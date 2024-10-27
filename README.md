@@ -2,7 +2,7 @@
 
 [Published Documentation](https://the-ai-alliance.github.io/developer-testing-guide/)
 
-This repo contains the code and documentation for the AI Alliance _Developer Testing for GenAI Applications_.
+This repo contains the code and documentation for the AI Alliance guide for _Developer Testing for GenAI Applications_, which explores the inherent difficulties and potential solutions for the desire to write deterministic, repeatable, automated tests when you have non-deterministic GenAI components in your application.
 
 See the [documentation](https://the-ai-alliance.github.io/developer-testing-guide/) for a more detailed description of the project.
 
