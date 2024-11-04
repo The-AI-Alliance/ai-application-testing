@@ -7,6 +7,6 @@ has_children: true
 
 # Testing Strategies and Techniques
 
-This section explores strategies and techniques you can use to achieve reliable, repeatable tests that are suitable for automation, whether or not you use [test-driven development](https://en.wikipedia.org/wiki/Test-driven_development) (TDD) or other ways of creating your tests.
+This section explores strategies and techniques you can use to achieve reliable, repeatable tests that are suitable for automation, whether or not you use [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) or other ways of creating your tests.
 
 {:toc}
