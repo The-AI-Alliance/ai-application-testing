@@ -21,5 +21,5 @@ So, introducing AI-generated content into an application makes it difficult to w
 
 It is not possible or even desirable to remove all non-determinism from GenAI applications. However, enabling developers to write tests that are repeatable and automatable, and deterministic when feasible, is still essential. The rest of this documentation explores techniques developers can use.
 
-<sup>1</sup> <a href="{{site.baseurl}}/glossary/#integration-test">Integration</a> and <a href="{{site.baseurl}}/glossary/#acceptance-test">Acceptance</a> tests usually <em>don't</em> remove these indeterminisms, where it is more important to test the real-world behavior in larger contexts.
+<sup>1</sup> [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove these indeterminisms, except where they focus on the real-world behavior in larger contexts, where the indeterminisms are a crucial factor.
 

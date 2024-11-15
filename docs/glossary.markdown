@@ -46,9 +46,13 @@ Can an action, like a test, be automated so it can be executed without human int
 
 ## Benchmark
 
-[\[1\]](#mlc) A methodology or function used for offline [Evaluation](#evaluation) of a [Model](#model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
+[\[1\]](#mlc) A methodology or function used for offline [Evaluation](#evaluation) of a [Generative Model](#generative-model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
 * A set of tests with metrics.
 * A summarization of the results.
+
+## Component
+
+An ill-defined, but often-used term in software. In this case, we use it to generically refer to anything with well-defined boundaries and access APIs: libraries, web services, etc.
 
 ## Dataset
 
@@ -64,7 +68,7 @@ Can humans understand why the system behaves the way that it does in a particula
 
 ## Evaluation
 
-The capability of measuring and quantifying how a [Model](#model) or [AI System](#ai-system) that uses models responds to inputs. Much like other software, models and AI systems need to be trusted and useful to their users. Evaluation aims to provide the evidence needed to gain users’ confidence. See also [Evaluation Framework](#evaluation-framework) and [Evaluator](#evaluator).
+The capability of measuring and quantifying how a [Generative Model](#generative-model) or [AI System](#ai-system) that uses models responds to inputs. Much like other software, models and AI systems need to be trusted and useful to their users. Evaluation aims to provide the evidence needed to gain users’ confidence. See also [Evaluation Framework](#evaluation-framework) and [Evaluator](#evaluator).
 
 ## Evaluation Framework
 
@@ -72,7 +76,7 @@ An umbrella term for the software tools, runtime services, benchmark systems, et
 
 ## Evaluator
 
-A classifier [Model](#model) or similar tool, possibly including a [Dataset](#dataset), that can quantify an [AI System's](#ai-system) inputs and outputs to detect the presence of risky content, such as hate speech, hallucinations, etc. For our purposes, an evaluator is API compatible for execution within an [Evaluation Framework](#evaluation-framework). In general, an evaluator could be targeted towards non-safety needs, such as measuring other aspects of [Alignment](#alignment), [Inference](#inference) model latency and throughput, carbon footprint, etc. Also, a given evaluator could be used at many points in the total AI life cycle, e.g., for a benchmark and an inference-time test.
+A classifier [Generative Model](#generative-model) or similar tool, possibly including a [Dataset](#dataset), that can quantify an [AI System's](#ai-system) inputs and outputs to detect the presence of risky content, such as hate speech, hallucinations, etc. For our purposes, an evaluator is API compatible for execution within an [Evaluation Framework](#evaluation-framework). In general, an evaluator could be targeted towards non-safety needs, such as measuring other aspects of [Alignment](#alignment), [Inference](#inference) model latency and throughput, carbon footprint, etc. Also, a given evaluator could be used at many points in the total AI life cycle, e.g., for a benchmark and an inference-time test.
 
 ## Fairness
 
@@ -88,13 +92,21 @@ Used here as an umbrella term for any unit of execution, including actual functi
 
 Other functions that read and possibly write external state or usually Non-[Deterministic](#deterministic). For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
 
+## Generative Model
+
+A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. See also [Large Language Model](#large-language-model) and [Multimodal Model](#multimodal-models).
+
+For convenience, in the text, we use the term _model_ to refer to the component that behaves non-deterministically, whether it is invoked directly in some sense or embedded inside another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
+
+See also [Multimodal Model](#multimodal-model) and [LLMs](#large-language-model)
+
 ## Hallucination
 
-When a [Model](#model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
+When a [Generative Model](#generative-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
 
 ## Inference
 
-Sending information to a [Model](#model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
+Sending information to a [Generative Model](#generative-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
 
 ## Integration Test
 
@@ -102,15 +114,11 @@ A test for several [Functions](#function) that verifies they interoperate proper
 
 ## Large Language Model
 
-Abbreviated _LLM_, a state of the art [Model](#model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
-
-## Model
-
-A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. See also [Large Language Model](#large-language-model) and [Multimodal Model](#multimodal-models).
+Abbreviated _LLM_, a state of the art [Generative Model](#generative-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
 
 ## Multimodal Model
 
-[Models](#model) that extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
+[Generative Models](#generative-model) that usually extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
 
 ## Refactoring
 
@@ -128,7 +136,7 @@ If an action, like running a test, is run repeatedly with no code or data change
 
 ## Robustness
 
-How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Model](#model) respond to prompts that deviate from its training data?
+How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Generative Model](#generative-model) respond to prompts that deviate from its training data?
 
 ## Side Effect
 
@@ -142,7 +150,7 @@ For our purposes, a [Unit](#unit-test), [Integration](#integration-test), or [Ac
 
 A test-only replacement for a [Function](#function) with [Side Effects](#side-effect), so it returns [Deterministic](#deterministic) values or behaviors when a dependent function uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test.
 
-See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test) test.
+See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
 
 ## Test-Driven Development
 
