@@ -1,10 +1,10 @@
 # README for Developer Testing for GenAI Applications
 
-[Published Documentation](https://the-ai-alliance.github.io/developer-testing-guide/)
+[Published Documentation](https://the-ai-alliance.github.io/ai-application-testing/)
 
 This repo contains the code and documentation for the AI Alliance guide for _Developer Testing for GenAI Applications_, which explores the inherent difficulties and potential solutions for the desire to write deterministic, repeatable, automated tests when you have non-deterministic GenAI components in your application.
 
-See the [documentation](https://the-ai-alliance.github.io/developer-testing-guide/) for a more detailed description of the project.
+See the [documentation](https://the-ai-alliance.github.io/ai-application-testing/) for a more detailed description of the project.
 
 ## Getting Involved
 
@@ -24,6 +24,10 @@ We use the "Developer Certificate of Origin" (DCO).
 > Before you make any git commits with changes, understand what's required for DCO.
 
 See the Alliance contributing guide [section on DCO](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md#developer-certificate-of-origin) for details. In practical terms, supporting this requirement means you must use the `-s` flag with your `git commit` commands.
+
+## The Website
+
+The documentation for this repo is published using [GitHub Pages](https://pages.github.com/). See [GITHUB_PAGES](GITHUB_PAGES.md) for details.
 
 
 ## About the GitHub Pages Website Published from this Repo
@@ -59,7 +63,7 @@ For external links, add a `target` tag using the following syntax, which works f
 [title]({{site.baseurl}}/relative_URL){:target="_target"}
 ```
 
-The `target` value is arbitrary; use whatever you want. While this is a little more tedious to type, it is usually better for users so they don't lose their place in the document. Also, [our stylesheet](https://github.com/The-AI-Alliance/developer-testing-guide/blob/main/docs/_includes/css/custom.scss.liquid) is configured to put the little up-and-to-the-right arrows after every link that isn't relative, i.e., links that start with `http` or `https`. This provides a visual clue that a new tab will be opened.
+The `target` value is arbitrary; use whatever you want. While this is a little more tedious to type, it is usually better for users so they don't lose their place in the document. Also, [our stylesheet](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/docs/_includes/css/custom.scss.liquid) is configured to put the little up-and-to-the-right arrows after every link that isn't relative, i.e., links that start with `http` or `https`. This provides a visual clue that a new tab will be opened.
 
 #### Emojis
 
@@ -88,7 +92,7 @@ Install a recent version of Ruby 3. Note that on MacOS, the default Ruby install
 This project's `Makefile` will attempt to install the remaining dependencies, including `jekyll`, when you run `make all` or `make view-local`.
 
 > [!WARNING]
-> The automatic setup of `jekyll` in the `Makefile` has only been tested on MacOS and it most likely doesn't work on Windows, unless you use the Linux subsystem. If you encounter problems on other platforms, please [post an issue](https://github.com/The-AI-Alliance/developer-testing-guide/issues) to get help, or if you can fix the issue, a [pull request](https://github.com/The-AI-Alliance/developer-testing-guide/pulls) (PR) is always welcome :nerd_face:. (More details on PRs below.)
+> The automatic setup of `jekyll` in the `Makefile` has only been tested on MacOS and it most likely doesn't work on Windows, unless you use the Linux subsystem. If you encounter problems on other platforms, please [post an issue](https://github.com/The-AI-Alliance/ai-application-testing/issues) to get help, or if you can fix the issue, a [pull request](https://github.com/The-AI-Alliance/ai-application-testing/pulls) (PR) is always welcome :nerd_face:. (More details on PRs below.)
 
 So, try `make view-local` and see if Jekyll is installed successfully and the website is rendered.
 
@@ -186,7 +190,7 @@ The `make` target runs the following command:
 cd docs && bundle exec jekyll serve --baseurl '' --incremental
 ```
 
-The `--baseurl` flag effectively supports the simple URL, `localhost:4000`. (Without it, the URL would be `localhost:4000/The-AI-Alliance/developer-testing-guide/`.) The `--incremental` flag lets you edit the pages and refresh the browser tab to see the updates immediately. 
+The `--baseurl` flag effectively supports the simple URL, `localhost:4000`. (Without it, the URL would be `localhost:4000/The-AI-Alliance/ai-application-testing/`.) The `--incremental` flag lets you edit the pages and refresh the browser tab to see the updates immediately. 
 
 > [!NOTE]
 > Well, more or less immediately. It can take several seconds for new pages to be generated and sometimes you'll get weird behaviors if you change URL paths, etc. So, occasionally it is useful to _control-c_ in the terminal and rerun `make view-local`.
@@ -245,7 +249,7 @@ bundle install
 bundle update html-pipeline
 ```
 
-Finally, if you are still stuck, please [post an issue](https://github.com/The-AI-Alliance/developer-testing-guide/issues) to get help.
+Finally, if you are still stuck, please [post an issue](https://github.com/The-AI-Alliance/ai-application-testing/issues) to get help.
 
 > **Help Needed:**
 >
