@@ -1,5 +1,5 @@
 
-pages_url    := https://the-ai-alliance.github.io/developer-testing-guide/
+pages_url    := https://the-ai-alliance.github.io/ai-application-testing/
 docs_dir     := docs
 site_dir     := ${docs_dir}/_site
 clean_dirs   := ${site_dir} ${docs_dir}/.sass-cache
@@ -15,7 +15,7 @@ JEKYLL_PORT         ?= 4000
 
 # Used for version tagging release artifacts.
 GIT_HASH            ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
-2024-10-25 16:13 -0500           ?= $(shell date +"%Y%m%d-%H%M%S")
+TIMESTAMP           ?= $(shell date +"%Y%m%d-%H%M%S")
 
 define help_message
 Quick help for this make process.
@@ -24,6 +24,7 @@ make all                # Clean and locally view the document.
 make clean              # Remove built artifacts, etc.
 make view-pages         # View the published GitHub pages in a browser.
 make view-local         # View the pages locally (requires Jekyll).
+                        # Tip: "JEKYLL_PORT=8000 make view-local" uses port 8000 instead of 4000!
 
 Miscellaneous tasks for help, debugging, setup, etc.
 
@@ -32,6 +33,7 @@ make print-info         # Print the current values of some make and env. variabl
 make setup-jekyll       # Install Jekyll. Make sure Ruby is installed. 
                         # (Only needed for local viewing of the document.)
 make run-jekyll         # Used by "view-local"; assumes everything is already built.
+                        # Tip: "JEKYLL_PORT=8000 make run-jekyll" uses port 8000 instead of 4000!
 endef
 
 define missing_shell_command_error_message
@@ -103,13 +105,13 @@ print-info:
 	@echo "clean dirs:          ${clean_dirs} (deleted by 'make clean')"
 	@echo
 	@echo "GIT_HASH:            ${GIT_HASH}"
-	@echo "2024-10-25 16:13 -0500:           ${2024-10-25 16:13 -0500}"
+	@echo "TIMESTAMP:           ${TIMESTAMP}"
 	@echo "MAKEFLAGS:           ${MAKEFLAGS}"
 	@echo "MAKEFLAGS_RECURSIVE: ${MAKEFLAGS_RECURSIVE}"
 	@echo "UNAME:               ${UNAME}"
 	@echo "ARCHITECTURE:        ${ARCHITECTURE}"
 	@echo "GIT_HASH:            ${GIT_HASH}"
-	@echo "2024-10-25 16:13 -0500:           ${2024-10-25 16:13 -0500}"
+	@echo "JEKYLL_PORT:         ${JEKYLL_PORT}"
 
 clean::
 	rm -rf ${clean_dirs} 
@@ -119,12 +121,11 @@ view-pages::
 		(echo "ERROR: I could not open the GitHub Pages URL. Try ⌘-click or ^-click on this URL instead:" && \
 		 echo "ERROR:   ${pages_url}" && exit 1 )
 
-view-local:: setup-jekyll do-view-local
-do-view-local: clean run-jekyll
+view-local:: setup-jekyll run-jekyll
 
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
-# `localhost:4000/The-AI-Alliance/developer-testing-guide` when -ping locally.
-run-jekyll:
+# `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
+run-jekyll: clean
 	@echo
 	@echo "Once you see the http://127.0.0.1:${JEKYLL_PORT}/ URL printed, open it with command+click..."
 	@echo
