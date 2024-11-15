@@ -13,11 +13,11 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Developer Testing for GenAI Applications
+title: AI Application Testing for Developers 
 email: contact@thealliance.ai
 description: >- # this means to ignore newlines until "baseurl:"
   The website for the AI Alliance project, Developer Testing for GenAI Applications.
-baseurl: "/developer-testing-guide" # the subpath of your site.
+baseurl: "/ai-application-testing" # the subpath of your site.
 url: "https://the-ai-alliance.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: pretty
@@ -70,8 +70,8 @@ aux_links:
     - "https://thealliance.ai"
 
 nav_external_links:
-  - title: The AI Alliance repo for Developer Testing for GenAI Applications"
-    url: "https://github.com/The-AI-Alliance/developer-testing-guide"
+  - title: The AI Alliance Repo for AI Application Testing for Developers"
+    url: "https://github.com/The-AI-Alliance/ai-application-testing"
     hide_icon: false
 
 # Makes Aux links open in a new tab. Default is false
@@ -92,12 +92,12 @@ back_to_top_text: "Back to the top"
 last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
 last_edit_time_format: "%Y-%m-%d %H:%M %z" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
 last_modified_timestamp: 2024-10-25 16:13 -0500
-last_version: 0.1.0
+last_version: 0.0.1
 
 # "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/The-AI-Alliance/developer-testing-guide/tree/latest/docs" # the github URL for your repo
+gh_edit_repository: "https://github.com/The-AI-Alliance/ai-application-testing/tree/latest/docs" # the github URL for your repo
 gh_edit_branch: "main" # the branch that your docs is served from
 gh_edit_source: "docs" # the source that your files originate from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
@@ -115,6 +115,7 @@ show_contribute_dataset_button: true
 
 plugins:
   - jekyll-seo-tag
+  - jekyll/footnotes
   - jemoji
 
 kramdown:
