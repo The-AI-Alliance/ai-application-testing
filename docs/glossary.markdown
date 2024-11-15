@@ -40,6 +40,10 @@ Umbrella term for an application or system with AI components, including [Datase
 
 A general term for how well an [AI System's](#ai-system) outputs (e.g., replies to queries) and behaviors correspond to end-user and service provider objectives, including the quality and utility of results, as well as safety requirements. Quality implies factual correctness and utility implies the results are fit for purpose, e.g., a Q&A system should answer user questions concisely and directly, a Python code-generation system should output valid, bug-free, and secure Python code. [EleutherAI defines alignment this way](https://www.eleuther.ai/alignment){:target="eleuther"}, &ldquo;Ensuring that an artificial intelligence system behaves in a manner that is consistent with human values and goals.&rdquo; See also the [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"}.
 
+## Automatable
+
+Can an action, like a test, be automated so it can be executed without human intervention?
+
 ## Benchmark
 
 [\[1\]](#mlc) A methodology or function used for offline [Evaluation](#evaluation) of a [Model](#model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
@@ -117,6 +121,10 @@ Modifying code to change its structure as required to support a new feature. _No
 When an unexpected behavior change is introduced into previously-working [Function](#function), because of a change made to the code base, often in other functions for unrelated functionality.
 
 Automated [Tests](#test) are designed to catch regressions as soon as they occur, making it easier to diagnose the change that caused the regression, as well as detecting the regression in the first place.
+
+## Repeatable
+
+If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, GenAI models are _expected_ to return different results each time a query is repeated.
 
 ## Robustness
 
