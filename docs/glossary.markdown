@@ -26,7 +26,7 @@ Some definitions are adapted from the following sources, which are indicated bel
 
 ## Acceptance Test
 
-A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#deterministic) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), and [Integration Test](#integration-test).
+A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), and [Integration Test](#integration-test).
 
 ## AI Actor
 
@@ -34,7 +34,7 @@ A test that verifies a user-visible feature works are required, often by driving
 
 ## AI System
 
-Umbrella term for an application or system with AI components, including [Datasets](#dataset), [Models](#model), [Evaluation Framework](#evaluation-framework) and [Evaluators](#evaluator) for safety detection and mitigation, etc., plus external services, databases for runtime queries, and other application logic that together provide functionality.
+Umbrella term for an application or system with AI components, including [Datasets](#dataset), [Generative AI Models](#generative-ai-model), [Evaluation Framework](#evaluation-framework) and [Evaluators](#evaluator) for safety detection and mitigation, etc., plus external services, databases for runtime queries, and other application logic that together provide functionality.
 
 ## Alignment
 
@@ -46,7 +46,7 @@ Can an action, like a test, be automated so it can be executed without human int
 
 ## Benchmark
 
-[\[1\]](#mlc) A methodology or function used for offline [Evaluation](#evaluation) of a [Generative Model](#generative-model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
+[\[1\]](#mlc) A methodology or function used for offline [Evaluation](#evaluation) of a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
 * A set of tests with metrics.
 * A summarization of the results.
 
@@ -58,9 +58,11 @@ An ill-defined, but often-used term in software. In this case, we use it to gene
 
 (See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc. 
 
-## Deterministic
+## Determinism
 
-The output of a [Function](#function) for a given input (or inputs) is known precisely. This affords writing repeatable, automated tests.
+The output of a [Function](#function) for a given input is always known precisely. This affords writing repeatable, predictable software and automated, reliable tests.
+
+In contrast, _nondeterminism_ means components for which identical inputs yield different results, removing repeatability and complicating predictability, and the ability to write automated, reliable tests.
 
 ## Explainability
 
@@ -68,7 +70,7 @@ Can humans understand why the system behaves the way that it does in a particula
 
 ## Evaluation
 
-The capability of measuring and quantifying how a [Generative Model](#generative-model) or [AI System](#ai-system) that uses models responds to inputs. Much like other software, models and AI systems need to be trusted and useful to their users. Evaluation aims to provide the evidence needed to gain users’ confidence. See also [Evaluation Framework](#evaluation-framework) and [Evaluator](#evaluator).
+The capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) that uses models responds to inputs. Much like other software, models and AI systems need to be trusted and useful to their users. Evaluation aims to provide the evidence needed to gain users’ confidence. See also [Evaluation Framework](#evaluation-framework) and [Evaluator](#evaluator).
 
 ## Evaluation Framework
 
@@ -76,7 +78,7 @@ An umbrella term for the software tools, runtime services, benchmark systems, et
 
 ## Evaluator
 
-A classifier [Generative Model](#generative-model) or similar tool, possibly including a [Dataset](#dataset), that can quantify an [AI System's](#ai-system) inputs and outputs to detect the presence of risky content, such as hate speech, hallucinations, etc. For our purposes, an evaluator is API compatible for execution within an [Evaluation Framework](#evaluation-framework). In general, an evaluator could be targeted towards non-safety needs, such as measuring other aspects of [Alignment](#alignment), [Inference](#inference) model latency and throughput, carbon footprint, etc. Also, a given evaluator could be used at many points in the total AI life cycle, e.g., for a benchmark and an inference-time test.
+A classifier [Generative AI Model](#generative-ai-model) or similar tool, possibly including a [Dataset](#dataset), that can quantify an [AI System's](#ai-system) inputs and outputs to detect the presence of risky content, such as hate speech, hallucinations, etc. For our purposes, an evaluator is API compatible for execution within an [Evaluation Framework](#evaluation-framework). In general, an evaluator could be targeted towards non-safety needs, such as measuring other aspects of [Alignment](#alignment), [Inference](#inference) model latency and throughput, carbon footprint, etc. Also, a given evaluator could be used at many points in the total AI life cycle, e.g., for a benchmark and an inference-time test.
 
 ## Fairness
 
@@ -88,37 +90,37 @@ For our purposes, a small bit of functionality provided by an application. It is
 
 ## Function
 
-Used here as an umbrella term for any unit of execution, including actual functions, methods, code blocks, etc. Many functions are free of [Side Effects](#side-effect), meaning they don't read or write state external to the function and shared by other functions. These functions are _always_ [Deterministic](#deterministic); for a given input(s) they always return the same output.
+Used here as an umbrella term for any unit of execution, including actual functions, methods, code blocks, etc. Many functions are free of [Side Effects](#side-effect), meaning they don't read or write state external to the function and shared by other functions. These functions are _always_ [Deterministic](#determinism); for a given input(s) they always return the same output.
 
-Other functions that read and possibly write external state or usually Non-[Deterministic](#deterministic). For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
+Other functions that read and possibly write external state or usually [Nondeterministic](#determinism). For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
 
-## Generative Model
+## Generative AI Model
 
 A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. See also [Large Language Model](#large-language-model) and [Multimodal Model](#multimodal-models).
 
-For convenience, in the text, we use the term _model_ to refer to the component that behaves non-deterministically, whether it is invoked directly in some sense or embedded inside another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
+For convenience, in the text, we use the term _model_ to refer to the generative AI component that has [Nondeterministic](#determinism) behavior, whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
 
 See also [Multimodal Model](#multimodal-model) and [LLMs](#large-language-model)
 
 ## Hallucination
 
-When a [Generative Model](#generative-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
+When a [Generative AI Model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
 
 ## Inference
 
-Sending information to a [Generative Model](#generative-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
+Sending information to a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
 
 ## Integration Test
 
-A test for several [Functions](#function) that verifies they interoperate properly. These "functions" could be other, distributed systems, too. When any of the functions being tested have [Side Effects](#side-effects), perhaps indirectly through other functions they call, all such side effects must be replaced with [Test Doubles](#test-double) to make the test deterministic. See also [Test](#test), [Unit Test](#unit-test), and [Acceptance Test](#acceptance-test).
+A test for several [Functions](#function) that verifies they interoperate properly. These "functions" could be other, distributed systems, too. When any of the functions being tested have [Side Effects](#side-effects), perhaps indirectly through other functions they call, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). See also [Test](#test), [Unit Test](#unit-test), and [Acceptance Test](#acceptance-test).
 
 ## Large Language Model
 
-Abbreviated _LLM_, a state of the art [Generative Model](#generative-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
+Abbreviated _LLM_, a state of the art [Generative AI Model](#generative-ai-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
 
 ## Multimodal Model
 
-[Generative Models](#generative-model) that usually extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
+[Generative AI Models](#generative-ai-model) that usually extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
 
 ## Refactoring
 
@@ -132,15 +134,15 @@ Automated [Tests](#test) are designed to catch regressions as soon as they occur
 
 ## Repeatable
 
-If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, GenAI models are _expected_ to return different results each time a query is repeated.
+If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, [Generative AI Models](#generative-ai-model) are _expected_ to return different results each time a query is repeated.
 
 ## Robustness
 
-How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Generative Model](#generative-model) respond to prompts that deviate from its training data?
+How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Generative AI Model](#generative-ai-model) respond to prompts that deviate from its training data?
 
 ## Side Effect
 
-Reading and/or writing state shared outside a [Function](#function) with other functions. See also [Deterministic](#deterministic).
+Reading and/or writing state shared outside a [Function](#function) with other functions. See also [Determinism](#determinism).
 
 ## Test
 
@@ -148,7 +150,7 @@ For our purposes, a [Unit](#unit-test), [Integration](#integration-test), or [Ac
 
 ## Test Double
 
-A test-only replacement for a [Function](#function) with [Side Effects](#side-effect), so it returns [Deterministic](#deterministic) values or behaviors when a dependent function uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test.
+A test-only replacement for a [Function](#function) with [Side Effects](#side-effect), so it returns [Deterministic](#determinism) values or behaviors when a dependent function uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test.
 
 See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
 
@@ -164,8 +166,8 @@ The [Wikipedia article on TDD](https://en.wikipedia.org/wiki/Test-driven_develop
 
 ## Token
 
-For language [Models](#model), the training texts and query prompts are split into tokens, usually whole words or fractions according to a vocabulary of tens of thousands of tokens that can include common single characters, several characters, and &ldquo;control&rdquo; tokens (like &ldquo;end of input&rdquo;). The rule of thumb is a corpus will have roughly 1.5 times the number of tokens as it will have words.
+For language [Generative AI Models](#generative-ai-model), the training texts and query prompts are split into tokens, usually whole words or fractions according to a vocabulary of tens of thousands of tokens that can include common single characters, several characters, and &ldquo;control&rdquo; tokens (like &ldquo;end of input&rdquo;). The rule of thumb is a corpus will have roughly 1.5 times the number of tokens as it will have words.
 
 ## Unit Test
 
-A test for a function that exercises its behavior in isolation from all other functions and state. When the function being tested has [Side Effects](#side-effects), perhaps indirectly through other functions it calls, all such side effects must be replaced with [Test Doubles](#test-double) to make the test deterministic. See also [Test](#test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
+A test for a function that exercises its behavior in isolation from all other functions and state. When the function being tested has [Side Effects](#side-effects), perhaps indirectly through other functions it calls, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). See also [Test](#test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
