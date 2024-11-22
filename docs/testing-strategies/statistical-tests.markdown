@@ -11,6 +11,7 @@ has_children: false
 Are there cases where the behavior is nondeterministic, but reasonable bounds can be specified statistically? In other words, if the results fall within some measurable confidence window, they are considered acceptable, i.e., _passing_. 
 
 
-TODOs
+TODOs:
+
 1. Examples, perhaps inspired by classifiers.
 2. Use of standard deviations, ...

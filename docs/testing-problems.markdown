@@ -35,3 +35,29 @@ It is not possible or even desirable to remove all nondeterminism from generativ
 
 <sup>1</sup> [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the indeterminisms are a crucial factor to be tested.
 
+## Notes about Software Design for Generative AI Applications
+
+The creators of [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) made clear that it is really a _design_ descipline as much as a _testing_ descipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
+
+During this process, the software design decisions you make reflect many perspectives, intuitions, and idioms, all built on years of experience. 
+
+### The Paradigm Shift Required in Your Thinking 
+
+Generative models force new perspectives, intuitions, and idioms, reflecting the unique characteristics of these inherently nondeterministic systems. 
+
+The nondeterminism comes from the inherently probabilistic nature of models. Simplicistically, models generate the next most probably &ldquo;element&rdquo, with some randomness to support alternative outputs, such as the next token for language models or the next pixel for image models.
+
+Unfortunately, truly effective testing of models requires some expertise with probabilities and statistics that software developers typically don't require. However, your intuitions are very helpful ...
+
+TODO - more specific details.
+
+### Scope Allowed Inputs and Outputs
+
+Traditional software has well defined interfaces (e.g., APIs) that limit how users invoke services. It may seem paradoxical that constraints are better than no constraints, but this characteristic greatly reduces ambiguities and misunderstanding about behaviors and expectations between the user and the software. In a well-designed interface, the user knows exactly what inputs to provide and the software knows exactly what results to return for a given set of inputs. This greatly simplifies the implementation on both sides of the interface, as no effort is required to deal with ambiguities and poorly-constrained possibilities.
+
+General AI Models are _completely open ended_; you can input almost any text you want (often limited only by the length of the query) and you can get almost any response possible in return! From a robust software design perspective, _this is truly a bad idea_, but models have compensating virtues. When they work well, they do a good job interpreting ambiguous human speech, especially from a non-expert, and creating results that accomplish the user's goals. They are very good at generating lots of detailed content in response to relatively little input, especially image generation models.
+
+Still, the open ended nature means you should consider ways of constraining allowed inputs and filtering results. 
+
+* **Don't expose the model directly:** Hide the model behind an interface with clear constraints. In many applications, a model might be used as a _universal translator_ of sorts between systems with APIs. The user interface might provide a constrained experience, tailored to a particular use case, and the underlying prompts sent to the model are carafully engineered (after experimentation) to optimize the model's results.
+* **Filter results heavily:** Make sure the user or downstream systems only see model results that are constrained appropriately. For more conversational applications, this will likely mean filtering for unacceptable speech. 

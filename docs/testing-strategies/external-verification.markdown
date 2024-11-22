@@ -33,7 +33,8 @@ Various deterministic tools exist to verify logical arguments, mathematical stat
 Models are now being used to model protein structure and generate new, candidate molecules for various purposes. The results can be compared to experimental data and physical models. Candidate molecules can be synthesized to verify the have the desired properties.
 
 
-TODOs
+TODOs:
+
 1. More high-level examples
 2. Details for some of them.
 

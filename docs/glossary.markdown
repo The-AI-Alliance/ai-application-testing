@@ -94,6 +94,14 @@ Used here as an umbrella term for any unit of execution, including actual functi
 
 Other functions that read and possibly write external state or usually [Nondeterministic](#determinism). For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
 
+## Functional Programming
+
+FP is a design methodology that attempts to formalize the properties of components and their properties, inspired by constructs in mathematics. State is maintained in a small set of abstractions, like _Maps_, _Lists_, and _Sets_, with operations that are implemented separately following protocol abstractions exposed by the collections. Like mathematical objects and unlike objects in [Object-Oriented Programming](#object-oriented-programming), mutation of state is prohibited; any operation, like adding elements to a collection, creates a new copy.
+
+FP became popular when concurrent software became more widespread in the 2000s, because the immutable objects lead to far fewer concurrency bugs.
+
+Contrast with [Object-Oriented Programming](#object-oriented-programming). Many programming langauges combine elements of FP and OOP.
+
 ## Generative AI Model
 
 A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. See also [Large Language Model](#large-language-model) and [Multimodal Model](#multimodal-models).
@@ -117,6 +125,14 @@ A test for several [Functions](#function) that verifies they interoperate proper
 ## Large Language Model
 
 Abbreviated _LLM_, a state of the art [Generative AI Model](#generative-ai-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
+
+## Object-Oriented Programming
+
+OOP (or OOSD - object-oriented software development) is a design methodology that creates software components with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates state and behavior behind its abstraction. 
+
+Introduced in the Simula langauge in the 1960s, it gained widespread interest in the 1980s with the emergence of graphical user interfaces (GUIs), where objects like _Window_, _Buttons_, and _Menus_ were an intuitive way to organize such software. 
+
+Contrast with [Functional Programming](#functional-programming). Many programming langauges combine elements of FP and OOP.
 
 ## Multimodal Model
 
