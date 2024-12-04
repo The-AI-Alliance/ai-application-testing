@@ -48,7 +48,7 @@ Additional links:
 
 ### Version History
 
-| **Version** | **Date**   |
+| Version     | Date       |
 | V0.0.2      | 2024-11-15 |
 | V0.0.1      | 2024-10-25 |
 
