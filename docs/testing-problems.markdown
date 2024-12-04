@@ -17,7 +17,7 @@ There are necessary exceptions to deterministic behavior for real-world systems.
 
 Note that these forms of nondeterminism and their side effects are well understood. Their behaviors are easy to reason about and manage. They are usually _peripheral_ to the core application logic. Examples include multi-threading and cluster computing for better scalability and performance, fetching data from a database, and generating UUIDs. 
 
-In our automated tests, it is straightforward to test the deterministic application core logic by hiding the non-deterministic behaviors behind APIs and replacing them at test time with deterministic and repeatable [Test Doubles]({{site.baseurl}}/glossary/#test-double). Examples include techniques to replace multi-threading with single-threaded execution, using a &ldquo;fake&rdquo; database query API that returns pre-defined results, and a fake UUID generator that always returns a particular value. These techniques ensure that the module being tested behaves deterministically during the tests<sup>1</sup>.
+In our automated tests, it is straightforward to test the deterministic application core logic by hiding the non-deterministic behaviors behind APIs and replacing them at test time with deterministic and repeatable [Test Doubles]({{site.baseurl}}/glossary/#test-double). Examples include techniques to replace multi-threading with single-threaded execution, using a &ldquo;fake&rdquo; database query API that returns pre-defined results, and a fake UUID generator that always returns a particular value. These techniques ensure that the module being tested behaves deterministically during the tests. [^1]
 
 To recap, application developers expect the following:
 
@@ -33,7 +33,7 @@ This nondeterminism isn't _peripheral_ either; we introduce generative AI, becau
 
 It is not possible or even desirable to remove all nondeterminism from generative AI applications. However, enabling developers to write tests that are repeatable and automatable, and deterministic when feasible, is still essential. The rest of this documentation explores techniques developers can use.
 
-<sup>1</sup> [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the indeterminisms are a crucial factor to be tested.
+[^1]: [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the indeterminisms are a crucial factor to be tested.
 
 ## Notes about Software Design for Generative AI Applications
 
