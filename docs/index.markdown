@@ -7,11 +7,8 @@ has_children: false
 
 # AI Application Testing for Developers
 
-[GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo" .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 .no-glyph}
-[The AI Alliance](https://thealliance.ai){:target="ai-alliance" .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 .no-glyph}
-
 | **Authors**     | [FA3: Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-wg"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
-| **Last Update**  | V0.0.2, 2024-11-15 |
+| **Last Update**  | V0.0.3, 2024-12-06 |
 
 > **Tips:**
 >
@@ -49,6 +46,7 @@ Additional links:
 ### Version History
 
 | Version     | Date       |
+| V0.0.3      | 2024-12-06 |
 | V0.0.2      | 2024-11-15 |
 | V0.0.1      | 2024-10-25 |
 
