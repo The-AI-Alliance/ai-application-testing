@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Unit Benchmarks
-nav_order: 220
+nav_order: 230
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -20,6 +20,6 @@ Suppose we want to define unit tests that verify our application does a very goo
 
 We can build a Q&A dataset for this purpose using logged queries in the past. Some human labeling will likely be required to create human text equivalents for the example queries, which would function as the expected answers. Each _unit benchmark_ could focus on one specific kind of common query for one specific table.
 
-A related approach that is widely used is to leverage a separate model, one that is very smart and expensive to use, as a _judge_ to generate Q&A pairs for the benchmarks.
+A related approach that is widely used is to leverage a separate model, one that is very smart and expensive to use, as a _judge_ to generate Q&A pairs for the benchmarks. See [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge).
 
 TODO - More details and specific examples.
