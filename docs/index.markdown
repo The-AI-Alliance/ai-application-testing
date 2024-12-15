@@ -28,7 +28,7 @@ The goals of this project are two fold:
 1. Research strategies and techniques for testing Generative AI applications that eliminate nondeterminism, where feasible, and enable effective [Repeatable]({{site.baseurl}}/glossary/#repeatable) and [Automatable]({{site.baseurl}}/glossary/#automatable) testing, where not feasible.
 2. Publish guidance for developers on these strategies and techniques here and possibly other venues, like blogs and research papers.
 
-This site will be updated regularly to reflect our current thinking and recommendations.
+> **NOTE:** This is very much a work in progress. This site will be updated frequently to reflect our current thinking, research, and emerging recommendations.
 
 The content is organized into the following sections:
 
