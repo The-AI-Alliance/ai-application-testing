@@ -16,16 +16,29 @@ Back to generative AI, various model-tuning techniques are established and neces
 
 How would this work and what's needed that we don't already have?
 
-TODO - more...
+For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} by Nathan Lambert:
+
+> **What is reinforcement finetuning?**
+>
+> Uses repeated passes over the data with RL to encourage model to figure out more robust behaviors in domains.
+> 
+> Requires:
+> 
+> 1. Training data with explicitly correct answers.
+> 1. A grader (or extraction program) for verifying outputs.
+> 1. A model that can sometimes generate a correct solution. _Otherwise, no signal for RL to learn from._
+>
+> Key innovation: 
+> 
+> **Improving targeted skills reliably without degradation on other tasks.**
+
+Nathan is talking about [this OpenAI paper](https://openai.com/form/rft-research-program/){:target="openai-rf"}, which is entirely focused on model tuning, but I think if you read the bullets above (assuming you understand the terminology), it also fits nicely with our goals. Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
+
+## Next steps
+
+(TODO: - this needs refinement)
 
 * We need very fine-grained tuning techniques for use-case specific tuning. See
-[Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks). Another technology to investigate for organizing these tuning runs is [InstructLab](https://instructlab.ai){:target="instructlab"}.
+[Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks). Another technology to investigate for organizing these tuning runs is [InstructLab](https://instructlab.ai){:target="instructlab"}. [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} From Allen Institute of AI has similar potential (and it is mentioned by Nathan above.)
 * We still need regression "testing", so whatever we construct for fine-grained tuning should be reusable in some way for repeated test runs.
 * ...
-
-
-TODOs:
-
-1. Examples, perhaps inspired by classifiers.
-2. Use of standard deviations, ...
-3. See [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"}.
