@@ -15,7 +15,7 @@ Some outputs can be verified through external tools. Here are some examples.
 Generated code can be checked with several tools for quality and validity. For example:
 
 * Use a parser or compiler to verify the syntax is valid
-* Scan for security vulnerabilies
+* Scan for security vulnerabilities
 * Check for excessive [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="cyclomatic_complexity"}
 * Check it uses only allowed third-party libraries.
 * If tests already exist for the generated code (see [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development)), does the generated code allow the tests to pass?
