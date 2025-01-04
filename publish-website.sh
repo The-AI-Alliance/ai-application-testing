@@ -7,7 +7,6 @@
 # 2. docs/index.markdown: 
 #    a. Authors and latest version table at the top of the page, if present
 #    b. The history table of versions and timestamps at the bottom, if present.
-#    c. The footer of every page in the Just the Docs template.
 #
 # NOTES: 
 # 1. While recommended, it's not required to use this script...
@@ -99,7 +98,6 @@ echo "Timestamp: $timestamp"
 branch=$(git branch --show-current)
 [[ "$branch" != "$work_branch" ]] && error "You must be on the $work_branch branch to run this command."
 
-echo "Updating _config.yml..."
 cfg_temp=${cfg}.$$
 if [[ -z "$NOOP" ]]
 then
@@ -119,7 +117,7 @@ then
 	grep "last_modified_timestamp: $timestamp" $cfg -q || error "New timestamp $timestamp not found in $cfg"
 fi
 
-Echo "Updating the index page tables with the new version..."
+# Update the index page table with versions.
 latest_history_line=$(grep '\*\*Last Update\*\*' "$index")
 latest_history=$(echo $latest_history_line | sed -e 's/[^V]*V\([^, ]*\).*/\1/')
 
@@ -128,6 +126,7 @@ then
 	echo "New version ($version) is the same as the old version in $index. Not changing that file."
 else
 	mv $index $index.$$
+	found_version_history=false
 	cat $index.$$ | while read line
 	do
 		case $line in
@@ -137,7 +136,15 @@ else
 				;;
 			*Version*Date*)
 				echo $line
-			    echo "| V$version      | $ymd |"
+				found_version_history=true
+				;;
+			\|\ :---*)
+				echo $line
+				if $found_version_history
+				then
+				    echo "| V$version   | $ymd |"
+				    found_version_history=false
+				fi
 			    ;;
 			*)
 				echo "$line"
