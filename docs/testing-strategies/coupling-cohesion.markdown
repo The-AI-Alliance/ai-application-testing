@@ -21,3 +21,11 @@ But that still leaves the challenge of testing model behaviors, and for [Integra
 A hallmark of good software design is clear and unambiguous abstractions with API interfaces between modules that try to eliminate potential misunderstands and guide the user to do the correct things. Exchanging free form text between users and tools is the _worst possible interface_, from this perspective.
 
 Tools like [`pydantic-ai`](https://github.com/pydantic/pydantic-ai/), part of the [`pydantic`](https://ai.pydantic.dev) tools, is an agent framework (one of many...), which is appealing because of its use of type checking for values exchanged between tools, among other benefits.
+
+### Abstractions Encapsulate Complexities
+
+[Micheal Feathers](https://michaelfeathers.silvrback.com) gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ) at Codecamp Romania, 2024.  
+
+Near the end, he discussed how the software industry has a history of introducing new levels of abstractions when complexity becomes a problem. For example, high-level programming languages removed most of the challenges of writing lower-level assembly code.
+
+From this perspective, the nondeterministic nature of generative AI is a _complexity_. While it obviously provides benefits (e.g., new ideas, summarization, etc.), it also makes testing harder. What kinds of abstractions make sense for AI that would help us with this form of complexity?
