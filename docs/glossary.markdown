@@ -28,6 +28,10 @@ Some definitions are adapted from the following sources, which are indicated bel
 
 A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), and [Integration Test](#integration-test).
 
+## Agent
+
+An old concept in AI, but seeing a renaissance currently as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of model and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming models can do everything successfully.
+
 ## AI Actor
 
 [\[2\]](#nist) An organization or individual building an [AI System](#ai-system).
