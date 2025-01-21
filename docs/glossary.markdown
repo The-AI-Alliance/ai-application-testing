@@ -142,6 +142,10 @@ Contrast with [Functional Programming](#functional-programming). Many programmin
 
 [Generative AI Models](#generative-ai-model) that usually extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
 
+## Paradigm
+
+From the [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/paradigm){:target="dict"}: &ldquo;a philosophical and theoretical framework of a scientific school or discipline within which theories, laws, and generalizations and the experiments performed in support of them are formulated.&rdquo;
+
 ## Refactoring
 
 Modifying code to change its structure as required to support a new feature. _No behavior changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [Test-Driven Development](#test-driven-development) cycle.
