@@ -18,13 +18,13 @@ Let's consider ways our encapsulation APIs can be most effective.
 
 ### Test Doubles at Netflix
 
-Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix wrote model [Test Doubles]({{site.baseurl}}/glossary/test-double) that would &ldquo;... dynamically create similar input content for tests classified along the axes that mattered for the algorithm.&rdquo; In other words, while traditional test doubles usually hard-code deterministic outputs for specific inputs, make the test double for a probabilistic model generate nondeterministic outputs that are within the expected bounds of acceptability, so tests using these test doubles are fully exercised against the range of expected outputs.
+Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix wrote model [Test Doubles]({{site.baseurl}}/glossary/test-double) that would &ldquo;... dynamically create similar input content for tests classified along the axes that mattered for the algorithm.&rdquo; In other words, while traditional test doubles usually hard-code deterministic outputs for specific inputs, make the test double for a probabilistic model generate nondeterministic outputs that are within the expected bounds of acceptability, so that tests using these test doubles can fully exercise the _unit_ under test with a full range of possible, but acceptable outputs.
 
-However, this also suggests that test doubles that deliberately write &ldquo;unacceptable&rdquo; output are also needed for testing your error handling of components that consume model output.
+However, this also suggests that test doubles are needed that deliberately write &ldquo;unacceptable&rdquo; output. These would be used to test component error handling for components that ingest and process model output.
 
 Netflix also added extra hidden output that showed the workings of the algorithm (i.e., for [Explainability]({{site.baseurl}}/glossary/#explainability)) when running a test configuration. Details about model weights, algorithmic details, etc. were encoded as HTML comments, visible if you viewed the page source. This information helped them understand why a particular list of movies were chosen, for example, in a test scenario.
 
-The generative AI equivalent of their approach might be to include in the prompt a clause that says something like, &ldquo;in a separate section explain how you came up with the answer&rdquo;. They output of that section is then hidden from end users, but visible to engineers through a page comment or logged somewhere.
+The generative AI equivalent of their approach might be to include in the prompt a clause that says something like, &ldquo;in a separate section explain how you came up with the answer&rdquo;. The output of that section is then hidden from end users, but visible to engineers through a page comment or logged somewhere.
 
 ### APIs in AI-based Applications
 

@@ -12,7 +12,7 @@ Are there cases where the behavior is nondeterministic, but reasonable bounds ca
 
 ### Use of Statistics at Netflix
  
-Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix took this approach for their recommendation models, computing _plausibility_ scores that gave them sufficient confidence in the results.
+Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix took this approach for their recommendation systems, computing _plausibility_ scores that gave them sufficient confidence in the results.
 
 TODOs:
 
