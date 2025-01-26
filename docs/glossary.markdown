@@ -70,7 +70,7 @@ In contrast, _nondeterminism_ means components for which identical inputs yield 
 
 ## Explainability
 
-Can humans understand why the system behaves the way that it does in a particular scenario?
+Can humans understand why the system behaves the way that it does in a particular scenario? Can the system provide additional information about about why it produced a particular output?
 
 ## Evaluation
 

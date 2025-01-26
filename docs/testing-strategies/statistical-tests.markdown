@@ -10,6 +10,9 @@ has_children: false
 
 Are there cases where the behavior is nondeterministic, but reasonable bounds can be specified statistically? In other words, if the results fall within some measurable confidence window, they are considered acceptable, i.e., _passing_. 
 
+### Use of Statistics at Netflix
+ 
+Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix took this approach for their recommendation models, computing _plausibility_ scores that gave them sufficient confidence in the results.
 
 TODOs:
 

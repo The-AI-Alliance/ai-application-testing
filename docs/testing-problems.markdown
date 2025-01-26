@@ -35,9 +35,15 @@ It is not possible or even desirable to remove all nondeterminism from generativ
 
 [^1]: [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the nondeterminisms are a crucial factor to be tested.
 
+### Is This Really a New Problem?
+
+Recently, one of us (Dean Wampler) posted a link on [Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} to the slides for a talk, [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slies"}. [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} replied that they encountered similar problems at Netflix around 2008 with their content recommendation systems; &ldquo;The content inventory (movies or products) changes constantly, and the recommendations are personalized so that everyone sees a different result. We had to build some novel practices and tools for our QA engineers.&rdquo; 
+
+The specific tools and practices he mentioned are discussed in the corresponding [Test Strategies and Techniques]({{site.baseurl}}/testing-strategies/testing-strategies) pages, [here]({{site.baseurl}}/testing-strategies/coupling-cohesion/#test-doubles-at-netflix) and [here]({{site.baseurl}}/testing-strategies/statistical-tests/#use-of-statistics-at-netflix).
+
 ## Notes about Software Design for Generative AI Applications
 
-The creators of [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) made clear that it is really a _design_ descipline as much as a _testing_ descipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
+The creators of [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) made clear that it is really a _design_ discipline as much as a _testing_ discipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
 
 During this process, the software design decisions you make reflect many perspectives, intuitions, and idioms, all built on years of experience. 
 
