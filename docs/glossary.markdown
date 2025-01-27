@@ -11,8 +11,8 @@ Some of the terms defined here are industry standards, while others are not stan
 
 Some definitions are adapted from the following sources, which are indicated below using the same numbers, i.e., [\[1\]](#mlc) and [\[2\]](#nist):
 
-1. <a id="mlc">[MLCommons AI Safety v0.5 Benchmark Proof of Concept Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary", :id="mlc-glossary"}
-2. <a id="nist">[NIST Artificial Intelligence Risk Management Framework (AI RMF 1.0)](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf", :id="nist-rmf"}
+1. <a id="mlc">[MLCommons AI Safety v0.5 Benchmark Proof of Concept Technical Glossary]({{site.baseurl}}/references/#mlcommons-glossary){:id="mlc-glossary"}
+2. <a id="nist">[NIST Artificial Intelligence Risk Management Framework (AI RMF 1.0)]({{site.baseurl}}/references/#nist-risk-management-framework){:id="nist-rmf"}
 
 
 <details open markdown="block">
@@ -42,7 +42,7 @@ Umbrella term for an application or system with AI components, including [Datase
 
 ## Alignment
 
-A general term for how well an [AI System's](#ai-system) outputs (e.g., replies to queries) and behaviors correspond to end-user and service provider objectives, including the quality and utility of results, as well as safety requirements. Quality implies factual correctness and utility implies the results are fit for purpose, e.g., a Q&A system should answer user questions concisely and directly, a Python code-generation system should output valid, bug-free, and secure Python code. [EleutherAI defines alignment this way](https://www.eleuther.ai/alignment){:target="eleuther"}, &ldquo;Ensuring that an artificial intelligence system behaves in a manner that is consistent with human values and goals.&rdquo; See also the [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"}.
+A general term for how well an [AI System's](#ai-system) outputs (e.g., replies to queries) and behaviors correspond to end-user and service provider objectives, including the quality and utility of results, as well as safety requirements. Quality implies factual correctness and utility implies the results are fit for purpose, e.g., a Q&A system should answer user questions concisely and directly, a Python code-generation system should output valid, bug-free, and secure Python code. [EleutherAI]({{site.baseurl}}/references/#eleuther-ai){:target="eleuther"} defines alignment [this way](https://www.eleuther.ai/alignment){:target="eleuther"}, &ldquo;Ensuring that an artificial intelligence system behaves in a manner that is consistent with human values and goals.&rdquo; See also the work of the [Alignment Forum]({{site.baseurl}}/references/#alignment-forum).
 
 ## Automatable
 
@@ -144,7 +144,7 @@ Contrast with [Functional Programming](#functional-programming). Many programmin
 
 ## Paradigm
 
-From the [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/paradigm){:target="dict"}: &ldquo;a philosophical and theoretical framework of a scientific school or discipline within which theories, laws, and generalizations and the experiments performed in support of them are formulated.&rdquo;
+From the [Merriam-Webster Dictionary]({{site.baseurl}}/references/#merriam-webster-dictionary) definition of [paradigm](https://www.merriam-webster.com/dictionary/paradigm){:target="dict"}: &ldquo;a philosophical and theoretical framework of a scientific school or discipline within which theories, laws, and generalizations and the experiments performed in support of them are formulated.&rdquo;
 
 ## Refactoring
 
@@ -186,7 +186,7 @@ When adding a [Feature](#feature) to a code base using _TDD_, the tests are writ
 2. Write a [Test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, behavior, etc., even though you are also creating a reusable test that will become part of the [Regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
 3. Write the new feature to make the new test (as well as all previously written tests) pass.
 
-The [Wikipedia article on TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="tdd"} is a good place to start for more information.
+The [Wikipedia]({{site.baseurl}}/references/#wikipedia) article on [TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="tdd"} is a good place to start for more information.
 
 ## Token
 

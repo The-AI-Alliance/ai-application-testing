@@ -35,6 +35,7 @@ The content is organized into the following sections:
 * [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems) - An explanation of the problems in detail.
 * [Testing Strategies]({{site.baseurl}}/testing-strategies/testing-strategies) - How to do effective testing of Generative AI Applications, despite the nondeterminancy.
 * [Glossary of Terms]({{site.baseurl}}/glossary) - Definitions of terms.
+* [References]({{site.baseurl}}/references) - Useful sources of additional information, some of which motivated the ideas here.
 
 Additional links:
 

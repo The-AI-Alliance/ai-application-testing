@@ -18,4 +18,4 @@ TODOs:
 
 1. Examples, perhaps inspired by classifiers.
 2. Use of standard deviations, ...
-3. See [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"}.
+3. See [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} a paper by [Evan Miller]({{site.baseurl}}/references/#evan-miller).

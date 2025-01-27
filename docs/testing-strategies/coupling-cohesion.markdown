@@ -30,11 +30,11 @@ The generative AI equivalent of their approach might be to include in the prompt
 
 A hallmark of good software design is clear and unambiguous abstractions with API interfaces between modules that try to eliminate potential misunderstands and guide the user to do the correct things. Exchanging free form text between users and tools is the _worst possible interface_, from this perspective.
 
-Tools like [`pydantic-ai`](https://github.com/pydantic/pydantic-ai/), part of the [`pydantic`](https://ai.pydantic.dev) tools, is an agent framework (one of many...), which is appealing because of its use of type checking for values exchanged between tools, among other benefits.
+Tools like [`pydantic-ai`](https://github.com/pydantic/pydantic-ai/){:target="pydantic-ai"}, part of the [`pydantic`](https://ai.pydantic.dev){:target="pydantic"} tools, is an agent framework (one of many...), which is appealing because of its use of type checking for values exchanged between tools, among other benefits.
 
 ### Abstractions Encapsulate Complexities
 
-[Micheal Feathers](https://michaelfeathers.silvrback.com) gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ) at Codecamp Romania, 2024.  
+[Michael Feathers]({{site.baseurl}}/references/#michael-feathers) gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024.  
 
 Near the end, he discussed how the software industry has a history of introducing new levels of abstractions when complexity becomes a problem. For example, high-level programming languages removed most of the challenges of writing lower-level assembly code.
 
