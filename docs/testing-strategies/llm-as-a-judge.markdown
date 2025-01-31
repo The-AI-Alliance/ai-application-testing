@@ -12,7 +12,20 @@ In _LLM as a Judge_, a separate model, one that is very smart and also usually e
 
 The judge model can also be used to decide whether or not the application model's response to a particular question is sufficiently close to the expected answer.
 
-Issues you have to manage:
+## An Example
+
+Popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} include [`unitxt`](https://www.unitxt.ai){:target="unitxt"} and [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"}.
+
+An example of using an LLM as a judge can be found in the [IBM Granite Community](https://github.com/ibm-granite-community){:target="igc"}, in the [Granite &ldquo;Snack&ldquo; Cookbook](https://github.com/ibm-granite-community/granite-snack-cookbook){:target="igc-snack"} repo, under the [`recipes/Evaluation`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation){:target="igc-snack-eval"} folder. The _recipes_ in this folder use `unitxt`. They only require running [Jupyter](https://jupyter.org/){:target="jupyter"} locally, because all inference is done remotely by the community's back-end services:
+
+* [`Unitxt_Granite_as_Judge.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Granite_as_Judge.ipynb){:target="igc-snack-eval3"}
+
+In addition, these notebooks demonstrate other aspects of using `unitxt`:
+
+* [`Unitxt_Quick_Start.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Quick_Start.ipynb){:target="igc-snack-eval1"} - A quick introduction to `unitxt`.
+* [`Unitxt_Demo_Strategies.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Demo_Strategies.ipynb){:target="igc-snack-eval2"} - Various ways to use `unitxt`.
+
+# Issues You Have to Consider
 
 1. How do you validate that the judge model is producing good Q&A pairs and accurately evaluating the student model's results? This will require some human inspection of the Q&A pairs and possibly some test results, until some confidence is established. [Statistical techniques]({{site.baseurl}}/testing-strategies/statistical-tests) may also be useful. 
 2. If the judge model is expensive or slow, how do you use it economically?
