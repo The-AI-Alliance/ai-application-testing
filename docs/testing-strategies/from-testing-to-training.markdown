@@ -1,7 +1,7 @@
 ---
 layout: default
 title: From Testing to Training
-nav_order: 260
+nav_order: 270
 parent: Testing Strategies and Techniques
 has_children: false
 ---
