@@ -1,7 +1,7 @@
 ---
 layout: default
 title: LLM as a Judge
-nav_order: 240
+nav_order: 250
 parent: Testing Strategies and Techniques
 has_children: false
 ---
