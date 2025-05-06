@@ -17,7 +17,7 @@ If you have any questions or concerns about this initiative, please contact us a
 
 * [More About the AI Alliance](https://thealliance.ai/about-aia){:target="ai-alliance"}
 * [Contact Us](mailto:contact@thealliance.ai) (email)
-* Follow us on [LinkedIn](https://www.linkedin.com/company/the-aialliance/){:target="linkedin"}
+* Follow us on [LinkedIn](https://www.linkedin.com/company/the-aialliance/){:target="linkedin"} and [Bluesky](https://bsky.app/profile/aialliance.bsky.social)
 
 ## About This Documentation
 
