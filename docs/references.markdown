@@ -25,6 +25,14 @@ References for more details on testing, especially in the AI context. Note that 
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [Alignment]({{site.baseurl}}/glossary/#alignment).
 
+## CVS Health
+
+[CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
+
+Among the useful tools in this repo are:
+* A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for synthetic data generation.
+* Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
+
 ## Dean Wampler
 
 In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler]({{site.baseurl}}/contributing/#contributors) summarizes the work of this project. After posting the link to the slides, he and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix. 
@@ -40,6 +48,12 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 ## James Thomas
 
 [James Thomas](https://bsky.app/profile/hiccupps.bsky.social){:target="jt"} is a QA engineer who [posted](https://bsky.app/profile/hiccupps.bsky.social/post/3lgms2z6zuk25){:target="bsky-jt"} a link to a blog post [How do I Test AI?](https://qahiccupps.blogspot.com/2025/01/how-do-i-test-ai.html){:target="blog-jt"} that lists criteria to consider when testing AI-enabled systems. While the post doesn't provide a lot of details behind the list items, the list is excellent for stimulating further investigation.
+
+## John Snow Labs and Pacific.ai
+
+John Snow Labs has created [langtest](https://langtest.org/){:target="_blank"}, a test generation and execution framework with &ldquo;60+ test types for comparing LLM & NLP models on accuracy, bias, fairness, robustness & more.&rdquo;
+
+The affiliated company [Pacific.ai](https://pacific.ai/) offers a commercial [testing system](https://pacific.ai/testing/){:target="_blank"} with similar features.
 
 ## Merriam-Webster Dictionary
 
