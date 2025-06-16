@@ -7,9 +7,6 @@ has_children: false
 
 # AI Application Testing for Developers
 
-| **Authors**     | [FA3: Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-wg"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
-| **Last Update**  | V0.0.6, 2025-06-03 |
-
 > **Tips:**
 >
 > 1. Use the search box at the top of this page to find specific content.
@@ -44,14 +41,5 @@ Additional links:
 * [The AI Alliance](https://thealliance.ai){:target="ai-alliance"}: The AI Alliance website.
 * [Project GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"}
 
-### Version History
-
-| Version  | Date       |
-| :------- | :--------- |
-| V0.0.6   | 2025-06-03 |
-| V0.0.5   | 2025-04-24 |
-| V0.0.4   | 2025-01-26 |
-| V0.0.3   | 2024-12-06 |
-| V0.0.2   | 2024-11-15 |
-| V0.0.1   | 2024-10-25 |
-
+| **Authors**     | [FA3: Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-wg"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
+| **Last Update**  | V0.0.6, 2025-06-03 |
