@@ -35,7 +35,7 @@ Among the useful tools in this repo are:
 
 ## Dean Wampler
 
-In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler]({{site.baseurl}}/contributing/#contributors) summarizes the work of this project. After posting the link to the slides, he and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix. 
+In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler]({{site.baseurl}}/contributing/#contributors) summarizes the work of this project. After posting the link to the slides, he and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix.
 
 ## EleutherAI
 
@@ -43,11 +43,15 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## Evan Miller
 
-[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/). 
+[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
 ## James Thomas
 
 [James Thomas](https://bsky.app/profile/hiccupps.bsky.social){:target="jt"} is a QA engineer who [posted](https://bsky.app/profile/hiccupps.bsky.social/post/3lgms2z6zuk25){:target="bsky-jt"} a link to a blog post [How do I Test AI?](https://qahiccupps.blogspot.com/2025/01/how-do-i-test-ai.html){:target="blog-jt"} that lists criteria to consider when testing AI-enabled systems. While the post doesn't provide a lot of details behind the list items, the list is excellent for stimulating further investigation.
+
+## Jiayi Yuan, et al.
+
+_Give Me FP32 or Give Me Death? Challenges and Solutions for Reproducible Reasoning_ [paper](https://arxiv.org/abs/2506.09501){:target="_blank"} examines the influence of floating point precision on the reproducibility of inference results, even when randomness is restricted, such as using a low "temperature". Of course, the theme of our project is dealing with the inherent randomness of inference, but there are also times when limiting that randomness is important.
 
 ## John Snow Labs and Pacific.ai
 
@@ -61,7 +65,7 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 ## Michael Feathers
 
-[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/testing-strategies/coupling-cohesion/#abstractions-encapsulate-complexities).  
+[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/testing-strategies/coupling-cohesion/#abstractions-encapsulate-complexities).
 
 ## MLCommons Glossary
 
@@ -77,7 +81,7 @@ The U.S. National Institute of Science and Technology's ([NIST](https://www.nist
 
 ## OpenAI
 
-An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Training]({{site.baseurl}}/testing-strategies/from-testing-to-training/). 
+An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Training]({{site.baseurl}}/testing-strategies/from-testing-to-training/).
 
 ## Wikipedia
 

@@ -30,7 +30,7 @@ A test that verifies a user-visible feature works are required, often by driving
 
 ## Agent
 
-An old concept in AI, but seeing a renaissance currently as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of model and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming models can do everything successfully.
+An old concept in AI, but now experiencing a renaissance as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of [_Generative AI Model_](#generative-ai-model) and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming that models can do everything successfully themselves. Agent-based applications sometimes use multiple models, one per agent, where each one provides some specific capabilities. For example, one model might be process user prompts into backend API invocations, including to other models, and interpret the results into user-friendly responses.
 
 ## AI Actor
 
@@ -60,7 +60,7 @@ An ill-defined, but often-used term in software. In this case, we use it to gene
 
 ## Dataset
 
-(See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc. 
+(See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc.
 
 ## Determinism
 
@@ -132,9 +132,9 @@ Abbreviated _LLM_, a state of the art [Generative AI Model](#generative-ai-model
 
 ## Object-Oriented Programming
 
-OOP (or OOSD - object-oriented software development) is a design methodology that creates software components with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates state and behavior behind its abstraction. 
+OOP (or OOSD - object-oriented software development) is a design methodology that creates software components with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates state and behavior behind its abstraction.
 
-Introduced in the Simula langauge in the 1960s, it gained widespread interest in the 1980s with the emergence of graphical user interfaces (GUIs), where objects like _Window_, _Buttons_, and _Menus_ were an intuitive way to organize such software. 
+Introduced in the Simula langauge in the 1960s, it gained widespread interest in the 1980s with the emergence of graphical user interfaces (GUIs), where objects like _Window_, _Buttons_, and _Menus_ were an intuitive way to organize such software.
 
 Contrast with [Functional Programming](#functional-programming). Many programming langauges combine elements of FP and OOP.
 
