@@ -41,5 +41,5 @@ Additional links:
 * [The AI Alliance](https://thealliance.ai){:target="ai-alliance"}: The AI Alliance website.
 * [Project GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"}
 
-| **Authors**     | [FA3: Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-wg"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
+| **Authors**     | [The AI Alliance Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
 | **Last Update**  | V0.0.6, 2025-06-03 |
