@@ -83,6 +83,10 @@ The U.S. National Institute of Science and Technology's ([NIST](https://www.nist
 
 An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Training]({{site.baseurl}}/testing-strategies/from-testing-to-training/).
 
+## Patronus
+
+The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
+
 ## Wikipedia
 
 Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.baseurl}}/glossary) and other places.
