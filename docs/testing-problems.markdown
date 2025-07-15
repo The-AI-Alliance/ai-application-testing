@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing Problems
-nav_order: 20
+nav_order: 10
 has_children: false
 ---
 
@@ -31,7 +31,7 @@ Generative AI models are famously nondeterministic. The same query to a model, f
 
 This nondeterminism isn't _peripheral_ either; we introduce generative AI, because we need it to be a central component of fundamentally new applications we are writing, which provide capabilities that were previously impossible.
 
-It is not possible or even desirable to remove all nondeterminism from generative AI applications. However, enabling developers to write tests that are repeatable and automatable, and deterministic when feasible, is still essential. The rest of this documentation explores techniques developers can use.
+It is not possible or even desirable to remove all nondeterminism from generative AI applications. However, enabling developers to write tests that are repeatable and automatable, and deterministic when feasible, is still essential. The rest of this website explores techniques developers can use.
 
 [^1]: [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the nondeterminisms are a crucial factor to be tested.
 

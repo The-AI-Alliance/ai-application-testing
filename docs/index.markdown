@@ -5,29 +5,37 @@ nav_order: 10
 has_children: false
 ---
 
-# AI Application Testing for Developers
+# Achieving Confidence in Enterprise AI Applications
+
+## How to Test AI Applications, for Enterprise Developers
+
+_If you are an enterprise developer, you know how to test your traditional software applications, but you may not know how to test your AI-powered applications, which are uniquely **nondeterministic**. This project is building the knowledge and tools you need to achieve the same confidence for your AI applications that you have for your traditional applications._
+
+Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI (&ldquo;GenAI&rdquo;) Applications**.
 
 > **Tips:**
 >
 > 1. Use the search box at the top of this page to find specific content.
-> 2. Capitalized, italicized terms link to a [glossary of terms]({{site.baseurl}}/glossary).
+> 2. Capitalized terms link to a [glossary of terms]({{site.baseurl}}/glossary).
 
-Welcome to the **The AI Alliance** project to advance the state of the art for **Developer Testing for Generative AI (&ldquo;GenAI&rdquo;) Applications**.
+We enterprise software developers know how to write [Repeatable]({{site.baseurl}}/glossary/#repeatable) and [Automatable]({{site.baseurl}}/glossary/#automatable) tests. In particular, we rely on [Deterministism]({{site.baseurl}}/glossary/#determinism) when we write [Unit]({{site.baseurl}}/glossary/#unit-test), [Integration]({{site.baseurl}}/glossary/#integration-test), and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests to verify expected behavior and to ensure that no [Regressions]({{site.baseurl}}/glossary/#regression) occur as our code base evolves. These are core skills in our profession. They give us essential _**confidence**_ that are applications meet our requirements and implement the use cases our customers expect.
 
-Using nondeterministic, [Genenerative AI Models]({{site.baseurl}}/glossary/#genenerative-ai-model) in an application makes it difficult to write [Deterministic]({{site.baseurl}}/glossary/#determinism), [Repeatable]({{site.baseurl}}/glossary/#repeatable), and [Automatable]({{site.baseurl}}/glossary/#automatable) tests. This is a serious concern for application developers, who are accustomed to and rely on determinism when they write [Unit]({{site.baseurl}}/glossary/#unit-test), [Integration]({{site.baseurl}}/glossary/#integration-test), and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests to verify expected behavior and ensure that no [Regressions]({{site.baseurl}}/glossary/#regression) occur as the application code base evolves.
+Problems arise when we introduce [Genenerative AI Models]({{site.baseurl}}/glossary/#genenerative-ai-model), which are inherently _nondeterministic_,  into our applications. Can we write the same kinds of tests now? If not, what alternative approaches should we use instead?
 
-What can be done about this problem?
+In contrast, AI model builders and data scientists use different tools to build their _confidence_ in how their models perform. Specifically, [Probability and Statistics]({{site.baseurl}}/glossary/#probability-and-statistics), tools that were developed long before Generative AI came along, are used to understand the probabilities of possible outcomes, analyze the actual behaviors, and to quantity their confidence in these models. 
+
+_**We have to bridge this divide.**_ As developers, we need to be able to adapt these data science tools to meet our needs. We will need to learn some probability and statistics concepts, but we shouldn't need to become experts. Similarly, our model builder and data science colleagues need to better understand our needs, in order for us to take their work and deliver reliable, trustworthy products that use AI and use it confidently.
 
 ## Project Goals
 
 The goals of this project are two fold:
 
-1. Research strategies and techniques for testing Generative AI applications that eliminate nondeterminism, where feasible, and enable effective [Repeatable]({{site.baseurl}}/glossary/#repeatable) and [Automatable]({{site.baseurl}}/glossary/#automatable) testing, where not feasible.
-2. Publish guidance for developers on these strategies and techniques here and possibly other venues, like blogs and research papers.
+1. Develop and document strategies and techniques for testing Generative AI applications that eliminate nondeterminism, where feasible, and where not feasible, still allow us to write effective, repeatable and automatable tests.
+2. Publish detailed, reusable examples and guidance for developers and AI experts on these strategies and techniques.
 
-> **NOTE:** This is very much a work in progress. This site will be updated frequently to reflect our current thinking, research, and emerging recommendations.
+> **NOTE:** This is very much a work in progress. This site will be updated frequently to reflect our current thinking, emerging recommendations, and reusable assets. Your [contributions]({{site.baseurl}}/contributing) are most welcome!
 
-The content is organized into the following sections:
+The website is organized into the following sections:
 
 * [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems) - An explanation of the problems in detail.
 * [Testing Strategies]({{site.baseurl}}/testing-strategies/testing-strategies) - How to do effective testing of Generative AI Applications, despite the nondeterminancy.
@@ -39,7 +47,7 @@ Additional links:
 * [Contributing]({{site.baseurl}}/contributing): We welcome your contributions! Here's how you can contribute.
 * [About Us]({{site.baseurl}}/about): More about the AI Alliance and this project.
 * [The AI Alliance](https://thealliance.ai){:target="ai-alliance"}: The AI Alliance website.
-* [Project GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"}
+* This project's [GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"}
 
-| **Authors**     | [The AI Alliance Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
-| **Last Update**  | V0.0.6, 2025-06-03 |
+| **Authors**     | The AI Alliance [Trust and Safety](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} and [Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-apps"} work groups. (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
+| **Last Update**  | V0.1.0, 2025-07-16 |

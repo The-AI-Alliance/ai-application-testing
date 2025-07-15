@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Glossary of Terms
-nav_order: 80
+nav_order: 70
 has_children: false
 ---
 
@@ -30,7 +30,7 @@ A test that verifies a user-visible feature works are required, often by driving
 
 ## Agent
 
-An old concept in AI, but now experiencing a renaissance as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of [_Generative AI Model_](#generative-ai-model) and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming that models can do everything successfully themselves. Agent-based applications sometimes use multiple models, one per agent, where each one provides some specific capabilities. For example, one model might be process user prompts into backend API invocations, including to other models, and interpret the results into user-friendly responses.
+An old concept in AI, but now experiencing a renaissance as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of [Generative AI Model](#generative-ai-model) and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming that models can do everything successfully themselves. Agent-based applications sometimes use multiple models, one per agent, where each one provides some specific capabilities. For example, one model might be process user prompts into backend API invocations, including to other models, and interpret the results into user-friendly responses.
 
 ## AI Actor
 
@@ -130,6 +130,10 @@ A test for several [Functions](#function) that verifies they interoperate proper
 
 Abbreviated _LLM_, a state of the art [Generative AI Model](#generative-ai-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
 
+## Model Context Protocol
+
+A de-facto standard for communications between models, agents, and other tools. See [modelcontextprotocol.io](https://modelcontextprotocol.io/introduction){:target="_blank"} for more information.
+
 ## Object-Oriented Programming
 
 OOP (or OOSD - object-oriented software development) is a design methodology that creates software components with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates state and behavior behind its abstraction.
@@ -145,6 +149,12 @@ Contrast with [Functional Programming](#functional-programming). Many programmin
 ## Paradigm
 
 From the [Merriam-Webster Dictionary]({{site.baseurl}}/references/#merriam-webster-dictionary) definition of [paradigm](https://www.merriam-webster.com/dictionary/paradigm){:target="dict"}: &ldquo;a philosophical and theoretical framework of a scientific school or discipline within which theories, laws, and generalizations and the experiments performed in support of them are formulated.&rdquo;
+
+## Probability and Statistics
+
+Two interrelated branches of mathematics, where statistics concerns such tasks as collecting, analyzing, and interpreting data, while probability concerns events, in particular the percentage likelihood that certain values will be measured when events occur. 
+
+Both disciplines emerged together to solve practical problems in science, industry, sociology, etc. It is common for researchers to build a _model_ of the system being studied, in part to compare actual results with model predictions, confirming or rejecting the underlying theories about the system upon which the model was built. Also, if the model is accurate, it provides predictive capabilities for possible and likely future events.
 
 ## Refactoring
 
@@ -191,6 +201,18 @@ The [Wikipedia]({{site.baseurl}}/references/#wikipedia) article on [TDD](https:/
 ## Token
 
 For language [Generative AI Models](#generative-ai-model), the training texts and query prompts are split into tokens, usually whole words or fractions according to a vocabulary of tens of thousands of tokens that can include common single characters, several characters, and &ldquo;control&rdquo; tokens (like &ldquo;end of input&rdquo;). The rule of thumb is a corpus will have roughly 1.5 times the number of tokens as it will have words.
+
+## Training
+
+In our context, training is the processes used to teach a model, such as a [Generative AI Models](#generative-ai-model) how to do its intended job. 
+
+In the generative AI case, we often speak of _pretraining_, the training process that uses a massive data corpus to teach the model facts about the world, how to speak and understand human language, and do some skills. However, the resulting model often does poorly on specialized tasks and even basic skills like following a user's instructions, conforming to social norms (e.g., avoiding hate speech), etc. 
+
+That's where a second [Tuning](#tuning) phase comes in, a suite of processes used to improve the models performance on many general or specific skills.
+
+## Tuning
+
+Tuning refers to one or more processes used to transform a [Pretrained](#training) model into one that exhibits much better desired behaviors (like instruction following) or specialized domain knowledge.
 
 ## Unit Test
 

@@ -19,14 +19,15 @@ If you have any questions or concerns about this initiative, please contact us a
 * [Contact Us](mailto:contact@thealliance.ai) (email)
 * Follow us on [LinkedIn](https://www.linkedin.com/company/the-aialliance/){:target="linkedin"} and [Bluesky](https://bsky.app/profile/aialliance.bsky.social)
 
-## About This Documentation
+## About This Website
 
-This documentation is built with [GitHub Pages](https://pages.github.com/){:target="github-pages"}, which uses [Jekyll](https://github.com/jekyll/jekyll){:target="gh-jekyll"} to serve the website. We use the [Just the Docs](https://just-the-docs.github.io/just-the-docs/){:target="just-the-docs"} Jekyll theme.
+This website is built with [GitHub Pages](https://pages.github.com/){:target="github-pages"}, which uses [Jekyll](https://github.com/jekyll/jekyll){:target="gh-jekyll"} to serve the website. We use the [Just the Docs](https://just-the-docs.github.io/just-the-docs/){:target="just-the-docs"} Jekyll theme.
 
 ### Version History
 
 | Version  | Date       |
 | :------- | :--------- |
+| V0.1.0   | 2025-07-16 |
 | V0.0.6   | 2025-06-03 |
 | V0.0.5   | 2025-04-24 |
 | V0.0.4   | 2025-01-26 |

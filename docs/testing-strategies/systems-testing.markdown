@@ -1,40 +1,23 @@
 ---
 layout: default
-title: External Tool Verification
-nav_order: 220
+title: Lessons from Systems Testing
+nav_order: 230
 parent: Testing Strategies and Techniques
 has_children: false
 ---
 
-# External Tool Verification
+# Lessons from Systems Testing
 
-Some outputs can be verified through external tools. Here are some examples.
+Quality assurance professionals have long dealt with the challenges of testing whole systems, where determinism and isolation are not always possible, reflecting the real world conditions that systems face. What lessons can we learn from this expertise?
 
-## Code Generation
+For example, most real, &ldquo;enterprise-grade&rdquo; applications today are distributed systems where various services are invoked asynchronously, sometimes across different cloud environments, and the application has to orchestrate the invocations and processing of responses. Any distributed system is inherently nondeterministic, because concurrent activities in real-world systems won't have deterministic response times, etc. As one example, network congestion between distributed services means that responses won't arrive in a predictable order. 
 
-Generated code can be checked with several tools for quality and validity. For example:
+Fortunately, these kinds of nondeterminism are bounded and well understood. Standard techniques for handling them are mature and standard practice for experienced teams.
 
-* Use a parser or compiler to verify the syntax is valid
-* Scan for security vulnerabilities
-* Check for excessive [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="cyclomatic-complexity"}
-* Check it uses only allowed third-party libraries.
-* If tests already exist for the generated code (see [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development)), does the generated code allow the tests to pass?
-
-## Planning
-
-Applications that use models to generate plans, like delivery routes and assembly line processes, can be checked against digital simulations of these scenarios.
-
-## Logic or Mathematics
-
-Various deterministic tools exist to verify logical arguments, mathematical statements and proofs.
-
-## Science
-
-Models are now being used to model protein structure and generate new, candidate molecules for various purposes. The results can be compared to experimental data and physical models. Candidate molecules can be synthesized to verify the have the desired properties.
+Testing these real world systems, ...
 
 
 TODOs:
 
-1. More high-level examples
-2. Details for some of them.
+1. Cite examples of systems testing concepts and techniques.
 
