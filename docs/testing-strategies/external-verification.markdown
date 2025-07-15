@@ -40,5 +40,5 @@ For example, protein structure models can generate new, candidate molecules for 
 
 TODOs:
 
-1. Add more high-level examples.
-2. Expand the details for some of them.
+1. Add more examples where tools can be used.
+1. Expand the details for some of them.

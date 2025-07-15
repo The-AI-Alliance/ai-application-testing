@@ -7,6 +7,10 @@ has_children: true
 
 # Testing Strategies and Techniques
 
-This section explores strategies and techniques you can use to achieve reliable, repeatable tests that are suitable for automation, whether or not you use [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) or other ways of creating your tests. We start with a reminder of general principles that have always applied.
+This section explores strategies and techniques that can be used to create reliable, repeatable tests for generative AI applications. 
 
-> **NOTE:** Using a [Generative AI Model](#generative-ai-model) can mean it is managed by the application itself, behind APIs or _Agents_, or it is used through direct calls to a separate service, like ChatGPT. When discussing models as components, we will often just use _model_ as a shorthand for both cases.
+We start with a reminder of general principles that have always applied, like _divide and conquer_ design approaches, then explore what new techniques developers can learn from their data scientist and model building peers.
+
+Each page has a list of ideas we are exploring as _TODO_ items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}.
+
+> **NOTE:** Using a [Generative AI Model]({{site.baseurl}}/glossary/#generative-ai-model) can mean it is managed by the application itself, behind APIs or [Agents]({{site.baseurl}}/glossary/#agent), or it is used through direct calls to a separate service, like ChatGPT. When discussing models as components, we will often just use _model_ as a shorthand for all these cases.
