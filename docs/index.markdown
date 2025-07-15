@@ -22,13 +22,13 @@ We enterprise software developers know how to write [Repeatable]({{site.baseurl}
 
 Problems arise when we introduce [Genenerative AI Models]({{site.baseurl}}/glossary/#genenerative-ai-model), which are inherently _nondeterministic_,  into our applications. Can we write the same kinds of tests now? If not, what alternative approaches should we use instead?
 
-In contrast, AI model builders and data scientists use different tools to build their _confidence_ in how their models perform. Specifically, [Probability and Statistics]({{site.baseurl}}/glossary/#probability-and-statistics), tools that were developed long before Generative AI came along, are used to understand the probabilities of possible outcomes, analyze the actual behaviors, and to quantity their confidence in these models. 
+In contrast, AI experts (model builders and data scientists) use different tools to build their _confidence_ in how their models perform. Specifically, [Probability and Statistics]({{site.baseurl}}/glossary/#probability-and-statistics), tools that were developed long before Generative AI came along, are used to understand the probabilities of possible outcomes, analyze the actual behaviors, and to quantity their confidence in these models. 
 
-![Developer to Data Scientist Spectrum]({{site.baseurl}}/assets/images/developer-to-data-scientist-spectrum.png "Developer to Data Scientist Spectrum")
+![Developer to AI Expert Spectrum]({{site.baseurl}}/assets/images/developer-to-AI-expert-spectrum.png "Developer to AI Expert Spectrum")
 
 **Figure 1:** The spectrum between deterministic and probabilitistic behavior.
 
-_**We have to bridge this divide.**_ As developers, we need to be able to adapt these data science tools to meet our needs. We will need to learn some probability and statistics concepts, but we shouldn't need to become experts. Similarly, our model builder and data science colleagues need to better understand our needs, in order for us to take their work and deliver reliable, trustworthy products that use AI and use it confidently.
+_**We have to bridge this divide.**_ As developers, we need to be able to adapt these data science tools to meet our needs. We will need to learn some probability and statistics concepts, but we shouldn't need to become experts. Similarly, our AI expert colleagues need to better understand our needs, in order for us to take their work and deliver reliable, trustworthy products that use AI and use it confidently.
 
 ## Project Goals
 
