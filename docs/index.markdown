@@ -7,6 +7,8 @@ has_children: false
 
 # Achieving Confidence in Enterprise AI Applications
 
+(Previous Title: _AI Application Testing for Developers_)
+
 ## How to Test AI Applications, for Enterprise Developers
 
 _If you are an enterprise developer, you know how to test your traditional software applications, but you may not know how to test your AI-powered applications, which are uniquely **nondeterministic**. This project is building the knowledge and tools you need to achieve the same confidence for your AI applications that you have for your traditional applications._
