@@ -54,8 +54,9 @@ Additional links:
 
 * [Contributing]({{site.baseurl}}/contributing): We welcome your contributions! Here's how you can contribute.
 * [About Us]({{site.baseurl}}/about): More about the AI Alliance and this project.
-* [The AI Alliance](https://thealliance.ai){:target="ai-alliance"}: The AI Alliance website.
 * This project's [GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"}
+* Companion projects: <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a> and <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>
+* [The AI Alliance](https://thealliance.ai){:target="ai-alliance"}: The AI Alliance website.
 
 | **Authors**     | The AI Alliance [Trust and Safety](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} and [Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-apps"} work groups. (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
 | **Last Update**  | V0.1.0, 2025-07-16 |
