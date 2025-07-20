@@ -11,6 +11,7 @@ The following people and organizations have contributed to the creation and main
 * [Dean Wampler](mailto:dwampler@thealliance.ai) - IBM
 * (More coming soon...)
 
+<a name="join-us"></a>
 # How to Contribute to this Project
 
 We welcome your contributions! Visit the Alliance [`community` repo](https://github.com/The-AI-Alliance/community/){:target="_blank"}, specifically the [`CONTRIBUTING` page](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md){:target="_blank"} for general information about contributing. 
@@ -27,7 +28,8 @@ Are you interested in joining this project's work group? Use the form on the All
 
 Check these boxes on the form:
 
-- [ ] AI Trust and Safety WG (left-hand side)
+- [ ] AI Trust and Safety WG (left-hand side) and/or,
+- [ ] Applications and Tools WG (left-hand side)
 - [ ] Evaluations (performance, quality, trust, safety,...) (right-hand side)
 
 In the &ldquo;Message&rdquo; box mention this project, **Achieving Confidence in Enterprise AI Applications**, and add anything else you would like us to know.

@@ -20,6 +20,8 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 > 1. Use the search box at the top of this page to find specific content.
 > 2. Capitalized terms link to a [glossary of terms]({{site.baseurl}}/glossary).
 
+## The Challenge We Face
+
 We enterprise software developers know how to write [Repeatable]({{site.baseurl}}/glossary/#repeatable) and [Automatable]({{site.baseurl}}/glossary/#automatable) tests. In particular, we rely on [Deterministism]({{site.baseurl}}/glossary/#determinism) when we write [Unit]({{site.baseurl}}/glossary/#unit-test), [Integration]({{site.baseurl}}/glossary/#integration-test), and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests to verify expected behavior and to ensure that no [Regressions]({{site.baseurl}}/glossary/#regression) occur as our code base evolves. These are core skills in our profession. They give us essential _**confidence**_ that are applications meet our requirements and implement the use cases our customers expect.
 
 Problems arise when we introduce [Genenerative AI Models]({{site.baseurl}}/glossary/#genenerative-ai-model), which are inherently _nondeterministic_,  into our applications. Can we write the same kinds of tests now? If not, what alternative approaches should we use instead?
