@@ -8,13 +8,13 @@ has_children: false
 
 # The Venerable Principles of Coupling and Cohesion
 
-Real applications, AI-enabled or not, combine many subsystems, usually including web pages for the user experience (UX), database and/or streaming systems for data retrieval and management, various libraries and modules, and calls to external services. Each of these [Components]({{site.baseurl}}/glossary/#component) can be tested in isolation and most are deterministic or can be made to behave in a deterministic way for testing. Good software design is a _divide and conquer_ strategy. 
+Real applications, AI-enabled or not, combine many subsystems, usually including web pages for the user experience (UX), database and/or streaming systems for data retrieval and management, various libraries and modules, and calls to external services. Each of these [_components_]({{site.glossaryurl}}/#component) can be tested in isolation and most are deterministic or can be made to behave in a deterministic way for testing. Good software design is a _divide and conquer_ strategy. 
 
-An AI application adds one or more [Generative AI Models]({{site.baseurl}}/glossary/#generative-ai-model) invoked through libraries, web services, or [Agents]({{site.baseurl}}/glossary/#agent), increasingly using [Model Context Protocol]({{site.baseurl}}/glossary/#model-context-protocol). 
+An AI application adds one or more [_generative AI models_]({{site.glossaryurl}}/#generative-ai-model) invoked through libraries, web services, or [_agents_]({{site.glossaryurl}}/#agent), increasingly using [_model context protocol_]({{site.glossaryurl}}/#model-context-protocol) (MCP). 
 
 > _Everything that isn't model output should be made as deterministic as possible and tested using the traditional, deterministic techniques._ 
 
-Invocations of the model should be hidden behind an API abstraction that can be replaced at test time with a [Test Double]({{site.baseurl}}/glossary/#test-double). Even for some integration and acceptance tests, use a model test double for tests that _aren't_ exercising the behavior of the model itself.
+Invocations of the model should be hidden behind an API abstraction that can be replaced at test time with a [_test double_]({{site.glossaryurl}}/#test-double). Even for some integration and acceptance tests, use a model test double for tests that _aren't_ exercising the behavior of the model itself.
 
 ## Possible &ldquo;Tactics&rdquo;
 
@@ -22,11 +22,11 @@ Let's consider ways our encapsulation APIs can be most effective in the context 
 
 ### Test Doubles at Netflix
 
-Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix wrote model [Test Doubles]({{site.baseurl}}/glossary/#test-double) that would &ldquo;... dynamically create similar input content for tests classified along the axes that mattered for the algorithm.&rdquo; In other words, while traditional test doubles usually hard-code deterministic outputs for specific inputs, make the test double for a probabilistic model generate nondeterministic outputs that are within the expected bounds of acceptability, so that tests using these test doubles can fully exercise the _unit_ under test with a full range of possible, but acceptable outputs.
+Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix wrote model [_test doubles_]({{site.glossaryurl}}/#test-double) that would &ldquo;... dynamically create similar input content for tests classified along the axes that mattered for the algorithm.&rdquo; In other words, while traditional test doubles usually hard-code deterministic outputs for specific inputs, make the test double for a probabilistic model generate nondeterministic outputs that are within the expected bounds of acceptability, so that tests using these test doubles can fully exercise the _unit_ under test with a full range of possible, but acceptable outputs.
 
 However, this also suggests that test doubles are needed that deliberately write &ldquo;unacceptable&rdquo; output. These would be used to test component error handling and _graceful degradation_ of components that ingest and process model output.
 
-Netflix also added extra hidden output that showed the workings of the algorithm, i.e., for [Explainability]({{site.baseurl}}/glossary/#explainability), when running a test configuration. Details about model weights, algorithmic details, etc. were encoded as HTML comments, visible if their developers viewed the page source. This information helped them understand why a particular list of movies were chosen, for example, in a test scenario.
+Netflix also added extra hidden output that showed the workings of the algorithm, i.e., for [_explainability_]({{site.glossaryurl}}/#explainability), when running a test configuration. Details about model weights, algorithmic details, etc. were encoded as HTML comments, visible if their developers viewed the page source. This information helped them understand why a particular list of movies were chosen, for example, in a test scenario.
 
 The generative AI equivalent of their approach might be to include in the prompt a clause that says something like, &ldquo;in a separate section explain how you came up with the answer&rdquo;. The output of that section is then hidden from end users, but recorded for monitoring and debugging purposes by the engineering team.
 
@@ -54,7 +54,7 @@ From this perspective, the nondeterministic nature of generative AI is a signifi
 
 So, we should carefully design our applications to control where non-deterministic AI behaviors occur and keep the rest of the components as deterministic as possible. Those components can be tested in the traditional ways.
 
-We still have the challenge of testing model behaviors themselves, especially for [Integration]({{site.baseurl}}/glossary/#integration-test), and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests that are intended to exercise whole systems or subsystems, including how parts of the system interact with models, both creating queries and processing results. 
+We still have the challenge of testing model behaviors themselves, especially for [_integration_]({{site.glossaryurl}}/#integration-test), and [_acceptance_]({{site.glossaryurl}}/#acceptance-test) tests that are intended to exercise whole systems or subsystems, including how parts of the system interact with models, both creating queries and processing results. 
 
 The [rest of the strategies and techniques]({{site.baseurl}}/testing-strategies/testing-strategies/) explore these concerns, starting with [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 

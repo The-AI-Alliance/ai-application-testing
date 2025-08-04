@@ -23,7 +23,7 @@ References for more details on testing, especially in the AI context. Note that 
 
 ## Alignment Forum
 
-The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [Alignment]({{site.baseurl}}/glossary/#alignment).
+The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [_alignment_]({{site.glossaryurl}}/#alignment).
 
 ## CVS Health
 
@@ -39,7 +39,7 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## EleutherAI
 
-[EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in our [glossary definition]({{site.baseurl}}/glossary/#alignment).
+[EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in our [glossary definition]({{site.glossaryurl}}/#alignment).
 
 ## Evan Miller
 
@@ -61,7 +61,7 @@ The affiliated company [Pacific.ai](https://pacific.ai/) offers a commercial [te
 
 ## Merriam-Webster Dictionary
 
-The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [glossary]({{site.baseurl}}/glossary) for several terms.
+The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [glossary]({{site.glossaryurl}}) for several terms.
 
 ## Michael Feathers
 
@@ -69,7 +69,7 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 ## MLCommons Glossary
 
-The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [Glossary]({{site.baseurl}}/glossary).
+The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [glossary]({{site.glossaryurl}}).
 
 ## Nathan Lambert
 
@@ -77,7 +77,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## NIST Risk Management Framework
 
-The U.S. National Institute of Science and Technology's ([NIST](https://www.nist.gov/){:target="nist"}) Artificial Intelligence [Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf"} (AI RMF 1.0) is used to inform our [Glossary]({{site.baseurl}}/glossary).
+The U.S. National Institute of Science and Technology's ([NIST](https://www.nist.gov/){:target="nist"}) Artificial Intelligence [Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf"} (AI RMF 1.0) is used to inform our [glossary]({{site.glossaryurl}}).
 
 ## OpenAI
 
@@ -89,4 +89,4 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 ## Wikipedia
 
-Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.baseurl}}/glossary) and other places.
+Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [glossary]({{site.glossaryurl}}) and other places.

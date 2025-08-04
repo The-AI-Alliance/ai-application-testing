@@ -7,17 +7,17 @@ has_children: false
 
 # Testing Problems Caused by Generative AI Nondeterminism 
 
-Let's first review why [Determinism]({{site.baseurl}}/glossary/#determinism) is an important concept in software development, then discuss how use of [Generative AI Models](#generative-ai-model) makes this difficult.
+Let's first review why [_determinism_]({{site.glossaryurl}}/#determinism) is an important concept in software development, then discuss how use of [_generative AI models_](#generative-ai-model) makes this difficult.
 
 ## Why Determinism is an Important Tool for Software Development
 
-We have learned from decades of experience that creating and maintaining reliable software requires deterministic behavior, whenever possible. We'll use the term [Function]({{site.baseurl}}/glossary/#function) for any unit of execution, even distributed services we invoke. Determinism means that a function with no [Side Effects]({{site.baseurl}}/glossary/#side-effect), meaning it doesn't read or write state shared with other functions, must always return the same value for the same input, e.g, `sin(π) == -1`. You can write an automated test for this that will never fail, unless some [Regression]({{site.baseurl}}/glossary/#regression) causes it to fail. (For floating point results, you have to be careful about roundoff errors, of course.)
+We have learned from decades of experience that creating and maintaining reliable software requires deterministic behavior, whenever possible. We'll use the term [_function_]({{site.glossaryurl}}/#function) for any unit of execution, even distributed services we invoke. Determinism means that a function with no [_side effects_]({{site.glossaryurl}}/#side-effect), meaning it doesn't read or write state shared with other functions, must always return the same value for the same input, e.g, `sin(π) == -1`. You can write an automated test for this that will never fail, unless some [_regression_]({{site.glossaryurl}}/#regression) causes it to fail. (For floating point results, you have to be careful about roundoff errors, of course.)
 
 There are necessary exceptions to deterministic behavior for real-world systems. A function that has side effects, may return different values, e.g., a function to return a new UUID or a function that fetches a database record, where that record may have been changed by other services between function invocations. Distributed systems, including multi-threaded applications, also usually do not guarantee ordering of events for performance and other reasons. 
 
 Note that these forms of nondeterminism and their side effects are well understood. Their behaviors are easy to reason about and manage. They are usually _peripheral_ to the core application logic. Examples include multi-threading and cluster computing for better scalability and performance, fetching data from a database, and generating UUIDs. 
 
-In our automated tests, it is straightforward to test the deterministic application core logic by hiding the non-deterministic behaviors behind APIs and replacing them at test time with deterministic and repeatable [Test Doubles]({{site.baseurl}}/glossary/#test-double). Examples include techniques to replace multi-threading with single-threaded execution, using a &ldquo;fake&rdquo; database query API that returns pre-defined results, and a fake UUID generator that always returns a particular value. These techniques ensure that the module being tested behaves deterministically during the tests. [^1]
+In our automated tests, it is straightforward to test the deterministic application core logic by hiding the non-deterministic behaviors behind APIs and replacing them at test time with deterministic and repeatable [_test doubles_]({{site.glossaryurl}}/#test-double). Examples include techniques to replace multi-threading with single-threaded execution, using a &ldquo;fake&rdquo; database query API that returns pre-defined results, and a fake UUID generator that always returns a particular value. These techniques ensure that the module being tested behaves deterministically during the tests. [^1]
 
 To recap, application developers expect the following:
 
@@ -33,7 +33,7 @@ This nondeterminism isn't _peripheral_ either; we introduce generative AI, becau
 
 It is not possible or even desirable to remove all nondeterminism from generative AI applications. However, enabling developers to write tests that are repeatable and automatable, and deterministic when feasible, is still essential. The rest of this website explores techniques developers can use.
 
-[^1]: [Integration]({{site.baseurl}}/glossary/#integration-test) and [Acceptance]({{site.baseurl}}/glossary/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the nondeterminisms are a crucial factor to be tested.
+[^1]: [_Integration_]({{site.glossaryurl}}/#integration-test) and [_acceptance_]({{site.glossaryurl}}/#acceptance-test) tests also remove nondeterminisms, except where they focus on the real-world behavior in larger contexts, where the nondeterminisms are a crucial factor to be tested.
 
 ### Is This Really a New Problem?
 
@@ -43,7 +43,7 @@ The specific tools and practices he mentioned are discussed in the corresponding
 
 ## Notes about Software Design for Generative AI Applications
 
-The creators of [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) (TDD) made clear that it is really a _design_ discipline as much as a _testing_ discipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
+The creators of [_test-driven development_]({{site.glossaryurl}}/#test-driven-development) (TDD) made clear that it is really a _design_ discipline as much as a _testing_ discipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
 
 During this process, the software design decisions you make reflect many perspectives, intuitions, and idioms, all built on years of experience. 
 
@@ -63,7 +63,7 @@ Traditional software has well defined interfaces (e.g., APIs) that limit how use
 
 Generative AI Models are effectively _completely open ended_; you can input almost any text you want (often limited only by the length of the query) and you can get almost any response possible in return! From a robust software design perspective, _this is truly a bad idea_, but models have compensating virtues. When they work well, they do a good job interpreting ambiguous human speech, especially from a non-expert, and creating results that accomplish the user's goals. They are very good at generating lots of detailed content in response to relatively little input, especially image generation models.
 
-A vision for [Agent]({{site.baseurl}}/glossary/#agent)-based (or _agentic_) AI is that models can determine for themselves what external services to invoke and how to invoke them, such as determining the weather forecast requested in a query. This also suggests that models have the potential of offering greater integration resiliency compared to conventional software. For example, if a breaking API change occurs in an external service, an _agentic_ system may be able to determine automatically how the behavior changed and how to compensate for it, freeing the developer of this tedium.
+A vision for [_agent_]({{site.glossaryurl}}/#agent)-based (or _agentic_) AI is that models can determine for themselves what external services to invoke and how to invoke them, such as determining the weather forecast requested in a query. This also suggests that models have the potential of offering greater integration resiliency compared to conventional software. For example, if a breaking API change occurs in an external service, an _agentic_ system may be able to determine automatically how the behavior changed and how to compensate for it, freeing the developer of this tedium.
 
 ### Useful Techniques
 

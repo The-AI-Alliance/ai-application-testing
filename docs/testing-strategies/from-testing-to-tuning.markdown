@@ -8,15 +8,15 @@ has_children: false
 
 # From Testing to Tuning
 
-Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.baseurl}}/glossary/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model behaviors, in favor of something entirely new?
+Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [_paradigm_]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model behaviors, in favor of something entirely new?
 
-Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.baseurl}}/glossary/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
+Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [_tunable_]({{site.glossaryurl}}/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
 
-[^1]: The tests are written _before_ the code when doing [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development).
+[^1]: The tests are written _before_ the code when doing [_test-driven development_]({{site.glossaryurl}}/#test-driven-development).
 
 How would this work? What is needed that we don't already have? 
 
-In a sense, this may not look all that different than the [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development) cycle, where [unit benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks) are written first for the desired behavior, but instead of writing code and running conventional tests, a tuning cycle is started that tunes the model until the benchmarks _pass_. As in normal TDD practice, all existing unit benchmarks would be executed regularly to catch behavior regressions.
+In a sense, this may not look all that different than the test-driven development cycle, where [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) are written first for the desired behavior, but instead of writing code and running conventional tests, a tuning cycle is started that tunes the model until the benchmarks _pass_. As in normal TDD practice, all existing unit benchmarks would be executed regularly to catch behavior regressions.
 
 ## Ideas to Explore
 

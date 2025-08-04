@@ -8,7 +8,7 @@ has_children: false
 
 # &ldquo;Unit Benchmarks&rdquo; - Benchmarks as Tests
 
-When testing applications with nondeterministic model output, an ad-hoc combination of [Benchmarks]({{site.baseurl}}/glossary/#benchmark) and &ldquo;playing around&rdquo; (manual testing) are typically done today.
+When testing applications with nondeterministic model output, an ad-hoc combination of [_benchmarks_]({{site.glossaryurl}}/#benchmark) and &ldquo;playing around&rdquo; (manual testing) are typically done today.
 
 Benchmarks are a popular tool for &ldquo;globally&rdquo; evaluating how well models perform categories of activities like code generation, Q&A (question and answer sessions), avoid hate speech, avoid hallucinations, etc. A typical benchmark attempts to provide a wide range of examples across the category and report a single number for the evaluation, usually scaled as a percentage of passing results between 0 and 100%). 
 

@@ -19,7 +19,7 @@ Generated code can be checked for quality and validity and, in some cases, modif
 * Scan for conformance to project code formatting conventions. This is a case where transforming the code might occur.
 * Check for excessive [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="cyclomatic-complexity"}
 * Check that it uses only allowed versions of allowed third-party libraries, e.g., those approved by the organization and versions that have no known vulnerabilities.
-* If tests already exist for the generated code (see [Test-Driven Development]({{site.baseurl}}/glossary/#test-driven-development)), verify the generated code allows the tests to pass.
+* If tests already exist for the generated code (see [_test-driven development_]({{site.glossaryurl}}/#test-driven-development)), verify the generated code allows the tests to pass.
 
 ## Planning
 
