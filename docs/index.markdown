@@ -1,5 +1,5 @@
 ---
-layout: minimal
+layout: default
 title: Home
 nav_order: 10
 has_children: false
