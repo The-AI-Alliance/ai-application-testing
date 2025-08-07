@@ -14,7 +14,7 @@ Are there cases where the behavior is nondeterministic, but reasonable bounds ca
  
 Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix took this approach for their recommendation systems, computing _plausibility_ scores that gave them sufficient confidence in the results.
 
-More recently, a new open-source project called [Intellagent](https://github.com/plurai-ai/intellagent) from [Plurai.ai](https://plurai.ai) brings together recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify _alignment_ of the system to the requirements. (We plan to update this site with more information about Intellagent soon.)
+More recently, a new open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} from [Plurai.ai](https://plurai.ai){:target="_blank"} brings together recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify _alignment_ of the system to the requirements. (We plan to update this site with more information about Intellagent soon.)
 
 TODOs:
 

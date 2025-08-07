@@ -76,4 +76,4 @@ See the [Contributing]({{site.baseurl}}/contributing) page for information on ho
 	* [The Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} 
 
 | **Authors**     | The AI Alliance [Trust and Safety](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} and [Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-apps"} work groups. (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
-| **Last Update**  | V0.1.0, 2025-07-16 |
+| **Last Update** | {{site.last_version}}, {{site.last_modified_timestamp}} |

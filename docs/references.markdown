@@ -57,7 +57,7 @@ _Give Me FP32 or Give Me Death? Challenges and Solutions for Reproducible Reason
 
 John Snow Labs has created [langtest](https://langtest.org/){:target="_blank"}, a test generation and execution framework with &ldquo;60+ test types for comparing LLM & NLP models on accuracy, bias, fairness, robustness & more.&rdquo;
 
-The affiliated company [Pacific.ai](https://pacific.ai/) offers a commercial [testing system](https://pacific.ai/testing/){:target="_blank"} with similar features.
+The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offers a commercial [testing system](https://pacific.ai/testing/){:target="_blank"} with similar features.
 
 ## Merriam-Webster Dictionary
 
