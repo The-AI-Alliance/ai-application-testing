@@ -26,6 +26,7 @@ Here are some ideas we are investigating.
 
 For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} by [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert), where he discusses a recent evolution of _reinforcement learning_, called _reinforcement finetuning_:
 
+{: .highlight }
 > **What is reinforcement finetuning?**
 >
 > Reinforcement finetuning uses repeated passes over the data with reinforcement learning (RL) to encourage the model to figure out more robust behaviors in domains.

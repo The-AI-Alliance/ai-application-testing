@@ -13,4 +13,5 @@ We start with a reminder of general principles that have always applied, like _d
 
 Each page has a list of ideas we are exploring as _TODO_ items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}.
 
+{: .note }
 > **NOTE:** Using a [_generative AI model_]({{site.glossaryurl}}/#generative-ai-model) can mean it is managed by the application itself, behind APIs or [_agents_]({{site.glossaryurl}}/#agent), or it is used through direct calls to a separate service, like ChatGPT. When discussing models as components, we will often just use _model_ as a shorthand for all these cases.

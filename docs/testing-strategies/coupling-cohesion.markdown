@@ -12,6 +12,7 @@ Real applications, AI-enabled or not, combine many subsystems, usually including
 
 An AI application adds one or more [_generative AI models_]({{site.glossaryurl}}/#generative-ai-model) invoked through libraries, web services, or [_agents_]({{site.glossaryurl}}/#agent), increasingly using [_model context protocol_]({{site.glossaryurl}}/#model-context-protocol) (MCP). 
 
+{: .highlight }
 > _Everything that isn't model output should be made as deterministic as possible and tested using the traditional, deterministic techniques._ 
 
 Invocations of the model should be hidden behind an API abstraction that can be replaced at test time with a [_test double_]({{site.glossaryurl}}/#test-double). Even for some integration and acceptance tests, use a model test double for tests that _aren't_ exercising the behavior of the model itself.
