@@ -19,7 +19,6 @@ description: >- # this means to ignore newlines until "baseurl:"
   Giving developers the tools and techniques they need to confidently test their generative AI applications.
 baseurl: "/ai-application-testing" # the subpath of your site.
 url: "https://the-ai-alliance.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-theme: just-the-docs
 
 permalink: pretty
 exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile", "Makefile"
@@ -147,8 +146,6 @@ ga_tracking: G-RNHLN944B5
 #ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
 
 plugins:
-  - jekyll-github-metadata
-  - jekyll-include-cache
   - jekyll-seo-tag
   - jekyll-target-blank
   - jemoji
