@@ -88,26 +88,6 @@ nav_sort: case_sensitive # Capital letters sorted before lowercase
 # For copy button on code
 enable_copy_code_button: true
 
-callouts_level: quiet # or loud
-callouts:
-  highlight:
-    color: grey-dk
-  tip:
-    title: Tip
-    color: yellow
-  important:
-    title: Important
-    color: blue
-  new:
-    title: New
-    color: green
-  note:
-    title: Note
-    color: purple
-  warning:
-    title: Warning
-    color: red
-
 # Footer content
 # appears at the bottom of every page's main content
 
