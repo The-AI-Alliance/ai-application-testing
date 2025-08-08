@@ -1,3 +1,23 @@
+/*
+$nav-width: 16rem;
+$nav-width-md: 15rem;
+$nav-width: 250px !default;
+$nav-width-md: 248px !default;
+*/
+
+/*
+$content-width: 50rem !default;
+$header-height: 3.75rem !default;
+$content-width: 800px !default;
+$header-height: 60px !default;
+*/
+
+@media screen { 
+  .side-bar {
+    width: 15.5rem;
+  }
+}
+
 table {
   background-color: rgba(222, 196, 172, 0.11);
   border: solid 1px rgba(222, 196, 172, 0.25); //$blue-100; //#52b1ae;
