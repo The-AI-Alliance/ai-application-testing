@@ -21,6 +21,10 @@ References for more details on testing, especially in the AI context. Note that 
 
 [Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this website. See also [Dean Wampler](#dean-wampler)
 
+## AI for Education
+
+The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}
+
 ## Alignment Forum
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [_alignment_]({{site.glossaryurl}}/#alignment).

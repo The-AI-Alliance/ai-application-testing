@@ -28,4 +28,46 @@ To reduce testing time and costs, could you use a version of your production mod
 
 A related approach that is widely used is to leverage a separate model, one that is very smart and expensive to use, as a _judge_ to generate Q&A pairs for the benchmarks. See [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge).
 
-TODO - More details and specific examples.
+## Adapting Domain-Specific Benchmarks
+
+While the best-known benchmarks tend to be broad in scope, there is a growing set of domain-specific benchmarks that could provide a good starting point for your application-specific benchmarks.
+
+Here is a list of some domain-specific benchmarks... or at least the start of this list. [Let us know]({{site.baseurl}}/contributing/#join-us) of any that you find!
+
+{: .note}
+> **Note:** Check the licenses for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
+
+### General Collections of Domain-Specific Evaluations
+
+* [Weval](https://weval.org/sandbox){:target="weval"} from the [Collective Intelligence Project](https://www.cip.org/){:target="cip"}, is a community-driven collection of domain-specific evaluations, designed to allow non-experts to contribute and use evaluation suites relevant to their needs. 
+
+### Healthcare 
+
+Benchmarks for testing health-related use cases.
+
+* OpenAI [Healthbench](https://openai.com/index/healthbench/){:target="oai-hb"}
+* Stanford HELM for healthcare, [MedHELM](https://crfm.stanford.edu/helm/medhelm/latest/){:target="medhelm"}
+
+### Software Engineering
+
+Benchmarks for testing software engineering use cases.
+
+* Open AI [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"}
+
+### Finance
+
+Benchmarks for finance applications.
+
+* Patronus AI [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"}
+
+### Legal
+
+* Stanford [LegalBench](https://hazyresearch.stanford.edu/legalbench/) ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"})
+
+### Education
+
+* The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
+
+### Other Domains?
+
+What other domains should we list here?
