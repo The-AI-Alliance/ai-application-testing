@@ -26,7 +26,7 @@ Some definitions are adapted from the following sources, which are indicated bel
 
 ## Acceptance Test
 
-A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [test](#test), [unit test](#unit-test), and [Integration Test](#integration-test).
+A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), and [Integration Test](#integration-test).
 
 ## Agent
 
@@ -90,7 +90,7 @@ Much like other software, models and AI systems need to be trusted and useful to
 
 An particular evaluation is the capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model), e.g., an [LLM](#large-language-model), or an [AI System](#ai-system) as a whole handles [Prompts](#prompt) and the kinds of [Responses](#response) produced. For example, an evaluation might be used to see if hate speech is detected in prompts and responses, if responses contain hallucinations, measure the overhead (time and compute) for processing, and for our purposes, implements a required use case, etc.
 
-An evaluation may be implemented in one of several ways. A classifier [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [evaluation framework](#evaluation-framework). 
+An evaluation may be implemented in one of several ways. A classifier [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
 
 See also [Evaluation Framework](#evaluation-framework).
 
@@ -104,7 +104,7 @@ Does the [AI system's](#ai-system) behaviors exhibit social biases, preferential
 
 ## Feature
 
-For our purposes, a small bit of functionality provided by an application. It is the increment of change in a single cycle of the [test-driven development](#test-driven-development) process, which could be enhancing some user-visible functionality or adding new functionality in small increments.
+For our purposes, a small bit of functionality provided by an application. It is the increment of change in a single cycle of the [Test-Driven Development](#test-driven-development) process, which could be enhancing some user-visible functionality or adding new functionality in small increments.
 
 ## Function
 
@@ -112,7 +112,7 @@ In most languages, the most fundamental unit of abstraction and execution. Depen
 
 Many functions are free of [Side Effects](#side-effect), meaning they don't read or write state external to the function and shared by other functions. These functions are _always_ [Deterministic](#determinism); for a given input(s) they always return the same output. This is a very valuable property for design, testing, and reuse.
 
-Other functions that read and possibly write external state are [nondeterministic](#determinism). So are functions that are implemented with [Concurrency](#concurrency) in a way that the order of results is not deterministic. For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
+Other functions that read and possibly write external state are nondeterministic. So are functions that are implemented with [Concurrency](#concurrency) in a way that the order of results is not deterministic. For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
 
 ## Functional Programming
 
@@ -124,19 +124,19 @@ Contrast with [Object-Oriented Programming](#object-oriented-programming). Many 
 
 ## Generative AI Model
 
-A combination of data and code, usually trained on a [dataset](#dataset), to support [inference](#inference) of some kind. See also [large language model](#large-language-model) and [multimodal model](#multimodal-models).
+A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. 
 
-For convenience, in the text, we use the term _model_ to refer to the generative AI [Component](#component) that has [nondeterministic](#determinism) behavior, whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
+For convenience, in the text, we use the term _model_ to refer to the generative AI [Component](#component) that has [Nondeterministic](#determinism) behavior, whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
 
-See also [multimodal model](#multimodal-model) and [large language model](#large-language-model) (LLMs)
+See also [Large Language Model](#large-language-model) (LLMs) and [Multimodal Model](#multimodal-models).
 
 ## Hallucination
 
-When a [generative AI model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [tokens](#token) that are plausible, i.e., probabilistically likely.
+When a [Generative AI Model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
 
 ## Inference
 
-Sending information to a [generative AI model](#generative-ai-model) or [AI system](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
+Sending information to a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
 
 ## Integration Test
 
@@ -146,11 +146,11 @@ See also [Test](#test), [Unit Test](#unit-test), and [Acceptance Test](#acceptan
 
 ## Large Language Model
 
-Abbreviated _LLM_, a state of the art [generative AI model](#generative-ai-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [multimodal model](#multimodal-model).
+Abbreviated _LLM_, a state of the art [Generative AI Model](#generative-ai-model), often with billions of parameters, that has the ability to summarize, classify, and even generate text in one or more spoken and programming languages. See also [Multimodal Model](#multimodal-model).
 
 ## Model Context Protocol
 
-A de-facto standard for communications between models, agents, and other tools. See [_modelcontextprotocol.io_](https://modelcontextprotocol.io/introduction){:target="_blank"} for more information.
+Abbreviated MCP, a de-facto standard for communications between models, agents, and other tools. See [_modelcontextprotocol.io_](https://modelcontextprotocol.io/introduction){:target="_blank"} for more information.
 
 ## Object-Oriented Programming
 
@@ -178,7 +178,7 @@ Two interrelated branches of mathematics, where statistics concerns such tasks a
 
 Both disciplines emerged together to solve practical problems in science, industry, sociology, etc. It is common for researchers to build a _model_ of the system being studied, in part to compare actual results with model predictions, confirming or rejecting the underlying theories about the system upon which the model was built. Also, if the model is accurate, it provides predictive capabilities for possible and likely future events.
 
-Contrast with [determinism](#determinism).
+Contrast with [Determinism](#determinism).
 
 ## Prompt
 
@@ -186,7 +186,7 @@ The query a user (or another system) sends to an [LLM](#large-language-model). O
 
 ## Refactoring
 
-Modifying code to change its structure as required to support a new feature. _No behavior changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [test-driven development](#test-driven-development) cycle.
+Modifying code to change its structure as required to support a new feature. _No behavior changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [Test-Driven Development](#test-driven-development) cycle.
 
 ## Regression
 
@@ -196,7 +196,7 @@ Automated [Tests](#test) are designed to catch regressions as soon as they occur
 
 ## Repeatable
 
-If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, [generative AI models](#generative-ai-model) are _expected_ to return different results each time a query is repeated.
+If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, [Generative AI Models](#generative-ai-model) are _expected_ to return different results each time a query is repeated.
 
 ## Response
 
@@ -204,7 +204,7 @@ The generic term for outputs from a [Generative AI Model](#generative-ai-model) 
 
 ## Robustness
 
-How well does the [AI system](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [generative AI model](#generative-ai-model) respond to prompts that deviate from its training data?
+How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Generative AI Model](#generative-ai-model) respond to prompts that deviate from its training data?
 
 ## Sequential
 
@@ -220,7 +220,7 @@ A commonly-used, statically-coded part of the [Context](#context) information ad
 
 ## Test
 
-For our purposes, a [unit](#unit-test), [integration](#integration-test), or [acceptance](#acceptance-test) test.
+For our purposes, a [Unit Test](#unit-test), [Integration Test](#integration-test), or [Acceptance Test](#acceptance-test).
 
 ## Test Double
 
@@ -233,26 +233,26 @@ See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration
 When adding a [Feature](#feature) to a code base using _TDD_, the tests are written _before_ the code is written. A three step &ldquo;virtuous&rdquo; cycle is used, where changes are made _incrementally_ and _iterative_ using small steps, one at a time:
 
 1. [Refactor](#refactoring) the code to change its structure as required to support the new feature, using the existing automated [Tests](#test) to verify that no regressions are introduced. For example, it might be necessary to introduce an abstraction to support two &ldquo;choices&rdquo; where previously only one choice existed.
-2. Write a [test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, behavior, etc., even though you are also creating a reusable test that will become part of the [regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
+2. Write a [Test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, behavior, etc., even though you are also creating a reusable test that will become part of the [Regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
 3. Write the new feature to make the new test (as well as all previously written tests) pass.
 
 The [Wikipedia TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="tdd"} article is a good place to start for more information.
 
 ## Token
 
-For language [generative AI models](#generative-ai-model), the training texts and query prompts are split into tokens, usually whole words or fractions according to a vocabulary of tens of thousands of tokens that can include common single characters, several characters, and &ldquo;control&rdquo; tokens (like &ldquo;end of input&rdquo;). The rule of thumb is a corpus will have roughly 1.5 times the number of tokens as it will have words.
+For language [Generative AI Models](#generative-ai-model), the training texts and query prompts are split into tokens, usually whole words or fractions according to a vocabulary of tens of thousands of tokens that can include common single characters, several characters, and &ldquo;control&rdquo; tokens (like &ldquo;end of input&rdquo;). The rule of thumb is a corpus will have roughly 1.5 times the number of tokens as it will have words.
 
 ## Training
 
-In our context, training is the processes used to teach a model, such as a [generative AI models](#generative-ai-model) how to do its intended job. 
+In our context, training is the processes used to teach a model, such as a [Generative AI Models](#generative-ai-model) how to do its intended job. 
 
 In the generative AI case, we often speak of _pretraining_, the training process that uses a massive data corpus to teach the model facts about the world, how to speak and understand human language, and do some skills. However, the resulting model often does poorly on specialized tasks and even basic skills like following a user's instructions, conforming to social norms (e.g., avoiding hate speech), etc. 
 
-That's where a second [tuning](#tuning) phase comes in, a suite of processes used to improve the models performance on many general or specific skills.
+That's where a second [Tuning](#tuning) phase comes in, a suite of processes used to improve the models performance on many general or specific skills.
 
 ## Tuning
 
-Tuning refers to one or more processes used to transform a [pretrained](#training) model into one that exhibits much better desired behaviors (like instruction following) or specialized domain knowledge.
+Tuning refers to one or more processes used to transform a [Pretrained](#training) model into one that exhibits much better desired behaviors (like instruction following) or specialized domain knowledge.
 
 ## Unit
 

@@ -7,20 +7,7 @@ has_children: true
 
 # Architecture and Design for Testing
 
-This section explores strategies and techniques that can be used to create reliable, repeatable tests for generative AI applications. 
-
-We start with a reminder of general principles that have always applied, like _divide and conquer_ design approaches, then explore what new techniques developers can learn from their data scientist and model building peers.
-
-Each page has a list of ideas we are exploring as _TODO_ items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}.
-
-{: .note }
-> **NOTE:** Using a [Generative AI Model]({{site.glossaryurl}}/#generative-ai-model) can mean it is managed by the application itself, behind APIs or [Agents]({{site.glossaryurl}}/#agent), or it is used through direct calls to a separate service, like ChatGPT. When discussing models as components, we will often just use _model_ as a shorthand for all these cases.
-
-
-
-## Notes about Software Design for Generative AI Applications
-
-The creators of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) made clear that it is really a _design_ discipline as much as a _testing_ discipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
+The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write tests before code, you are in the frame of mind of specifying the expected behavior of what you are about to implement, expressed as tests. This encourages surfacing good abstraction boundaries organically, both the _unit_ being designed and implemented right now, but also other units it depends on dependencies, especially The iterative nature of TDD encourages you to make minimally-sufficient and incremental changes as you go.
 
 During this process, the software design decisions you make reflect many perspectives, intuitions, and idioms, all built on years of experience. 
 
