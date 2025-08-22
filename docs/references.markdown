@@ -39,7 +39,11 @@ Among the useful tools in this repo are:
 
 ## Dean Wampler
 
-In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler]({{site.baseurl}}/contributing/#contributors) summarizes the work of this project. After posting the link to the slides, he and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix.
+In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler](http://deanwampler.com){:target="dw"} (one of this project's [contributors]({{site.baseurl}}/contributing/#contributors)) summarizes the work of this project. After posting the link to the slides, Dean and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix, which have informed this project's content.
+
+### Ekimetrics
+
+[ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciencies and ethics.
 
 ## EleutherAI
 
