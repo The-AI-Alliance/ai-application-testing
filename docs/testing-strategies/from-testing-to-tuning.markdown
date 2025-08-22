@@ -1,18 +1,18 @@
 ---
 layout: default
 title: From Testing to Tuning
-nav_order: 270
+nav_order: 370
 parent: Testing Strategies and Techniques
 has_children: false
 ---
 
 # From Testing to Tuning
 
-Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [_paradigm_]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model behaviors, in favor of something entirely new?
+Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model behaviors, in favor of something entirely new?
 
-Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [_tunable_]({{site.glossaryurl}}/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
+Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
 
-[^1]: The tests are written _before_ the code when doing [_test-driven development_]({{site.glossaryurl}}/#test-driven-development).
+[^1]: The tests are written _before_ the code when doing [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development).
 
 How would this work? What is needed that we don't already have? 
 
@@ -46,6 +46,12 @@ Nathan also discusses this work in [this Interconnects post](https://www.interco
 In particular, note that a _grader_ is used to verify outputs, a key component of any test framework! Hence, it is worth exploring what suite of graders would be useful for many AI-centric use cases? John Allard from OpenAI describes them in [this X post](https://x.com/john__allard/status/1865520756559614090?s=46&mx=2){:target="x"}. Graders may be useful for testing, as well as tuning.
 
 Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
+
+## The Impact on Architecture and Design
+
+In [Architecture and Design]({{site.baseurl}}/architecture-design), we discussed techniques with testing needs in mind. Making tuning an integral part of the software development process could impact the architecture and design, too, as we explore in this section.
+
+TODO - how tuning becomes a part of the development lifecycle, how testing processes might change.
 
 ## Some Next Steps
 

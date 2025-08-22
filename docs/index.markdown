@@ -9,23 +9,22 @@ has_children: false
 
 (Previous Title: _AI Application Testing for Developers_)
 
-## I'm an Enterprise Developer: How Do I Test my AI Applications??
-
 {: .highlight }
+> **I am an Enterprise Developer: How Do I Test My AI Applications??**
+>
 > I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **nondeterministic**.
 
 Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI (&ldquo;GenAI&rdquo;) Applications**. We are building the knowledge and tools you need to achieve the same testing confidence for your AI applications that you have for your traditional applications.
 
-{% comment %}
+{: .tip}
 > **Tips:**
 >
 > 1. Use the search box at the top of this page to find specific content.
-> 2. _Italicized_ terms link to a [glossary of terms]({{site.glossaryurl}}).
-{% endcomment %}
+> 2. [Capitalized Terms]({{site.glossaryurl}}/) link to glossary definitions.
 
 ## The Challenge We Face
 
-We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Deterministism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected behavior and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to a function, we will get the same answer back (with special exceptions). This property enables our core testing techniques, which give us essential _**confidence**_ that our applications meet our requirements, that they implement the use cases our customers expect. We are accustomed to _pass/fail_ answers!
+We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Deterministism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected behavior and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to a [Unit]({{site.glossaryurl}}/#unit) (e.g., a [Function]({{site.glossaryurl}}/#function)), we will get the same answer back (with special exceptions). This property enables our core testing techniques, which give us essential _**confidence**_ that our applications meet our requirements, that they implement the use cases our customers expect. We are accustomed to _pass/fail_ answers!
 
 Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#genenerative-ai-model), which are inherently [Probabilistic]({{site.glossaryurl}}/#probability-and-statistics) and hence _nondeterministic_. Can we write the same kinds of tests now? If not, what alternative approaches should we use instead?
 
@@ -41,30 +40,33 @@ _**We have to bridge this divide.**_ As developers, we need to understand and ad
 
 The goals of this project are two fold:
 
-1. Develop and document strategies and techniques for testing Generative AI applications that eliminate nondeterminism, where feasible, and where not feasible, still allow us to write effective, repeatable and automatable tests.
+1. Develop and document strategies and techniques for testing Generative AI applications that eliminate nondeterminism, where feasible, and where not feasible, still allow us to write effective, repeatable and automatable tests. This work also impacts architecture and design decisions.
 2. Publish detailed, reusable examples and guidance for developers and AI experts on these strategies and techniques.
 
-The [strategies and techniques]({{site.baseurl}}/testing-strategies/testing-strategies) we will discuss are these:
-* [Coupling and Cohesion]({{site.baseurl}}/testing-strategies/coupling-cohesion): We can still use these classic design principles.
-* [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM outputs.
-* [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing large, complex systems is also less deterministic. What lessons can we learn here?
-* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmarks]({{site.glossaryurl}}/#benchmark) as [Unit Tests]({{site.glossaryurl}}/#unit-test).
-* [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Use a &ldquo;smarter&rdquo; LLM to judge our applications.
-* [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests): Embracing statistical analysis.
-* [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning): Should we rethink testing as a strategy?
+## Overview of This Site
 
-> **NOTE:** This is very much a work in progress. This site will be updated frequently to reflect our current thinking, emerging recommendations, and reusable assets. Your [contributions]({{site.baseurl}}/contributing) are most welcome!
+We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
 
-The website is organized into the following sections:
+Then we discuss [Architecture and Design]({{site.baseurl}}/architecture-design) concepts that are informed by the need for effective testing, which leads to AI applications that are reliable and serve their purposes:
+* [Coupling and Cohesion]({{site.baseurl}}/architecture-design/coupling-cohesion): Remembering to use these classic design principles.
+* [Tips and Tricks for AI Application Design]({{site.baseurl}}/testing-strategies/ai-specific-design): AI-specific ideas for building more effective applications.
 
-* [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems) - An explanation of the problems in more detail.
-* [Testing Strategies]({{site.baseurl}}/testing-strategies/testing-strategies) - A deeper dive into various techniques for doing effective testing of Generative AI Applications, despite the nondeterminism.
-* [Glossary of Terms]({{site.glossaryurl}}) - To be precise in our concepts.
-* [References]({{site.baseurl}}/references) - Useful sources of additional information, much of which motivated the ideas here.
+Good design will make the main topic of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/), easier to use and more effective:
+* [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM results.
+* [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
+* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques for [Unit Testing]({{site.glossaryurl}}/#unit-test) and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-testing) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-testing).
+* [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge application behaviors.
+* [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests): Embracing statistical analysis. What's the minimum you need to know? How do you use these techniques?
+* [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning): Should we rethink testing as a strategy? If so, how would this change affect AI application architecture and design?
 
-## We Need Your Help!
+Finally, there is a [Glossary of Terms]({{site.glossaryurl}}) and [References]({{site.baseurl}}/references) for additional information.
 
-See the [Contributing]({{site.baseurl}}/contributing) page for information on how you can get involved. See the [About Us]({{site.baseurl}}/about) page for more details about this project and the AI Alliance.
+
+## Help Wanted!
+
+This is very much a work in progress. This content will be updated frequently to reflect our current thinking, emerging recommendations, and reusable assets. Your [contributions]({{site.baseurl}}/contributing) are needed and most welcome!
+
+See also [About Us]({{site.baseurl}}/about) for more details about this project and the AI Alliance.
 
 ## Additional Links
 
@@ -72,6 +74,7 @@ See the [Contributing]({{site.baseurl}}/contributing) page for information on ho
 * Companion projects: 
 	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>
 	* <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>
+	* <a href="https://the-ai-alliance.github.io/trust-safety-user-guide/" target="ers">The AI Trust and Safety User Guide</a>
 * The AI Alliance: 
 	* [Website](https://thealliance.ai){:target="ai-alliance"}
 	* [The Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} 

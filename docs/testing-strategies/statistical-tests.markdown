@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Statistical Tests
-nav_order: 260
+nav_order: 360
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -10,9 +10,9 @@ has_children: false
 
 Are there cases where the behavior is nondeterministic, but reasonable bounds can be specified statistically? In other words, if the results fall within some measurable confidence window, they are considered acceptable, i.e., _passing_. 
 
-### Use of Statistics at Netflix
+### The Use of Statistics at Netflix
  
-Adrian Cockcroft [told one of us]({{site.baseurl}}/testing-problems/#is-this-really-a-new-problem) that Netflix took this approach for their recommendation systems, computing _plausibility_ scores that gave them sufficient confidence in the results.
+In [Testing Problems]({{site.baseurl}}/testing-problems/#this-is-not-a-new-problem), we mentioned that Adrian Cockcroft told us in a private communication that Netflix used this approach in part to test their recommendation systems. They computed _plausibility_ scores that gave them sufficient confidence in the results.
 
 More recently, a new open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} from [Plurai.ai](https://plurai.ai){:target="_blank"} brings together recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify _alignment_ of the system to the requirements. (We plan to update this site with more information about Intellagent soon.)
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: LLM as a Judge
-nav_order: 250
+nav_order: 350
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -16,7 +16,7 @@ The judge model can also be used to decide whether or not the application model'
 
 Popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} include [`unitxt`](https://www.unitxt.ai){:target="unitxt"} and [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"}.
 
-IBM Research recently open-sourced [EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"}, which makes writing `unitxt`-based evaluations easier. Specifically, EvalAssist is an application that simplifies using writing evaluators using LLM as a Judge. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
+IBM Research recently open-sourced [EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"}, which makes writing `unitxt`-based evaluations easier. Specifically, EvalAssist is an application that simplifies using implementing evaluations using LLM as a Judge. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
 
 ## An Example
 

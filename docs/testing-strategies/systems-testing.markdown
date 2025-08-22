@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Lessons from Systems Testing
-nav_order: 230
+nav_order: 330
 parent: Testing Strategies and Techniques
 has_children: false
 ---
