@@ -8,7 +8,7 @@ nav_order: 90
 
 The following people and organizations have contributed to the creation and maintenance of this project:
 
-* [Dean Wampler](mailto:dwampler@thealliance.ai) - IBM
+* [Dean Wampler](https://github.com/deanwampler){:target="dw-gh"} ([Alliance email](mailto:dwampler@thealliance.ai)) - IBM and The AI Alliance
 * (More coming soon...)
 
 <a name="join-us"></a>
@@ -26,7 +26,7 @@ See also the full list of projects [here](https://the-ai-alliance.github.io/){:t
 
 Are you interested in joining this project's work group? Use the form on the Alliance's [Become a collaborator](https://thealliance.ai/become-a-collaborator){:target="join-collab"} page to let us know your interests. 
 
-Check these boxes on the form:
+Check any of these boxes on the form:
 
 - [ ] AI Trust and Safety WG (left-hand side) and/or,
 - [ ] Applications and Tools WG (left-hand side)

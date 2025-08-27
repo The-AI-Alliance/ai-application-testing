@@ -12,16 +12,16 @@ This section is a reminder that the tools that worked well for us in the past ar
 
 Real applications, AI-enabled or not, combine many [Components]({{site.glossaryurl}}/#component), such as web pages for the user experience (UX), database and/or streaming systems for data retrieval and management, third-party libraries, and external web services. The [Units]({{site.glossaryurl}}/#unit) in these components should be testable in isolation, when their dependencies are well-encapsulated and easy to replace with [Test Doubles]({{site.glossaryurl}}/#test-double), and most are deterministic or can be made to behave in a deterministic way for testing. Good software design is a _divide and conquer_ strategy. 
 
-The terms [Coupling]({{site.glossaryurl}}/#coupling) and [Cohesion]({{site.glossaryurl}}/#cohesion) embody good abstraction design. A well-design component abstraction is &ldquo;loosely coupled&rdquo; to its dependencies and it presents a 
+The terms [Coupling]({{site.glossaryurl}}/#coupling) and [Cohesion]({{site.glossaryurl}}/#cohesion) embody the qualities of good abstraction design. A well-designed component interface is &ldquo;loosely coupled&rdquo; to its dependencies. Cohesion means it supports a single purpose, with clear behaviors for all its [Functions]({{site.glossaryurl}}/#function) (or other ways of invocation), and logical state that's easy to comprehend and follows a well-designed [State Machine]({{site.glossaryurl}}/#state-machine) for any state transitions.
 
-An AI application adds one or more [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model) invoked through libraries, web services, [Agents]({{site.glossaryurl}}/#agent), and increasingly using [Model Context Protocol]({{site.glossaryurl}}/#model-context-protocol) (MCP). 
+An AI application is like any other application, except it adds one or more [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model) invoked through components like web services, [Agents]({{site.glossaryurl}}/#agent), and increasingly using [Model Context Protocol]({{site.glossaryurl}}/#model-context-protocol) (MCP). 
 
 The first lesson we should apply is to clearly encapsulate AI dependencies separately from the rest of the components that behave deterministically.
 
 {: .highlight }
-> _All units that don't encapsulate models or directly handle model responses should be made as deterministic as possible and tested using the traditional, deterministic techniques._ 
+> _All units that don't encapsulate models or directly handle model responses should be designed and implemented to be as deterministic as possible and tested using the traditional, deterministic testing techniques._ 
 
-With the deterministic components handled in traditional ways, now we can focus on the AI-enabled components.
+With the deterministic components handled in traditional ways, we can now focus on the AI-enabled components.
 
 ## Encapsulate Each Model Behind an API
 
@@ -29,9 +29,13 @@ Invoking models through an abstraction serves several purposes.
 
 ### Tests of Dependencies
 
-When [Unit Testing]({{site.glossaryurl}}/#unit-test) _other_ units that use the model, the regular implementation of the encapsulating API can be replaced at test time with a test double, which _fakes_ handling of [Prompts]({{site.glossaryurl}}/#prompt) and returns deterministic [Responses]({{site.glossaryurl}}/#response) that allow the logic of the unit to be tested in the usual ways. 
+In [TDD and Generative AI]({{site.baseurl}}/architecture-design/#tdd-and-generative-ai), we started our exploration of how to create tests for AI-enabled units. Now let's consider the case where we are [Unit Testing]({{site.glossaryurl}}/#unit-test) _other_ units that use those components. Any test (like any component), should have a singular purpose, so these unit tests will not want the probabilistic behavior the AI-enabled unit normally provides, because they are exercising other aspects of behavior.
 
-Many [Integration Tests]({{site.glossaryurl}}/#integration-test) will cover aspects of how units and components interact that don't require model [Behaviors]({{site.glossaryurl}}/#behavior), so they can also use test doubles this way. Other integration tests and all [Acceptance Tests]({{site.glossaryurl}}/#acceptance-test) need to exercise handling of realistic model invocations.
+In those cases, we want to replace the regular implementation of the AI-enabled unit at test time with a [Test Double]({{site.glossaryurl}}/#test-double), which _fakes_ handling of inputs, such as [Prompts]({{site.glossaryurl}}/#prompt), and returns deterministic [Responses]({{site.glossaryurl}}/#response), allow the logic of the unit we are currently testing to proceed in the usual, deterministic ways. 
+
+Use [Integration Tests]({{site.glossaryurl}}/#integration-test) will explore how these units behave when interacting with the real AI-enabled units. Not all integration tests will need to do this; some will still want to use test doubles so they can focus on other purposes, but the intent of integration tests is to exhaustively examine how units work together.
+
+[Acceptance Tests]({{site.glossaryurl}}/#acceptance-test) should rarely use test doubles, because their purpose is final validation that a _feature_ is working as designed, including the expected generative AI behaviors.
 
 ### Design and Testing of Model Usage
 
