@@ -24,7 +24,7 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 
 ## The Challenge We Face
 
-We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Deterministism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected behavior and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to a [Unit]({{site.glossaryurl}}/#unit) (e.g., a [Function]({{site.glossaryurl}}/#function)), we will get the same answer back (with special exceptions). This property enables our core testing techniques, which give us essential _**confidence**_ that our applications meet our requirements, that they implement the use cases our customers expect. We are accustomed to _pass/fail_ answers!
+We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Deterministism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected [Behavior]({{site.glossaryurl}}/#behavior) and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to a [Unit]({{site.glossaryurl}}/#unit) (e.g., a [Function]({{site.glossaryurl}}/#function)), we will get the same answer back (with special exceptions). This property enables our core testing techniques, which give us essential _**confidence**_ that our applications meet our requirements, that they implement the use cases our customers expect. We are accustomed to _pass/fail_ answers!
 
 Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#genenerative-ai-model), which are inherently [Probabilistic]({{site.glossaryurl}}/#probability-and-statistics) and hence _nondeterministic_. Can we write the same kinds of tests now? If not, what alternative approaches should we use instead?
 
@@ -32,7 +32,7 @@ In contrast, our AI-expert colleagues (model builders and data scientists) use d
 
 ![Developer to AI Expert Spectrum]({{site.baseurl}}/assets/images/developer-to-AI-expert-spectrum.png "Developer to AI Expert Spectrum")
 
-**Figure 1:** The spectrum between deterministic and probabilitistic behavior.
+**Figure 1:** The spectrum between deterministic and probabilistic behavior.
 
 _**We have to bridge this divide.**_ As developers, we need to understand and adapt these data science tools for our needs. This will mean learning some probability and statistics concepts, but we shouldn't need to become experts. Similarly, our AI-expert colleagues need to better understand our needs, so they can help us take their work and use it to deliver reliable, trustworthy AI-enabled products.
 
@@ -54,13 +54,16 @@ Then we discuss [Architecture and Design]({{site.baseurl}}/architecture-design) 
 Good design will make the main topic of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/), easier to use and more effective:
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM results.
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
-* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques for [Unit Testing]({{site.glossaryurl}}/#unit-test) and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-testing) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-testing).
+* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques for unit testing and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-testing) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-testing).
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge application behaviors.
 * [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests): Embracing statistical analysis. What's the minimum you need to know? How do you use these techniques?
 * [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning): Should we rethink testing as a strategy? If so, how would this change affect AI application architecture and design?
 
 Finally, there is a [Glossary of Terms]({{site.glossaryurl}}) and [References]({{site.baseurl}}/references) for additional information.
 
+## How to Use This Site
+
+This site is primarily designed to be read from beginning to end, but who does that anymore?? We suggest you at least skim the content that way, then go to areas of particular interest. For example, if you already know [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development), you could read just the parts that discuss what's unique about TDD in the AI context, then follow links to other sections for more details.
 
 ## Help Wanted!
 

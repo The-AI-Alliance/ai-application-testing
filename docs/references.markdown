@@ -27,7 +27,7 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 ## Alignment Forum
 
-The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [Alignment]({{site.glossaryurl}}/#alignment).
+The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
 
 ## CVS Health
 
@@ -93,7 +93,7 @@ An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/for
 
 ## PlurAI
 
-[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify [Alignment]({{site.glossaryurl}}/#alignment) of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
 
 ## Patronus
 

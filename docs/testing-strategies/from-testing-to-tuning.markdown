@@ -8,7 +8,7 @@ has_children: false
 
 # From Testing to Tuning
 
-Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model behaviors, in favor of something entirely new?
+Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model [Behaviors]({{site.glossaryurl}}/#behavior), in favor of something entirely new?
 
 Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
 

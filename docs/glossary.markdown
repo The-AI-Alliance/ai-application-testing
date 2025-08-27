@@ -14,6 +14,7 @@ Some definitions are adapted from the following sources, which are indicated bel
 1. <a id="mlc">[_MLCommons AI Safety v0.5 Benchmark Proof of Concept Technical Glossary_]({{site.baseurl}}/references/#mlcommons-glossary){:id="mlc-glossary"}
 2. <a id="nist">[_NIST Artificial Intelligence Risk Management Framework (AI RMF 1.0)_]({{site.baseurl}}/references/#nist-risk-management-framework){:id="nist-rmf"}
 
+Sometimes we will use a term that could be defined, but we won't provide a definition for brevity. We show these terms in _italics_. You can assume the usual, plain-sense meaning for the term, or in some cases it is easy to search for a definition. 
 
 <details open markdown="block">
   <summary>
@@ -42,11 +43,15 @@ Umbrella term for an application or system with AI [Components](#component), inc
 
 ## Alignment
 
-A general term for how well an [AI System's](#ai-system) outputs (e.g., replies to queries) and behaviors correspond to end-user and service provider objectives, including the quality and utility of results, as well as safety requirements. Quality implies factual correctness and utility implies the results are fit for purpose, e.g., a Q&A system should answer user questions concisely and directly, a Python code-generation system should output valid, bug-free, and secure Python code. [EleutherAI]({{site.baseurl}}/references/#eleuther-ai){:target="eleuther"} defines alignment [this way](https://www.eleuther.ai/alignment){:target="eleuther"}, &ldquo;Ensuring that an artificial intelligence system behaves in a manner that is consistent with human values and goals.&rdquo; See also the work of the [Alignment Forum]({{site.baseurl}}/references/#alignment-forum).
+A general term for how well an [AI System's](#ai-system) outputs (e.g., replies to queries) and [Behaviors](#behavior) correspond to end-user and service provider objectives, including the quality and utility of results, as well as safety requirements. Quality implies factual correctness and utility implies the results are fit for purpose, e.g., a Q&A system should answer user questions concisely and directly, a Python code-generation system should output valid, bug-free, and secure Python code. [EleutherAI]({{site.baseurl}}/references/#eleuther-ai){:target="eleuther"} defines alignment [this way](https://www.eleuther.ai/alignment){:target="eleuther"}, &ldquo;Ensuring that an artificial intelligence system behaves in a manner that is consistent with human values and goals.&rdquo; See also the work of the [Alignment Forum]({{site.baseurl}}/references/#alignment-forum).
 
 ## Automatable
 
 Can an action, like a test, be automated so it can be executed without human intervention?
+
+## Behavior
+
+What does a [Component](#component) do, either autonomously on its own (e.g., a security monitoring tool that is constantly running) or when invoked by another component through an API or [Function](#function) call?
 
 ## Benchmark
 
@@ -70,6 +75,14 @@ When work can be partitioned into smaller steps that can be executed in any orde
 
 Additional information passed to an [LLM](#large-language-model) as part of a user [Prompt](#prompt), which is intended to provide additional, useful _context_ information so that the [Response](#response) is better than if the user's prompt was passed to the LLM alone. This additional content may include a [System Prompt](#system-prompt), relevant documents retrieved using [RAG](#retrieval-augmented-generation), etc.
 
+## Cohesion
+
+Does a [Component](#component) feel like &ldquo;one thing&rdquo; with a single purpose, exhibiting well-defined [Behaviors](#behavior) with a coherent [State](#state)? Or does it feel like a miscellaneous collection of behaviors or state?
+
+## Coupling
+
+How closely connected is one [Component](#component) to others in the system? &ldquo;Loose&rdquo; coupling is preferred, because it makes it easier to test components in isolation, substitute replacements when needed, etc. Strongly coupled components often indicate poor abstraction boundaries between them.
+
 ## Dataset
 
 (See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc.
@@ -90,7 +103,7 @@ Much like other software, models and AI systems need to be trusted and useful to
 
 An particular evaluation is the capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model), e.g., an [LLM](#large-language-model), or an [AI System](#ai-system) as a whole handles [Prompts](#prompt) and the kinds of [Responses](#response) produced. For example, an evaluation might be used to see if hate speech is detected in prompts and responses, if responses contain hallucinations, measure the overhead (time and compute) for processing, and for our purposes, implements a required use case, etc.
 
-An evaluation may be implemented in one of several ways. A classifier [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
+An evaluation may be implemented in one of several ways. A _classifier_ [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
 
 See also [Evaluation Framework](#evaluation-framework).
 
@@ -100,7 +113,7 @@ An umbrella term for the software tools, runtime services, benchmark systems, et
 
 ## Fairness
 
-Does the [AI system's](#ai-system) behaviors exhibit social biases, preferential treatment, or other forms of non-objectivity?
+Does the [AI system's](#ai-system) responses exhibit social biases, preferential treatment, or other forms of non-objectivity?
 
 ## Feature
 
@@ -110,13 +123,13 @@ For our purposes, a small bit of functionality provided by an application. It is
 
 In most languages, the most fundamental unit of abstraction and execution. Depending on the language, the term _function_ or _method_ might be used, where the latter are special functions associated with [Classes](#class) in [OOP](#object-oriented-programming) languages. Some languages allow code blocks outside of functions, perhaps inside alternative [Component](#component) boundaries, but this is not important for our purposes. 
 
-Many functions are free of [Side Effects](#side-effect), meaning they don't read or write state external to the function and shared by other functions. These functions are _always_ [Deterministic](#determinism); for a given input(s) they always return the same output. This is a very valuable property for design, testing, and reuse.
+Many functions are free of [Side Effects](#side-effect), meaning they don't read or write [State](#state) external to the function and shared by other functions. These functions are _always_ [Deterministic](#determinism); for a given input(s) they always return the same output. This is a very valuable property for design, testing, and reuse.
 
 Other functions that read and possibly write external state are nondeterministic. So are functions that are implemented with [Concurrency](#concurrency) in a way that the order of results is not deterministic. For example, functions that retrieve data, like a database record, functions to generate UUIDs, functions that call other processes or systems.
 
 ## Functional Programming
 
-FP is a design methodology that attempts to formalize the properties of [Functions](#function) and their properties, inspired by the behavior of mathematical functions. _State_ is maintained in a small set of abstractions, like _Maps_, _Lists_, and _Sets_, with operations that are implemented separately following protocol abstractions exposed by the collections. Like mathematical objects and unlike objects in [Object-Oriented Programming](#object-oriented-programming), mutation of state is prohibited; any operation, like adding elements to a collection, creates a new, _immutable_ copy. 
+FP is a design methodology that attempts to formalize the properties of [Functions](#function) and their properties, inspired by the behavior of mathematical functions. _State_ is maintained in a small set of abstractions, like _Maps_, _Lists_, and _Sets_, with operations that are implemented separately following protocol abstractions exposed by the collections. Like mathematical objects and unlike objects in [Object-Oriented Programming](#object-oriented-programming), mutation of [State](#state) is prohibited; any operation, like adding elements to a collection, creates a new, [Immutable](#immutable) copy. 
 
 FP became popular when concurrent software became more widespread in the 2000s, because the immutable objects lead to far fewer concurrency bugs. FP languages may have other [Component](#component) constructs for grouping of functions, e.g., into _libraries_.
 
@@ -126,13 +139,17 @@ Contrast with [Object-Oriented Programming](#object-oriented-programming). Many 
 
 A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. 
 
-For convenience, in the text, we use the term _model_ to refer to the generative AI [Component](#component) that has [Nondeterministic](#determinism) behavior, whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test _models_.
+For convenience, in the text, we use the shorthand term _model_ to refer to the generative AI [Component](#component) that has [Nondeterministic](#determinism) [Behavior](#behavior), whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test models.
 
 See also [Large Language Model](#large-language-model) (LLMs) and [Multimodal Model](#multimodal-models).
 
 ## Hallucination
 
 When a [Generative AI Model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
+
+## Immutable
+
+A [Unit's](#unit) [State](#state) cannot be modified, once it has been initialized. If _all_ units in a [Component](#component) are immutable, then the component itself is considered immutable. Contrast with [Mutable](#mutable). See also [State](#state).
 
 ## Inference
 
@@ -154,7 +171,7 @@ Abbreviated MCP, a de-facto standard for communications between models, agents, 
 
 ## Object-Oriented Programming
 
-OOP (or OOSD - object-oriented software development) is a design methodology that creates software [Components](#component) with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates state and behavior behind its abstraction.
+OOP (or OOSD - object-oriented software development) is a design methodology that creates software [Components](#component) with boundaries that mimic real-world objects (like _Person_, _Automobile_, _Shopping Cart_, etc.). Each object encapsulates [State](#state) and [Behavior](#behavior) behind its abstraction.
 
 Introduced in the Simula language in the 1960s, it gained widespread interest in the 1980s with the emergence of graphical user interfaces (GUIs), where objects like _Window_, _Buttons_, and _Menus_ were an intuitive way to organize such software.
 
@@ -164,13 +181,17 @@ Contrast with [Functional Programming](#functional-programming). Many programmin
 
 [Generative AI Models](#generative-ai-model) that usually extend the text-based capabilities of [LLMs](#large-language-model) with additional support for other media, such as video, audio, still images, or other kinds of data.
 
+## Mutable
+
+A [Unit's](#unit) [State](#state) can be modified during execution, either through direct manipulation by another unit or indirectly by invoking the unit (e.g., calling a [Function](#function) that changes the state. If any _one_ unit in a [Component](#component) is mutable, then the component itself is considered mutable. Contrast with [Immutable](#immutable). See also [State](#state).
+
 ## Paradigm
 
 From the [_Merriam-Webster Dictionary_]({{site.baseurl}}/references/#merriam-webster-dictionary) definition of [_paradigm_](https://www.merriam-webster.com/dictionary/paradigm){:target="dict"}: &ldquo;a philosophical and theoretical framework of a scientific school or discipline within which theories, laws, and generalizations and the experiments performed in support of them are formulated.&rdquo;
 
 ## Predictable
 
-In the context of software, the quality that knowing the history of past behavior and the design of a [Unit](#unit), you can predict future its behavior reliably.
+In the context of software, the quality that knowing a [Unit's](#unit) history of past [Behavior](#behavior) and its design, you can predict its future behavior reliably. See also [State Machine](#state-machine).
 
 ## Probability and Statistics
 
@@ -186,11 +207,11 @@ The query a user (or another system) sends to an [LLM](#large-language-model). O
 
 ## Refactoring
 
-Modifying code to change its structure as required to support a new feature. _No behavior changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [Test-Driven Development](#test-driven-development) cycle.
+Modifying code to change its structure as required to support a new feature. _No [Behavior](#behavior) changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [Test-Driven Development](#test-driven-development) cycle.
 
 ## Regression
 
-When an unexpected behavior change is introduced into a previously-working [Unit](#unit), because of a change made to the code base, often in other units for unrelated functionality.
+When an unexpected [Behavior](#behavior) change is introduced into a previously-working [Unit](#unit), because of a change made to the code base, often in other units for unrelated functionality.
 
 Automated [Tests](#test) are designed to catch regressions as soon as they occur, making it easier to diagnose the change that caused the regression, as well as detecting the regression in the first place.
 
@@ -208,11 +229,21 @@ How well does the [AI System](#ai-system) continue to perform within acceptable 
 
 ## Sequential
 
-The steps of some work are performed in a predictable, repeatable order. This property is one of the requirements for [Deterministic](#determinism) behavior. Contrast with [Concurrent](#concurrent).
+The steps of some work are performed in a predictable, repeatable order. This property is one of the requirements for [Deterministic](#determinism) [Behavior](#behavior). Contrast with [Concurrent](#concurrent).
 
 ## Side Effect
 
-Reading and/or writing state shared outside a [Unit](#unit), i.e., a [Function](#function) with other functions. See also [Determinism](#determinism).
+Reading and/or writing [State](#state) shared outside a [Unit](#unit), i.e., a [Function](#function) with other functions. See also [Determinism](#determinism).
+
+## State
+
+Used in software to refer to a set of values in some context, like a [Component](#component). The values determine how the component will behave in subsequent invocations to perform some work. The values can sometimes be read directly by other components. If the component is [Mutable](#mutable), then the state can be changed by other components either directly or through invocations of the component that cause state transitions to occur. (For example, popping the top element of a stack changes the contents of the stack, the number of elements it currently holds, etc.) 
+
+Often, these _state transitions_ are modeled with a [State Machine](#state-machine), which constrains the allowed transitions.
+
+## State Machine
+
+A formal model of how the [State](#state) of a component can transition from one value (or set of values) to another. As an example, the TCP protocol [has a well-defined state machine](https://www.ietf.org/rfc/rfc9293.html#name-state-machine-overview){:target="tcp"}.
 
 ## System Prompt
 
@@ -224,7 +255,7 @@ For our purposes, a [Unit Test](#unit-test), [Integration Test](#integration-tes
 
 ## Test Double
 
-A test-only replacement for a [Unit](#unit), usually because it has [Side Effects](#side-effect), so its behavior is [Deterministic](#determinism) for the purposes of testing a dependent unit that uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test.
+A test-only replacement for a [Unit](#unit), usually because it has [Side Effects](#side-effect), so its [Behavior](#behavior) is [Deterministic](#determinism) for the purposes of testing a dependent unit that uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test. A _mock_ is a popular kind of test double that uses the underlying runtime environment (e.g., the Python interpreter, the Java Virtual Machine - JVM) to intercept invocations of a unit and programmatically behave as desired by the tester.
 
 See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
 
@@ -233,7 +264,7 @@ See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration
 When adding a [Feature](#feature) to a code base using _TDD_, the tests are written _before_ the code is written. A three step &ldquo;virtuous&rdquo; cycle is used, where changes are made _incrementally_ and _iterative_ using small steps, one at a time:
 
 1. [Refactor](#refactoring) the code to change its structure as required to support the new feature, using the existing automated [Tests](#test) to verify that no regressions are introduced. For example, it might be necessary to introduce an abstraction to support two &ldquo;choices&rdquo; where previously only one choice existed.
-2. Write a [Test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, behavior, etc., even though you are also creating a reusable test that will become part of the [Regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
+2. Write a [Test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, [Behavior](#behavior), etc., even though you are also creating a reusable test that will become part of the [Regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
 3. Write the new feature to make the new test (as well as all previously written tests) pass.
 
 The [Wikipedia TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="tdd"} article is a good place to start for more information.
@@ -252,7 +283,7 @@ That's where a second [Tuning](#tuning) phase comes in, a suite of processes use
 
 ## Tuning
 
-Tuning refers to one or more processes used to transform a [Pretrained](#training) model into one that exhibits much better desired behaviors (like instruction following) or specialized domain knowledge.
+Tuning refers to one or more processes used to transform a [Pretrained](#training) model into one that exhibits much better desired [Behaviors](#behavior) (like instruction following) or specialized domain knowledge.
 
 ## Unit
 
@@ -260,6 +291,6 @@ For our purposes, the _unit_ in the context of a [Unit Test](#unit-test). Usuall
 
 ## Unit Test
 
-A test for a [Unit](#unit) that exercises its behavior in isolation from all other functions and state. When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
+A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
 See also [Test](#test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
