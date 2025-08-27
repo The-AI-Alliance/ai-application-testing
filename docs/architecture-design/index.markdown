@@ -11,9 +11,10 @@ In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/te
 
 Before we discuss [testing strategies]({{site.baseurl}}/testing-strategies/) for AI-enabled applications, let's revisit some tried and true principles of architecture and design that better enable testing, then consider how they apply in this AI era we are in.
 
-* [Test-Driven Development]({{site.baseurl}}/architecture-design/tdd/): One of the most effective practices for effective _design_, as well as testing, the core principles still apply, but generative AI nondeterminism requires some adaptations.
-* [Coupling and Cohesion]({{site.baseurl}}/coupling-cohesion/): The classic principles of minimizing [Coupling]({{site.glossaryurl}}/#coupling) between [Units]({{site.glossaryurl}}/#unit) and making components [Cohesive]({{site.glossaryurl}}/#cohesion) still apply. In particular, they help us keep the deterministic vs. nondeterministic units separate, limiting the scope of new handling required for nondeterminism.
-* [Component Design]({{site.baseurl}}/component-design/): Adapting classic techniques for good component design, what is different about designing AI components?
+This section is a reminder that the tools that worked well for us in the past are still very useful, but some adaptations are required.
+
+* [Test-Driven Development]({{site.baseurl}}/architecture-design/tdd/): TDD is especially good at encouraging iterative, incremental design and implementation of systems, including comprehensive tests for them. The core principles still apply, but generative AI nondeterminism requires some adaptations. We will also see our first example of a test written for AI. 
+* [Component Design]({{site.baseurl}}/component-design/): Adapting classic techniques for good component design, what is different about designing AI components? [Coupling and Cohesion]({{site.baseurl}}/architecture-design/component-design/#coupling-cohesion) are classic principles for minimizing [Coupling]({{site.glossaryurl}}/#coupling) between [Units]({{site.glossaryurl}}/#unit) and making components logically [Cohesive]({{site.glossaryurl}}/#cohesion). In particular, they help us keep the deterministic (non-AI) vs. nondeterministic (AI) units separate, limiting the scope of new handling required for nondeterminism. 
 
 The last section in [Testing Strategies]({{site.baseurl}}/testing-strategies), [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning), discusses how we might rethink testing for AI applications and put more emphasis on tuning the behaviors to align with our goals, as opposed to a cycle of testing and _bug_ fixing. This idea would influence architecture and design, too, but we'll wait to discuss this influence until that section.
 

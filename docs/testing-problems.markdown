@@ -39,7 +39,7 @@ It is not possible or even desirable to remove all nondeterminism from generativ
 
 Recently, [one of us]({{site.baseurl}}/references/#dean-wampler) posted a link on [Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} to the slides for a talk, [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"}. In a private conversation afterwards, [Adrian Cockcroft]({{site.baseurl}}/references/#adrian-cockcroft) said that Netflix encountered similar problems around 2008 with their content recommendation systems: &ldquo;The content inventory (movies or products) changes constantly, and the recommendations are personalized so that everyone sees a different result. We had to build some novel practices and tools for our QA engineers.&rdquo; 
 
-The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/architecture-design/coupling-cohesion/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-tests/#the-use-of-statistics-at-netflix)
+The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/architecture-design/component-design/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-tests/#the-use-of-statistics-at-netflix)
 
 --- 
 

@@ -47,11 +47,11 @@ The goals of this project are two fold:
 
 We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
 
-Then we discuss [Architecture and Design]({{site.baseurl}}/architecture-design) concepts that are informed by the need for effective testing, which leads to AI applications that are reliable and serve their purposes:
-* [Coupling and Cohesion]({{site.baseurl}}/architecture-design/coupling-cohesion): Remembering to use these classic design principles.
-* [Tips and Tricks for AI Application Design]({{site.baseurl}}/testing-strategies/ai-specific-design): AI-specific ideas for building more effective applications.
+Then we discuss [Architecture and Design]({{site.baseurl}}/architecture-design) concepts that are informed by the need for effective testing to ensure our AI applications are reliable and do what expect of them. We explore how tried and true principles still apply, but updates are often needed:
+* [Test-Driven Development]({{site.baseurl}}/architecture-design/tdd/): TDD is really a _design_ methodology as much as a _testing_ discipline, despite the name, promoting incremental delivery and iterative development. What do AI-specific tests look like in a TDD context?
+* [Component Design]({{site.baseurl}}/architecture-design/component-design): How do classic principles of _coupling_ and _cohesion_ help us encapsulate generative AI behaviors in ways that make them easier to develop, test, and integrate into whole systems?
 
-Good design will make the main topic of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/), easier to use and more effective:
+With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM results.
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
 * [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques for unit testing and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-testing) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-testing).

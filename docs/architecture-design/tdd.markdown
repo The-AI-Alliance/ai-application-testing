@@ -8,11 +8,15 @@ has_children: false
 
 # Test-Driven Development
 
-In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior, for reasoning about how the system behaves, for writing repeatable, automatable tests, etc.
+In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior, for reasoning about how the system behaves, during design and implementation, and for writing tests that are repeatable, comprehensive, and automated.
+
+Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will refer back to this example. 
 
 ## What We Learned from Test-Driven Development
 
-The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the _unit_ being designed and implemented right now, but also dependencies on other units and how those dependencies should be managed. 
+The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Unit]({{site.glossaryurl}}/#unit) being designed and implemented right now, but also dependencies on other units, collections of units into [Components]({{site.glossaryurl}}/#component), and how dependencies should be managed. 
+
+We will discuss the qualities that make good units and components in [Component Design]({{site.baseurl}}/architecture-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/architecture-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
 
 The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor) the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
@@ -47,7 +51,7 @@ So, how does this change TDD? To be clear, we are not discussing the use of gene
 
 First, what aspects of TDD _don't_ need to change? Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send exchange messages to a medical care provider where in some cases a quick reply will be generated automatically. In the other cases, the provider will have to respond. Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
-Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional fixed input and fixed response won't work. We can't expect a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a _unit benchmark_ analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
+Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a _unit benchmark[^1]_ analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
 
 * &ldquo;I need my _X_ refilled.&rdquo;
 * &ldquo;I need my _X_ drug refilled.&rdquo;
@@ -55,10 +59,12 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 * &ldquo;My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?&rdquo;
 * ...
 
-For this first iteration, the answer parts of the Q&A pairs might be identical for all cases:[^1] 
+[^1]: We will define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
+
+For this first iteration, the answer parts of the Q&A pairs might be identical for all cases:[^2] 
 
 
-[^1]: A future feature might be able to check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
+[^2]: A future feature might be able to check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
 
 
 * &ldquo;Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.&rdquo;
@@ -114,7 +120,7 @@ If the request doesn't look like a refill request, reply with this message:
 - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
 ```
 
-We tried both system prompts with the models [`gpt-oss:20B`](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} and [`llama3.2:8B`](https://huggingface.co/meta-llama/Meta-Llama-3-8B){:target="hf-llama32"}, served locally using [`ollama`](https://ollama.com/){:target="ollama"} with a number of prompts. First, a set of refill requests:
+We tried both system prompts with the models [`gpt-oss:20B`](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} and [`llama3.2:3B`](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"}, served locally using [`ollama`](https://ollama.com/){:target="ollama"} with a number of prompts. First, a set of refill requests:
 
 * `I need my _X_ refilled.`
 * `I need my _X_ drug refilled.`
@@ -135,25 +141,42 @@ For both models, both drugs, and all refill requests, the expected answer was al
 Similarly, for the other prompts, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
 {: .highlight}
-> Try this yourself! This Linux/MacOS `zsh` script, [`refill-chatbot.sh`]({{site.baseurl}}/files/scripts/refill-chatbot.sh){:download="refill-chatbot.sh"} uses the excellent [`llm` CLI tool](https://github.com/simonw/llm){:target="llm"} from Simon Willison, which can call a variety of services for model inference, including local serving using [`ollama`](https://ollama.com){:target="ollama"}, which we used for these tests. If you use `ollama`, install the llm
-plugin using this command: `llm install llm-ollama`.
-> 
-> Run `refill-chatbot.sh --help` for more information.
+> Try this yourself! We used this Linux/MacOS `zsh` script, [`refill-chatbot.sh`]({{site.baseurl}}/files/scripts/refill-chatbot.sh){:download="refill-chatbot.sh"}.
+> Run `refill-chatbot.sh --help` for more information about using it.
 >
+> `refill-chatbot.sh` uses the excellent [`llm` CLI tool](https://github.com/simonw/llm){:target="llm"} from Simon Willison, which can call a variety of services for model inference, including local serving using [`ollama`](https://ollama.com){:target="ollama"}, which we used for these tests. See the `llm` docs for using other options, like OpenAI's hosted models.
+>
+> If you install and use [`ollama`](https://ollama.com){:target="ollama"}, install the llm plugin using this command: `llm install llm-ollama`. Then install your models of choice. For example, to install the `llama3.2:3B` and `gpt-oss:20b` models we used, run `ollama pull llama3.2:3B` and `ollama pull gpt-oss:20b`, respectively. (Yes, it is `B` for one and `b` for the other, as shown...)
+> 
 > The script assumes you have to `llm` &ldquo;templates&rdquo; installed. Run the following command to see where `llm` has templates installed on your machine: `llm templates path`.
 > 
 > On MacOS, it will probably be `$HOME/Library/Application Support/io.datasette.llm/templates`. Now download the following two files and copy them to that location:
 > * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/llm/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
 > * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/llm/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
 >
-> If you aren't using a Linux or MacOS system or you can't use `llm` or `ollama` for any reason, you can try the system prompt and user requests shown above using any ChatBot for inference that you have at your disposal.
+> If you aren't using a Linux or MacOS system or you can't use `llm` and/or `ollama` for any reason, you can try the system prompt and user requests shown above using any inference service at your disposal. If the service doesn't provide a way to specify the system prompt separately, try combining it with the user prompt, e.g.,
+>
+> ```text
+> system:
+>   You are a helpful assistant for medical patients requesting help from their care provider. Some patients will request prescription refills. 
+> 
+>   Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _X_ is replaced by the name of the prescription:
+> 
+>   - Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.
+>   
+>   If the request doesn't look like a refill request, reply with this message:
+>   
+>   - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
+>   
+> prompt: I need a refill for my miracle drug.
+> ```
 
-We effectively created _deterministic_ outputs for a narrow range of particular inputs! The next questions to investigate would the following:
+We effectively created _deterministic_ outputs for a narrow range of particular inputs! Two next questions to investigate include the following:
 
-* How _diverse_ can the prompts grow and still be &ldquo;mapped&rdquo; by the LLM to the same response?
+* How _diverse_ can the prompts be and still be &ldquo;mapped&rdquo; by the LLM to the same response?
 * How should cases at those edges be handled?
 
-Answering the third question posed above, &ldquo;How do we create these Q&A pairs?&rdquo;, is part of the answer. First, let's explore a design idea.
+Answering the third question posed earlier, &ldquo;How do we create these Q&A pairs?&rdquo;, is part of the answer. First, let's explore a design idea.
 
 ### Idea: Handling Frequently Asked Questions
 
@@ -174,22 +197,21 @@ The remaining four questions we posed above are these:
 * How do we validate the resulting answers?
 * How do we define &ldquo;pass/fail&rdquo; for this test?
 
-One drawback to our experiment above was the need for humans to manually create good Q&A pairs for testing. We mentioned above that follow-up questions include how should we quantify the range of possible questions that all get &ldquo;mapped&rdquo; to the same response, and how should we handle edge cases at the discovered boundaries? These are the kinds of questions that can really only be answered on a case-by-case basis through experimentation, using lots of Q&A pairs. We will explore automated alternatives for data _synthesis_ in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks). We will also discuss there how to run our benchmarks, including how we can scale up our tasks beyond the ad hoc approach we used above.
+One drawback to our experiment above was the need for humans to manually create good Q&A pairs for testing. We mentioned above that follow-up questions include how should we quantify the range of possible questions that all get &ldquo;mapped&rdquo; to the same response, and how should we handle edge cases at the discovered boundaries? These are the kinds of questions that can really only be answered on a case-by-case basis through experimentation, using lots of Q&A pairs. We will explore automated techniques for data _synthesis_ in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks). We will also discuss there how to run our benchmarks, including how we can scale up our tasks beyond the ad hoc approach we used above.
 
-Similarly, we will need a way to assess the answers generated, including for the synthetic Q&A test pairs themselves. Two techniques we will cover are [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
+Similarly, we will need a way to automatically assess the answers generated from prompts, including checking the quality of synthetic Q&A test pairs themselves. Two techniques we will cover are [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 
-Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate (as long as it was okay to ignore capitalization of some words!). This convenient result won't always be available to us.
-
+Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate (as long as it was okay to ignore capitalization of some words!). This convenient _certainty_ won't happen very often.
 
 {: .tip}
 > **Takeaways:**
 >
-> 1. Experiment with the system prompt to find the minimally-sufficient (for efficiency) content that provides measurably better results. Prompt design, including system prompts is still something of a _black art_.
-> 2. Mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministically_ and therefore much easier to design and test.
-> 3. Think about appropriate processing of responses to make them more deterministic, while still useful.
-> 4. Include robust fall-back handling when a suitable response is not obvious.
-> 5. For early versions of an application, conservative handling of known scenarios and falling-back to human intervention for everything else lowers the risk of undesirable results, and makes testing easier.  
+> 1. Experiment with the system prompt to find the minimally-sufficient (for efficiency) content that provides measurably better results. Prompt design, including system prompts, is still something of a _black art_.
+> 2. When it is feasible, mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministic_, and therefore much easier to design and test.
+> 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
+> 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
+> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
 
 ---
 
-Next, we discuss [Coupling and Cohesion]({{site.baseurl}}/testing-strategies/coupling-cohesion).
+Next, let us discuss [Component Design]({{site.baseurl}}/architecture-design/component-design), a look at _coupling_ and _cohesion_ principles, and specific considerations for AI _components_.
