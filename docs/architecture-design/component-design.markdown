@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Component Design
-nav_order: 230
+nav_order: 220
 parent: Architecture and Design for Testing
 has_children: false
 ---
