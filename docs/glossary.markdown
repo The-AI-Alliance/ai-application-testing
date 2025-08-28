@@ -67,6 +67,8 @@ The primary [Component](#component) abstraction in [Object-Oriented Programming]
 
 An ill-defined, but often-used term in software. In this case, we use it to generically refer to any piece of software with a well-defined purpose, an access API that defines clear boundaries. Depending on the programming language, it may group together [Functions](#function), [Classes](#class), etc. Particular programming languages and &ldquo;paradigms&rdquo; (like [OOP](#object-oriented-programming) and [FP](#functional-programming)) might use terms like _packages_, _modules_, _subsystems_, _libraries_, and even _web services_ can be considered components.
 
+In principal, a component could contain a single [Unit](#unit). So, for simplicity in the rest of the text, we will use [Component](#Component) as an umbrella term that could also mean an individual [Unit](#unit), unless it is important to make finer distinctions.
+
 ## Concurrent
 
 When work can be partitioned into smaller steps that can be executed in any order and the runtime executes them in a nonpredictable order. If the order is predictable, no matter how it executed, we can say it is effectively [Sequential](#sequential).
@@ -89,7 +91,7 @@ How closely connected is one [Component](#component) to others in the system? &l
 
 ## Determinism
 
-The output of a [Unit](#unit) for a given input is always known precisely. This affords writing repeatable, predictable software and automated, reliable tests.
+The output of a [Component](#component) for a given input is always known precisely. This affords writing repeatable, predictable software and automated, reliable tests.
 
 In contrast, _nondeterminism_ means identical inputs yield different results, removing [Repeatability](#Repeatable) and complicating [Predictability](#predictable), and the ability to write automated, reliable tests.
 
@@ -121,7 +123,7 @@ For our purposes, a small bit of functionality provided by an application. It is
 
 ## Function
 
-In most languages, the most fundamental unit of abstraction and execution. Depending on the language, the term _function_ or _method_ might be used, where the latter are special functions associated with [Classes](#class) in [OOP](#object-oriented-programming) languages. Some languages allow code blocks outside of functions, perhaps inside alternative [Component](#component) boundaries, but this is not important for our purposes. 
+In most languages, the most fundamental [Unit](#unit) of abstraction and execution. Depending on the language, the term _function_ or _method_ might be used, where the latter are special functions associated with [Classes](#class) in [OOP](#object-oriented-programming) languages. Some languages allow code blocks outside of functions, perhaps inside alternative [Component](#component) boundaries, but this is not important for our purposes. 
 
 Many functions are free of [Side Effects](#side-effect), meaning they don't read or write [State](#state) external to the function and shared by other functions. These functions are _always_ [Deterministic](#determinism); for a given input(s) they always return the same output. This is a very valuable property for design, testing, and reuse.
 
@@ -145,11 +147,11 @@ See also [Large Language Model](#large-language-model) (LLMs) and [Multimodal Mo
 
 ## Hallucination
 
-When a [Generative AI Model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible, i.e., probabilistically likely.
+When a [Generative AI Model](#generative-ai-model) generates text that seems plausible, but is not factually accurate. Lying is not the right term, because there is no malice intended by the model, which only knows how to generate a sequence of [Tokens](#token) that are plausible. Which token is actually returned in a given context is a [Stochastic](#stochastic) process, i.e., a random process governed by a [Probability](#probability-and-statistics) distributions.
 
 ## Immutable
 
-A [Unit's](#unit) [State](#state) cannot be modified, once it has been initialized. If _all_ units in a [Component](#component) are immutable, then the component itself is considered immutable. Contrast with [Mutable](#mutable). See also [State](#state).
+A [Unit's](#unit) or [Component's](#component) [State](#state) cannot be modified, once it has been initialized. If _all_ units in a [Component](#component) are immutable, then the component itself is considered immutable. Contrast with [Mutable](#mutable). See also [State](#state).
 
 ## Inference
 
@@ -157,7 +159,7 @@ Sending information to a [Generative AI Model](#generative-ai-model) or [AI Syst
 
 ## Integration Test
 
-A test for several [Units](#unit) working together that verifies they interoperate properly. These "units" could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not explore handling of such side effects, all units with side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
+A test for several [Units](#unit) or [Components](#component) working together that verifies they interoperate properly. These components could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not to explore handling of such side effects, all units with side effects should be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
 
 See also [Test](#test), [Unit Test](#unit-test), and [Acceptance Test](#acceptance-test).
 
@@ -191,15 +193,15 @@ From the [_Merriam-Webster Dictionary_]({{site.baseurl}}/references/#merriam-web
 
 ## Predictable
 
-In the context of software, the quality that knowing a [Unit's](#unit) history of past [Behavior](#behavior) and its design, you can predict its future behavior reliably. See also [State Machine](#state-machine).
+In the context of software, the quality that knowing a [Unit's](#unit) or [Components](#component) history of past [Behavior](#behavior) and its design, you can predict its future behavior reliably. See also [State Machine](#state-machine).
 
 ## Probability and Statistics
 
-Two interrelated branches of mathematics, where statistics concerns such tasks as collecting, analyzing, and interpreting data, while probability concerns events, in particular the percentage likelihood that certain values will be measured when events occur. 
+Two interrelated branches of mathematics, where statistics concerns such tasks as collecting, analyzing, and interpreting data, while probability concerns observations, in particular the percentage likelihood that certain values will be measured when observations are made of a _random_ process, like heads or tails when flipping a coin. 
 
-Both disciplines emerged together to solve practical problems in science, industry, sociology, etc. It is common for researchers to build a _model_ of the system being studied, in part to compare actual results with model predictions, confirming or rejecting the underlying theories about the system upon which the model was built. Also, if the model is accurate, it provides predictive capabilities for possible and likely future events.
+Both disciplines emerged together to solve practical problems in science, industry, sociology, etc. It is common for researchers to build a mathematical _model_ (in the general sense of the word, not just an AI model) of the system being studied, in part to compare actual results with predictions from the model, confirming or rejecting the underlying theories about the system upon which the model was built. Also, if the model is accurate, it provides predictive capabilities for possible and likely future observations.
 
-Contrast with [Determinism](#determinism).
+Contrast with [Determinism](#determinism). See also [Stochastic](#stochastic).
 
 ## Prompt
 
@@ -233,7 +235,7 @@ The steps of some work are performed in a predictable, repeatable order. This pr
 
 ## Side Effect
 
-Reading and/or writing [State](#state) shared outside a [Unit](#unit), i.e., a [Function](#function) with other functions. See also [Determinism](#determinism).
+Reading and/or writing [State](#state) shared outside a [Unit](#unit), i.e., a [Function](#function) with other functions. See also [Determinism](#determinism). If a [Component](#component) contains unit that perform side effects, then the component itself is considered to perform side effects.
 
 ## State
 
@@ -245,6 +247,10 @@ Often, these _state transitions_ are modeled with a [State Machine](#state-machi
 
 A formal model of how the [State](#state) of a component can transition from one value (or set of values) to another. As an example, the TCP protocol [has a well-defined state machine](https://www.ietf.org/rfc/rfc9293.html#name-state-machine-overview){:target="tcp"}.
 
+## Stochastic
+
+The behavior of a system where observed values are governed by a random probability distribution. For example, when flipping a coin repeatedly, the observed values, heads or tails, are governed by a distribution that predicts 50% of the time heads will be observed and 50% of the time tails will be observed, assuming a _fair coin_ (not weighted on one side or the other). The value you observe for any given flip is random; you can't predict exactly which possibility will happen, only that there is an equal probability of heads or tails. After performing more and more flips, the total count of heads and tails should be very close to equal. See also [Probabilities and Statistics](#probabilities-and-statistics).
+
 ## System Prompt
 
 A commonly-used, statically-coded part of the [Context](#context) information added by an [AI System](#ai-system) the [Prompt](#prompt) before sending it to the [LLM](#large-language-model). System prompts are typically used to provide the model with overall guidance about the application's purpose and how the LLM should respond. For example, it might include phrases like &ldquo;You are a helpful software development assistant.&rdquo;
@@ -255,7 +261,7 @@ For our purposes, a [Unit Test](#unit-test), [Integration Test](#integration-tes
 
 ## Test Double
 
-A test-only replacement for a [Unit](#unit), usually because it has [Side Effects](#side-effect), so its [Behavior](#behavior) is [Deterministic](#determinism) for the purposes of testing a dependent unit that uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test. A _mock_ is a popular kind of test double that uses the underlying runtime environment (e.g., the Python interpreter, the Java Virtual Machine - JVM) to intercept invocations of a unit and programmatically behave as desired by the tester.
+A test-only replacement for a [Unit](#unit) or a while [Component](#component), usually because it has [Side Effects](#side-effect) and we need the [Behavior](#behavior) to be [Deterministic](#determinism) for the purposes of testing a dependent unit that uses it. For example, a function that queries a database can be replaced with a version that always returns a fixed value expected by the test. A _mock_ is a popular kind of test double that uses the underlying runtime environment (e.g., the Python interpreter, the Java Virtual Machine - JVM) to intercept invocations of a unit and programmatically behave as desired by the tester.
 
 See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
 
@@ -287,7 +293,9 @@ Tuning refers to one or more processes used to transform a [Pretrained](#trainin
 
 ## Unit
 
-For our purposes, the _unit_ in the context of a [Unit Test](#unit-test). Usually, this is a single [Function](#function) that is being designed and written, but this may be happening in the larger context of a _class_ in an [Object-Oriented Programming](#object-oriented-programming) language or some other self-contained [Component](#Component). We will use _unit_ as an umbrella term in many discussions, unless it is important to make finer distinctions.
+For our purposes, the _unit_ in the context of a [Unit Test](#unit-test), the smallest granularity of functionality we care about. A unit can be a single [Function](#function) that is being designed and written, but this may be happening in the larger context of a [Component](#Component), such as a [Class](#class) in an [Object-Oriented Programming](#object-oriented-programming) language or some other self-contained. 
+
+For simplicity, rather than say &ldquo;unit and/or component&rdquo; frequently in the text, we will often use just &ldquo;component&rdquo; as an umbrella term that could also mean either or both concepts, unless it is important to make finer distinctions.
 
 ## Unit Test
 

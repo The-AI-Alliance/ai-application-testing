@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6">
   <diagram name="Page-1" id="MSaa-mH9MaB9M1fiBA18">
     <mxGraphModel dx="1106" dy="1004" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -72,10 +72,10 @@
         <mxCell id="7yW3JbcLsS10eUoLvzNY-37" value="&lt;b&gt;Deterministic Behavior&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="194" y="198" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="7yW3JbcLsS10eUoLvzNY-38" value="&lt;b&gt;Probabilistic&amp;nbsp;&lt;/b&gt;&lt;div&gt;&lt;b&gt;Behavior&lt;/b&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="7yW3JbcLsS10eUoLvzNY-38" value="&lt;b&gt;Stochastic Behavior&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="533.5" y="198" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="7yW3JbcLsS10eUoLvzNY-39" value="&lt;b&gt;A Spectrum of Perspectives&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="7yW3JbcLsS10eUoLvzNY-39" value="&lt;b&gt;The Spectrum of Experience&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="370" y="260" width="110" height="30" as="geometry" />
         </mxCell>
       </root>

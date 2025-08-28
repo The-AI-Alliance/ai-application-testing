@@ -15,7 +15,9 @@ In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/te
 {: .tip}
 > **Highlights:**
 >
-> 1. Experiment with the system prompt to find the minimally-sufficient (for efficiency) content that provides measurably better results. Prompt design, including system prompts, is still something of a _black art_.
+> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component), like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic) processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark).
+> 1. We build our first example exploring this approach.
+> 1. For efficiency, experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt) to find the minimally-sufficient content that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt) design, including system prompts, is still something of a _black art_.
 > 2. When it is feasible, mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministic_, and therefore much easier to design and test.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
 > 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
@@ -25,9 +27,9 @@ Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our fir
 
 ## What We Learned from Test-Driven Development
 
-The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Unit]({{site.glossaryurl}}/#unit) being designed and implemented right now, but also dependencies on other units, collections of units into [Components]({{site.glossaryurl}}/#component), and how dependencies should be managed. 
+The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Component]({{site.glossaryurl}}/#component) being designed and implemented right now, but also dependencies on other components, and how dependencies should be managed. 
 
-We will discuss the qualities that make good units and components in [Component Design]({{site.baseurl}}/architecture-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/architecture-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
+We will discuss the qualities that make good components in [Component Design]({{site.baseurl}}/architecture-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/architecture-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
 
 The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor) the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
@@ -39,30 +41,13 @@ That doesn't mean you proceed naively or completely ignore longer-term goals. Du
 
 This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#Determinism) behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency). 
 
-## The &ldquo;Paradigm Shift&rdquo; AI Requires 
+## TDD and Generative AI
 
-Generative AI models are inherently nondeterministic, because the outputs are [Probabilistic]({{site.glossaryurl}}/#probability-and-statistics), so they force us to reevaluate our tools and techniques.
-
-For example, in the simplest implementations, an [LLM]({{site.glossaryurl}}/#large-language-model) generates the next [Token]({{site.glossaryurl}}/#token), one at a time, picking from the tokens with the highest or nearly the highest probability of being the next appropriate choice to follow the content already generated, guided by any additional context information that was supplied in the prompt. 
-
-Some randomness is used to prevent the model from always picking the _most probably_ token, which would make the output effectively deterministic for any given prompt, because for most use cases, we want at least some &ldquo;variation&rdquo; in the results. (The amount of randomness, called the _temperature_, is tunable for many models.) [Multimodal Models]({{site.glossaryurl}}/#multimodal-models) that generate images, audio, and video work similarly.
-
-{: .highlight}
-> _Temperature_ is a useful metaphor for randomness; think of how the surface of a pot of water behaves as you heat it up, going from cold and flat (and &ldquo;predictable&rdquo;) to hot and very bubbly, where any point on the surface can vary a lot around the average level.
-
-### How Do AI Experts Test Models?
-
-AI experts need to understand how well models (and the [AI Systems]({{site.glossaryurl}}/#ai-systems) that use them) perform against various criteria, like suppression of hate speech and hallucinations. They do this using lots of sample data, like a set of known-good question and answer (Q&A) pairs, where the model is prompted with each question and the answer is judged for correctness. (Deciding whether or not an answer is &ldquo;correct&rdquo; is another challenge, which we'll return to in several places in [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).)
-
-[Statistical Analysis]({{site.glossaryurl}}/#probabilities-and-statistics) is used to used to assess the aggregate results. When you look at leaderboards that rank models, if see that a particular model scored 80% on a benchmark, it means the model replies to the prompts was judged correct 80% of the time. Is 80% good enough?? It really depends on the application requirements, whether or not there better performing alternative models, etc. This approach to validating behaviors is far different than the &ldquo;pass/fail&rdquo; unambiguous answers software developers are accustomed to seeing.
-
-### TDD and Generative AI
-
-So, how does this change TDD? To be clear, we are not discussing the use of generative AI to create traditional tests. Rather, we are concerned with how to use TDD for generative AI itself!
+So, how can we practice TDD for tests of stochastic components? First, to be clear, we are not discussing the use of generative AI to generate traditional tests for source code. Rather, we are concerned with how to use TDD to test generative AI itself!
 
 First, what aspects of TDD _don't_ need to change? Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send exchange messages to a medical care provider where in some cases a quick reply will be generated automatically. In the other cases, the provider will have to respond. Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
-Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a _unit benchmark[^1]_ analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
+Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a &ldquo;unit benchmark&rdquo;[^1], an analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
 
 * &ldquo;I need my _X_ refilled.&rdquo;
 * &ldquo;I need my _X_ drug refilled.&rdquo;
@@ -70,7 +55,7 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 * &ldquo;My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?&rdquo;
 * ...
 
-[^1]: We will define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
+[^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
 
 For this first iteration, the answer parts of the Q&A pairs might be identical for all cases:[^2] 
 
