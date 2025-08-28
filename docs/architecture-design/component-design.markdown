@@ -11,7 +11,15 @@ has_children: false
 What makes a good [Unit]({{site.glossaryurl}}/#unit)?
 What makes a good [Component]({{site.glossaryurl}}/#component), consisting of one or more units?
 
-<a id="coupling-cohesion">
+
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
+<a id="coupling-cohesion"></a>
 	
 ## The Venerable Principles of Coupling and Cohesion
 
@@ -125,7 +133,6 @@ In the Python community, [`pydantic`](https://ai.pydantic.dev){:target="pydantic
 
 A different approach to achieving greater resiliency is [OpenDXA with DANA](https://the-ai-alliance.github.io/#ai-powered-programming-language-for-agents){:target="dana"}. Here, they seek to establish better control over model behaviors by automatically learning to be more effective.
 
-
 ---
 
-After exploring this section on architecture and design, proceed to [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).
+Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).

@@ -10,6 +10,13 @@ has_children: false
 
 For some applications, the utility and quality of model outputs can be verified using external, non-generative tools. Here are some examples.
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
 ## Code Generation
 
 Generated code can be checked for quality and validity and, in some cases, modified into a more desirable form. For example:
@@ -42,3 +49,7 @@ TODOs:
 
 1. Add more examples where tools can be used.
 1. Expand the details for some of them.
+
+---
+
+Review the [highlights](#highlights) summarized above, then proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).

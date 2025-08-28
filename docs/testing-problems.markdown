@@ -9,6 +9,13 @@ has_children: false
 
 Let's first review why [Determinism]({{site.glossaryurl}}/#determinism) is an important concept in software development, then discuss how the use of [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model) makes this difficult.
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
 ## Why Determinism is an Important Tool for Software Development
 
 We have learned from decades of experience that creating and maintaining reliable software requires deterministic [Behavior]({{site.glossaryurl}}/#behavior), whenever possible, and when it can't be avoided, principled handling of the nondeterminism. Simply stated, the more [Predictable]({{site.glossaryurl}}/#predictable) and [Repeatable]({{site.glossaryurl}}/#repeatable) the behavior, the easier it is to _reason_ about its [State]({{site.glossaryurl}}/#state) and [Behavior]({{site.glossaryurl}}/#behavior), including aspects of design, testing, and interactions with other software libraries.
@@ -43,4 +50,4 @@ The specific tools and practices he mentioned are discussed in [Test Doubles at 
 
 --- 
 
-Before we discuss [Testing Strategies]({{site.baseurl}}/testing-strategies), let's first discuss [Architecture and Design]({{site.baseurl}}/architecture-design), informed by our testing concerns.
+Review the [highlights](#highlights) summarized above. Next, before we discuss [Testing Strategies]({{site.baseurl}}/testing-strategies), let us first discuss [Architecture and Design]({{site.baseurl}}/architecture-design), informed by our testing concerns.

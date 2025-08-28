@@ -10,6 +10,17 @@ has_children: false
 
 In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior, for reasoning about how the system behaves, during design and implementation, and for writing tests that are repeatable, comprehensive, and automated.
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> 1. Experiment with the system prompt to find the minimally-sufficient (for efficiency) content that provides measurably better results. Prompt design, including system prompts, is still something of a _black art_.
+> 2. When it is feasible, mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministic_, and therefore much easier to design and test.
+> 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
+> 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
+> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
+
 Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will refer back to this example. 
 
 ## What We Learned from Test-Driven Development
@@ -203,15 +214,6 @@ Similarly, we will need a way to automatically assess the answers generated from
 
 Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate (as long as it was okay to ignore capitalization of some words!). This convenient _certainty_ won't happen very often.
 
-{: .tip}
-> **Takeaways:**
->
-> 1. Experiment with the system prompt to find the minimally-sufficient (for efficiency) content that provides measurably better results. Prompt design, including system prompts, is still something of a _black art_.
-> 2. When it is feasible, mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministic_, and therefore much easier to design and test.
-> 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
-> 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
-> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
-
 ---
 
-Next, let us discuss [Component Design]({{site.baseurl}}/architecture-design/component-design), a look at _coupling_ and _cohesion_ principles, and specific considerations for AI _components_.
+Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Component Design]({{site.baseurl}}/architecture-design/component-design), a look at _coupling_ and _cohesion_ principles, and specific considerations for AI _components_.

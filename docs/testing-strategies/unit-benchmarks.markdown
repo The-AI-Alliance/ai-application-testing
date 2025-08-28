@@ -10,6 +10,13 @@ has_children: false
 
 When testing applications with nondeterministic model output, an ad-hoc combination of [Benchmarks]({{site.glossaryurl}}/#benchmark) and &ldquo;playing around&rdquo; (manual testing) are typically done today.
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
 Benchmarks are a popular tool for &ldquo;globally&rdquo; evaluating how well models perform categories of activities like code generation, Q&A (question and answer sessions), avoid hate speech, avoid hallucinations, etc. A typical benchmark attempts to provide a wide range of examples across the category and report a single number for the evaluation, usually scaled as a percentage of passing results between 0 and 100%). 
 
 In contrast, good software tests are very specific, examining one specific [Behavior]({{site.glossaryurl}}/#behavior), while keeping everything else _invariant_.
@@ -72,3 +79,9 @@ Benchmarks for finance applications.
 ### Other Domains?
 
 What other domains should we list here?
+
+
+---
+
+Review the [highlights](#highlights) summarized above, then proceed to [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
+.

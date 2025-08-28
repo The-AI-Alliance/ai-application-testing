@@ -10,6 +10,13 @@ has_children: false
 
 Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model [Behaviors]({{site.glossaryurl}}/#behavior), in favor of something entirely new?
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
 Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning), what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldqou;building&rdqou; process? We will probably need some combination of _verification_ and _coercion_.
 
 [^1]: The tests are written _before_ the code when doing [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development).
@@ -69,3 +76,8 @@ TODO - how tuning becomes a part of the development lifecycle, how testing proce
 The idea of a complete reset is an established idea. [_The Structure of Scientific Revolutions_](https://en.wikipedia.org/wiki/The_Structure_of_Scientific_Revolutions){:target="ssr"}, published in 1962, studied how scientists approach new evidence that appears to contradict an established theory. They don't immediately discard the established theory. Instead, they first attempt to accommodate the new evidence into the existing theory, making modifications as necessary.
 
 Eventually, if the contradictions become too glaring and the modifications become too strained, some researchers will abandon the established theory and allow the evidence to lead them to a fundamentally new theory. Two examples from the history of Physics are the transition from Newtonian (&ldquo;Classical&rdquo;) Mechanics to Quantum Mechanics and the emergence of the Special and General Theories of Relativity, all of which emerged in the early decades of the twentieth century. In Astronomy, it took several _millennia_  for astronomers to discard the _geocentric_ view of the solar system, where the Earth was believed to be at the center and everything else revolves around it. Astronomers developed elaborate theories about orbital mechanics involving [_epicycles_](https://en.wikipedia.org/wiki/Deferent_and_epicycle){:target="wikipedia"}, nesting of circular orbits, that were needed to explain the observed _retrograde motion_ of planetary orbits. An important breakthrough for considering a _heliocentric_ solar system, where the Sun is at the center, was the way this model greatly simplified orbital mechanics, removing the need for epicycles.
+
+
+---
+
+Review the [highlights](#highlights) summarized above, then see the [References]({{site.baseurl}}/references/) for more information.

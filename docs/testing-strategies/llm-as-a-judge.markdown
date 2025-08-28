@@ -12,6 +12,13 @@ In _LLM as a Judge_, a separate model, one that is very smart and also usually e
 
 The judge model can also be used to decide whether or not the application model's response to a particular question is sufficiently close to the expected answer.
 
+<a id="highlights"></a>
+
+{: .tip}
+> **Highlights:**
+>
+> TODO
+
 ## Tools
 
 Popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} include [`unitxt`](https://www.unitxt.ai){:target="unitxt"} and [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"}.
@@ -36,3 +43,7 @@ In addition, these notebooks demonstrate other aspects of using `unitxt`:
 3. ...
 
 TODO
+
+---
+
+Review the [highlights](#highlights) summarized above, then proceed to [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).

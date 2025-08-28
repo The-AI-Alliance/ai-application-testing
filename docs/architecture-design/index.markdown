@@ -20,4 +20,4 @@ The last section in [Testing Strategies]({{site.baseurl}}/testing-strategies), [
 
 ---
 
-After exploring this section on architecture and design, proceed to [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).
+After exploring this section on architecture and design, starting with [Test-Driven Development]({{site.baseurl}}/architecture-design/tdd/), proceed to [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).
