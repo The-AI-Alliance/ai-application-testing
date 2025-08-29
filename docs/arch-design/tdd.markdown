@@ -29,7 +29,7 @@ Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our fir
 
 The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Component]({{site.glossaryurl}}/#component) being designed and implemented right now, but also dependencies on other components, and how dependencies should be managed. 
 
-We will discuss the qualities that make good components in [Component Design]({{site.baseurl}}/architecture-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/architecture-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
+We will discuss the qualities that make good components in [Component Design]({{site.baseurl}}/arch-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/arch-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
 
 The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor) the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
@@ -201,4 +201,4 @@ Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tes
 
 ---
 
-Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Component Design]({{site.baseurl}}/architecture-design/component-design), a look at _coupling_ and _cohesion_ principles, and specific considerations for AI _components_.
+Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Component Design]({{site.baseurl}}/arch-design/component-design), a look at _coupling_ and _cohesion_ principles, and specific considerations for AI _components_.

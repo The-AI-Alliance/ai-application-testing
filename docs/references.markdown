@@ -73,7 +73,7 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 ## Michael Feathers
 
-[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/architecture-design/component-design/#abstractions-encapsulate-complexities).
+[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/arch-design/component-design/#abstractions-encapsulate-complexities).
 
 ## MLCommons Glossary
 

@@ -56,7 +56,7 @@ Subsequent slides go into the tuning data format, how answers are analyzed for c
 
 ## The Impact on Architecture and Design
 
-In [Architecture and Design]({{site.baseurl}}/architecture-design), we discussed techniques with testing needs in mind. Making tuning an integral part of the software development process could impact the architecture and design, too, as we explore in this section.
+In [Architecture and Design]({{site.baseurl}}/arch-design), we discussed techniques with testing needs in mind. Making tuning an integral part of the software development process could impact the architecture and design, too, as we explore in this section.
 
 TODO - how tuning becomes a part of the development lifecycle, how testing processes might change.
 

@@ -47,9 +47,9 @@ The goals of this project are two fold:
 
 We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
 
-Then we discuss [Architecture and Design]({{site.baseurl}}/architecture-design) concepts that are informed by the need for effective testing to ensure our AI applications are reliable and do what expect of them. We explore how tried and true principles still apply, but updates are often needed:
-* [Test-Driven Development]({{site.baseurl}}/architecture-design/tdd/): TDD is really a _design_ methodology as much as a _testing_ discipline, despite the name, promoting incremental delivery and iterative development. What do AI-specific tests look like in a TDD context?
-* [Component Design]({{site.baseurl}}/architecture-design/component-design): How do classic principles of _coupling_ and _cohesion_ help us encapsulate generative AI behaviors in ways that make them easier to develop, test, and integrate into whole systems?
+Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts that are informed by the need for effective testing to ensure our AI applications are reliable and do what expect of them. We explore how tried and true principles still apply, but updates are often needed:
+* [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/): TDD is really a _design_ methodology as much as a _testing_ discipline, despite the name, promoting incremental delivery and iterative development. What do AI-specific tests look like in a TDD context?
+* [Component Design]({{site.baseurl}}/arch-design/component-design): How do classic principles of _coupling_ and _cohesion_ help us encapsulate generative AI behaviors in ways that make them easier to develop, test, and integrate into whole systems?
 
 With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM results.

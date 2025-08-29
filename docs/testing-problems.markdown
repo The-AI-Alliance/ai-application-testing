@@ -29,7 +29,7 @@ Furthermore, suppose a unit in question is [Immutable]({{site.glossaryurl}}/#imm
 
 There are necessary exceptions to this deterministic behavior for real-world systems. Some units will have mutable state, like a stack data structure. Some units will prompt a user for inputs, so the value it returns will rarely be the same value from one invocation to the next. Finally, any distributed systems, including multi-threaded applications, cannot guarantee how events will be ordered, and many cases which events will occur. 
 
-Fortunately, these forms of nondeterminism and side effects are well understood and the range of possible occurrences is usually bounded, allowing effective handling both in tests and in production deployments. We have effective techniques for handling them, which we will review in [Architecture and Design for Testing]({{site.baseurl}}/architecture-design/).
+Fortunately, these forms of nondeterminism and side effects are well understood and the range of possible occurrences is usually bounded, allowing effective handling both in tests and in production deployments. We have effective techniques for handling them, which we will review in [Architecture and Design for Testing]({{site.baseurl}}/arch-design/).
 
 To summarize, application developers expect the following:
 
@@ -72,8 +72,8 @@ You are probably already familiar with concepts like the _mean_ and _standard de
 
 Recently, [one of us]({{site.baseurl}}/references/#dean-wampler) posted a link on [Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} to the slides for a talk, [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"}. In a private conversation afterwards, [Adrian Cockcroft]({{site.baseurl}}/references/#adrian-cockcroft) said that Netflix encountered similar problems around 2008 with their content recommendation systems: &ldquo;The content inventory (movies or products) changes constantly, and the recommendations are personalized so that everyone sees a different result. We had to build some novel practices and tools for our QA engineers.&rdquo; 
 
-The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/architecture-design/component-design/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-tests/#the-use-of-statistics-at-netflix)
+The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/arch-design/component-design/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-tests/#the-use-of-statistics-at-netflix)
 
 --- 
 
-Review the [highlights](#highlights) summarized above. Next, before we discuss [Testing Strategies]({{site.baseurl}}/testing-strategies), let us first discuss [Architecture and Design]({{site.baseurl}}/architecture-design), informed by our testing concerns.
+Review the [highlights](#highlights) summarized above. Next, before we discuss [Testing Strategies]({{site.baseurl}}/testing-strategies), let us first discuss [Architecture and Design]({{site.baseurl}}/arch-design), informed by our testing concerns.

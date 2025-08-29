@@ -1,4 +1,4 @@
 ---
 layout: redirect
-redirect_rel_url: ./architecture-design/component-design/
+redirect_rel_url: ./arch-design/component-design/
 ---
