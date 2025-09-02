@@ -51,7 +51,7 @@ Can an action, like a test, be automated so it can be executed without human int
 
 ## Behavior
 
-What does a [Component](#component) do, either autonomously on its own (e.g., a security monitoring tool that is constantly running) or when invoked by another component through an API or [Function](#function) call?
+What does a [Component](#component) do, either autonomously on its own (e.g., a security monitoring tool that is constantly running) or when invoked by another component through an API or [Function](#function) call? This is a general-purpose term that could cover a single [Feature](#feature), a whole [Use Case](#use-case) or anything in between.
 
 ## Benchmark
 
@@ -103,7 +103,7 @@ Can humans understand why the system behaves the way that it does in a particula
 
 Much like other software, models and AI systems need to be trusted and useful to their users. Evaluation aims to provide the evidence needed to gain users’ confidence for an [AI System](#ai-system).
 
-An particular evaluation is the capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model), e.g., an [LLM](#large-language-model), or an [AI System](#ai-system) as a whole handles [Prompts](#prompt) and the kinds of [Responses](#response) produced. For example, an evaluation might be used to see if hate speech is detected in prompts and responses, if responses contain hallucinations, measure the overhead (time and compute) for processing, and for our purposes, implements a required use case, etc.
+An particular evaluation is the capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model), e.g., an [LLM](#large-language-model), or an [AI System](#ai-system) as a whole handles [Prompts](#prompt) and the kinds of [Responses](#response) produced. For example, an evaluation might be used to see if hate speech is detected in prompts and responses, if responses contain hallucinations, measure the overhead (time and compute) for processing, and for our purposes, implements a required [Use Case]({{site.glossaryurl}}/#use-case), etc.
 
 An evaluation may be implemented in one of several ways. A _classifier_ [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
 
@@ -119,7 +119,7 @@ Does the [AI system's](#ai-system) responses exhibit social biases, preferential
 
 ## Feature
 
-For our purposes, a small bit of functionality provided by an application. It is the increment of change in a single cycle of the [Test-Driven Development](#test-driven-development) process, which could be enhancing some user-visible functionality or adding new functionality in small increments.
+For our purposes, a small bit of functionality provided by an application. It is the increment of change in a single cycle of the [Test-Driven Development](#test-driven-development) process, which could be enhancing some user-visible functionality or adding new functionality in small increments. See also [Use Case](#use-case)
 
 ## Function
 
@@ -297,8 +297,16 @@ For our purposes, the _unit_ in the context of a [Unit Test](#unit-test), the sm
 
 For simplicity, rather than say &ldquo;unit and/or component&rdquo; frequently in the text, we will often use just &ldquo;component&rdquo; as an umbrella term that could also mean either or both concepts, unless it is important to make finer distinctions.
 
+## Unit Benchmark
+
+An adaption of [Benchmark](#benchmark) tools and techniques for more fine-grained and targeted testing purposes, such as verifying [Features](#feature) and [Use Cases](#use-case) work as designed. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) section for details.
+
 ## Unit Test
 
 A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
 See also [Test](#test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
+
+## Use Case
+
+A common term for an end-to-end user activity done with a system, often broken down into several _scenarios_ that describe different "paths" through the use case, including error scenarios, in addition to happy paths. Hence, scenarios would be the next level of granularity. Compare with [Features](#feature), which would be the capabilities implemented one at a time to support scenarios and use cases.

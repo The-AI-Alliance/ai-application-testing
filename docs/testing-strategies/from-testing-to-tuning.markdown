@@ -50,7 +50,7 @@ For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](http
 
 Nathan also discusses this work in [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. It is based on [this OpenAI paper](https://openai.com/form/rft-research-program/){:target="openai-rf"}, which is entirely focused on conventional model tuning, but I think if you consider the bullets above, it also fits nicely with our goals of finding general ways to assure desired behavior. 
 
-In particular, note that a _grader_ is used to verify outputs, a key component of any test framework! Hence, it is worth exploring what suite of graders would be useful for many AI-centric use cases? John Allard from OpenAI describes them in [this X post](https://x.com/john__allard/status/1865520756559614090?s=46&mx=2){:target="x"}. Graders may be useful for testing, as well as tuning.
+In particular, note that a _grader_ is used to verify outputs, a key component of any test framework! Hence, it is worth exploring what suite of graders would be useful for many AI-centric [Use Cases]({{site.glossaryurl}}/#use-case)? John Allard from OpenAI describes them in [this X post](https://x.com/john__allard/status/1865520756559614090?s=46&mx=2){:target="x"}. Graders may be useful for testing, as well as tuning.
 
 Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
 
