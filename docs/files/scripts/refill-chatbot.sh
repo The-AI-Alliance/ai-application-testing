@@ -98,7 +98,7 @@ trial() {
                 # echo "Expected response: $expected"
                 resp_str="SUCCESS!"
                 query=$(replace_x "$d" "$q")
-                response=$($NOOP llm -t $t "$query")
+                response=$($NOOP llm --template $t "$query")
                 let count=$count+1
                 if [[ "$response" != "$expected" ]]
                 then
@@ -121,47 +121,3 @@ trial() {
 
 trial "refill" "$refill_expected_response" "${refill_queries[@]}"
 trial "non-refill" "$other_query_expected_response" "${other_queries[@]}"
-
-# expected_response=$(replace_x $refill_expected_response)
-# echo "Queries that are refill requests:"
-# echo "Expected response: $expected_response"
-# for t in "${templates[@]}"
-# do
-#     echo "  Using template $t:"
-#     for q in "${refill_queries[@]}"
-#     do
-#         for d in "${drugs[@]}"
-#         do
-#             resp_str="SUCCESS!"
-#             query=$(replace_x $q)
-#             response=$(llm -t $t "$query")
-#             if [[ "$response" != "$expected_response" ]]
-#             then
-#                 resp_str="FAILURE! response = $response"
-#             fi
-#             echo "    Query: $query => $resp_str"
-#         done
-#     done
-# done
-
-# expected_response=$(replace_x $other_query_expected_response)
-# echo "Queries that are not refill requests:"
-# echo "Expected response: $expected_response"
-# for t in "${templates[@]}"
-# do
-#     echo "  Using template $t:"
-#     for q in "${other_queries[@]}"
-#     do
-#         for d in "${drugs[@]}"
-#         do
-#             resp_str="SUCCESS!"
-#             query=$(replace_x $q)
-#             response=$(llm -t $t "$query")
-#             if [[ "$response" != "$expected_response" ]]
-#             then
-#                 resp_str="FAILURE! response = $response"
-#             fi
-#             echo "    Query: $query => $resp_str"
-#         done
-#     done
-# done

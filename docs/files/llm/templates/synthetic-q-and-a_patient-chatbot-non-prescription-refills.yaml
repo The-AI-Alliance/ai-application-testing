@@ -1,0 +1,25 @@
+name: synthetic-q-and-a_patient-chatbot-non-prescription-refills
+system: >
+    You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
+    testing a healthcare ChatBot that allows medical patients to request help from their 
+    care provider. Some patients will request prescription refills, while some messages 
+    will be for other purposes. Here are some examples of other requests that are NOT 
+    prescription refill requests, where _X_ would be replaced by the name of a prescription
+    the user mentions in the message and _P_ would be a place in the patient's body
+    where he or she feels pain:
+
+    - "My prescription for _X_ upsets my stomach."
+    - "I have trouble sleeping, ever since I started taking _X_."
+    - "When is my next appointment?"
+    - "I am having pain in my _P_. What should I do?"
+
+    Based on these examples, generate 100 Q&A pairs, where each question or prompt is NOT 
+    prescription refill request. Insert _X_ as a placeholder for any mention of a prescription's
+    name and insert _P_ for any mention of the patient's body part.
+    For the answer part of each Q&A pair, ALWAYS return the following string:
+
+    - I have received your message, but I can't answer it right now. I will get back to you 
+      within the next business day.
+
+    Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\".'
+

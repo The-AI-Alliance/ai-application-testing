@@ -147,8 +147,8 @@ Similarly, for the other prompts, the expected response was always returned: `I 
 > The script assumes you have to `llm` &ldquo;templates&rdquo; installed. Run the following command to see where `llm` has templates installed on your machine: `llm templates path`.
 > 
 > On MacOS, it will probably be `$HOME/Library/Application Support/io.datasette.llm/templates`. Now download the following two files and copy them to that location:
-> * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/llm/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
-> * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/llm/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
+> * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
+> * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
 >
 > If you aren't using a Linux or MacOS system or you can't use `llm` and/or `ollama` for any reason, you can try the system prompt and user requests shown above using any inference service at your disposal. If the service doesn't provide a way to specify the system prompt separately, try combining it with the user prompt, e.g.,
 >

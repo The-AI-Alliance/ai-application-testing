@@ -18,10 +18,11 @@ GIT_HASH            ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 TIMESTAMP           ?= $(shell date +"%Y%m%d-%H%M%S")
 
 define help_message
-Quick help for this make process.
+Quick help for this make process. This Makefile is used for the website management.
+For running the example tools described there, see src/Makefile or run "make help-src".
 
 make all                # Clean and locally view the document.
-make clean              # Remove built artifacts, etc.
+make clean              # Remove build artifacts, etc.
 make view-pages         # View the published GitHub pages in a browser.
 make view-local         # View the pages locally (requires Jekyll).
                         # Tip: "JEKYLL_PORT=8000 make view-local" uses port 8000 instead of 4000!
@@ -29,6 +30,8 @@ make view-local         # View the pages locally (requires Jekyll).
 Miscellaneous tasks for help, debugging, setup, etc.
 
 make help               # Prints this output.
+make help-src           # Print help on the src/Makefile tools.
+
 make print-info         # Print the current values of some make and env. variables.
 make setup-jekyll       # Install Jekyll. Make sure Ruby is installed. 
                         # (Only needed for local viewing of the document.)
@@ -88,7 +91,7 @@ Ruby's 'gem' is required. See ruby-lang.org for installation instructions.
 endef
 
 
-.PHONY: all view-pages view-local clean help 
+.PHONY: all view-pages view-local clean help help-src
 .PHONY: setup-jekyll run-jekyll
 
 all:: clean view-local
@@ -96,6 +99,9 @@ all:: clean view-local
 help::
 	$(info ${help_message})
 	@echo
+
+help-src::
+	@SRC_ROOT=src DOCS_ROOT=docs make -C src help
 
 print-info:
 	@echo "GitHub Pages URL:    ${pages_url}"
