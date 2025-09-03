@@ -17,6 +17,7 @@ make all                # Clean and run the tools.
 make clean              # Remove build artifacts, etc., including the contents of
                         # ${TOOLS_DEST}. (See the help for the stage-files target.)
 
+make one-time-setup     # Synonym for the setup target...
 make setup              # One-time setup tasks; builds target install-llm, which
                         # builds install-templates.
 make install-llm        # pip install "llm" and dependencies. Also makes install-templates.
@@ -36,9 +37,6 @@ make stage-files        # The tools files are actually kept in ${TOOLS_SRC}, so
                         # edits in ${TOOLS_SRC} and let targets rerun "make stage-files".
 
 make run-tdd-example    # Run the code for the TDD example "unit benchmark".
-
-make setup              # One-time commands that setup tools:
-                        # * Copy "llm" template files to $HOME/Library/
 
 Miscellaneous tasks for help, debugging, setup, etc.
 
@@ -63,14 +61,14 @@ stage-files:: clean-tools-dest ${TEMP_DIR} install-templates
 
 run-tdd-example:: stage-files ${OUTPUT}
 	@echo "Running the TDD example. If errors occur, run 'make setup' or 'make clean-setup setup', then try again."
-	@echo TODO
+	${TOOLS_DEST}/script
 
 ${TEMP_DIR} ${OUTPUT}::
 	mkdir -p $@
 
-.PHONY: setup clean-setup clean-llm clean-templates install-llm install-templates
+.PHONY: one-time-setup setup clean-setup clean-llm clean-templates install-llm install-templates
 
-setup:: install-llm
+setup one-time-setup:: install-llm
 
 clean-setup:: clean-llm
 

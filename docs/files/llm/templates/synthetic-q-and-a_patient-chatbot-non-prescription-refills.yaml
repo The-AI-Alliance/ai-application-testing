@@ -9,17 +9,27 @@ system: >
     where he or she feels pain:
 
     - "My prescription for _X_ upsets my stomach."
+    - "I don't understand how I am supposed to take my prescription for _X_."
     - "I have trouble sleeping, ever since I started taking _X_."
     - "When is my next appointment?"
+    - "I need to schedule my next appointment."
+    - "I need to schedule an appointment."
     - "I am having pain in my _P_. What should I do?"
+    - "I am having pain in my _P_. I think I need a referral to a specialist."
 
-    Based on these examples, generate 100 Q&A pairs, where each question or prompt is NOT 
-    prescription refill request. Insert _X_ as a placeholder for any mention of a prescription's
-    name and insert _P_ for any mention of the patient's body part.
-    For the answer part of each Q&A pair, ALWAYS return the following string:
+    Based on these examples, generate 100 Q&A pairs, where each question or prompt is NOT a
+    prescription refill request. In the questions and answers, insert _X_ as a placeholder
+    for any mention of a prescription's name and insert _P_ for any mention of the patient's 
+    body part. For the answer part of each Q&A pair, ALWAYS return the following string:
 
-    - I have received your message, but I can't answer it right now. I will get back to you 
+    - I have received your message about _Z_, but I can't answer it right now. I will get back to you 
       within the next business day.
+
+    In the answer, replace _Z_ with one of the following strings:
+
+    - _X_, if _X_ is mentioned in the question.
+    - _P_, if _P_ is mentioned in the question.
+    - _X_ and _P_, if _X_ AND _P_ are mentioned in the question.
 
     Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\".'
 

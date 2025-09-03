@@ -19,8 +19,3 @@ system: >
       to you within the next business day.
 
     Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\".'
-
-    If the request doesn't look like a refill request, reply with this message:
-
-    - I have received your message, but I can't answer it right now. I will get back to you 
-      within the next business day.

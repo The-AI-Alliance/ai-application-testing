@@ -136,19 +136,58 @@ For both models, both drugs, and all refill requests, the expected answer was al
 
 Similarly, for the other prompts, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
-{: .highlight}
-> Try this yourself! We used this Linux/MacOS `zsh` script, [`refill-chatbot.sh`]({{site.baseurl}}/files/scripts/refill-chatbot.sh){:download="refill-chatbot.sh"}.
-> Run `refill-chatbot.sh --help` for more information about using it.
+### Try This Yourself!
+
+We used `zsh` scripts for Linux or MacOS. Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run commands in the `src` directory. 
+
+#### Running with `make`
+
+You can run the scripts directly or use `make`. Switch to the `src` directory and run this `make` command:
+
+```shell
+make one-time-setup run-tdd-example
+```
+
+The `one-time-setup` target will `pip install` tools like [`llm`](https://github.com/simonw/llm){:target="llm"}, install _template_ files used by `llm`, etc. The `run-tdd-example` target runs the script `scripts/tdd-example-refill-chatbot.sh`.
+
+Try `make help` for details about the `make` process. There is also a `--help` option for the script.
+
+As the name suggests, you don't need to repeat `one-time-setup`. You can just run `make run-tdd-example` to repeat execution. You can also run the script directly if you prefer, _after using make once_. The reason you need to run `make run-tdd-example` at least once is because it copies some files to `src/temp` that you will need. These files are staged in directories for the website to have them available.
+
+#### Setting up and Running the Tools Individually
+
+Here are some details handled by the `make` process, which you could do yourself, if you prefer.
+
+The `zsh` script, `tdd-example-refill-chatbot.sh`, is in the `src` directory of the repo or you can download it [here]({{site.baseurl}}/files/src/scripts/tdd-example-refill-chatbot.sh){:download="tdd-example-refill-chatbot.sh"}.
+
+Before running the full script, you'll need to install some tools. We used the excellent [`llm` CLI tool](https://github.com/simonw/llm){:target="llm"} from Simon Willison, which can call a variety of services for model inference, including local serving using [`ollama`](https://ollama.com){:target="ollama"}, which we used for these tests. See the `llm` docs for using other options, like OpenAI's or Anthropic's hosted models.
+
+If you install and use [`ollama`](https://ollama.com){:target="ollama"}, install the `llm` plugin using this command: 
+
+```shell
+llm install llm-ollama
+```
+
+Then install your models of choice. For example, to install the `llama3.2:3B` and `gpt-oss:20b` models we used, run these commands:
+
+```shell
+ollama pull llama3.2:3B
+ollama pull gpt-oss:20b
+```
+
+(Yes, it is `B` for one and `b` for the other, as shown...)
+ 
+The `tdd-example-refill-chatbot.sh` script assumes you have our `llm` &ldquo;templates&rdquo; installed (which is also handled by `make` above). To install them yourself, first run the following command to see where `llm` has templates installed on your system: 
+
+```shell
+llm templates path
+```
+
+On MacOS, it will be `$HOME/Library/Application Support/io.datasette.llm/templates`. Now download the following two files and copy them to the correct location:
+> * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/src/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
+> * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/src/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
 >
-> `refill-chatbot.sh` uses the excellent [`llm` CLI tool](https://github.com/simonw/llm){:target="llm"} from Simon Willison, which can call a variety of services for model inference, including local serving using [`ollama`](https://ollama.com){:target="ollama"}, which we used for these tests. See the `llm` docs for using other options, like OpenAI's hosted models.
->
-> If you install and use [`ollama`](https://ollama.com){:target="ollama"}, install the llm plugin using this command: `llm install llm-ollama`. Then install your models of choice. For example, to install the `llama3.2:3B` and `gpt-oss:20b` models we used, run `ollama pull llama3.2:3B` and `ollama pull gpt-oss:20b`, respectively. (Yes, it is `B` for one and `b` for the other, as shown...)
-> 
-> The script assumes you have to `llm` &ldquo;templates&rdquo; installed. Run the following command to see where `llm` has templates installed on your machine: `llm templates path`.
-> 
-> On MacOS, it will probably be `$HOME/Library/Application Support/io.datasette.llm/templates`. Now download the following two files and copy them to that location:
-> * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
-> * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
+> The `make` process above does these steps for you, too.
 >
 > If you aren't using a Linux or MacOS system or you can't use `llm` and/or `ollama` for any reason, you can try the system prompt and user requests shown above using any inference service at your disposal. If the service doesn't provide a way to specify the system prompt separately, try combining it with the user prompt, e.g.,
 >

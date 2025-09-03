@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-model=gpt-oss:20b
+default_model=gpt-oss:20b
 SCRIPT=$0
 
 help() {
@@ -9,7 +9,7 @@ Try several prompts for the medical chatbot and print what happens.
 Usage: $SCRIPT [-h|--help] [-m|--model MODEL] 
 Where:
 -h | --help         Print this message and exit
--m | --model MODEL  Use MODEL instead of the default: $model
+-m | --model MODEL  Use MODEL instead of the default: $default_model
 
 The llm CLI is required. See https://github.com/simonw/llm for details.
 If you want to serve models locally using "ollama", install it 
@@ -24,6 +24,7 @@ error() {
     exit 1
 }
 
+model=$default_model
 while [[ $# -gt 0 ]]
 do
     case $1 in
