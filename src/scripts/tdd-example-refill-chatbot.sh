@@ -6,25 +6,27 @@ SCRIPT=$0
 help() {
     cat <<EOF
 Try several prompts for the medical chatbot and print what happens.
-Usage: $SCRIPT [-h|--help] [-m|--model MODEL] 
+Usage: $SCRIPT [-h|--help] [-m|--model MODEL] [-o|--output OUT]
 Where:
 -h | --help         Print this message and exit
 -m | --model MODEL  Use MODEL instead of the default: $default_model
+-o | --output OUT   Where standard output is written. Defaults to stdout.
+                    Error messages are written to stderr.
 
-The llm CLI is required. See https://github.com/simonw/llm for details.
-If you want to serve models locally using "ollama", install it 
-following the instructions at https://ollama.com and install the llm
-plugin: "llm install llm-ollama". 
+The llm CLI is required. Run "make help-llm" in the project's src directory.
 EOF
 }
 
 error() {
-    echo "ERROR: $@"
-    help
+    do_help=true
+    [[ $1 = "--no-help" ]] && shift && do_help=false
+    echo "*** ERROR: $@" 1>&2
+    $do_help && help 1>&2
     exit 1
 }
 
 model=$default_model
+output=
 while [[ $# -gt 0 ]]
 do
     case $1 in
@@ -36,6 +38,11 @@ do
         shift
         model=$1
         echo "Using model: $model"
+        ;;
+    -o|--output)
+        shift
+        output="$1"
+        echo "Writing output to $output"
         ;;
     *)
         error "Unrecognized argument $1"
@@ -70,7 +77,7 @@ drugs=(
     "miracle drug"
 )
 
-command -v llm > /dev/null || error "The llm CLI is required. See https://github.com/simonw/llm"
+command -v llm > /dev/null || error "The llm CLI is required. Run 'make help-llm' and see https://github.com/simonw/llm"
 
 replace_x() {
     x_value="$1"
@@ -78,7 +85,7 @@ replace_x() {
     echo "$@" | sed -e "s/_X_/$x_value/g"
 }
 
-trial() {
+do_trial() {
     label="$1"
     shift
     expected_response="$1"
@@ -118,6 +125,16 @@ trial() {
     done
     echo "Total queries = $count, errors = $errors"
     echo
+    return $errors
+}
+
+trial() {
+    if [[ -z $output ]]
+    then
+        do_trial "$@" || error --no-help "\"$1\" run had errors."
+    else
+        do_trial "$@" > "$output" || error --no-help "\"$1\" run had errors. See $output"
+    fi
 }
 
 trial "refill" "$refill_expected_response" "${refill_queries[@]}"

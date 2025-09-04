@@ -1,5 +1,5 @@
 name: synthetic-q-and-a_patient-chatbot-non-prescription-refills
-system: >
+prompt: >
     You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
     testing a healthcare ChatBot that allows medical patients to request help from their 
     care provider. Some patients will request prescription refills, while some messages 
