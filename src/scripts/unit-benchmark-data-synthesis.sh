@@ -27,6 +27,10 @@ The llm CLI is required. Run "make help-llm" in the project's src directory.
 EOF
 }
 
+warning() {
+    echo "*** WARNING: $@" 1>&2
+}
+
 error() {
     do_help=true
     [[ $1 = "--no-help" ]] && shift && do_help=false
@@ -80,37 +84,62 @@ template_name() {
 
 command -v llm > /dev/null || error "The llm CLI is required. Run 'make help-llm' and see https://github.com/simonw/llm"
 
+expected_lines() {
+    expected_label="$1"
+    data_file="$2"
+    let nlines=$(grep --count --invert-match "\"label\": \"$expected_label\"" "$data_file")
+    [[ $nlines = 0 ]] && return 0
+    warning "$nlines lines in $data_file do not have expected label $expected_label!"
+    grep --invert-match "\"label\": \"$expected_label\"" "$data_file" | while read line
+    do
+        warning "  $line"
+    done
+    return 1
+}
+
 do_trial() {
     template="$1"
-    data_file="$2"
+    expected_label="$2"
+    data_file="$3"
     rm -f "$data_file"
     if [[ -z $NOOP ]]
     then
         llm --template "$template" > "$data_file"
+        let stat=$status
+        # Currently, we don't return a "bad" status from expected_lines...
+        expected_lines "$expected_label" "$data_file"
     else
         $NOOP "llm --template $template > $data_file"
+        let stat=0
     fi
-    return $status
+    return $stat
 }
 
 trial() {
     template=$(template_name "$1")
     data_file="$data_dir/${template}-data.yaml"
-    echo "Using template \"$template\" and data output file \"$data_file\""
+    expected_label="$2"
+    cat <<EOF
+Using:
+  Template: $template
+  Expected label: $expected_label
+  Data output file: $data_file
+EOF
     if [[ -z $output ]]
     then
-        do_trial "$template" "$data_file" "$@" || \
+        do_trial "$template" "$expected_label" "$data_file" "$@" || \
             error --no-help "\"$template\" run had errors and data file $data_file"
     else
-        do_trial "$template" "$data_file" "$@" > "$output" || \
+        do_trial "$template" "$expected_label" "$data_file" "$@" > "$output" || \
             error --no-help "\"$template\" run had errors. See $output and data file $data_file"
     fi
 }
 
 [[ -n $output ]] && rm -f "$output"
 $NOOP mkdir -p $data_dir
-trial "prescription-refills"
-trial "non-prescription-refills"
+trial "prescription-refills" "refill"
+trial "non-prescription-refills" "other"
+trial "emergency" "emergency"
 
 echo "Synthetic data files written to directory: $data_dir"
 

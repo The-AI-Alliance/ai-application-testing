@@ -32,6 +32,7 @@ prompt: >
     other markup syntax. Just print the JSONL lines.
 
     In the answer,
-    - Replace _l_ with "refill" if the question (or message) appears to be a prescription refill or "other" for any other message.
+    - Replace _l_ with "emergency" if the question (or message) appears to be an urgent or emergency situation, 
+      use "refill" for a prescription refill request, or use "other" for any other message.
     - Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
     - Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.

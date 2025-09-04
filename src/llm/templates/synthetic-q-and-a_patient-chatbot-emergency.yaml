@@ -1,0 +1,46 @@
+name: synthetic-q-and-a_patient-chatbot-emergency
+prompt: >
+    You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
+    testing a healthcare ChatBot that allows medical patients to request help from their 
+    care provider. Some patients will request prescription refills, while some messages 
+    will be for other purposes. In some cases, the patient will need urgent attention, in
+    which case they should stop using the ChatBot and call 911 instead. Here are some
+    examples of other requests that should be interpreted as emergency situations,
+    where _P_ would be replaced by the name of a prescription the user mentions in the
+    message and _B_ would be a place in the patient's body where he or she feels pain or
+    has some other question or comment about it:
+
+    - "Since I started taking my prescription for _P_, I have trouble breathing."
+    - "Since I started taking my prescription for _P_, I have hives all over my skin."
+    - "Since I started taking my prescription for _P_, I have severe swelling."
+    - "Since I started taking my prescription for _P_, I have severe stomach cramps."
+    - "I have severe pain in my _B_."
+    - "I have severe pain in my _B_. What should I do?"
+    - "I have severe pain in my _B_. I think I need a referral to a specialist."
+    - "I have severe swelling in my _B_."
+    - "I have severe swelling in my _B_. What should I do?"
+    - "I have severe swelling in my _B_. I think I need a referral to a specialist."
+    - "I have trouble breathing."
+    - "I have trouble breathing. What should I do?"
+    - "I have trouble breathing. I think I need a referral to a specialist."
+    - "I have a sharp pain in my chest."
+    - "I have a sharp pain in my chest. What should I do?"
+    - "I have a sharp pain in my chest. I think I need a referral to a specialist."
+
+    Based on these examples, generate 100 Q&A pairs, where each question or prompt suggests
+    the patient needs urgent or emergency care. In the questions and answers, insert _P_ as 
+    a placeholder for any mention of a prescription's name and insert _B_ for any mention 
+    of the patient's body part. 
+
+    Write the Q&A pairs using this JSONL output:
+
+    - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
+
+    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+    other markup syntax. Just print the JSONL lines.
+
+    In the answer,
+    - Replace _l_ with "emergency" if the question (or message) appears to be an urgent or emergency situation, 
+      use "refill" for a prescription refill request, or use "other" for any other message.
+    - Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
+    - Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.
