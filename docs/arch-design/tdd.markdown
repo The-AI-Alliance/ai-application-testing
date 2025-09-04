@@ -211,6 +211,14 @@ A next, more sophisticated step in the design could be to build a _classifier_ m
 
 When a FAQ label is returned, a router sends the message to a low-cost model tuned specifically just for that FAQ. Or it might be sufficient to tune one model to handle all the FAQs, like we discovered meet our example's needs without requiring any special tuning. In contrast, the &ldquo;other&rdquo; messages would be routed to a smarter (and more expensive) model better able to handle more diverse content.
 
+Finally, thinking in terms of a classifier suggests that we don't necessarily want to hard-code in the system prompt the deterministic answer the model should return. Instead, we should return just the label and any additional data of interest, like the drug name in our example. This answer could be formatted in JSONL, like for example the following:
+
+```json
+{"label": "refill-request", "drug-name": "miracle drug"}
+```
+
+Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file or runtime configuration option, so it is easy to change the response without changing the system prompt, etc. This would also make _internalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. For internationalization, we may have to pick a properly _localized_ model for each target language our deployments support.
+
 ### Creating and Using Unit Benchmarks
 
 The remaining four questions we posed above are these:

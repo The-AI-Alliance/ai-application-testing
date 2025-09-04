@@ -18,4 +18,6 @@ prompt: >
     - Okay, I have your request for a refill for _X_. I will check your records and get back
       to you within the next business day.
 
-    Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\".'
+    Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\". Do not write any
+    comments around the JSONL lines and do not wrap the JSONL in Markdown or other markup 
+    syntax. Just print the JSONL lines.

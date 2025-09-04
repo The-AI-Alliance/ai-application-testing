@@ -70,24 +70,29 @@ template_name() {
 command -v llm > /dev/null || error "The llm CLI is required. Run 'make help-llm' and see https://github.com/simonw/llm"
 
 do_trial() {
-    template=$(template_name "$1")
-    rm -f "$data_dir/${template}-data.yaml"
-    echo "Using template $template:"
+    template="$1"
+    data_file="$2"
+    rm -f "$data_file"
     if [[ -z $NOOP ]]
     then
-        llm --template "$template" > "$data_dir/${template}-data.yaml"
+        llm --template "$template" > "$data_file"
     else
-        $NOOP "llm --template $template > $data_dir/${template}-data.yaml"
+        $NOOP "llm --template $template > $data_file"
     fi
     return $status
 }
 
 trial() {
+    template=$(template_name "$1")
+    data_file="$data_dir/${template}-data.yaml"
+    echo "Using template \"$template\" and data output file \"$data_file\""
     if [[ -z $output ]]
     then
-        do_trial "$@" || error --no-help "\"$1\" run had errors."
+        do_trial "$template" "$data_file" "$@" || \
+            error --no-help "\"$template\" run had errors and data file $data_file"
     else
-        do_trial "$@" > "$output" || error --no-help "\"$1\" run had errors. See $output"
+        do_trial "$template" "$data_file" "$@" > "$output" || \
+            error --no-help "\"$template\" run had errors. See $output and data file $data_file"
     fi
 }
 
