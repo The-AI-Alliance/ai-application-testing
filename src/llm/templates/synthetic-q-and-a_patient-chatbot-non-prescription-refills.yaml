@@ -19,8 +19,11 @@ prompt: >
     - "I am having some swelling in my _B_. What should I do?"
     - "I am having some swelling in my _B_. I think I need a referral to a specialist."
 
-    Based on these examples, generate 100 Q&A pairs, where each question or prompt is NOT a
-    prescription refill request. In the questions and answers, insert _P_ as a placeholder
+    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt is NOT a
+    prescription refill request. Do not generate any questions that could be intepreted as
+    emergency or urgent care situations, like extreme pain or allergic reactions. All questions
+    should not require urgent responses from the care provider.
+    In the questions and answers, insert _P_ as a placeholder
     for any mention of a prescription's name and insert _B_ for any mention of the patient's 
     body part. 
 

@@ -90,6 +90,7 @@ expected_lines() {
     let nlines=$(grep --count --invert-match "\"label\": \"$expected_label\"" "$data_file")
     [[ $nlines = 0 ]] && return 0
     warning "$nlines lines in $data_file do not have expected label $expected_label!"
+    warning "The labels may be correct for the actual question generated, so please check the following:"
     grep --invert-match "\"label\": \"$expected_label\"" "$data_file" | while read line
     do
         warning "  $line"
@@ -106,6 +107,7 @@ do_trial() {
     then
         llm --template "$template" > "$data_file"
         let stat=$status
+        echo "$(grep --count "\"question\":" $data_file) Q&A pairs generated"
         # Currently, we don't return a "bad" status from expected_lines...
         expected_lines "$expected_label" "$data_file"
     else
@@ -130,7 +132,7 @@ EOF
         do_trial "$template" "$expected_label" "$data_file" "$@" || \
             error --no-help "\"$template\" run had errors and data file $data_file"
     else
-        do_trial "$template" "$expected_label" "$data_file" "$@" > "$output" || \
+        do_trial "$template" "$expected_label" "$data_file" "$@" >> "$output" || \
             error --no-help "\"$template\" run had errors. See $output and data file $data_file"
     fi
 }

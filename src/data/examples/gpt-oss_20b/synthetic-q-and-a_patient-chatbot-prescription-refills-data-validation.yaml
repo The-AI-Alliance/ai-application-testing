@@ -1,0 +1,55 @@
+{"question":"I'm running low on _P_. Could you get me a refill?","label":"refill","rating":5,"reason":"The question clearly requests a refill for a prescription."}
+{"question":"I would like to request a refill for my _P_ medication.","label":"refill","rating":5,"reason":"The question directly states a desire for a prescription refill."}
+{"question":"Please arrange a refill for my _P_ as I'm out of it.","label":"refill","rating":5,"reason":"The question asks for assistance in getting a refill, clearly indicating a refill request."}
+{"question":"It’s time for a refill on my _P_. Can you help?","label":"refill","rating":5,"reason":"The inquiry is a clear request for help with a prescription refill."}
+{"question":"I need more of my _P_. Can you send a refill?","label":"refill","rating":5,"reason":"The question explicitly asks for a refill of a prescription."}
+{"question":"My doctor said I can refill my _P_. Can you assist with that?","label":"refill","rating":5,"reason":"The question indicates a request for a refill based on a doctor's instruction."}
+{"question":"Could you please refill my _P_ prescription?","label":"refill","rating":5,"reason":"This is a straightforward request for a prescription refill."}
+{"question":"I've run out of _P_. Can I get a refill through you?","label":"refill","rating":5,"reason":"The user is asking for a refill, making it a clear request."}
+{"question":"My pharmacy informed me that I have no more refills for _P_. Can you help?","label":"refill","rating":5,"reason":"The question tells about the situation and requests help for a refill."}
+{"question":"Can you request a refill for my _P_ prescription at the pharmacy?","label":"refill","rating":5,"reason":"The question is a direct request to assist in getting a prescription refill."}
+{"question":"I need to get my _P_ prescription refilled, please.","label":"refill","rating":5,"reason":"The inquiry is a clear and straightforward request for a prescription refill."}
+{"question":"Can you send a prescription refill for my _P_?","label":"refill","rating":5,"reason":"This question directly requests a refill for a prescription."}
+{"question":"I need assistance with refilling my _P_ medication.","label":"refill","rating":5,"reason":"The question explicitly requests assistance with a refill, indicating a refill request."}
+{"question":"Can I have my _P_ prescription refilled?","label":"refill","rating":5,"reason":"The question is a direct ask for a prescription refill."}
+{"question":"I would like to request a refill for _P_ as I’m out of it.","label":"refill","rating":5,"reason":"The question indicates clearly that the user is requesting a prescription refill."}
+{"question":"I'm out of _P_ and need a refill, please.","label":"refill","rating":5,"reason":"The inquiry clearly requests a refill after indicating they are out."}
+{"question":"Can you help me get my _P_ medication refilled?","label":"refill","rating":5,"reason":"This question indicates a request for help in getting a prescription refill."}
+{"question":"I need my _P_ drug refilled, can you do that?","label":"refill","rating":5,"reason":"The question is a clear request for a drug refill."}
+{"question":"I need to refill my _P_. Can you assist?","label":"refill","rating":5,"reason":"This is a clear request for assistance with refilling a prescription."}
+{"question":"Can you check on my refills for _P_? I'm running low.","label":"refill","rating":5,"reason":"The inquiry asks for help with checking refills, indicating it's a refill request."}
+{"question":"My last prescription for _P_ is finished. Can I get a refill?","label":"refill","rating":5,"reason":"The question clearly indicates that the user is seeking a refill for a finished prescription."}
+{"question":"Could you request a refill for _P_ at the earliest?","label":"refill","rating":5,"reason":"The question is a clear request for a timely refill of a prescription."}
+{"question":"I received a reminder about needing to refill my _P_. Can you help?","label":"refill","rating":5,"reason":"The question indicates a request for help based on a reminder for a prescription refill."}
+{"question":"My medication _P_ is running out; can you help me get a refill?","label":"refill","rating":5,"reason":"The inquiry clearly indicates a need for assistance in obtaining a refill."}
+{"question":"I need a refill for my _P_ medication taken for _B_.","label":"refill","rating":5,"reason":"The question presents a request for a refill while mentioning the medication context."}
+{"question":"Can you assist me in getting more _P_ medication?","label":"refill","rating":5,"reason":"The inquiry is a straightforward request for assistance with obtaining more medication."}
+{"question":"I’m completely out of my _P_ and need a refill.","label":"refill","rating":5,"reason":"The question clearly communicates that the user is out of their prescription and needs a refill."}
+{"question":"I'm running low on _P_ and would like a refill.","label":"refill","rating":5,"reason":"This is a clear request for a refill based on the user's low supply."}
+{"question":"Please send a refill for my _P_ at the pharmacy.","label":"refill","rating":5,"reason":"The question explicitly requests a prescription refill."}
+{"question":"Can I get a refill for _P_? I'm running out.","label":"refill","rating":5,"reason":"The question clearly asks for a refill as the user is running out of medication."}
+{"question":"I need to get my _P_ prescription refilled. Can you do that?","label":"refill","rating":5,"reason":"The inquiry is a clear request for assistance in refilling a prescription."}
+{"question":"My pharmacy said I don't have any more refills for _P_. Can you help?","label":"refill","rating":5,"reason":"This question indicates a request for help to refill after being notified by the pharmacy."}
+{"question":"Can you help me with my _P_ refill request?","label":"refill","rating":5,"reason":"The question is a straightforward request for assistance with a refill."}
+{"question":"I need my _P_ refilled as soon as possible.","label":"refill","rating":5,"reason":"The inquiry is a direct request for a quick refill."}
+{"question":"Can we arrange for a refill for my _P_ today?","label":"refill","rating":5,"reason":"The question clearly requests an arrangement for a refill."}
+{"question":"I'm out of my _P_ and need to get it refilled.","label":"refill","rating":5,"reason":"The inquiry clearly indicates that the user is out and needs a refill."}
+{"question":"Could you please refill my _P_ prescription?","label":"refill","rating":5,"reason":"This is a clear and direct request for a prescription refill."}
+{"question":"I’ve run out of _P_ medication; please refill it.","label":"refill","rating":5,"reason":"The question expresses a clear need for a refill."}
+{"question":"I would like to refill my _P_ prescription now.","label":"refill","rating":5,"reason":"The inquiry indicates a desire to immediately refill a prescription."}
+{"question":"Can you help with a refill request for my _P_?","label":"refill","rating":5,"reason":"The question directly requests assistance with a prescription refill."}
+{"question":"I need a quick refill for my _P_. Can you do that?","label":"refill","rating":5,"reason":"This question expresses urgency and requests a refill."}
+{"question":"My _P_ is finished, can you recharge my prescription?","label":"refill","rating":5,"reason":"The question indicates that the prescription is done and asks for a refill."}
+{"question":"Can you send a refill request for _P_?","label":"refill","rating":5,"reason":"This is a clear inquiry about sending a refill request."}
+{"question":"I want to request a refill for _P_.","label":"refill","rating":5,"reason":"The question straightforwardly requests a refill."}
+{"question":"Please assist me in refilling my _P_ as I’m out.","label":"refill","rating":5,"reason":"The inquiry expresses a need for assistance with a refill clearly."}
+{"question":"My current supply of _P_ has run out; can I get a refill?","label":"refill","rating":5,"reason":"This question clearly indicates the need for a refill due to being out of medication."}
+{"question":"I need another refill of _P_. Can you help me with that?","label":"refill","rating":5,"reason":"The inquiry is a clear request for help with a refill."}
+{"question":"I need my _P_ prescription sent for refill.","label":"refill","rating":5,"reason":"This question requests that the prescription be sent for a refill."}
+{"question":"Can you please arrange a refill for _P_?","label":"refill","rating":5,"reason":"The request for assistance in arranging a refill is clear."}
+{"question":"It's time for a refill for my _P_. Can you assist me?","label":"refill","rating":5,"reason":"The question indicates a need for assistance with a refill request."}
+{"question":"I require a refill on my _P_ medication.","label":"refill","rating":5,"reason":"The inquiry is a clear and direct statement requesting a refill."}
+{"question":"I would like to refill _P_ as I am out of it.","label":"refill","rating":5,"reason":"The question clearly states a desire for a refill due to being out."}
+{"question":"Can I have a refill for my _P_ prescription?","label":"refill","rating":5,"reason":"This directly requests a prescription refill."}
+{"question":"My recent prescription for _P_ has finished. Can you help me get a refill?","label":"refill","rating":5,"reason":"The inquiry clearly states that the prescription is finished and requests assistance with refilling it."}
+{"question":"Can you help me refill my _P_ prescription?","label":"refill","rating":5,"reason":"This question requests help with the refill of a prescription."}

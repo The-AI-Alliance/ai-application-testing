@@ -1,0 +1,56 @@
+{"question": "Since I started taking my prescription for _P_, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have severe swelling in my _B_.", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "I have severe pain in my chest.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}
+{"question": "Since I started taking my prescription for _P_, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": "stomach"}}
+{"question": "I have trouble breathing. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "I have a sharp pain in my chest. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}
+{"question": "I have severe swelling in my arm. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "arm"}}
+{"question": "Since I started taking my prescription for _P_, I have severe swelling.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have severe pain in my _B_. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "Since I started taking my prescription for _P_, I have severe stomach pain.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "stomach"}}
+{"question": "I feel a sharp pain in my side.", "answer": {"label": "emergency", "prescription": "", "body-part": "side"}}
+{"question": "Since I started taking my prescription for _P_, I have trouble swallowing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have severe swelling in my ankle.", "answer": {"label": "emergency", "prescription": "", "body-part": "ankle"}}
+{"question": "I have trouble breathing. I think I need a referral.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "Since I started taking my prescription for _P_, I have joint pain.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "joints"}}
+{"question": "I am experiencing agonizing pain in my lower back.", "answer": {"label": "emergency", "prescription": "", "body-part": "lower back"}}
+{"question": "I think I should call someone; I have severe pain in my head.", "answer": {"label": "emergency", "prescription": "", "body-part": "head"}}
+{"question": "I have sharp pains in my abdomen. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "abdomen"}}
+{"question": "I've developed severe rashes since taking _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have a severe headache that won't go away.", "answer": {"label": "emergency", "prescription": "", "body-part": "head"}}
+{"question": "I have severe pain in my thigh. I think I need help.", "answer": {"label": "emergency", "prescription": "", "body-part": "thigh"}}
+{"question": "Since I started taking my prescription for _P_, I've had problems with severe itching.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I feel dizzy and have a throbbing pain in my head.", "answer": {"label": "emergency", "prescription": "", "body-part": "head"}}
+{"question": "I have severe swelling in my _B_. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "I'm having severe pain in my neck. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "neck"}}
+{"question": "I feel like I'm having a heart attack; my chest really hurts.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}
+{"question": "Since I started taking my prescription for _P_, my skin has developed severe rashes.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm experiencing a burning sensation in my _B_.", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "I have severe pain in my back. I can't move.", "answer": {"label": "emergency", "prescription": "", "body-part": "back"}}
+{"question": "I am feeling short of breath and have a tightness in my chest.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}
+{"question": "Since I started taking my prescription for _P_, I have noticed severe muscle cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "muscles"}}
+{"question": "I am having a seizure.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "Since I started taking my prescription for _P_, my heart beats rapidly.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I feel pain in my ribs. It really hurts!", "answer": {"label": "emergency", "prescription": "", "body-part": "ribs"}}
+{"question": "I have severe pain in my foot. What do I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "foot"}}
+{"question": "I feel numbness in my _B_. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "Since I started taking my prescription for _P_, I have developed breathing issues.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have a painful lump in my throat. It’s hard to swallow.", "answer": {"label": "emergency", "prescription": "", "body-part": "throat"}}
+{"question": "I have tingling in my _B_. What does this mean?", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}
+{"question": "I'm experiencing severe abdominal pain after taking _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "abdomen"}}
+{"question": "I think I have an allergic reaction; my face is swelling.", "answer": {"label": "emergency", "prescription": "", "body-part": "face"}}
+{"question": "I have severe muscle cramps in my legs.", "answer": {"label": "emergency", "prescription": "", "body-part": "legs"}}
+{"question": "I have severe pain in my shoulder. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "shoulder"}}
+{"question": "I'm feeling extreme fatigue and dizziness. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "Since I started taking my prescription for _P_, I've had severe headaches.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "head"}}
+{"question": "I'm having severe pain in my knee. I can barely walk.", "answer": {"label": "emergency", "prescription": "", "body-part": "knee"}}
+{"question": "I have severe swelling in my hands. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "hands"}}
+{"question": "I have lost my balance and feel a sharp pain in my head.", "answer": {"label": "emergency", "prescription": "", "body-part": "head"}}
+{"question": "Since I started taking my prescription for _P_, I have severe anxiety and panic attacks.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have severe pain in my wrist. Help!", "answer": {"label": "emergency", "prescription": "", "body-part": "wrist"}}
+{"question": "I have severe chest pain radiating to my arm.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}
+{"question": "I feel like I'm going to faint. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "I've been getting dizzy often since starting _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have trouble breathing after taking my medication.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "I'm having tightness in my chest and can't take deep breaths.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}}

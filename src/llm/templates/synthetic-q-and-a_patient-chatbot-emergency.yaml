@@ -27,7 +27,7 @@ prompt: >
     - "I have a sharp pain in my chest. What should I do?"
     - "I have a sharp pain in my chest. I think I need a referral to a specialist."
 
-    Based on these examples, generate 100 Q&A pairs, where each question or prompt suggests
+    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt suggests
     the patient needs urgent or emergency care. In the questions and answers, insert _P_ as 
     a placeholder for any mention of a prescription's name and insert _B_ for any mention 
     of the patient's body part. 

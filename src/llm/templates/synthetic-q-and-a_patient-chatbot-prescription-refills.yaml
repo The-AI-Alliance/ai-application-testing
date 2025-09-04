@@ -11,8 +11,10 @@ prompt: >
     - "I need more _P_."
     - "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?"
 
-    Based on these examples, generate 100 Q&A pairs, where each question or prompt is a 
-    prescription refill request. Insert _P_ as a placeholder for the prescription's name.
+    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt is a 
+    prescription refill request. Do not generate any questions that could be intepreted as
+    emergency or urgent care situations, like extreme pain or allergic reactions.
+    Insert _P_ as a placeholder for the prescription's name.
     If a body part is mentioned, insert _B_ as a placeholder for the body part's name.
 
     Write the Q&A pairs using this JSONL output:

@@ -133,9 +133,10 @@ trial() {
     then
         do_trial "$@" || error --no-help "\"$1\" run had errors."
     else
-        do_trial "$@" > "$output" || error --no-help "\"$1\" run had errors. See $output"
+        do_trial "$@" >> "$output" || error --no-help "\"$1\" run had errors. See $output"
     fi
 }
 
+[[ -n $output ]] && rm -f "$output"
 trial "refill" "$refill_expected_response" "${refill_queries[@]}"
 trial "non-refill" "$other_query_expected_response" "${other_queries[@]}"
