@@ -1,0 +1,62 @@
+{"question": "My prescription for _P_ makes me feel nauseous.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have been feeling dizzy after taking _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you tell me how to take my medication for _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "What are the side effects of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to check when my last appointment was.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "Could you assist me in scheduling a follow-up appointment?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I want to schedule an appointment with my doctor.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I'm experiencing pain in my _B_. What should I do next?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "There's a sharp pain in my _B_. Should I be concerned?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I have noticed some swelling in my _B_. Is this normal?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "There is a bump on my _B_. Can you help me?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "My prescription for _P_ is causing headaches.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me understand the instructions for _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I think I need to see a specialist for my pain in my _B_.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I have persistent pain in my _B_. What are my options?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "My prescription _P_ has been making me feel very anxious.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How long should I wait before I see a doctor about my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can I take _P_ with my other medications?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to know the dosage for _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "There is some redness around my _B_. What does this mean?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I want to understand more about the benefits of _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "What should I do if I missed a dose of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm having trouble sleeping after I started _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How can I quit taking _P_ safely?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have a question about my lab results from my last visit.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I think I may be having a reaction to _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "What are the alternatives to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Should I be concerned about the swelling in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I have pain in my _B_ when I move it. What can I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can you guide me on how to administer _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I forgot when my appointment is scheduled for.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I'm having side effects from my medication _P_, what should I do?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "There's a pain in my _B_ after I exercise. Is that normal?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "How do I know if I need to see a specialist for my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "What should I do for my rash on my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "My mother is worried about her medication _P_. Can you help?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can _P_ affect my mood?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have been experiencing extreme fatigue since starting _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "When is my next follow-up appointment scheduled?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "What should I do if my _B_ feels numb?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can I take _P_ on an empty stomach?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I've been prescribed _P_, but I want to know its purpose.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "What can I do about the itching in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Is there a time frame for how long I need to be on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have unusual pain in my _B_. Should I be worried?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can you clarify how I should store my _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have an appointment next week and I'm feeling stressed about it.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "What are the signs I should look for if I have a reaction to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Should I avoid any foods while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm feeling pain in my _B_ when I breathe. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "What tests will I need before my next appointment?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I think I need to adjust my dosage of _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How can I alleviate the discomfort in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I need some advice after my previous visit regarding _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "My pharmacy says they need a new prescription for _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How do I report side effects from _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "What do I do if my _B_ feels warm to the touch?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can I drink alcohol while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How long should I expect to feel this way after starting _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I am feeling pain in my _B_ after changing my exercise routine.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Does _P_ interact with my other medications?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I have a follow-up appointment next month. What should I prepare?", "answer": {"label": "other", "prescription": "", "body-part": ""}}

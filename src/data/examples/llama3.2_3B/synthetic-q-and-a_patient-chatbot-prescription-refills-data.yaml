@@ -1,0 +1,61 @@
+{"question": "I need my aspirin refilled.", "answer": {"label": "refill", "prescription": "aspirin", "body-part": ""}}
+{"question": "I need my blood pressure medication refilled.", "answer": {"label": "refill", "prescription": "blood pressure medication", "body-part": ""}}
+{"question": "Can you help me get a refill for my cholesterol meds?", "answer": {"label": "refill", "prescription": "cholesterol meds", "body-part": ""}}
+{"question": "I'm out of my antidepressant. Can I get a refill?", "answer": {"label": "refill", "prescription": "antidepressant", "body-part": ""}}
+{"question": "I need more metformin.", "answer": {"label": "refill", "prescription": "metformin", "body-part": ""}}
+{"question": "Could you refill my inhaler, please?", "answer": {"label": "refill", "prescription": "inhaler", "body-part": ""}}
+{"question": "My pharmacy says my thyroid medication needs a refill.", "answer": {"label": "refill", "prescription": "thyroid medication", "body-part": ""}}
+{"question": "I'm out of my pain reliever, could you refill it?", "answer": {"label": "refill", "prescription": "pain reliever", "body-part": ""}}
+{"question": "I need a refill for my allergy meds.", "answer": {"label": "refill", "prescription": "allergy meds", "body-part": ""}}
+{"question": "Can I have a refill for my anxiety prescription?", "answer": {"label": "refill", "prescription": "anxiety prescription", "body-part": ""}}
+{"question": "I need my blood thinner refilled.", "answer": {"label": "refill", "prescription": "blood thinner", "body-part": ""}}
+{"question": "Could you ask for a refill on my high blood pressure medication?", "answer": {"label": "refill", "prescription": "high blood pressure medication", "body-part": ""}}
+{"question": "My doctor prescribed me a refill for my antidepressants.", "answer": {"label": "refill", "prescription": "antidepressants", "body-part": ""}}
+{"question": "I'm low on my vitamin D. Can I get a refill?", "answer": {"label": "refill", "prescription": "vitamin D", "body-part": ""}}
+{"question": "I need a refill of my glucophage.", "answer": {"label": "refill", "prescription": "glucophage", "body-part": ""}}
+{"question": "Please refill my muscle relaxants.", "answer": {"label": "refill", "prescription": "muscle relaxants", "body-part": "muscles"}}
+{"question": "I need more of my migraine medication.", "answer": {"label": "refill", "prescription": "migraine medication", "body-part": "head"}}
+{"question": "My last prescription for antibiotics ran out. Can I have a refill?", "answer": {"label": "refill", "prescription": "antibiotics", "body-part": ""}}
+{"question": "I need a refill on my sleeping pills.", "answer": {"label": "refill", "prescription": "sleeping pills", "body-part": ""}}
+{"question": "I need my loratadine refilled.", "answer": {"label": "refill", "prescription": "loratadine", "body-part": ""}}
+{"question": "My asthma inhaler is empty. Can I get a refill?", "answer": {"label": "refill", "prescription": "asthma inhaler", "body-part": "lungs"}}
+{"question": "My pharmacist said I don't have refills for my statins.", "answer": {"label": "refill", "prescription": "statins", "body-part": ""}}
+{"question": "I need a refill for amoxicillin.", "answer": {"label": "refill", "prescription": "amoxicillin", "body-part": ""}}
+{"question": "I need more clopidogrel, please.", "answer": {"label": "refill", "prescription": "clopidogrel", "body-part": ""}}
+{"question": "I need my metoprolol refilled.", "answer": {"label": "refill", "prescription": "metoprolol", "body-part": ""}}
+{"question": "Can I get a refill for my ranitidine?", "answer": {"label": "refill", "prescription": "ranitidine", "body-part": ""}}
+{"question": "My prescription for ibuprofen is empty. Can I get more?", "answer": {"label": "refill", "prescription": "ibuprofen", "body-part": ""}}
+{"question": "I need my fluoxetine refilled.", "answer": {"label": "refill", "prescription": "fluoxetine", "body-part": ""}}
+{"question": "I'm out of my hydrocodone. Can you refill it?", "answer": {"label": "refill", "prescription": "hydrocodone", "body-part": ""}}
+{"question": "Can I have a refill of my prednisone?", "answer": {"label": "refill", "prescription": "prednisone", "body-part": ""}}
+{"question": "I need my lorazepam refilled.", "answer": {"label": "refill", "prescription": "lorazepam", "body-part": ""}}
+{"question": "Could I have a refill for my buprenorphine?", "answer": {"label": "refill", "prescription": "buprenorphine", "body-part": ""}}
+{"question": "I'm out of my escitalopram. Can I get a refill?", "answer": {"label": "refill", "prescription": "escitalopram", "body-part": ""}}
+{"question": "My allergy prescription is running low. Can you help me refill it?", "answer": {"label": "refill", "prescription": "allergy prescription", "body-part": ""}}
+{"question": "My blood pressure pills are almost gone. Please refill them.", "answer": {"label": "refill", "prescription": "blood pressure pills", "body-part": ""}}
+{"question": "I need more trazodone, please.", "answer": {"label": "refill", "prescription": "trazodone", "body-part": ""}}
+{"question": "Can you refill my blood glucose monitor supplies?", "answer": {"label": "refill", "prescription": "blood glucose monitor supplies", "body-part": ""}}
+{"question": "I need my lisinopril refilled.", "answer": {"label": "refill", "prescription": "lisinopril", "body-part": ""}}
+{"question": "Please send in a refill request for my sertraline.", "answer": {"label": "refill", "prescription": "sertraline", "body-part": ""}}
+{"question": "Can I get a refill on my furosemide?", "answer": {"label": "refill", "prescription": "furosemide", "body-part": ""}}
+{"question": "I need my acetaminophen refilled.", "answer": {"label": "refill", "prescription": "acetaminophen", "body-part": ""}}
+{"question": "I'm running low on my unziprol.", "answer": {"label": "refill", "prescription": "unziprol", "body-part": ""}}
+{"question": "Can you refill my hydromorphone?", "answer": {"label": "refill", "prescription": "hydromorphone", "body-part": ""}}
+{"question": "I need a refill of my topiramate.", "answer": {"label": "refill", "prescription": "topiramate", "body-part": ""}}
+{"question": "I need my Donepezil refilled.", "answer": {"label": "refill", "prescription": "Donepezil", "body-part": ""}}
+{"question": "My pharmacy said I can't refill my antibiotic prescription.", "answer": {"label": "refill", "prescription": "antibiotic prescription", "body-part": ""}}
+{"question": "I need more of my phenytoin.", "answer": {"label": "refill", "prescription": "phenytoin", "body-part": ""}}
+{"question": "Could I please get a refill for my rivaroxaban?", "answer": {"label": "refill", "prescription": "rivaroxaban", "body-part": ""}}
+{"question": "Can you send a refill for my calcium supplement?", "answer": {"label": "refill", "prescription": "calcium supplement", "body-part": ""}}
+{"question": "I'm running out of my antidiabetic medication.", "answer": {"label": "refill", "prescription": "antidiabetic medication", "body-part": ""}}
+{"question": "Please refill my lisinopril.", "answer": {"label": "refill", "prescription": "lisinopril", "body-part": ""}}
+{"question": "I need my phentermine refilled.", "answer": {"label": "refill", "prescription": "phentermine", "body-part": ""}}
+{"question": "Can I have a refill for my dexamethasone?", "answer": {"label": "refill", "prescription": "dexamethasone", "body-part": ""}}
+{"question": "My hydralazine is almost gone. Can I refill it?", "answer": {"label": "refill", "prescription": "hydralazine", "body-part": ""}}
+{"question": "I'm out of my loratadine. Can you help?", "answer": {"label": "refill", "prescription": "loratadine", "body-part": ""}}
+{"question": "Can I get my adderall refilled?", "answer": {"label": "refill", "prescription": "adderall", "body-part": ""}}
+{"question": "I'm low on my birth control pills. Can I get a refill?", "answer": {"label": "refill", "prescription": "birth control pills", "body-part": ""}}
+{"question": "Please help me refill my niacin.", "answer": {"label": "refill", "prescription": "niacin", "body-part": ""}}
+{"question": "I need my aspirin prescription refilled.", "answer": {"label": "refill", "prescription": "aspirin", "body-part": ""}}
+{"question": "Can I get a refill on my gabapentin?", "answer": {"label": "refill", "prescription": "gabapentin", "body-part": ""}}
+{"question": "I need my sertraline refilled.", "answer": {"label": "refill", "prescription": "sertraline", "body-part": ""}}
