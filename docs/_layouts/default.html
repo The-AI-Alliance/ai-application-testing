@@ -197,7 +197,7 @@ layout: table_wrappers
               %}
                 <div class="d-flex mt-2">
                   <p class="text-small text-grey-dk-000 mb-0">
-                    <a href="{{ site.gh_edit_repository }}/{{ page.path }}" id="edit-this-page" target="_blank">{{ site.gh_edit_link_text }}</a>
+                    <a href="{{ site.gh_edit_repository }}/{{site.gh_edit_view_mode}}/{{site.gh_edit_branch}}/{{site.gh_edit_source}}/{{ page.path }}" id="edit-this-page" target="_blank">{{ site.gh_edit_link_text }}</a>
                   </p>
                 </div>
               {% endif %}

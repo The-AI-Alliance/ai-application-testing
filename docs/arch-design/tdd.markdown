@@ -158,7 +158,7 @@ As the name suggests, you don't need to repeat `one-time-setup`. You can just ru
 
 Here are some details handled by the `make` process, which you could do yourself, if you prefer.
 
-The `zsh` script, `tdd-example-refill-chatbot.sh`, is in the `src` directory of the repo or you can download it [here]({{site.baseurl}}/files/src/scripts/tdd-example-refill-chatbot.sh){:download="tdd-example-refill-chatbot.sh"}.
+The `zsh` script, `tdd-example-refill-chatbot.sh`, is in the `src` directory of the repo or you can download it [here]({{site.gh_edit_repository}}/blob/main/src/scripts/tdd-example-refill-chatbot.sh){:target="_blank"}
 
 Before running the full script, you'll need to install some tools. We used the excellent [`llm` CLI tool](https://github.com/simonw/llm){:target="llm"} from Simon Willison, which can call a variety of services for model inference, including local serving using [`ollama`](https://ollama.com){:target="ollama"}, which we used for these tests. See the `llm` docs for using other options, like OpenAI's or Anthropic's hosted models.
 
@@ -184,34 +184,22 @@ llm templates path
 ```
 
 On MacOS, it will be `$HOME/Library/Application Support/io.datasette.llm/templates`. Now download the following two files and copy them to the correct location:
-> * [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.baseurl}}/files/src/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml){:download="q-and-a_patient-chatbot-prescriptions.yaml"} 
-> * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.baseurl}}/files/src/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:download="q-and-a_patient-chatbot-prescriptions-with-examples.yaml"} 
->
-> The `make` process above does these steps for you, too.
->
-> If you aren't using a Linux or MacOS system or you can't use `llm` and/or `ollama` for any reason, you can try the system prompt and user requests shown above using any inference service at your disposal. If the service doesn't provide a way to specify the system prompt separately, try combining it with the user prompt, e.g.,
+
+* [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} 
+* [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"} 
+
+{: .highlight}
+> If you aren't using a Linux or MacOS system or you can't use `llm` for any reason, you can use any inference service at your disposal with the system prompts in those YAML files and user prompts shown above. If the service doesn't provide a way to specify the system prompt separately, just combine it with the user prompt, e.g.,
 >
 > ```text
 > system:
 >   You are a helpful assistant for medical patients requesting help from their care provider. Some patients will request prescription refills. 
-> 
->   Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _X_ is replaced by the name of the prescription:
-> 
->   - Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.
->   
->   If the request doesn't look like a refill request, reply with this message:
->   
->   - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
+>   ...
 >   
 > prompt: I need a refill for my miracle drug.
 > ```
 
-We effectively created _deterministic_ outputs for a narrow range of particular inputs! Two next questions to investigate include the following:
-
-* How _diverse_ can the prompts be and still be &ldquo;mapped&rdquo; by the LLM to the same response?
-* How should cases at those edges be handled?
-
-Answering the third question posed earlier, &ldquo;How do we create these Q&A pairs?&rdquo;, is part of the answer. First, let's explore a design idea.
+Back to our results above; we effectively created _deterministic_ outputs for a narrow range of particular inputs! This suggests a design idea we should explore next.
 
 ### Idea: Handling Frequently Asked Questions
 
@@ -232,11 +220,20 @@ The remaining four questions we posed above are these:
 * How do we validate the resulting answers?
 * How do we define &ldquo;pass/fail&rdquo; for this test?
 
-One drawback to our experiment above was the need for humans to manually create good Q&A pairs for testing. We mentioned above that follow-up questions include how should we quantify the range of possible questions that all get &ldquo;mapped&rdquo; to the same response, and how should we handle edge cases at the discovered boundaries? These are the kinds of questions that can really only be answered on a case-by-case basis through experimentation, using lots of Q&A pairs. We will explore automated techniques for data _synthesis_ in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks). We will also discuss there how to run our benchmarks, including how we can scale up our tasks beyond the ad hoc approach we used above.
+In addition, we just discovered that we could have our models return a desired, _deterministic_ response for particular &ldquo;classes&rdquo; of prompts, like various ways of asking for prescription refills. This suggests two additional questions for follow up:
 
-Similarly, we will need a way to automatically assess the answers generated from prompts, including checking the quality of synthetic Q&A test pairs themselves. Two techniques we will cover are [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
+* How _diverse_ can the prompts be and still be correctly &ldquo;mapped&rdquo; by the LLM to the same desired response?
+* If those edge cases aren't properly handled, what should we do?
 
-Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate (as long as it was okay to ignore capitalization of some words!). This convenient _certainty_ won't happen very often.
+Several of these questions share the requirement that we need a scalable and efficient way to create lots of high-quality Q&A pairs. One drawback to our experiment above was the way we manually created good Q&A pairs for testing. They were not comprehensive and it doesn't scale well for humans to do this work.
+
+We need automated techniques for data _synthesis_ to scale up our tasks beyond the ad hoc approach we used above, especially as we add more and more tests. We also need automated techniques for validating the quality of our synthetic test data.
+
+In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks), we will explore these techniques and also discuss there how to run the unit benchmarks we create.
+
+To automatically check the quality of synthetic Q&A test pairs, including how well each answer aligns with its question, we will explore techniques like [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
+
+Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate (as long as it was okay to ignore capitalization of some words!). This convenient _certainty_ won't happen very often, especially if when we encounter edge cases.
 
 ---
 
