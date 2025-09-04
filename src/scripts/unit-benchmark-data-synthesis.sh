@@ -2,7 +2,13 @@
 
 default_model=gpt-oss:20b
 SCRIPT=$0
-default_data_dir=.
+default_data_dir=data
+
+model_dir_name() {
+    echo "$1" | sed -e 's/:/_/g'
+}
+
+default_model_dir_name=$(model_dir_name $default_model)
 
 help() {
     cat <<EOF
@@ -14,6 +20,9 @@ Where:
 -o | --output OUT   Where standard output is written. Defaults to stdout.
                     Error messages are written to stderr.
 -d | --data DIR     Directory where data files are written. Default: $default_data_dir.
+                    The files will actually be written into a subdirectory 
+                    based on the model name, by default: $default_model_dir_name
+
 The llm CLI is required. Run "make help-llm" in the project's src directory.
 EOF
 }
@@ -26,9 +35,9 @@ error() {
     exit 1
 }
 
-model=$default_model
+model="$default_model"
 output=
-data_dir=$default_data_dir
+data_dir1="$default_data_dir"
 while [[ $# -gt 0 ]]
 do
     case $1 in
@@ -39,17 +48,14 @@ do
     -m|--model)
         shift
         model=$1
-        echo "Using model: $model"
         ;;
     -o|--output)
         shift
         output="$1"
-        echo "Writing output to $output"
         ;;
     -d|--data)
         shift
-        data_dir="$1"
-        echo "Writing synthetic data files to $data_dir"
+        data_dir1="$1"
         ;;
     *)
         error "Unrecognized argument $1"
@@ -57,6 +63,15 @@ do
     esac
     shift
 done
+
+data_dir="$data_dir1/$(model_dir_name $model)"
+cat << EOF
+$SCRIPT:
+Using model: $model
+Writing output to $([[ -z $output ]] && echo "stdout" || echo $output)
+Writing synthetic data files to $data_dir
+
+EOF
 
 template_name() {
     which_one=$1
@@ -93,6 +108,7 @@ trial() {
 }
 
 [[ -n $output ]] && rm -f "$output"
+$NOOP mkdir -p $data_dir
 trial "prescription-refills"
 trial "non-prescription-refills"
 
