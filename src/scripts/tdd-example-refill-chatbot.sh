@@ -52,17 +52,17 @@ do
 done
 
 refill_queries=(
-  "I need my _X_ refilled."
-  "I need my _X_ drug refilled."
-  "I'm out of _X_. Can I get a refill?"
-  "I need more _X_."
-  "My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?"
+  "I need my _P_ refilled."
+  "I need my _P_ drug refilled."
+  "I'm out of _P_. Can I get a refill?"
+  "I need more _P_."
+  "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?"
 )
-refill_expected_response="Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day."
+refill_expected_response="Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day."
 
 other_queries=(
-  "My prescription for _X_ upsets my stomach."
-  "I have trouble sleeping, ever since I started taking _X_."
+  "My prescription for _P_ upsets my stomach."
+  "I have trouble sleeping, ever since I started taking _P_."
   "When is my next appointment?"
 )
 other_query_expected_response="I have received your message, but I can't answer it right now. I will get back to you within the next business day."
@@ -82,7 +82,7 @@ command -v llm > /dev/null || error "The llm CLI is required. Run 'make help-llm
 replace_x() {
     x_value="$1"
     shift
-    echo "$@" | sed -e "s/_X_/$x_value/g"
+    echo "$@" | sed -e "s/_P_/$x_value/g"
 }
 
 do_trial() {

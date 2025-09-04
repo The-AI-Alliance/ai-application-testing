@@ -1,0 +1,101 @@
+{"question": "My prescription for _P_ upsets my stomach.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I don't understand how I am supposed to take my prescription for _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I have trouble sleeping, ever since I started taking _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "When is my next appointment?", "answer": {"label": "other", "prescription": "", "body-part": ""}}  
+{"question": "I need to schedule my next appointment.", "answer": {"label": "other", "prescription": "", "body-part": ""}}  
+{"question": "I need to schedule an appointment.", "answer": {"label": "other", "prescription": "", "body-part": ""}}  
+{"question": "I am having pain in my _B_. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I am having pain in my _B_. I think I need a referral to a specialist.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I am having some swelling in my _B_. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I am having some swelling in my _B_. I think I need a referral to a specialist.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Can you tell me more about the side effects of my medication _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Is it safe to eat dairy while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I’ve been feeling anxious since I started taking _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Do I need blood tests before or after taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What should I do if I accidentally missed a dose of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I am having a rash on my _B_. Is that normal with _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": "_B_"}}  
+{"question": "Can I take _P_ with my other medications?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What symptoms should I look out for while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I am feeling dizzy after taking _P_. What should I do?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need some advice on how to manage my pain in my _B_.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Can you provide information on how to manage my symptoms related to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What are the alternatives to _P_? I’m feeling some side effects.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How do I handle the nausea that comes with taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I have a follow-up question regarding my last appointment.", "answer": {"label": "other", "prescription": "", "body-part": ""}}  
+{"question": "My dosage of _P_ doesn't seem to be working. What should I do?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What are the long-term effects of taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need clarification about when to take my next dose of _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you recommend exercises for pain in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "How should I adjust my diet while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I am concerned about my blood pressure while on _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What can I do to alleviate the discomfort in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Can you help me understand how to taper off _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I think I need a change in my medication. Can we discuss _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "My _B_ has been bothering me a lot lately. What can I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I am feeling more tired since starting _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you tell me about the potential allergies I should watch for with _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need a note for work regarding my _B_ pain.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Is it ok to consume alcohol while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I’d like to understand more about how _P_ impacts my liver.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can _P_ cause headaches and what should I do about them?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What should I do if I experience severe side effects with _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "When should I schedule a follow-up after starting _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I want to discuss my progress in treatment while taking _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What tests might I need while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you suggest over-the-counter medication I can take for my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Will _P_ interact with my previous medications?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "My _B_ has been really stiff lately. What’s your advice?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I am having mood swings after starting _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What precautions should I take while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can I continue exercising with pain in my _B_ while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": "_B_"}}  
+{"question": "How do I know if _P_ is still effective for me?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need support for my mental health while on _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What should I do if I suspect an allergic reaction to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How long should I wait to see improvements from _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I heard someone mention potential weight gain from _P_. Is this true?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What do I do if I feel unwell after taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Are there dietary restrictions I should follow while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I have questions about the cost of medication _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you recommend ways to manage the side effects of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm thinking about switching from _P_ to another medication, what do you recommend?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What should I bring to my appointment to discuss _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Is there a connection between my diet and my symptoms on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I would like to schedule an evaluation for my _B_ pain.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Do you have any resources for dealing with chronic pain in my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Should I consider therapy while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm not sure how to take _P_ properly, can you guide me?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What happens if I overdose on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I have a question about my test results. When will they be available?", "answer": {"label": "other", "prescription": "", "body-part": ""}}  
+{"question": "I'm looking for advice on how to transition off _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How can I improve my overall health while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need help managing stress while taking _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What lifestyle changes can support my treatment on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I’m experiencing headaches related to my _B_. What can I do?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "I have a follow-up about my medication _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What resources do you recommend for learning about the effects of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you suggest a physical therapist for my _B_ pain?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "How do I manage my chronic fatigue while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you provide tips for improving sleep while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What are the common dosages for _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need information regarding the withdrawal symptoms from _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you explain the importance of hydration while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How do I schedule an MRI for my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "What tips can help minimize side effects from _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm looking for alternative therapies for my _B_.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Where can I find support groups related to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "Can you recommend a specialist for my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "How can I communicate with my doctor about my experience with _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm uncertain if _P_ is the right choice for me. Can we discuss it?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What types of therapy could help with my _B_?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Can you explain what happens during a medication review for _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How can I obtain a copy of my medical records for my appointment regarding _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What steps should I take if I feel my condition worsening while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm feeling pressure in my _B_. What's the next step?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Can you provide information on the latest research related to _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I need assistance with managing my anxiety while on _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I would like to discuss the effectiveness of _P_ compared to other treatments.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "What common health concerns should I watch for while on _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How long does it take to see results from _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "I'm looking for holistic approaches to support my treatment with _P_.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  
+{"question": "How should I prepare for an appointment regarding my _B_ pain?", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}  
+{"question": "Are there specific lifestyle changes recommended while taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}  

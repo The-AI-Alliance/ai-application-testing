@@ -49,10 +49,10 @@ First, what aspects of TDD _don't_ need to change? Let's use a concrete example.
 
 Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a &ldquo;unit benchmark&rdquo;[^1], an analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
 
-* &ldquo;I need my _X_ refilled.&rdquo;
-* &ldquo;I need my _X_ drug refilled.&rdquo;
-* &ldquo;I'm out of _X_. Can I get a refill?&rdquo;
-* &ldquo;My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?&rdquo;
+* &ldquo;I need my _P_ refilled.&rdquo;
+* &ldquo;I need my _P_ drug refilled.&rdquo;
+* &ldquo;I'm out of _P_. Can I get a refill?&rdquo;
+* &ldquo;My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?&rdquo;
 * ...
 
 [^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
@@ -62,12 +62,11 @@ For this first iteration, the answer parts of the Q&A pairs might be identical f
 
 [^2]: A future feature might be able to check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
 
-
-* &ldquo;Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.&rdquo;
+* &ldquo;Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.&rdquo;
 
 Now we have to answer these questions:
 
-* For those questions and desired answers that have a placeholder _X_ for the drug, how do we handle testing any conceivable drug?
+* For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
 * What should happen if the request doesn't appear to be a refill request?
 * How do we create these Q&A pairs?
 * How do we run this &ldquo;unit test&rdquo;?
@@ -78,7 +77,7 @@ Now we have to answer these questions:
 
 Let's explore the first two questions:
 
-* For those questions and desired answers that have a placeholder _X_ for the drug, how do we handle testing any conceivable drug?
+* For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
 * What should happen if the request doesn't appear to be a refill request?
 
 It turns out this is often easier to address than it might appear at first. Before LLMs, we would have to think about some sort of language _parser_ that finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt) that steers the LLM towards the desired behaviors. Let's see an example of how this works.
@@ -86,16 +85,16 @@ It turns out this is often easier to address than it might appear at first. Befo
 First, LLMs have been trained to recognize prompt strings that might contain a system prompt along with the user query. This system prompt is usually a static, application-specific string that provides fixed context to the model. For our experiments with this example, we used two, similar system prompts. Here is the first one:
 
 ```text
-You are a helpful assistant for medical patients requesting help from their care provider. Some patients will request prescription refills. Here are some examples, where _X_ would be replaced by the name of the prescription the user mentions:
+You are a helpful assistant for medical patients requesting help from their care provider. Some patients will request prescription refills. Here are some examples, where _P_ would be replaced by the name of the prescription the user mentions:
 
-- "I need my _X_ refilled."
-- "I need my _X_ drug refilled."
-- "I'm out of _X_. Can I get a refill?"
-- "My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?"
+- "I need my _P_ refilled."
+- "I need my _P_ drug refilled."
+- "I'm out of _P_. Can I get a refill?"
+- "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?"
 
-Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _X_ is replaced by the name of the prescription:
+Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _P_ is replaced by the name of the prescription:
 
-- Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.
+- Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.
 
 If the request doesn't look like a refill request, reply with this message:
 
@@ -107,9 +106,9 @@ We found that providing examples wasn't actually necessary in this case, at leas
 ```text
 You are a helpful assistant for medical patients requesting help from their care provider. Some patients will request prescription refills. 
 
-Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _X_ is replaced by the name of the prescription:
+Whenever you see a request that looks like a prescription refill request, always reply with the following text, where _P_ is replaced by the name of the prescription:
 
-- Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.
+- Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.
 
 If the request doesn't look like a refill request, reply with this message:
 
@@ -118,21 +117,21 @@ If the request doesn't look like a refill request, reply with this message:
 
 We tried both system prompts with the models [`gpt-oss:20B`](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} and [`llama3.2:3B`](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"}, served locally using [`ollama`](https://ollama.com/){:target="ollama"} with a number of prompts. First, a set of refill requests:
 
-* `I need my _X_ refilled.`
-* `I need my _X_ drug refilled.`
-* `I'm out of _X_. Can I get a refill?`
-* `I need more _X_.`
-* `My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?`
+* `I need my _P_ refilled.`
+* `I need my _P_ drug refilled.`
+* `I'm out of _P_. Can I get a refill?`
+* `I need more _P_.`
+* `My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?`
 
 We also tried other requests that aren't related to refills:
 
-* `My prescription for _X_ upsets my stomach.`
-* `I have trouble sleeping, ever since I started taking _X_.`
+* `My prescription for _P_ upsets my stomach.`
+* `I have trouble sleeping, ever since I started taking _P_.`
 * `When is my next appointment?`
 
-We ran separate queries for `_X_` replaced with `prozac` and `miracle drug`.
+We ran separate queries for `_P_` replaced with `prozac` and `miracle drug`.
 
-For both models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day.`, with `_X_` replaced by the drug name, although sometimes the model would write `Prozac`, which is arguably more correct, rather than what the &ldquo;user&rdquo; entered, `prozac`. When checking the results, the script described shortly would do a case-insensitive comparison, when necessary.
+For both models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would write `Prozac`, which is arguably more correct, rather than what the &ldquo;user&rdquo; entered, `prozac`. When checking the results, the script described shortly would do a case-insensitive comparison, when necessary.
 
 Similarly, for the other prompts, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
@@ -176,7 +175,11 @@ ollama pull gpt-oss:20b
 ```
 
 (Yes, it is `B` for one and `b` for the other, as shown...)
- 
+
+{: .tip}
+> **TIP:** If you use a tool like `ollama` for local inference, you will have to pick a model that works on your machine. 
+> For example, while testing on Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b` if a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`. Having 64GB of memory allowed `gpt-oss:20b` to work well. Pick a small enough model that you can run, but keep in mind that the quality of the output will decrease for smaller models.
+
 The `tdd-example-refill-chatbot.sh` script assumes you have our `llm` &ldquo;templates&rdquo; installed (which is also handled by `make` above). To install them yourself, first run the following command to see where `llm` has templates installed on your system: 
 
 ```shell

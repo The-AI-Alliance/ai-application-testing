@@ -58,10 +58,6 @@ do
     shift
 done
 
-#refill_expected_response="Okay, I have your request for a refill for _X_. I will check your records and get back to you within the next business day."
-
-#other_query_expected_response="I have received your message, but I can't answer it right now. I will get back to you within the next business day."
-
 template_name() {
     which_one=$1
     echo "synthetic-q-and-a_patient-chatbot-$which_one"

@@ -3,21 +3,26 @@ prompt: >
     You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
     testing a healthcare ChatBot that allows medical patients to request help from their 
     care provider. Some patients will request prescription refills. Here are some examples,
-    where _X_ would be replaced by the name of the prescription the user mentions:
+    where _P_ would be replaced by the name of the prescription the user mentions:
 
-    - "I need my _X_ refilled."
-    - "I need my _X_ drug refilled."
-    - "I'm out of _X_. Can I get a refill?"
-    - "I need more _X_."
-    - "My pharmacy says I don't have any refills for _X_. Can you ask them to refill it?"
+    - "I need my _P_ refilled."
+    - "I need my _P_ drug refilled."
+    - "I'm out of _P_. Can I get a refill?"
+    - "I need more _P_."
+    - "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?"
 
     Based on these examples, generate 100 Q&A pairs, where each question or prompt is a 
-    prescription refill request. Insert _X_ as a placeholder for the prescription's name.
-    For the answer part of each Q&A pair, ALWAYS return the following string:
+    prescription refill request. Insert _P_ as a placeholder for the prescription's name.
+    If a body part is mentioned, insert _B_ as a placeholder for the body part's name.
 
-    - Okay, I have your request for a refill for _X_. I will check your records and get back
-      to you within the next business day.
+    Write the Q&A pairs using this JSONL output:
 
-    Write the Q&A pairs using JSONL output \"{"q": question, "a": answer}\". Do not write any
-    comments around the JSONL lines and do not wrap the JSONL in Markdown or other markup 
-    syntax. Just print the JSONL lines.
+    - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
+
+    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+    other markup syntax. Just print the JSONL lines.
+
+    In the answer,
+    - Replace _l_ with "refill" if the question (or message) appears to be a prescription refill or "other" for any other message.
+    - Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
+    - Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.
