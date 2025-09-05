@@ -169,7 +169,7 @@ before-run:: ${OUTPUT} ${OUTPUT_DATA} install-templates
 .PHONY: clean-llm clean-templates install-llm install-templates
 .PHONY: clean-jq clean-jq-preamble install-jq install-jq-preamble
 
-setup one-time-setup:: install-llm
+setup one-time-setup:: install-llm install-jq
 
 clean-setup:: clean-llm clean-jq
 
@@ -190,6 +190,7 @@ clean-jq-preamble::
 install-llm:: install-templates
 	pip install -U llm bs4
 	llm install llm-ollama
+	echo "If you plan to use ollama for local inference, follow the installation instructions at https://ollama.com"
 
 install-templates::
 	cp ${SRC_DIR}/llm/templates/*.yaml "${LLM_TEMPLATE_DIR}"

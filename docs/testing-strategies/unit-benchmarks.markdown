@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Unit Benchmarks
-nav_order: 240
+nav_order: 310
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -18,61 +18,66 @@ _Unit benchmarks_ are an adaptation of benchmarking tools and techniques for the
 > **Highlights:**
 >
 > 1. We can adapt benchmark concepts to be appropriate for unit, integration, and acceptance testing of AI components.
+> 2. Benchmarks require good datasets with prompts designed to probe how the model behaves in a certain area of interest, along with responses that represent acceptable answers. We will use the term question and answer (Q&A) pairs for these prompts and responses, following conventional practice.[^1]
+> 3. A [Teacher Model]({{site.glossaryurl}}#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
+> 4. Benchmark tools can be called from tests written using Python test frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}, so they are executed as part of an application's test suites.
 
-Benchmarks are a popular tool for _globally_ evaluating how well models perform &ldquo;categories&rdquo; of activity like code generation, Q&A (question and answer sessions), avoiding hate speech, avoiding hallucinations, etc. A typical benchmark attempts to provide a wide range of examples across the category and report a single number for the evaluation, usually scaled as a percentage of passing results between 0 and 100%). 
+[^1]: Not all benchmarks use Q&A pair datasets like this. For example, some use a specially trained model to evaluate responses. We will only consider benchmarks that work with Q&A pairs.
 
-In contrast, good software tests are very specific, examining one specific [Behavior]({{site.glossaryurl}}/#behavior), while keeping everything else _invariant_. The scope of the test will vary from fine grained for unit tests to broad for integration tests to whole-application for acceptance tests.
+Benchmarks are a popular tool for evaluating how well models perform in &ldquo;categories&rdquo; of activity with broad scope, like code generation, Q&A (question and answer sessions), instruction following, Mathematics, avoiding hate speech, avoiding hallucinations, etc. A typical benchmark attempts to provide a wide range of examples across the category and report a single number for the evaluation, usually scaled as a percentage of passing results between 0 and 100%. 
 
-Why not write more focused benchmarks? In other words, embrace the nondeterminism of models and use the benchmark concept, just focused very narrowly?
+In contrast, good software tests are very specific, examining one specific [Behavior]({{site.glossaryurl}}/#behavior), while keeping everything else _invariant_. The scope of the test will vary from fine grained for unit tests, to unit and component combinations for integration tests, to whole-application for acceptance tests.
 
-Suppose we want to define unit tests that verify our application does a very good job generating SQL queries from human text. We have tuned a model to be very knowledgeable about the databases, schemas, and typical queries in our organization.
+Why not write more focused benchmarks? In other words, embrace the nondeterminism of models and use the benchmark concept, just focused narrowly for each particular scope?
 
-We can build a Q&A dataset for this purpose using logged queries in the past. Some human labeling will likely be required to create human text equivalents for the example queries, which would provide the expected answers. Each _unit benchmark_ could focus on one specific kind of common query for one specific table.
+## Revisiting our TDD Example
 
-What about the cost of running lots of examples through your LLM? Say you have 100 examples in each fine-grained unit benchmark and you have 100 of those benchmarks. How long with each full test run take for those 10,000 invocations and how expensive will they be? 
+In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages.
 
-For traditional unit testing, your development environment might only invoke the tests associated with the source files that have just changed, saving a full run for occasional purposes, like before saving changes to version control. Can you develop a similar strategy here, where only a subset of your unit benchmarks are invoked for incremental updates, while the full suite is only invoked occasionally? 
+So, we need a better dataset of Q&A pairs. A real healthcare organization will likely have many patient &ldquo;portal&rdquo; conversations logged that can be used for this purpose. They might also be used to [Tune]({{site.glossaryurl}}#tune) a &ldquo;generic&rdquo; model to be better at healthcare Q&A. Some manual curation of the data will likely be necessary, but LLMs can also be very useful for analyzing these logs and extracting useful content.
 
-To reduce testing time and costs, could you use a version of your production model that is quantized or a version with fewer parameters? Will the results during unit testing be good enough that running against the more-expensive production model can be reserved for less frequent integration test runs? Another benefit of a smaller model is the ability to do inference on development machines, rather than having to call a inference service for every invocation, which is slower and more expensive.
+Generating synthetic data is another tool, which we will explore in depth below. First, let's discuss a few other considerations for these tests we are building.
 
-A related approach that is widely used is to leverage a separate model, one that is very smart and expensive to use, as a _judge_ to generate Q&A pairs for the benchmarks. See [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge).
+What about the cost of running lots of examples through your LLM? Say you have 100 examples in each fine-grained unit benchmark and you have 100 of those benchmarks. How long will each full test run take for those 10,000 invocations and how expensive will they be? You will have to benchmark these runs to answer these questions. If you use a commercial service for model inference during your tests, you'll need to watch those costs.
 
-## Revisting our TDD Example
+For traditional unit testing, your development environment usually only invokes the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the pull request process in your version control system. Runs of the integration and acceptance tests, which are relatively slow and expensive, are typically run a few times per day. We can develop a similar strategy here, where only a subset of our unit benchmarks are invoked for incremental updates, while the full suite is only invoked occasionally. 
 
-In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we sketched a [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for a healthcare ChatBot, specifically a feature where patient requests for a prescription refill result in the same deterministic response.
+To reduce testing time and costs, you will want to experiment with model choices, both for the production deployments and for development purposes. For example, if you have picked a production version of a model, there may be smaller versions you can use successfully during development. You might trade off the quality of responses, but perhaps the results during testing will be &ldquo;good enough&rdquo;. Since acceptance tests are designed to confirm that a feature is working, use the full production models for those tests. Another benefit of using smaller models is the ability to do inference on development machines, with sufficient compute capability, rather than having to call a inference service for every invocation, which is slower and more expensive.
 
-We hand-wrote several example Q&A pairs that focused only on this feature, and nothing else about the ChatBot's behavior. In other words, while there are a many available ChatBot benchmarks, they tend to be very broad, covering overall conversational abilities or perhaps facility for a a particular domain. 
+Back to the TDD example, while there are a many available ChatBot benchmarks, they tend to be very broad, covering overall conversational abilities. Rarely do they cover specific domains, and none are fine-grained in the ways that we need.
 
-In contrast, our unit benchmark was very narrowly focused. It exercised this one behavior and left other behaviors to be exercised by separate unit benchmarks. For each of those unit benchmarks, a separate suite of Q&A pairs would be written. For example, we will want a healthcare ChatBot to detect when the patient appears to be in need of urgent care, in which case the response should be to call 911 (in the USA) immediately[^1].
+In contrast, our narrowly-focused unit benchmark exercised one behavior, a prescription refill request or &ldquo;other&rdquo; message, and left other behaviors to be exercised by separate unit benchmarks. For each of those unit benchmarks, a separate suite of Q&A pairs is created. For example, in this section, we will add a new benchmark data set for detecting situations where the patient appears to require urgent or emergency care, in which case we want the response to be that they should call 911 (in the USA) immediately[^1].
 
-[^1]: Anyone who has called a doctor's office in the USA and heard the automated message, "If this is a medical emergency, please hang up and dial 911."
+[^1]: Anyone who has called a doctor's office in the USA has heard the automated message, "If this is a medical emergency, please hang up and dial 911."
 
-Like conventional unit tests, we can run this &ldquo;unit test&rdquo; any time we make a change that might affect the system behavior, as well as periodic, automated runs to catch regressions. 
-
-Our example was somewhat _ad hoc_ in creation and execution. Let's look at more systematic approaches to creating and executing unit benchmarks:
+Let's look at more systematic approaches to creating and executing unit benchmarks:
 
 1. Synthetic data generation and validation.
 2. Integration into a standard testing framework.
 
-
-### Synthetic Data Generation and Validation
+## Synthetic Data Generation and Validation
 
 In our TDD example, we wrote the Q&A pairs by hand for our unit benchmark. This has two disadvantages:
 
 1. It is time consuming, so it doesn't scale well for large applications.
 2. Covering the whole &ldquo;space&rdquo; of possible questions and answers is difficult and error prone.
 
-The solution is to use generative AI to generate a lot of diverse Q&A pairs (or other benchmark data required). The disadvantage of this approach is ensuring that generated data is of good quality. We will discuss how to perform this assessment, too.
+The solution is to use generative AI to generate a lot of diverse Q&A pairs. The disadvantage of this approach is ensuring that generated data is of good quality. We will discuss how to perform this assessment, too.
+
+### Generating the Synthetic Data
 
 
-#### Evaluating the Synthetic Data
+### Evaluating the Synthetic Data
 
 In the TDD example, we used a system prompt to cause the LLM to always returned a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it makes it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
 
-In the more general case, where the output isn't as deterministic, we have to lean more heavily on the teacher model to evaluate a few things:
+In the more general case, where the output isn't as deterministic, we have to lean more heavily on a [Teacher Model]({{site.glossaryurl}}#teacher-model) to evaluate a few things:
 
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
+
+We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge).
+
 
 #### PleurAI Intellagent
 

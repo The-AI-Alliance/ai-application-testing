@@ -255,6 +255,10 @@ The behavior of a system where observed values are governed by a random probabil
 
 A commonly-used, statically-coded part of the [Context](#context) information added by an [AI System](#ai-system) the [Prompt](#prompt) before sending it to the [LLM](#large-language-model). System prompts are typically used to provide the model with overall guidance about the application's purpose and how the LLM should respond. For example, it might include phrases like &ldquo;You are a helpful software development assistant.&rdquo;
 
+## Teacher Model
+
+A [Generative AI Model](#generative-ai-model) that can be used as part of a [Tuning](#tuning) (&ldquo;teach&rdquo;) process for other models, to generate synthetic data, to evaluate the quality of data, etc. These models are usually relatively large, sophisticated, and powerful, so they are very capable for these purposes, but they are often considered too costly to use as an application's runtime model, where smaller, lower-overhead models are necessary. However, for software development purposes, less frequent use of teacher models is worth the higher cost for the services they provide.
+
 ## Test
 
 For our purposes, a [Unit Test](#unit-test), [Integration Test](#integration-test), or [Acceptance Test](#acceptance-test).

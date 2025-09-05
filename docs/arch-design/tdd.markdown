@@ -45,7 +45,12 @@ This methodology also leans heavily on the expectation of [Deterministic]({{site
 
 So, how can we practice TDD for tests of stochastic components? First, to be clear, we are not discussing the use of generative AI to generate traditional tests for source code. Rather, we are concerned with how to use TDD to test generative AI itself!
 
-First, what aspects of TDD _don't_ need to change? Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send exchange messages to a medical care provider where in some cases a quick reply will be generated automatically. In the other cases, the provider will have to respond. Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
+First, what aspects of TDD _don't_ need to change? Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send messages to a healthcare provider. In some cases, an immediate reply will be generated automatically. In the rest of the cases, a response will be returned to the use that the provider will have to respond personally as soon as possible. 
+
+{: .warning}
+> **DISCLAIMER:** We will use this healthcare ChatBot example throughout this guide. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, this example _must_ only be used for educational purposes. It is not at all suitable for use in real healthcare settings.
+
+Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
 Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a &ldquo;unit benchmark&rdquo;[^1], an analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
 
@@ -57,12 +62,13 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 
 [^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
 
+We are using _P_ as a placeholder for any prescription.
+
 For this first iteration, the answer parts of the Q&A pairs might be identical for all cases:[^2] 
 
+* &ldquo;Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.&rdquo;
 
 [^2]: A future feature might be able to check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
-
-* &ldquo;Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.&rdquo;
 
 Now we have to answer these questions:
 
@@ -180,7 +186,7 @@ ollama pull gpt-oss:20b
 > **TIP:** If you use a tool like `ollama` for local inference, you will have to pick a model that works on your machine. 
 > For example, while testing on Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b` if a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`. Having 64GB of memory allowed `gpt-oss:20b` to work well. Pick a small enough model that you can run, but keep in mind that the quality of the output will decrease for smaller models.
 
-The `tdd-example-refill-chatbot.sh` script assumes you have our `llm` &ldquo;templates&rdquo; installed (which is also handled by `make` above). To install them yourself, first run the following command to see where `llm` has templates installed on your system: 
+The `tdd-example-refill-chatbot.sh` script assumes you have our `llm` &ldquo;templates&rdquo; installed (which is also handled by the `make` process above). To install them yourself, first run the following command to see where `llm` has templates installed on your system: 
 
 ```shell
 llm templates path

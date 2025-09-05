@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Statistical Tests
-nav_order: 360
+nav_order: 350
 parent: Testing Strategies and Techniques
 has_children: false
 ---
