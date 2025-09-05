@@ -8,6 +8,15 @@ has_children: false
 
 # External Tool Verification
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 For some applications, the utility and quality of model outputs can be verified using external, non-generative tools. Here are some examples.
 
 <a id="highlights"></a>

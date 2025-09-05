@@ -8,6 +8,15 @@ has_children: false
 
 # LLM as a Judge
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 In _LLM as a Judge_, a separate model, one that is very smart and also usually expensive to use or otherwise not suitable for production use in your application, serves as a _judge_ to generate Q&A pairs for the benchmarks. 
 
 The judge model can also be used to decide whether or not the application model's response to a particular question is sufficiently close to the expected answer.

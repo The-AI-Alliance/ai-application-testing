@@ -8,6 +8,15 @@ has_children: false
 
 # Test-Driven Development
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior, for reasoning about how the system behaves, during design and implementation, and for writing tests that are repeatable, comprehensive, and automated.
 
 <a id="highlights"></a>
@@ -79,7 +88,7 @@ Now we have to answer these questions:
 * How do we validate the resulting answers?
 * How do we define &ldquo;pass/fail&rdquo; for this test?
 
-### Ways that LLMs Make Our Jobs Easier
+## Ways that LLMs Make Our Jobs Easier
 
 Let's explore the first two questions:
 
@@ -141,28 +150,36 @@ For both models, both drugs, and all refill requests, the expected answer was al
 
 Similarly, for the other prompts, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
-### Try This Yourself!
+## Try This Yourself!
 
-We used `zsh` scripts for Linux or MacOS. Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run commands in the `src` directory. 
+Our examples are written as Python tools. Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run `make` commands in the root directory. 
 
-#### Running with `make`
+### Running with `make`
 
-You can run the scripts directly or use `make`. Switch to the `src` directory and run this `make` command:
+{: .tip}
+> **TIPS:** 
+> 1. See the project [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"} for more details on setup instructions, etc.
+> 2. Try `make help` for details about the `make` process. There is also a `--help` option for the script.
+
+You can run the tools directly or use `make`. First, here is how to use the `make` targets. You will begin with a &ldquo;one-time&rdquo; setup target:
 
 ```shell
-cd src  # if you start in the repo root directory
-make one-time-setup run-tdd-example-refill-chatbot
+make one-time-setup 
 ```
 
-The `one-time-setup` target will `pip install` tools like [`llm`](https://github.com/simonw/llm){:target="llm"}, install _template_ files used by `llm`, etc. The `run-tdd-example-refill-chatbot` target runs the script `scripts/tdd-example-refill-chatbot.sh`.
+This target will install some tools and provide instructions for installing others that are difficult to automate for different platforms. After completing those steps, run this command to execute the example:
 
-Try `make help` for details about the `make` process. There is also a `--help` option for the script.
+```shell
+make run-tdd-example-refill-chatbot
+```
+
+The `run-tdd-example-refill-chatbot` target runs the script `src/scripts/tdd-example-refill-chatbot.py`.
 
 As the name suggests, you don't need to repeat `one-time-setup`. You can just run `make run-tdd-example-refill-chatbot` to repeat execution. You can also run the script directly if you prefer, but run it at least once to see the commands the `make` target executes before running the script (like copying the latest `llm` templates to the correct location).
 
 An example of the output of this script can be found in the repo in [src/data/examples/gpt-oss_20b/tdd-example-refill-chatbot.out]({{site.gh_edit_repository}}/blob/main/src/data/examples/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} and similarly for [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} and  [`llama3.3_70b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/llama3.3_70b/tdd-example-refill-chatbot.out){:target="_blank"}. (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) Interestingly, the `llama3.3:70b` run had one minor &ldquo;error&rdquo;, where the generated wording was trivially different than the expected wording. This happened even though we said very specifically in the system prompt to respond with a very specific string. This didn't happen with the two smaller models.
 
-#### Setting up and Running the Tools Individually
+### Setting up and Running the Tools Individually
 
 Here are some details handled by the `make` process, which you could do yourself, if you prefer.
 
@@ -213,7 +230,7 @@ On MacOS, it will be `$HOME/Library/Application Support/io.datasette.llm/templat
 
 Back to our results above; we effectively created _deterministic_ outputs for a narrow range of particular inputs! This suggests a design idea we should explore next.
 
-### Idea: Handling Frequently Asked Questions
+## Idea: Handling Frequently Asked Questions
 
 In this app, asking for a prescription refill is a _frequently asked question_ (FAQ). We observed that even small models, with a good system prompt, were able to &ldquo;map&rdquo; a range of similar questions to the same answer and even do appropriate substitutions in the text, the prescription in this case.
 
@@ -231,7 +248,7 @@ Finally, thinking in terms of a classifier suggests that we don't necessarily wa
 
 Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file or runtime configuration option, so it is easy to change the response without changing the system prompt, etc. This would also make _internalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. For internationalization, we may have to pick a properly _localized_ model for each target language our deployments support.
 
-### Creating and Using Unit Benchmarks
+## Creating and Using Unit Benchmarks
 
 The remaining four questions we posed above are these:
 

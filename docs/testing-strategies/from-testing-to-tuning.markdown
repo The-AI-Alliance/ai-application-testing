@@ -8,6 +8,15 @@ has_children: false
 
 # From Testing to Tuning
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 Finally, could it be we are thinking about this all wrong? It is normal to attempt to _bend_ your current [Paradigm]({{site.glossaryurl}}/#paradigm) to meet a new reality, rather than rethink the situation from the fundamentals. With that in mind, should we _abandon_ the idea of testing, at least for the unavoidable, nondeterministic model [Behaviors]({{site.glossaryurl}}/#behavior), in favor of something entirely new?
 
 <a id="highlights"></a>

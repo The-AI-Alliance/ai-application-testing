@@ -8,6 +8,15 @@ has_children: false
 
 # Statistical Tests
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 Are there cases where the [Behavior]({{site.glossaryurl}}/#behavior) is nondeterministic, but reasonable bounds can be specified statistically? In other words, if the results fall within some measurable confidence window, they are considered acceptable, i.e., _passing_. 
 
 <a id="highlights"></a>

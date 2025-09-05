@@ -10,21 +10,20 @@ This project contains the website for the user guide, with the GitHub Pages cont
 
 Here, we discuss how to setup and execute the tools, but you'll need to read the corresponding user guide sections for details about what they are doing and how they work.
 
-At this time, `zsh` scripts for Linux or MacOS are used, although we are planning to port them to Python for greater portability. 
-
 ### Setup
 
-Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run the following `make` command in the `src` directory to do "one-time" setup steps, such as installing tools required. Assuming you are in the repo root directory, run these commands:
+Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run the following `make` command to do "one-time" setup steps, such as installing tools required. Assuming you are in the repo root directory, run this command:
 
 ```shell
-cd src
 make one-time-setup 
 ```
 
 > [!TIP]
 > Try `make help` for details about the `make` process. There are also `--help` options for example scripts discussed below.
 
-This target installs the excellent [`llm` CLI tool](https://github.com/simonw/llm) from Simon Willison and the JSON parsing CLI tool [`jq`](https://jqlang.org/download/).
+This target provides instructions for how to install required tools, like [`uv`](https://docs.astral.sh/uv/), the Python package management system, and [`jq`](https://jqlang.org), the JSON parsing CLI tool. 
+
+Other tools are installed automatically by `one-time-setup`, like the excellent [`llm` CLI tool](https://github.com/simonw/llm) from Simon Willison and the JSON parsing CLI tool [`jq`](https://jqlang.org/download/).
 
 Also installed are our `llm` &ldquo;templates&rdquo;, which we use define system prompts, etc. for several tools. To do this yourself, start by running the following command to see where `llm` has templates installed on your system: 
 
@@ -56,22 +55,21 @@ Use `make` to run the examples. The actual commands are printed out, so you can 
 
 This example is explained in user guide's section on [Test-Driven Development](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
-Switch to the `src` directory and run this `make` command:
+Run this `make` command:
 
 ```shell
-cd src  # if necessary...
 make run-tdd-example-refill-chatbot 
 ```
 
 > [!TIP]
-> If you aren't using our default model, `gpt-oss:20b`, there are two ways to specify your preferred model:
-> 1. Edit [`src/Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/Makefile) and change the defintion of `MODEL` to be your choice, e.g., `llama3.2:3B`. This will make the change permanent for all examples.
-> 1. Override the definition of `MODEL` when you run `make`: `MODEL=llama3.2:3B make run-tdd-example-refill-chatbot`
+> If you aren't using our default model, `ollama/gpt-oss:20b`, there are two ways to specify your preferred model:
+> 1. Edit [`src/Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/Makefile) and change the defintion of `MODEL` to be your choice, e.g., `ollama/llama3.2:3B`. This will make the change permanent for all examples.
+> 1. Override the definition of `MODEL` when you run `make`: `MODEL=ollama/llama3.2:3B make run-tdd-example-refill-chatbot`
 
 This does some setup, then runs this command (default arguments):
 
 ```shell
-./scripts/tdd-example-refill-chatbot.sh --model gpt-oss:20b --output temp/output/tdd-example-refill-chatbot.out
+./src/scripts/tdd-example-refill-chatbot.sh --model ollama/gpt-oss:20b --output temp/output/tdd-example-refill-chatbot.out
 ```
 
 This invokes `llm` twice, once with the template file `q-and-a_patient-chatbot-prescriptions.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/q-and-a_patient-chatbot-prescriptions.yaml) and once with `q-and-a_patient-chatbot-prescriptions-with-examples.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The script passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD section]() explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
@@ -81,17 +79,16 @@ This invokes `llm` twice, once with the template file `q-and-a_patient-chatbot-p
 Described in [Unit Benchmarks](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/unit-benchmarks/), this script uses `llm` to generate Q&A pairs for _unit benchmarks_:
 
 ```shell
-cd src  # if necessary...
 make run-unit-benchmark-data-synthesis
 ```
 
 After some setup, the following command is executed:
 
 ```shell
-./scripts/unit-benchmark-data-synthesis.sh --model gpt-oss:20b --data temp/output/data
+./src/scripts/unit-benchmark-data-synthesis.sh --model ollama/gpt-oss:20b --data temp/output/data
 ```
 
-The `--data` argument specifies where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `gpt-oss:20b`, `temp/output/data/gpt-oss_20b` will have these files of synthetic Q&A pairs:
+The `--data` argument specifies where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `gpt-oss:20b` (the `ollama/` prefix is not included), `temp/output/data/gpt-oss_20b` will have these files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
@@ -114,14 +111,13 @@ These files are generated with three invocations of `llm`, each using one of the
 Described in [LLM as a Judge](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/llm-as-a-judge/), this script uses `llm` to _validate_ how good the Q&A pairs are that we just generated, using a _teacher model_:
 
 ```shell
-cd src  # if necessary...
 make run-unit-benchmark-data-validation
 ```
 
 After some setup, the following command is executed:
 
 ```shell
-./scripts/unit-benchmark-data-validation.sh --model gpt-oss:20b --data temp/output/data
+./src/scripts/unit-benchmark-data-validation.sh --model ollama/gpt-oss:20b --data temp/output/data
 ```
 
 The `--data` argument specifies where the previously-generated Q&A pairs are read from, actually `temp/output/data/gpt-oss_20b` if `gpt-oss:20b` is used. For each Q&A file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:

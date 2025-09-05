@@ -8,6 +8,15 @@ has_children: false
 
 # Lessons from Systems Testing
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 Quality assurance professionals have long dealt with the challenges of testing whole systems, where determinism and isolation are not always possible, reflecting the real world conditions that systems face. What lessons can we learn from this expertise?
 
 <a id="highlights"></a>
