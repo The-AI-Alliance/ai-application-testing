@@ -110,7 +110,9 @@ do_trial() {
                 let count=$count+1
                 if [[ "$response" != "$expected" ]]
                 then
-                    response_lc=$(echo "$response" | tr '[:upper:]' '[:lower:]')
+                    # We have observed responses the include the leading `-` shown in the system prompt,
+                    # so we remove those, along with any leading or trailing whitespace.
+                    response_lc=$(echo "$response" | tr '[:upper:]' '[:lower:]' | sed -e 's/^ *-? *//' -e 's/ *$//')
                     if [[ "$response_lc" = "$expected_lc" ]]
                     then
                         resp_str="$resp_str (ignoring case differences)"

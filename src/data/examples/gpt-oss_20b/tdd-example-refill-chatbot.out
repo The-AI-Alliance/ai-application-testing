@@ -1,0 +1,42 @@
+Queries that are refill requests:
+  Using template q-and-a_patient-chatbot-prescriptions-with-examples:
+    Query: I need my prozac refilled. => SUCCESS!
+    Query: I need my miracle drug refilled. => SUCCESS!
+    Query: I need my prozac drug refilled. => SUCCESS!
+    Query: I need my miracle drug drug refilled. => SUCCESS!
+    Query: I'm out of prozac. Can I get a refill? => SUCCESS!
+    Query: I'm out of miracle drug. Can I get a refill? => SUCCESS!
+    Query: I need more prozac. => SUCCESS!
+    Query: I need more miracle drug. => SUCCESS!
+    Query: My pharmacy says I don't have any refills for prozac. Can you ask them to refill it? => SUCCESS!
+    Query: My pharmacy says I don't have any refills for miracle drug. Can you ask them to refill it? => SUCCESS!
+  Using template q-and-a_patient-chatbot-prescriptions:
+    Query: I need my prozac refilled. => SUCCESS! (ignoring case differences)
+    Query: I need my miracle drug refilled. => SUCCESS!
+    Query: I need my prozac drug refilled. => SUCCESS! (ignoring case differences)
+    Query: I need my miracle drug drug refilled. => SUCCESS!
+    Query: I'm out of prozac. Can I get a refill? => SUCCESS! (ignoring case differences)
+    Query: I'm out of miracle drug. Can I get a refill? => SUCCESS!
+    Query: I need more prozac. => SUCCESS! (ignoring case differences)
+    Query: I need more miracle drug. => SUCCESS!
+    Query: My pharmacy says I don't have any refills for prozac. Can you ask them to refill it? => SUCCESS! (ignoring case differences)
+    Query: My pharmacy says I don't have any refills for miracle drug. Can you ask them to refill it? => SUCCESS!
+Total queries = 20, errors = 0
+
+Queries that are non-refill requests:
+  Using template q-and-a_patient-chatbot-prescriptions-with-examples:
+    Query: My prescription for prozac upsets my stomach. => SUCCESS!
+    Query: My prescription for miracle drug upsets my stomach. => SUCCESS!
+    Query: I have trouble sleeping, ever since I started taking prozac. => SUCCESS!
+    Query: I have trouble sleeping, ever since I started taking miracle drug. => SUCCESS!
+    Query: When is my next appointment? => SUCCESS!
+    Query: When is my next appointment? => SUCCESS!
+  Using template q-and-a_patient-chatbot-prescriptions:
+    Query: My prescription for prozac upsets my stomach. => SUCCESS!
+    Query: My prescription for miracle drug upsets my stomach. => SUCCESS!
+    Query: I have trouble sleeping, ever since I started taking prozac. => SUCCESS!
+    Query: I have trouble sleeping, ever since I started taking miracle drug. => SUCCESS!
+    Query: When is my next appointment? => SUCCESS!
+    Query: When is my next appointment? => SUCCESS!
+Total queries = 12, errors = 0
+

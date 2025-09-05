@@ -150,14 +150,17 @@ We used `zsh` scripts for Linux or MacOS. Clone the project [repo](https://githu
 You can run the scripts directly or use `make`. Switch to the `src` directory and run this `make` command:
 
 ```shell
-make one-time-setup run-tdd-example
+cd src  # if you start in the repo root directory
+make one-time-setup run-tdd-example-refill-chatbot
 ```
 
-The `one-time-setup` target will `pip install` tools like [`llm`](https://github.com/simonw/llm){:target="llm"}, install _template_ files used by `llm`, etc. The `run-tdd-example` target runs the script `scripts/tdd-example-refill-chatbot.sh`.
+The `one-time-setup` target will `pip install` tools like [`llm`](https://github.com/simonw/llm){:target="llm"}, install _template_ files used by `llm`, etc. The `run-tdd-example-refill-chatbot` target runs the script `scripts/tdd-example-refill-chatbot.sh`.
 
 Try `make help` for details about the `make` process. There is also a `--help` option for the script.
 
-As the name suggests, you don't need to repeat `one-time-setup`. You can just run `make run-tdd-example` to repeat execution. You can also run the script directly if you prefer, _after using make once_. The reason you need to run `make run-tdd-example` at least once is because it copies some files to `src/temp` that you will need. These files are staged in directories for the website to have them available.
+As the name suggests, you don't need to repeat `one-time-setup`. You can just run `make run-tdd-example-refill-chatbot` to repeat execution. You can also run the script directly if you prefer, but run it at least once to see the commands the `make` target executes before running the script (like copying the latest `llm` templates to the correct location).
+
+An example of the output of this script can be found in the repo in [src/data/examples/gpt-oss_20b/tdd-example-refill-chatbot.out]({{site.gh_edit_repository}}/blob/main/src/data/examples/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} and similarly for [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} and  [`llama3.3_70b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/llama3.3_70b/tdd-example-refill-chatbot.out){:target="_blank"}. (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) Interestingly, the `llama3.3:70b` run had one minor &ldquo;error&rdquo;, where the generated wording was trivially different than the expected wording. This happened even though we said very specifically in the system prompt to respond with a very specific string. This didn't happen with the two smaller models.
 
 #### Setting up and Running the Tools Individually
 

@@ -19,6 +19,10 @@ The judge model can also be used to decide whether or not the application model'
 >
 > TODO
 
+## Variations
+
+### Voting
+
 ## Tools
 
 Popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} include [`unitxt`](https://www.unitxt.ai){:target="unitxt"} and [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"}.

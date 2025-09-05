@@ -1,0 +1,25 @@
+Queries that are refill requests:
+  Using template q-and-a_patient-chatbot-prescriptions-with-examples:
+    Query: I need my prozac refilled. => SUCCESS!
+    Query: I need my miracle drug refilled. => SUCCESS!
+    Query: I need my prozac drug refilled. => SUCCESS!
+    Query: I need my miracle drug drug refilled. => SUCCESS!
+    Query: I'm out of prozac. Can I get a refill? => SUCCESS!
+    Query: I'm out of miracle drug. Can I get a refill? => SUCCESS!
+    Query: I need more prozac. => SUCCESS! (ignoring case differences)
+    Query: I need more miracle drug. => SUCCESS!
+    Query: My pharmacy says I don't have any refills for prozac. Can you ask them to refill it? => SUCCESS!
+    Query: My pharmacy says I don't have any refills for miracle drug. Can you ask them to refill it? => SUCCESS!
+  Using template q-and-a_patient-chatbot-prescriptions:
+    Query: I need my prozac refilled. => SUCCESS! (ignoring case differences)
+    Query: I need my miracle drug refilled. => SUCCESS!
+    Query: I need my prozac drug refilled. => SUCCESS! (ignoring case differences)
+    Query: I need my miracle drug drug refilled. => SUCCESS!
+    Query: I'm out of prozac. Can I get a refill? => SUCCESS! (ignoring case differences)
+    Query: I'm out of miracle drug. Can I get a refill? => SUCCESS!
+    Query: I need more prozac. => SUCCESS! (ignoring case differences)
+    Query: I need more miracle drug. => FAILURE! response = I have received your message, but I can't answer it right now. I will get back to you within the next business day., expected = Okay, I have your request for a refill for miracle drug. I will check your records and get back to you within the next business day.
+    Query: My pharmacy says I don't have any refills for prozac. Can you ask them to refill it? => SUCCESS! (ignoring case differences)
+    Query: My pharmacy says I don't have any refills for miracle drug. Can you ask them to refill it? => SUCCESS!
+Total queries = 20, errors = 1
+

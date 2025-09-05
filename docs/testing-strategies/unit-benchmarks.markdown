@@ -62,10 +62,106 @@ In our TDD example, we wrote the Q&A pairs by hand for our unit benchmark. This 
 1. It is time consuming, so it doesn't scale well for large applications.
 2. Covering the whole &ldquo;space&rdquo; of possible questions and answers is difficult and error prone.
 
-The solution is to use generative AI to generate a lot of diverse Q&A pairs. The disadvantage of this approach is ensuring that generated data is of good quality. We will discuss how to perform this assessment, too.
+The solution is to use an LLM to generate a lot of diverse Q&A pairs. We will need a way to ensure that generated data is of good quality, which we will explore.
 
 ### Generating the Synthetic Data
 
+The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a script [`src/scripts/unit-benchmark-data-synthesis.sh`]({{site.gh_edit_repository}}/blob/main/src/scripts/unit-benchmark-data-synthesis.sh/){:target="_blank"} that uses `llm` to generate Q&A pairs for three unit benchmarks, each corresponding to a template file:
+
+| Unit Benchmark | Template File | 
+| :------------- | :------------ | 
+| Prescription refill requests | [`synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
+| Apparent emergencies | [`synthetic-q-and-a_patient-chatbot-emergency-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
+| Other messages | [`synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
+
+The _emergency_ use case attempts to detect when the patient needs urgent or emergency care, such as saying she is in extreme pain or she has trouble breathing, in which case the patient is directed to call 911 (in the US) instead.
+
+Here is the template file for that use case:
+
+```text
+name: synthetic-q-and-a_patient-chatbot-emergency
+prompt: >
+    You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
+    testing a healthcare ChatBot that allows medical patients to request help from their 
+    care provider. Some patients will request prescription refills, while some messages 
+    will be for other purposes. In some cases, the patient will need urgent attention, in
+    which case they should stop using the ChatBot and call 911 instead. Here are some
+    examples of other requests that should be interpreted as emergency situations,
+    where _P_ would be replaced by the name of a prescription the user mentions in the
+    message and _B_ would be a place in the patient's body where he or she feels pain or
+    has some other question or comment about it:
+
+    - "Since I started taking my prescription for _P_, I have trouble breathing."
+    - "Since I started taking my prescription for _P_, I have hives all over my skin."
+    - "Since I started taking my prescription for _P_, I have severe swelling."
+    - "Since I started taking my prescription for _P_, I have severe stomach cramps."
+    - "I have severe pain in my _B_."
+    - "I have severe pain in my _B_. What should I do?"
+    - "I have severe pain in my _B_. I think I need a referral to a specialist."
+    - "I have severe swelling in my _B_."
+    - "I have severe swelling in my _B_. What should I do?"
+    - "I have severe swelling in my _B_. I think I need a referral to a specialist."
+    - "I have trouble breathing."
+    - "I have trouble breathing. What should I do?"
+    - "I have trouble breathing. I think I need a referral to a specialist."
+    - "I have a sharp pain in my chest."
+    - "I have a sharp pain in my chest. What should I do?"
+    - "I have a sharp pain in my chest. I think I need a referral to a specialist."
+
+    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt suggests
+    the patient needs urgent or emergency care. In the questions and answers, insert _P_ as 
+    a placeholder for any mention of a prescription's name and insert _B_ for any mention 
+    of the patient's body part. 
+
+    Write the Q&A pairs using this JSONL output:
+
+    - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
+
+    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+    other markup syntax. Just print the JSONL lines.
+
+    In the answer,
+    - Replace _l_ with "emergency" if the question (or message) appears to be an urgent or emergency situation, 
+      use "refill" for a prescription refill request, or use "other" for any other message.
+    - Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
+    - Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.
+```
+
+The other two template files are similar.
+
+You can run this tool yourself using `make`:
+
+```shell
+cd src  # if you are in the repo root directory...
+make run-unit-benchmark-data-synthesis
+```
+
+After some setup, the following command is executed:
+
+```shell
+./scripts/unit-benchmark-data-synthesis.sh --model gpt-oss:20b --data temp/output/data
+```
+
+The `--data` argument specifies where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `gpt-oss:20b`, `temp/output/data/gpt-oss_20b` will have these files of synthetic Q&A pairs:
+
+* `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`                
+* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml` 
+* `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml` 
+
+Examples from our runs can be found in the [`src/data/examples/`]({{site.gh_edit_repository}}/blob/main/src/data/examples/){:target="_blank"} directory in the project repo for `gpt-oss:20b`, `llama3.2:3B`, and `llama3.3:70b`.
+
+They cover three unit-benchmarks:
+* `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should call 911 (in the US).
+* `refill`: The patient is asking for a prescription refill.
+* `other`: (i.e., `non-prescription-refills`) All other patient questions.
+
+These files are generated with three invocations of `llm`, each corresponding to the following template files:
+
+* `synthetic-q-and-a_patient-chatbot-emergency.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
+* `synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
+* `synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
+
+We note that even though the system prompt tries to emphasize that we want at least 100 Q&A pairs, we rarely get that many in the actual results. 
 
 ### Evaluating the Synthetic Data
 
@@ -78,17 +174,28 @@ In the more general case, where the output isn't as deterministic, we have to le
 
 We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge).
 
+### Using the Unit Benchmarks
 
-#### PleurAI Intellagent
-
-
-
-### Integration Into a Standard Testing Framework
+#### Integration Into a Standard Testing Framework
 
 * Ad hoc execution in your development workflows.
 * PyTest and other Python test frameworks.
 
-## Adapting Domain-Specific Benchmarks
+### Experiments to Try
+
+TODO
+
+## More Advanced Benchmark Tools
+
+### Unitxt
+
+TODO
+
+### PleurAI Intellagent
+
+TODO
+
+## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
 While the best-known benchmarks tend to be broad in scope, there is a growing set of domain-specific benchmarks that could provide a good starting point for your more-specific benchmarks.
 
@@ -132,7 +239,6 @@ Benchmarks for finance applications.
 ### Other Domains?
 
 What other domains should we list here?
-
 
 ---
 

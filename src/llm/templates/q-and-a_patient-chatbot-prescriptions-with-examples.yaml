@@ -13,10 +13,8 @@ system: >
     Whenever you see a request that looks like a prescription refill request, always reply
     with the following text, where _P_ is replaced by the name of the prescription:
 
-    - Okay, I have your request for a refill for _P_. I will check your records and get back
-      to you within the next business day.
+    - Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.
 
     If the request doesn't look like a refill request, reply with this message:
 
-    - I have received your message, but I can't answer it right now. I will get back to you 
-      within the next business day.
+    - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
