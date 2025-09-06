@@ -6,7 +6,7 @@ INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
 MODEL_FILE_NAME       ?= $(subst /,_,$(subst :,_,${MODEL}))
 SRC_DIR               ?= src
-PROMPT_TEMPLATES_DIR  ?= ${SRC_DIR}/llm/templates
+PROMPT_TEMPLATES_DIR  ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
 OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
@@ -18,11 +18,6 @@ CLEAN_CODE_DIRS       ?= ${TEMP_DIR}
 ## NOOP=echo make foobar
 ## Another way is `make -n targets`.
 NOOP                  ?=
-
-LLM_TEMPLATES_LIB_DIR ?= $(shell llm templates path)
-ifeq ($(LLM_TEMPLATES_LIB_DIR),)
-LLM_TEMPLATES_LIB_DIR := $$HOME/Library/Application Support/io.datasette.llm/templates (on MacOS)
-endif
 
 # Definitions for the website.
 PAGES_URL             ?= https://the-ai-alliance.github.io/ai-application-testing/
@@ -80,33 +75,24 @@ make all-code           # Clean and run all the tools.
 make clean-code         # Remove build artifacts, etc., such as outputs in ${OUTPUT_DIR}
 
 make one-time-setup     # Synonym for the setup target...
-make setup              # One-time setup tasks; builds target install-llm, which
-                        # builds install-templates.
+make setup              # One-time setup tasks; builds targets install-uv and install-jq.
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
-make install-llm        # pip install "llm" and dependencies. Also makes install-templates.
-                        # Run "make help-llm" for more information.
-make install-templates  # Install our llm "templates" into llm. See also the "run-*" targets.
 make install-jq         # Explain how to install "jq".
                         # Run "make help-jq" for more information.
 
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what to do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
-make clean-llm          # pip uninstall "llm" and dependencies. Also makes clean-templates.
-make clean-templates    # Remove our llm "templates" from llm.
 make clean-jq           # Explain how to uninstall "jq".
 
 For scripts run by the following targets, which invoke inference, ${MODEL} served by
 ollama is used, by default. To specify a different model, invoke make as in this example:
 
-  MODEL=llama3.2:3B make run-tdd-example-refill-chatbot
+  MODEL=ollama/llama3.2:3B make run-tdd-example-refill-chatbot
 
-"llm" will interpret the model name to invoke the correct service.
-
-All these "run-*" targets have install-templates as a dependency, because it would be easy
-to forgot to build this target if you edit a template and this step is trivial to run, so
-we just do it every time...
+All these "run-*" targets may run setup dependencies that are redundant most of the time,
+but easy to forgot when important!
 
 make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
 make run-tdd-example-refill-chatbot   
@@ -127,10 +113,9 @@ Miscellaneous tasks for help, debugging, setup, etc.
 
 make help-code          # Prints this output.
 
-The "uv", "llm", and "jq" CLI tools are required:
+The "uv" and "jq" CLI tools are required:
 
 make help-uv            # Prints specific information about "uv", including installation.
-make help-llm           # Prints specific information about "llm", including installation.
 make help-jq            # Prints specific information about "jq", including installation.
 
 make save-examples      # Copy run output and data files for ${MODEL} to ${EXAMPLE_DATA}.
@@ -145,32 +130,6 @@ If you want to uninstall uv and used HomeBrew to install it,
 use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.
-
-endef
-
-define help_message_llm
-The "llm" CLI is used by many of the tools here. For more details, see:
-  https://github.com/simonw/llm
-
-You can install llm using make:
-  make install-llm
-
-If you want to serve models locally using "ollama", see the installation instructions:
-  https://ollama.com 
-
-Also install the llm plugin using the llm CLI:
-  llm install llm-ollama
-
-The tools also use several llm "templates". These need to be installed into:
-  ${LLM_TEMPLATES_LIB_DIR}
-
-Use the following make command to do this:
-  make install-templates 
-
-WARNING: If you edit the templates in ${PROMPT_TEMPLATES_DIR}, rerun  
-  make install-templates 
-
-If you want to uninstall llm, use "make clean-llm".
 
 endef
 
@@ -234,19 +193,10 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-code help-uv help-llm help-llm-preamble help-jq
+.PHONY: help help-docs help-code help-uv help-jq
 
 all help::
 	$(info ${help_message})
-	@echo
-
-help-llm:: help-llm-preamble
-help-docs help-code help-uv help-llm help-jq::
-	$(info ${help_message_${@:help-%=%}})
-	@echo
-
-help-llm-preamble::
-	@echo 'One moment, determining where llm wants "templates"...'
 	@echo
 
 .PHONY: print-info print-info-docs print-info-code print-info-env
@@ -254,33 +204,33 @@ help-llm-preamble::
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "For the GitHub Pages website:"
-	@echo "  GitHub Pages URL:    ${PAGES_URL}"
-	@echo "  current dir:         ${PWD}"
-	@echo "  docs dir:            ${DOCS_DIR}"
-	@echo "  site dir:            ${SITE_DIR}"
-	@echo "  JEKYLL_PORT:         ${JEKYLL_PORT}"
+	@echo "  GitHub Pages URL:      ${PAGES_URL}"
+	@echo "  current dir:           ${PWD}"
+	@echo "  docs dir:              ${DOCS_DIR}"
+	@echo "  site dir:              ${SITE_DIR}"
+	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
 	@echo
 
 print-info-code::
 	@echo "For the code examples:"
-	@echo "  model:               ${MODEL}"
-	@echo "  inference service:   ${INFERENCE_SERVICE}"
-	@echo "  llm templates dir:   ${SRC_DIR}"
-	@echo "  output dir:          ${OUTPUT_DIR}"
-	@echo "  output data dir:     ${OUTPUT_DATA_DIR}"
-	@echo "  example data dir:    ${EXAMPLE_DATA}"
-	@echo "  src dir:             ${SRC_DIR}"
+	@echo "  model:                 ${MODEL}"
+	@echo "  inference service:     ${INFERENCE_SERVICE}"
+	@echo "  prompt templates dir:  ${PROMPT_TEMPLATES_DIR}"
+	@echo "  output dir:            ${OUTPUT_DIR}"
+	@echo "  output data dir:       ${OUTPUT_DATA_DIR}"
+	@echo "  example data dir:      ${EXAMPLE_DATA}"
+	@echo "  src dir:               ${SRC_DIR}"
 	@echo
 
 print-info-env::
 	@echo "The environment:"
-	@echo "  GIT_HASH:            ${GIT_HASH}"
-	@echo "  TIMESTAMP:           ${TIMESTAMP}"
-	@echo "  MAKEFLAGS:           ${MAKEFLAGS}"
-	@echo "  MAKEFLAGS_RECURSIVE: ${MAKEFLAGS_RECURSIVE}"
-	@echo "  UNAME:               ${UNAME}"
-	@echo "  ARCHITECTURE:        ${ARCHITECTURE}"
-	@echo "  GIT_HASH:            ${GIT_HASH}"
+	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo "  TIMESTAMP:             ${TIMESTAMP}"
+	@echo "  MAKEFLAGS:             ${MAKEFLAGS}"
+	@echo "  MAKEFLAGS_RECURSIVE:   ${MAKEFLAGS_RECURSIVE}"
+	@echo "  UNAME:                 ${UNAME}"
+	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
+	@echo "  GIT_HASH:              ${GIT_HASH}"
 
 # Docs Targets
 
@@ -356,7 +306,7 @@ ${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
 	mkdir -p $@
 
 # See help above for why we have install-templates as a dependency.
-before-run:: uv-venv jq-command-check llm-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR} install-templates 
+before-run:: uv-venv jq-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR} install-templates 
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
 uv-venv:: uv-command-check 
@@ -368,36 +318,17 @@ save-examples::
 	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
 
 .PHONY: one-time-setup setup clean-setup 
-.PHONY: clean-uv clean-jq clean-llm clean-templates 
-.PHONY: install-uv install-jq install-jq-preamble install-llm install-templates
+.PHONY: clean-uv clean-jq clean-templates 
+.PHONY: install-uv install-jq install-jq-preamble install-templates
 
-setup one-time-setup:: install-uv install-llm install-jq
+setup one-time-setup:: install-uv install-jq
 
-clean-setup:: clean-uv clean-llm clean-jq
+clean-setup:: clean-uv clean-jq
 
 clean-uv clean-jq:: 
 	@echo "You have to uninstall ${@:clean-%=%} manually:"
 	@echo
 	$(info ${help_message_${@:clean-%=%}})
-
-clean-llm:: uv-command-check clean-templates
-	@printf "uv pip uninstalling llm and support libraries. Proceed? [Y/n] " && \
-		read answer; \
-		[[ $$answer = 'n' ]] && exit 0 || echo uv pip uninstall llm bs4
-
-clean-templates::
-	@cd ${SRC_DIR}/llm/templates/ && \
-		for t in *.yaml; do echo "removing: ${LLM_TEMPLATES_LIB_DIR}/$$t"; rm -f "${LLM_TEMPLATES_LIB_DIR}/$$t"; done
-	ls -l "${LLM_TEMPLATES_LIB_DIR}"
-
-install-llm:: install-templates
-	pip install -U llm bs4
-	llm install llm-ollama
-	echo "If you plan to use ollama for local inference, follow the installation instructions at https://ollama.com"
-
-install-templates::
-	cp ${SRC_DIR}/llm/templates/*.yaml "${LLM_TEMPLATES_LIB_DIR}"
-	ls -l "${LLM_TEMPLATES_LIB_DIR}"
 
 install-uv install-jq:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
