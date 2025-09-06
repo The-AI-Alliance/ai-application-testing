@@ -1,0 +1,6 @@
+INFO: src/scripts/unit-benchmark-data-synthesis.py:
+INFO:   Model:        ollama/gpt-oss:20b
+INFO:   Service URL:  http://localhost:11434
+INFO:   Template dir: src/prompts/templates
+INFO:   Output:       temp/output/ollama/gpt-oss_20b/unit-benchmark-data-synthesis.out
+INFO:   Data dir:     temp/output/ollama/gpt-oss_20b/data

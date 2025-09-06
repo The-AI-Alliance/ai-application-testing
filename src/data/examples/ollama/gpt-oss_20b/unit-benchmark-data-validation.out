@@ -1,0 +1,22 @@
+INFO: src/scripts/unit-benchmark-data-validation.py:
+INFO:   Model:             ollama/gpt-oss:20b
+INFO:   Service URL:       http://localhost:11434
+INFO:   Template:          src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml
+INFO:   Output:            temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out
+INFO:   Data dir:          temp/output/ollama/gpt-oss_20b/data
+INFO:   Just report stats? False
+WARNING:  JSON parsing failed (exception: Invalid control character at: line 1 column 433 (char 432)): {"question":"I have swelling in my ankle after a minor sprain. What can I do at home?","label":"other","rating":5,"reason":"The label 'other' accurately reflects that the patient is seeking advice for a non-emergency, non-prescription-related issue. The question is a general health query about home care for a minor sprain, which does not qualify as a prescription refill or an emergency situation. Thus, the label matches well.\"}
+
+WARNING:  JSON parsing failed (exception: Expecting ',' delimiter: line 1 column 265 (char 264)): {"question":"Is it safe to drive after taking _P_?","label":"other","rating":5,"reason":"The question is about safe driving after medication, which does not indicate an emergency or a prescription refill request. The 'other' label correctly categorizes the query.")}
+
+WARNING:  JSON parsing failed (exception: Invalid control character at: line 1 column 402 (char 401)): {"question":"My medication dosage is confusing me. Can you please explain it again?","label":"other","rating":5,"reason":"The question is about understanding medication dosage, which is a general informational request about medication. It is neither an urgent emergency (no indication of acute symptom) nor a prescription refill request. Therefore, the label \"other\" correctly matches the question.}
+
+INFO: Files:                                                                            |    1  |    2  |    3  |    4  |    5  | Total |
+INFO: --------------------------------------------------------------------------------  |-------|-------|-------|-------|-------|-------|
+INFO: synthetic-q-and-a_patient-chatbot-emergency-data.json                             |    0  |    4  |    7  |   12  |  168  |  191  |
+INFO: synthetic-q-and-a_patient-chatbot-prescription-refills-data.json                  |    0  |    0  |    0  |    0  |  108  |  108  |
+INFO: synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json              |    2  |    2  |    0  |    1  |  168  |  173  |
+INFO: --------------------------------------------------------------------------------  |-------|-------|-------|-------|-------|-------|
+INFO: Totals:                                                                           |    2  |    6  |    7  |   13  |  444  |  472  |
+INFO: --------------------------------------------------------------------------------  |-------|-------|-------|-------|-------|-------|
+INFO: Total count: 475 (includes errors), total errors: 3

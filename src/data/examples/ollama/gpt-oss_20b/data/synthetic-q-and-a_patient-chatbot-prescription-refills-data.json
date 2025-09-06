@@ -1,0 +1,108 @@
+{"question":"I need my _P_ refilled.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Can I get a refill for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I'm out of _P_, can you help?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My last _P_ ran out, need a new prescription.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ medication?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need more _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacy says no refills left for _P_, can you order?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Can you send a refill for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I ran out of _P_, need another prescription.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Need another dose of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Do you have any refills left for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need to refill _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m low on _P_, please prescribe again.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you send me more of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill on my _P_ prescription.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Can you request a new prescription for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need my _P_ bottle refilled.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please send a refilled prescription for _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacy says I have none left, need a refill of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill for my _P_ for _B_ pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you send me a refill for my _P_ tablets?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need more _P_ capsules for my _B_.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"My pharmacist said no refills left on my _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ for my knee issues.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can I get another prescription of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m out of _P_, can you refill it?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you order a refill for my _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill of _P_ for my back pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Is there any refills left on my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need to get a refill on my _P_ medication.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ for my headaches.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you refill my _P_ prescription bottle?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m low on _P_, can you send a refill?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need more _P_ for my knee condition.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Could you refill my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill for my _P_ drug for _B_.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Is it possible to refill my _P_ again?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacy says no left on _P_, can you order?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need another supply of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ for my back pain relief.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can I request a refill of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m out of _P_, please send a refill.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ prescription for my headaches?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I need a refill for my _P_ medication, it's finished.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please send me a new refill of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacist notified me of no refills on _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you prescribe me a refill of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need my _P_ again for my knee.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Are there refills left on my _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ prescription bottle? I need one more.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill of _P_ for my shoulder pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Please refill my _P_ prescription for back aches.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I’m out of _P_, can you send a refill?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ drug?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill for my _P_ medication for headaches.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you send a refill of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please prescribe me a refill of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacy says I have no more refills on _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Do I have any refills left on my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need my _P_ medication refilled for my back pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Could you order a refill of my _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"My pharmacist says I’m out of _P_. Can you refill?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need another prescription of _P_ for my knee.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you supply me with a refill of _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please send me a refill for my _P_ pills.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need more _P_ for my back pain relief.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you refill my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m low on _P_, can you prescribe another?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Do you have a refill for my _P_ drug?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ prescription for my foot pain?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I need a refill for my _P_ medication, it’s finished.","answer":{"label":"refill","prescription":"_P_","body-point":""}}
+{"question":"Please request a refill of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Is there a refill for my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need extra _P_ for my back issues.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can you refill my _P_ drug?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please send me a refill for _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m out of _P_, can you help me refill it?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you order a refill of my _P_ for my shoulder?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Do I have any refills left on my _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ prescription for my knee pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I need another supply of _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Can you send me a refill for my _P_ bottle?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill of _P_ for my back, can you help?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Is it possible to get a refill on my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m out of _P_, please send a refill.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you refill my _P_ prescription?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Do you have any refills left on my _P_? I need one. ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need a refill for my _P_ medication for headaches. ","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Please send me a refill of _P_ tablets. ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m low on _P_, can you refill it?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you order a new refill of my _P_ for my knee?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I need more _P_ pills for back pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Can I get a refill on my _P_ prescription? ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need to refill my _P_ for my shoulders.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Please refill my _P_ medication, I'm out.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Is there a refill available for my _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need another prescription of _P_ for my knee pain.","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Please send me a refill for my _P_ drug. ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I’m out of _P_, could you send a refill?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Could you order another refill of my _P_ for my back?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Do I have any refills left on _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ prescription for my headaches. ","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"I need a refill for my _P_ medication, it’s finished. ","answer":{"label":"refill","prescription":"_P_","body-point":""}}
+{"question":"Can you refill my _P_ prescription bottle? ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"I need more _P_ for my knee. ","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}
+{"question":"Could you send me a refill of _P_? ","answer":{"label":"refill","prescription":"_P_","body-part":""}}
+{"question":"Please refill my _P_ for my back pain, can you?","answer":{"label":"refill","prescription":"_P_","body-part":"_B_"}}

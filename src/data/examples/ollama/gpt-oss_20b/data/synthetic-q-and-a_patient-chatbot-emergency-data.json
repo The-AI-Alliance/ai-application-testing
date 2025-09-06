@@ -1,0 +1,191 @@
+{"question":"Since I started taking my prescription for _P_, I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"Since I started taking my prescription for _P_, I have hives all over my skin.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"Since I started taking my prescription for _P_, I have severe swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"Since I started taking my prescription for _P_, I have severe stomach cramps.","answer":{"label":"emergency","prescription":"_P_","body-part":"stomach"}}
+{"question":"I have severe pain in my chest.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have severe pain in my chest. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have severe pain in my chest. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have severe swelling in my neck.","answer":{"label":"emergency","prescription":"","body-part":"neck"}}
+{"question":"I have severe swelling in my neck. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"neck"}}
+{"question":"I have severe swelling in my neck. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"neck"}}
+{"question":"I have trouble breathing.","answer":{"label":"emergency","prescription":"","body-part":""}}
+{"question":"I have trouble breathing. What should I do?","answer":{"label":"emergency","prescription":"","body-part":""}}
+{"question":"I have trouble breathing. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":""}}
+{"question":"I have a sharp pain in my chest.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have a sharp pain in my chest. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have a sharp pain in my chest. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have severe headaches that won't go away.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash around my eyes that is spreading.","answer":{"label":"emergency","prescription":"_P_","body-part":"eyes"}}
+{"question":"Since I started taking my prescription for _P_, I feel like my heart is racing and I'm short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"heart"}}
+{"question":"Since I started taking my prescription for _P_, I have swelling in my ankles and can’t walk.","answer":{"label":"emergency","prescription":"_P_","body-part":"ankles"}}
+{"question":"I have severe pain in my back after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have severe pain in my back. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"back"}}
+{"question":"I have severe pain in my throat and can't swallow. I think I need a specialist.","answer":{"label":"emergency","prescription":"","body-part":"throat"}}
+{"question":"I have trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have trouble breathing and my mouth is swelling. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"mouth"}}
+{"question":"I have sudden severe chest pain and my arms feel numb. I need help ASAP.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have a severe allergic reaction after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have hives all over my body after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have severe swelling in my face and can’t open my eyes. Please help.","answer":{"label":"emergency","prescription":"","body-part":"face"}}
+{"question":"I have a rapid heartbeat and feel lightheaded after my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"heart"}}
+{"question":"I have a sharp pain in my left leg that is getting worse.","answer":{"label":"emergency","prescription":"","body-part":"left leg"}}
+{"question":"I have trouble breathing and my throat feels closed up.","answer":{"label":"emergency","prescription":"","body-part":"throat"}}
+{"question":"I have severe swelling in my wrist after starting my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"wrist"}}
+{"question":"I have a severe rash that is spreading from my arm to my chest.","answer":{"label":"emergency","prescription":"","body-part":"arm, chest"}}
+{"question":"I have a sudden severe headache that is getting worse. Need urgent care.","answer":{"label":"emergency","prescription":"","body-part":"head"}}
+{"question":"I have trouble breathing and feel faint. My heart is racing.","answer":{"label":"emergency","prescription":"","body-part":"heart"}}
+{"question":"I have a sharp pain in my stomach and can't stand up after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"stomach"}}
+{"question":"I have severe swelling in my knee that makes me unable to walk.","answer":{"label":"emergency","prescription":"","body-part":"knee"}}
+{"question":"Since I started taking my prescription for _P_, I feel like my chest is tight and my breathing is difficult.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a severe allergic reaction with swelling at my lips and cannot swallow.","answer":{"label":"emergency","prescription":"","body-part":"lips"}}
+{"question":"I have a sharp pain in my right elbow and can’t bend it. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"right elbow"}}
+{"question":"I have trouble breathing and I hear wheezing. Need urgent help.","answer":{"label":"emergency","prescription":"","body-part":"larynx"}}
+{"question":"I have severe pain in my sacrum and feel nauseated.","answer":{"label":"emergency","prescription":"","body-part":"sacrum"}}
+{"question":"Since I started taking my prescription for _P_, I have developed a fever and swelling in my neck.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck"}}
+{"question":"I have a severe rash on my arms and torso after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms, torso"}}
+{"question":"I have trouble breathing and my eyes are red. I need urgent care.","answer":{"label":"emergency","prescription":"","body-part":"eyes"}}
+{"question":"I have a sharp pain in my sternum and the pain radiates to my left arm.","answer":{"label":"emergency","prescription":"","body-part":"sternum"}}
+{"question":"I have swelling in my hands and can't move my fingers after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"hands"}}
+{"question":"Since I started taking my prescription for _P_, I feel a sudden severe dizziness and faintness.","answer":{"label":"emergency","prescription":"_P_","body-part":"brain"}}
+{"question":"I have severe pain in my shoulder blade that is getting worse.","answer":{"label":"emergency","prescription":"","body-part":"shoulder blade"}}
+{"question":"I have trouble breathing and I feel like I'm suffocating after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have swelling in my face and cannot take anything by mouth. Need urgent help.","answer":{"label":"emergency","prescription":"","body-part":"face"}}
+{"question":"I have severe chest pain that doesn't go away with rest. Need immediate care.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"I have a sudden severe headache and my vision is blurry after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash around my neck and sore throat.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck, throat"}}
+{"question":"I have a sharp pain in my lower back and cannot stand after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lower back"}}
+{"question":"I have swelling in my ankles while on my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"ankles"}}
+{"question":"I have a severe allergic reaction after taking my prescription for _P_ with hives and swelling in my throat.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have trouble breathing after eating because of my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"mouth"}}
+{"question":"I have a sudden severe chest pain that feels like a knife cut. Need help.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I've started feeling very short of breath and my lungs feel tight.","answer":{"label":"emergency","prescription":"_P_","body-part":"lungs"}}
+{"question":"I have swelling in my eyelids and can’t open my eyes after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"eyelids"}}
+{"question":"I feel extremely lightheaded, dizzy, and I have sudden severe headache after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have trouble breathing and I'm feeling nauseated with my heart racing at the same time.","answer":{"label":"emergency","prescription":"","body-part":"heart"}}
+{"question":"I have a severe rash that keeps spreading across my chest and arm after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest, arm"}}
+{"question":"I have swelling in my throat and I'm having difficulty speaking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have severe pain in my right knee that won't subside after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"right knee"}}
+{"question":"Since I started taking my prescription for _P_, I have a sudden severe dizziness and I'm unable to stand.","answer":{"label":"emergency","prescription":"_P_","body-part":"balance"}}
+{"question":"I have trouble breathing and experiencing wheezing that is getting worse after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lungs"}}
+{"question":"I have a sharp pain that started in my left chest and traveled into my left shoulder after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"left chest, shoulder"}}
+{"question":"I have swelling in my ears and can’t hear after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"ears"}}
+{"question":"I have severe pain in my jaw and the pain radiates into my neck.","answer":{"label":"emergency","prescription":"","body-part":"jaw"}}
+{"question":"I have a sudden severe rash on my back and I'm experiencing shortness of breath after starting my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have a sharp stabbing pain in my abdomen and feel nauseated after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"abdomen"}}
+{"question":"I have swelling in my throat and I can’t hold my breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have trouble breathing and a strange feeling that my chest is locked after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a sudden severe headache that gets worse with movement after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have swelling in my arm and my pulse is rapid after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arm"}}
+{"question":"I have a sharp pain in my pelvis that is getting worse. I need urgent care.","answer":{"label":"emergency","prescription":"","body-part":"pelvis"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash all over my arms and legs and I feel unsteady.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms, legs"}}
+{"question":"I have swelling in my fingers and I can’t pick up objects after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"fingers"}}
+{"question":"I have trouble breathing, chest pain and headache all at once after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest, head"}}
+{"question":"I have a sudden severe dizziness and my vision becomes double after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"vision"}}
+{"question":"I have swelling in my face and my tongue is enlarged after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, tongue"}}
+{"question":"I have severe pain in my right ankle that I can’t move after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"right ankle"}}
+{"question":"I have a severe rash that keeps spreading to my chest and I'm having trouble breathing.","answer":{"label":"emergency","prescription":"","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a sudden severe headache and my vision is blurred.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have a sudden severe burning feeling in my throat and my swallowing is difficult after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have a sharp pain in my rib cage and I can’t breathe after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"rib"}}
+{"question":"I have swelling in my knees and an inability to walk after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"knees"}}
+{"question":"I have severe pain in my calf and swelling after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"calf"}}
+{"question":"I have trouble breathing and a feeling of pressure in my chest after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash around my chest and I feel extremely short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have swelling of my lips and my throat, and I can’t swallow after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lips, throat"}}
+{"question":"I have a sudden severe stomach cramp and severe nausea after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"stomach"}}
+{"question":"I have sudden severe chest pain that radiates to my jaw and arm after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that spreads to my face and I feel lightheaded.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"I have a sudden severe breathing difficulty and my chest feels tight after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my shoulders and have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"shoulders"}}
+{"question":"I have a severe rash that keeps spreading across my upper body and I have chest tightness after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"upper body"}}
+{"question":"I have swelling in my eyes and I can’t open my eyes after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"eyes"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe headache and feel nauseated.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have difficulty breathing and a sense that my lungs are not getting air after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lungs"}}
+{"question":"I have severe swelling of my face and my tongue is swelling after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, tongue"}}
+{"question":"I have a severe rash on my arms and I'm experiencing shortness of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"I have sudden severe chest pain after I take my prescription for _P_ and it spreads to left arm.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have difficulty swallowing, a tight throat, and I'm choking.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have swelling in my chest and I'm short of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a sudden severe headache and vision changes after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have a rash all over my body and I have trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"Since I started taking my prescription for _P_, I have swelling in my legs and I'm nauseated.","answer":{"label":"emergency","prescription":"_P_","body-part":"legs"}}
+{"question":"I have a severe rash on my throat and I cannot swallow after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"throat"}}
+{"question":"I have trouble breathing and my heart rate spikes after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"heart"}}
+{"question":"I have swelling in my face and I feel like I'm suffocating after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe rash on my chest and I cannot breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a sudden severe chest pain that gets worse when I breathe after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a severe rash on my lips and throat and I'm having difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lips, throat"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that spreads to my arms and I'm experiencing chest tightness.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"I have swelling in my tongue and I'm choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"tongue"}}
+{"question":"I have a severe headache and my vision blurs after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"Since I started taking my prescription for _P_, I have difficulty breathing, chest tightness, and throat swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest, throat"}}
+{"question":"I have swelling of my eyelids and I can’t open my eyes after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"eyelids"}}
+{"question":"I have a rash on my feet and I'm experiencing swelling and pain after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"feet"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe rash on my face and I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"I have swelling in my legs and I feel faint after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"legs"}}
+{"question":"I have a sudden severe chest pain and a tight feeling in my lungs after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a severe rash on my back and I feel lightheaded after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that spreads to my body and I am having trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have swelling in my jaw and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"jaw"}}
+{"question":"I have a sudden severe headache and a feeling of tightness in my chest after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have a severe rash on my neck and I have swelling in my throat after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck, throat"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading to my arms and I feel short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"I have a sudden severe chest pain that is radiating to my lips and I'm choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe rash on my chest and my chest feels tight.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have swelling in my arms and I'm unable to breathe after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"Since I started taking my prescription for _P_, I have nausea and a severe headache, and I feel like I'm suffocating.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have a rash all over my body and I am having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have swelling in my mouth and I can't swallow after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"mouth"}}
+{"question":"I have a severe rash on my neck and I am experiencing shortness of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading to my face and neck and I feel short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, neck"}}
+{"question":"I have swelling in my legs and I am experiencing faintness and chest tightness after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"legs"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe rash on my chest and neck and I'm choking.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest, neck"}}
+{"question":"I have a rash that keeps spreading on my back and I'm having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have swelling in my jaw and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"jaw"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe headache and a tight feeling in my chest, I want urgent care.","answer":{"label":"emergency","prescription":"_P_","body-part":"head"}}
+{"question":"I have a rash over my body and I'm experiencing chest tightness after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have a rash spreading to my lips and I am choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lips"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my ankles and I am feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":"ankles"}}
+{"question":"I have a rash that keeps spreading to my arms and I'm experiencing shortness of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my face and my throat is swelling, I need urgent help.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, throat"}}
+{"question":"I have a rash on my chest and I am having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have swelling in my lips and I can't open my mouth after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lips"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my face and my throat is swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, throat"}}
+{"question":"I have a rash that spreads to my chest and I feel short of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have severe pain in my knee and I cannot move it after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"knee"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my back and I feel weak and short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have difficulty breathing and a chest tightness after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a rash that keeps spreading to my face and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading and I have chest tightness.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"I have a rash on my arms and I am having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"I have a rash that spreads to my back and I feel short of breath after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash over my body and I’m having trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have swelling in my mouth and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"mouth"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash over my legs and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":"legs"}}
+{"question":"I have a rash over my chest and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my face and my throat is swelling and I can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, throat"}}
+{"question":"I have a rash that keeps spreading to my arms and I am choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that spreads to my body and I can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have a rash on my lips and I am having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"lips"}}
+{"question":"I have a rash that keeps spreading to my neck and I am choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my face and my chest hurts with difficulty breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"face, chest"}}
+{"question":"I have a rash that keeps spreading to my arms and I have a feeling of pressure in my chest after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that's spreading to my back and I'm having trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have a rash on my chest and my throat is swelling and I'm having difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest, throat"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash on my face and I feel faint and short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"I have a rash that spreads to my face and I feel faint and I cannot breathe after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my body and I feel short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"I have a rash over my body and I am having trouble breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"body"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash over my ears that is itchy and I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"ears"}}
+{"question":"I have a rash that keeps spreading to the back and I feel faint after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading to my neck and I feel short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck"}}
+{"question":"I have a rash that keeps spreading to my chest and I have difficulty breathing after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my face and I have chest tightness.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}
+{"question":"I have severe chest pain and a sudden swelling in my throat after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my arms and have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"arms"}}
+{"question":"I have swelling in my left leg and my chest feels tight after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"left leg"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my back and I have chest tightness.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"I have a rash that keeps spreading to my chest and I am choking after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"chest"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my neck and I have swelling in my throat.","answer":{"label":"emergency","prescription":"_P_","body-part":"neck"}}
+{"question":"I have a rash that covers my back and my chest is tight after taking my prescription for _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"back"}}
+{"question":"Since I started taking my prescription for _P_, I have a rash that keeps spreading across my face and I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"face"}}

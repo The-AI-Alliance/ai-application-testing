@@ -1,0 +1,15 @@
+{"question": "I need my P drug refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "My pharmacy says I don't have any refills for P. Can you ask them to refill it?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "I'm out of P. Can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with my P prescription refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "I need more P.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm running low on P and I was wondering if you could help me get a refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Do you have any suggestions for how to get my P prescription refilled?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a prescription refill for my P today?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "I need to know if you can help me with the P prescription refill process.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "How do I request a P prescription refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with the P refill process?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I need a prescription refill for my P as soon as possible.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with getting a P prescription refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Do you have any information about how to get a P prescription refill?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a prescription refill for my B today?", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}
