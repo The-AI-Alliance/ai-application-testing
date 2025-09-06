@@ -4,7 +4,7 @@
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
-MODEL_FILE_NAME       ?= $(subst /,_,$(subst :,_,${MODEL}))
+MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
 PROMPT_TEMPLATES_DIR  ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
@@ -13,6 +13,7 @@ OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${TEMP_DIR}
+TIME                  ?= time  # time execution of long processes
 
 ## One way to prevent execution of scripts is to invoke make this way:
 ## NOOP=echo make foobar
@@ -142,10 +143,14 @@ If you want to uninstall jq and used HomeBrew to install it,
 use 'brew uninstall jq'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete jq.
+
 endef
 
 ifndef DOCS_DIR
 $(error ERROR: There is no ${DOCS_DIR} directory!)
+endif
+ifndef SRC_DIR
+$(error ERROR: There is no ${SRC_DIR} directory!)
 endif
 
 define gem-error-message
@@ -274,52 +279,48 @@ all-code:: clean-code run-tdd-example-refill-chatbot run-unit-benchmark-data-syn
 
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}   
+
+define run-tdd-example-refill-chatbot-message
+*** Running the TDD example.
+endef
+define run-unit-benchmark-data-synthesis-message
+*** Running the unit benchmark data synthesis example.
+endef
+define run-unit-benchmark-data-validation-message
+*** Running the unit benchmark synthetic data validation example.
+endef
 	
 run-terc:: run-tdd-example-refill-chatbot
-run-tdd-example-refill-chatbot:: before-run
-	@echo "*** Running the TDD example."
-	${NOOP} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
+run-ubds:: run-unit-benchmark-data-synthesis
+run-ubdv:: run-unit-benchmark-data-validation
+
+run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
+	$(info ${$@-message})
+	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPT_TEMPLATES_DIR} \
-		--output ${OUTPUT_DIR}/${@:run-%=%}.out
+		--output ${OUTPUT_DIR}/${@:run-%=%}.out \
+		--data ${OUTPUT_DATA_DIR}
 
-# If you decide to write the output to a file, add --output ${OUTPUT_DIR}/${@:run-%=%}.out
-# We don't do that by default, because this output is either empty or small for normal 
-# execution runs.
-run-ubds:: run-unit-benchmark-data-synthesis
-run-unit-benchmark-data-synthesis:: before-run 
-	@echo "*** Running the unit benchmark data synthesis example."
-	${NOOP} ${SRC_DIR}/scripts/${@:run-%=%}.sh --model ${MODEL} \
-		--data ${OUTPUT_DATA_DIR} 
-
-# If you decide to write the output to a file, add --output ${OUTPUT_DIR}/${@:run-%=%}.out
-# We don't do that by default, because this output is either empty or small for normal 
-# execution runs.
-run-ubdv:: run-unit-benchmark-data-validation
-run-unit-benchmark-data-validation:: before-run
-	@echo "*** Running the unit benchmark synthetic data validation example."
-	${NOOP} ${SRC_DIR}/scripts/${@:run-%=%}.sh --model ${MODEL} \
-		--data ${OUTPUT_DATA_DIR} 
-
-${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
-	mkdir -p $@
-
-# See help above for why we have install-templates as a dependency.
-before-run:: uv-venv jq-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR} install-templates 
+before-run:: uv-venv jq-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
 uv-venv:: uv-command-check 
 	uv venv
 
+${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
+	mkdir -p $@
+
 save-examples::
 	@echo "Saving example output and data files for model ${MODEL}:"
 	rm -rf ${EXAMPLE_DATA}
+	mkdir -p $$(dirname ${EXAMPLE_DATA})
 	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-jq clean-templates 
-.PHONY: install-uv install-jq install-jq-preamble install-templates
+.PHONY: install-uv install-jq install-jq-preamble 
 
 setup one-time-setup:: install-uv install-jq
 
