@@ -27,16 +27,17 @@ prompt: >
     - "I have a sharp pain in my chest. What should I do?"
     - "I have a sharp pain in my chest. I think I need a referral to a specialist."
 
-    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt suggests
-    the patient needs urgent or emergency care. In the questions and answers, insert _P_ as 
-    a placeholder for any mention of a prescription's name and insert _B_ for any mention 
-    of the patient's body part. 
+    Using these examples for inspiration, GENERATE AT LEAST 100 Q&A PAIRS, where each question 
+    or prompt suggests the patient needs urgent or emergency care. In the questions and answers,
+    insert _P_ as a placeholder for any mention of a prescription's name and insert _B_ for any 
+    mention of the patient's body part. Keep generating Q&A pairs until you have output at least
+    100 of them.
 
     Write the Q&A pairs using this JSONL output:
 
     - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
 
-    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+    DO NOT write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
     other markup syntax. Just print the JSONL lines.
 
     In the answer,

@@ -19,19 +19,19 @@ prompt: >
     - "I am having some swelling in my _B_. What should I do?"
     - "I am having some swelling in my _B_. I think I need a referral to a specialist."
 
-    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt is NOT a
-    prescription refill request. Do not generate any questions that could be intepreted as
-    emergency or urgent care situations, like extreme pain or allergic reactions. All questions
-    should not require urgent responses from the care provider.
-    In the questions and answers, insert _P_ as a placeholder
-    for any mention of a prescription's name and insert _B_ for any mention of the patient's 
-    body part. 
+    Using these examples for inspiration, GENERATE AT LEAST 100 Q&A PAIRS, where each question
+    or prompt is NOT a prescription refill request. Do not generate any questions that could be
+    intepreted as emergency or urgent care situations, like extreme pain or allergic reactions. 
+    All questions should not require urgent responses from the care provider. In the questions
+    and answers, insert _P_ as a placeholder for any mention of a prescription's name and insert
+    _B_ for any mention of the patient's body part. Keep generating Q&A pairs until you have 
+    output at least 100 of them.
 
     Write the Q&A pairs using this JSONL output:
 
     - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
 
-    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+    DO NOT write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
     other markup syntax. Just print the JSONL lines.
 
     In the answer,
