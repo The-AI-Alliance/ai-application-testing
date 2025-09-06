@@ -4,12 +4,14 @@
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
+MODEL_FILE_NAME       ?= $(subst /,_,$(subst :,_,${MODEL}))
 SRC_DIR               ?= src
 PROMPT_TEMPLATES_DIR  ?= ${SRC_DIR}/llm/templates
 TEMP_DIR              ?= temp
-OUTPUT_DIR            ?= ${TEMP_DIR}/output
+OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
+OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
-EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples
+EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${TEMP_DIR}
 
 ## One way to prevent execution of scripts is to invoke make this way:
@@ -56,6 +58,7 @@ define help_message_docs
 Quick help for this make process. This Makefile is used for the website management.
 For running the example tools described there, see src/Makefile or run "make help-src".
 
+make help-docs          # Help on the website make targets.
 make all-docs           # Clean and locally view the document.
 make clean-docs         # Remove build artifacts, etc.
 make view-pages         # View the published GitHub pages in a browser.
@@ -122,13 +125,15 @@ make run-unit-benchmark-data-validation
 
 Miscellaneous tasks for help, debugging, setup, etc.
 
-make help               # Prints this output.
+make help-code          # Prints this output.
 
 The "uv", "llm", and "jq" CLI tools are required:
 
 make help-uv            # Prints specific information about "uv", including installation.
 make help-llm           # Prints specific information about "llm", including installation.
 make help-jq            # Prints specific information about "jq", including installation.
+
+make save-examples      # Copy run output and data files for ${MODEL} to ${EXAMPLE_DATA}.
 
 endef
 
@@ -288,7 +293,7 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@python -m webbrowser "${PAGES_URL}" || \ 
+	@python -m webbrowser "${PAGES_URL}" || \
 		(echo "ERROR: I could not open the GitHub Pages URL, ${PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
 		 exit 1 ): 
 view-local:: setup-jekyll run-jekyll
@@ -313,7 +318,7 @@ setup-jekyll:: ruby-installed-check bundle-ruby-command-check
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
-.PHONY: before-run uv-venv 
+.PHONY: before-run uv-venv save-examples
 
 all-code:: clean-code run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
 
@@ -356,6 +361,11 @@ before-run:: uv-venv jq-command-check llm-command-check ${OUTPUT_DIR} ${OUTPUT_D
 
 uv-venv:: uv-command-check 
 	uv venv
+
+save-examples::
+	@echo "Saving example output and data files for model ${MODEL}:"
+	rm -rf ${EXAMPLE_DATA}
+	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-jq clean-llm clean-templates 
