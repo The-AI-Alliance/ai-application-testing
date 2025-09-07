@@ -76,16 +76,13 @@ make all-code           # Clean and run all the tools.
 make clean-code         # Remove build artifacts, etc., such as outputs in ${OUTPUT_DIR}
 
 make one-time-setup     # Synonym for the setup target...
-make setup              # One-time setup tasks; builds targets install-uv and install-jq.
+make setup              # One-time setup tasks; e.g., builds target install-uv.
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
-make install-jq         # Explain how to install "jq".
-                        # Run "make help-jq" for more information.
 
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what to do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
-make clean-jq           # Explain how to uninstall "jq".
 
 For scripts run by the following targets, which invoke inference, ${MODEL} served by
 ollama is used, by default. To specify a different model, invoke make as in this example:
@@ -114,10 +111,9 @@ Miscellaneous tasks for help, debugging, setup, etc.
 
 make help-code          # Prints this output.
 
-The "uv" and "jq" CLI tools are required:
+The "uv" CLI tool is required:
 
 make help-uv            # Prints specific information about "uv", including installation.
-make help-jq            # Prints specific information about "jq", including installation.
 
 make save-examples      # Copy run output and data files for ${MODEL} to ${EXAMPLE_DATA}.
 
@@ -131,18 +127,6 @@ If you want to uninstall uv and used HomeBrew to install it,
 use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.
-
-endef
-
-define help_message_jq
-The "jq" CLI is used by some tools for parsing JSON. For more details, see:
-  https://jqlang.org
-  https://jqlang.org/download/  (downloading and installation instructions)
-
-If you want to uninstall jq and used HomeBrew to install it,
-use 'brew uninstall jq'. Otherwise, if you executed one of the
-installation commands on the website above, find the installation
-location and delete jq.
 
 endef
 
@@ -198,7 +182,7 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-code help-uv help-jq
+.PHONY: help help-docs help-code help-uv
 
 all help::
 	$(info ${help_message})
@@ -303,7 +287,7 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 		--output ${OUTPUT_DIR}/${@:run-%=%}.out \
 		--data ${OUTPUT_DATA_DIR}
 
-before-run:: uv-venv jq-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
+before-run:: uv-venv ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
 uv-venv:: uv-command-check 
@@ -319,19 +303,19 @@ save-examples::
 	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
 
 .PHONY: one-time-setup setup clean-setup 
-.PHONY: clean-uv clean-jq clean-templates 
-.PHONY: install-uv install-jq install-jq-preamble 
+.PHONY: clean-uv clean-templates 
+.PHONY: install-uv
 
-setup one-time-setup:: install-uv install-jq
+setup one-time-setup:: install-uv
 
-clean-setup:: clean-uv clean-jq
+clean-setup:: clean-uv
 
-clean-uv clean-jq:: 
+clean-uv:: 
 	@echo "You have to uninstall ${@:clean-%=%} manually:"
 	@echo
 	$(info ${help_message_${@:clean-%=%}})
 
-install-uv install-jq:: 
+install-uv:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
 		echo "$$cmd is already installed" || ${MAKE} help-$$cmd
 
