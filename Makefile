@@ -184,8 +184,14 @@ endef
 
 .PHONY: help help-docs help-code help-uv
 
-all help::
+all:: help
+
+help::
 	$(info ${help_message})
+	@echo
+
+help-docs help-code help-uv::
+	$(info ${help_message_${@:help-%=%}})
 	@echo
 
 .PHONY: print-info print-info-docs print-info-code print-info-env

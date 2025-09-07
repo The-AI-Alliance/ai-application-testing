@@ -2,13 +2,15 @@
 
 [Published Documentation](https://the-ai-alliance.github.io/ai-application-testing/)
 
-This repo contains the code and documentation for the AI Alliance user guide and tools for _Achieving Confidence in Enterprise AI Applications_, which explores the inherent difficulties for enterprise developers who need to right the kinds of repeatable, reliable, and automatable tests they are accustomed to writing, but which are much more challenging with generative AI models involved. This is because non-Gen AI software is (mostly) deterministic and hence predictable, while Gen AI outputs are _stochastic_, governed by a random probability model.
+This repo contains the code and documentation for the AI Alliance user guide and tools for _Achieving Confidence in Enterprise AI Applications_, which explores the inherent difficulties for enterprise developers who need to write the same kinds of repeatable, reliable, and automatable tests for AI behaviors that they are accustomed to writing for "traditional" code. This is much more challenging with generative AI models involved, because non-Gen AI software is (mostly) deterministic and hence predictable, while Gen AI outputs are _stochastic_, governed by a random probability model, so how do you write a _predictable_ test for that kind of behavior?? 
 
-This project contains the website for the user guide, with the GitHub Pages content in the `docs` folder, and example code in the `src` folder.
+This project contains the website for the user guide, with the GitHub Pages content in the `docs` folder, and example code in the `src` folder. A `Makefile` provides convenient `make` targets for doing most tasks.
+
+Next, we discuss working with the testing tools in this project. For information about working with the website documentation, see [GITHUB_PAGES.md](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/GITHUB_PAGES.md).
 
 ## Trying the Tools Yourself!
 
-Here, we discuss how to setup and execute the tools, but you'll need to read the corresponding user guide sections for details about what they are doing and how they work.
+We discuss how to setup and execute the tools, but you'll need to read the corresponding [website](https://the-ai-alliance.github.io/ai-application-testing/) user guide sections for details about what these tools are doing and how they work.
 
 ### Setup
 
@@ -19,9 +21,10 @@ make one-time-setup
 ```
 
 > [!TIP]
-> Try `make help` for details about the `make` process. There are also `--help` options for example scripts discussed below.
+> 1. Try `make help` for details about the `make` process. There are also `--help` options for all the tools discussed below.
+> 2. The `make` process has only been tested on MacOS, but it is designed to work on Linux. The actual tools are written in Python for portability.
 
-This target provides instructions for how to install required tools, like [`uv`](https://docs.astral.sh/uv/), the Python package management system, and [`jq`](https://jqlang.org), the JSON parsing CLI tool. 
+The `one-time-setup` target provides instructions for how to install required tools, like [`uv`](https://docs.astral.sh/uv/), the Python package management system, and installs other tools itself, like Python library dependencies using `uv`. 
 
 Other tools are installed automatically by `one-time-setup`, like the excellent [`llm` CLI tool](https://github.com/simonw/llm) from Simon Willison and the JSON parsing CLI tool [`jq`](https://jqlang.org/download/).
 
