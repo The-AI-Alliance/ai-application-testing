@@ -6,7 +6,7 @@ INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
-PROMPT_TEMPLATES_DIR  ?= ${SRC_DIR}/prompts/templates
+PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
 OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
@@ -22,7 +22,7 @@ NOOP                  ?=
 
 # Definitions for the website.
 PAGES_URL             ?= https://the-ai-alliance.github.io/ai-application-testing/
-DOCS_DIR              ?= ../docs
+DOCS_DIR              ?= docs
 SITE_DIR              ?= ${DOCS_DIR}/_site
 CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 
@@ -214,7 +214,7 @@ print-info-code::
 	@echo "For the code examples:"
 	@echo "  model:                 ${MODEL}"
 	@echo "  inference service:     ${INFERENCE_SERVICE}"
-	@echo "  prompt templates dir:  ${PROMPT_TEMPLATES_DIR}"
+	@echo "  prompt templates dir:  ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  output dir:            ${OUTPUT_DIR}"
 	@echo "  output data dir:       ${OUTPUT_DATA_DIR}"
 	@echo "  example data dir:      ${EXAMPLE_DATA}"
@@ -249,7 +249,7 @@ view-local:: setup-jekyll run-jekyll
 
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
 # `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
-run-jekyll: clean
+run-jekyll: clean-docs
 	@echo
 	@echo "Once you see the http://127.0.0.1:${JEKYLL_PORT}/ URL printed, open it with command+click..."
 	@echo
@@ -293,7 +293,7 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
-		--template-dir ${PROMPT_TEMPLATES_DIR} \
+		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--output ${OUTPUT_DIR}/${@:run-%=%}.out \
 		--data ${OUTPUT_DATA_DIR}
 
@@ -313,7 +313,7 @@ save-examples::
 	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
 
 .PHONY: one-time-setup setup clean-setup 
-.PHONY: clean-uv clean-templates 
+.PHONY: clean-uv clean-llm-templates 
 .PHONY: install-uv
 
 setup one-time-setup:: install-uv
@@ -348,3 +348,79 @@ ruby-installed-check:
 		( echo "ERROR: shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it." && \
 		  echo "       or run \"make help\", \"make help-$$cmd\", and see the project's README.md for more information." && \
 			exit 1 )
+
+# The rest of this Makefile includes some convenience targets for working 
+# with the "llm" CLI tool. See the Appendix in the README.md for details.
+
+define help_message_llm
+
+The "llm" CLI is used by many of the tools here. For more details, see:
+  https://github.com/simonw/llm
+
+You can install llm using pip:
+  pip install -U llm bs4
+or if you use uv:
+  uv add -U llm bs4
+
+To remove llm, use the corresponding commands, one of:
+  pip uninstall llm bs4
+  uv remove llm bs4
+
+If you want to serve models locally using "ollama", see the installation 
+instructions:
+  https://ollama.com 
+
+Then install the llm plugin for ollama:
+  llm install llm-ollama
+
+The tools also use several llm "templates". These need to be installed into
+the directory output by this llm command:
+  llm templates path
+
+Use the following make command to do this automatically:
+  make install-llm-templates 
+
+WARNING: If you edit the templates in ${PROMPTS_TEMPLATES_DIR}, rerun  
+  make install-llm-templates 
+
+(llm is required to run this target, because it uses 'llm templates path'
+to determine the installation location.)
+
+So, to summarize the llm-related targets (and mention the rest of them):
+
+make help-llm               # This information!
+make install-llm            # Instructions for installing llm.
+make install-llm-templates  # Install our llm "templates" into llm.
+make clean-llm              # Instructions for uninstalling llm. Also makes clean-llm-templates.
+make clean-llm-templates    # Remove our llm "templates" from the llm installation location.
+
+endef
+
+.PHONY: help-llm clean-llm clean-llm-templates install-llm
+
+help-llm::
+	$(info ${help_message_llm})
+	@echo
+
+clean-llm:: help-llm clean-llm-templates
+	@echo
+	@echo "** NOTE: ** clean-llm-templates was already executed to uninstall our templates."
+	@echo
+
+clean-llm-templates::
+	@cd ${PROMPTS_TEMPLATES_DIR} && \
+		llmdir="$$(llm templates path)" && \
+		for t in *.yaml; do echo "removing: $$llmdir/$$t"; rm -f "$$llmdir/$$t"; done && \
+		ls -l "$$llmdir"
+
+install-llm:: help-llm install-llm-templates
+	@echo
+	@echo "** NOTE: ** install-llm-templates was already executed to install our templates."
+	@echo
+
+install-llm-templates:: llm-command-check
+	@llmdir="$$(llm templates path)" && \
+	echo "Installing the llm templates from ${PROMPTS_TEMPLATES_DIR} into $$llmdir" && \
+	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
+	ls -l "$$llmdir"
+
