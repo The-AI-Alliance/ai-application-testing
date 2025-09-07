@@ -30,6 +30,7 @@ _Unit benchmarks_ are an adaptation of benchmarking tools and techniques for the
 > 2. Benchmarks require good datasets with prompts designed to probe how the model behaves in a certain area of interest, along with responses that represent acceptable answers. We will use the term question and answer (Q&A) pairs for these prompts and responses, following conventional practice.[^1]
 > 3. A [Teacher Model]({{site.glossaryurl}}#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
 > 4. Benchmark tools can be called from tests written using Python test frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}, so they are executed as part of an application's test suites.
+> 5. There are many third-party, production-grade tools you can use for evaluation and benchmark creation and execution.
 
 [^1]: Not all benchmarks use Q&A pair datasets like this. For example, some use a specially trained model to evaluate responses. We will only consider benchmarks that work with Q&A pairs.
 
@@ -69,149 +70,157 @@ Let's look at more systematic approaches to creating and executing unit benchmar
 In our TDD example, we wrote the Q&A pairs by hand for our unit benchmark. This has two disadvantages:
 
 1. It is time consuming, so it doesn't scale well for large applications.
-2. Covering the whole &ldquo;space&rdquo; of possible questions and answers is difficult and error prone.
+2. Covering the whole &ldquo;space&rdquo; of possible questions and answers is difficult and error prone, especially for edge cases.
 
 The solution is to use an LLM to generate a lot of diverse Q&A pairs. We will need a way to ensure that generated data is of good quality, which we will explore.
 
 ### Generating the Synthetic Data
 
-The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a script [`src/scripts/unit-benchmark-data-synthesis.sh`]({{site.gh_edit_repository}}/blob/main/src/scripts/unit-benchmark-data-synthesis.sh/){:target="_blank"} that uses `llm` to generate Q&A pairs for three unit benchmarks, each corresponding to a template file:
+The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/scripts/unit-benchmark-data-synthesis.py`]({{site.gh_edit_repository}}/blob/main/src/scripts/unit-benchmark-data-synthesis.py/){:target="_blank"} that uses an LLM to generate Q&A pairs for three unit benchmarks, each corresponding to the `prompt` from the following `llm`-compatible template files:
 
 | Unit Benchmark | Template File | 
 | :------------- | :------------ | 
-| Prescription refill requests | [`synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
-| Apparent emergencies | [`synthetic-q-and-a_patient-chatbot-emergency-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
-| Other messages | [`synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
+| Prescription refill requests | [`synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
+| Apparent emergencies | [`synthetic-q-and-a_patient-chatbot-emergency-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
+| Other messages | [`synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
 
 The _emergency_ use case attempts to detect when the patient needs urgent or emergency care, such as saying she is in extreme pain or she has trouble breathing, in which case the patient is directed to call 911 (in the US) instead.
 
-Here is the template file for that use case:
+Here is the prompt for that use case:
 
 ```text
-name: synthetic-q-and-a_patient-chatbot-emergency
-prompt: >
-    You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
-    testing a healthcare ChatBot that allows medical patients to request help from their 
-    care provider. Some patients will request prescription refills, while some messages 
-    will be for other purposes. In some cases, the patient will need urgent attention, in
-    which case they should stop using the ChatBot and call 911 instead. Here are some
-    examples of other requests that should be interpreted as emergency situations,
-    where _P_ would be replaced by the name of a prescription the user mentions in the
-    message and _B_ would be a place in the patient's body where he or she feels pain or
-    has some other question or comment about it:
+You are a helpful assistant to generate synthetic question and answer (Q&A) pairs for
+testing a healthcare ChatBot that allows medical patients to request help from their 
+care provider. Some patients will request prescription refills, while some messages 
+will be for other purposes. In some cases, the patient will need urgent attention, in
+which case they should stop using the ChatBot and call 911 instead. Here are some
+examples of other requests that should be interpreted as emergency situations,
+where _P_ would be replaced by the name of a prescription the user mentions in the
+message and _B_ would be a place in the patient's body where he or she feels pain or
+has some other question or comment about it:
 
-    - "Since I started taking my prescription for _P_, I have trouble breathing."
-    - "Since I started taking my prescription for _P_, I have hives all over my skin."
-    - "Since I started taking my prescription for _P_, I have severe swelling."
-    - "Since I started taking my prescription for _P_, I have severe stomach cramps."
-    - "I have severe pain in my _B_."
-    - "I have severe pain in my _B_. What should I do?"
-    - "I have severe pain in my _B_. I think I need a referral to a specialist."
-    - "I have severe swelling in my _B_."
-    - "I have severe swelling in my _B_. What should I do?"
-    - "I have severe swelling in my _B_. I think I need a referral to a specialist."
-    - "I have trouble breathing."
-    - "I have trouble breathing. What should I do?"
-    - "I have trouble breathing. I think I need a referral to a specialist."
-    - "I have a sharp pain in my chest."
-    - "I have a sharp pain in my chest. What should I do?"
-    - "I have a sharp pain in my chest. I think I need a referral to a specialist."
+- "Since I started taking my prescription for _P_, I have trouble breathing."
+- "Since I started taking my prescription for _P_, I have hives all over my skin."
+- "Since I started taking my prescription for _P_, I have severe swelling."
+- "Since I started taking my prescription for _P_, I have severe stomach cramps."
+- "I have severe pain in my _B_."
+- "I have severe pain in my _B_. What should I do?"
+- "I have severe pain in my _B_. I think I need a referral to a specialist."
+- "I have severe swelling in my _B_."
+- "I have severe swelling in my _B_. What should I do?"
+- "I have severe swelling in my _B_. I think I need a referral to a specialist."
+- "I have trouble breathing."
+- "I have trouble breathing. What should I do?"
+- "I have trouble breathing. I think I need a referral to a specialist."
+- "I have a sharp pain in my chest."
+- "I have a sharp pain in my chest. What should I do?"
+- "I have a sharp pain in my chest. I think I need a referral to a specialist."
 
-    Based on these examples, generate AT LEAST 100 Q&A pairs, where each question or prompt suggests
-    the patient needs urgent or emergency care. In the questions and answers, insert _P_ as 
-    a placeholder for any mention of a prescription's name and insert _B_ for any mention 
-    of the patient's body part. 
+Using these examples for inspiration, GENERATE AT LEAST 100 Q&A PAIRS, where each question 
+or prompt suggests the patient needs urgent or emergency care. In the questions and answers,
+insert _P_ as a placeholder for any mention of a prescription's name and insert _B_ for any 
+mention of the patient's body part. Keep generating Q&A pairs until you have output at least
+100 of them.
 
-    Write the Q&A pairs using this JSONL output:
+Write the Q&A pairs using this JSONL output:
 
-    - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
+- \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
 
-    Do not write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
-    other markup syntax. Just print the JSONL lines.
+DO NOT write any comments around the JSONL lines and do not wrap the JSONL in Markdown or 
+other markup syntax. Just print the JSONL lines.
 
-    In the answer,
-    - Replace _l_ with "emergency" if the question (or message) appears to be an urgent or emergency situation, 
-      use "refill" for a prescription refill request, or use "other" for any other message.
-    - Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
-    - Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.
+In the answer,
+- Replace _l_ with "emergency" if the question (or message) appears to be an urgent or emergency situation, 
+  use "refill" for a prescription refill request, or use "other" for any other message.
+- Replace _p_ with _P_ if _P_ is mentioned in the question. Otherwise, replace _p_ with an empty string.
+- Replace _b_ with _B_ if _B_ is mentioned in the question. Otherwise, replace _b_ with an empty string.
 ```
 
-The other two template files are similar.
+The other two prompts are similar.
 
-You can run this tool yourself using `make`:
+You can run this tool yourself using `make`. See the [Try It Yourself!]({{site.baseurl}}/arch-design/tdd/#try-it-yourself) section in the chapter on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) for details on setting up the tools. See also the project repo's [README]({{site.gh_edit_repository}}/){:target="_blank"}). Here is the `make` command to run the data synthesis tool with the default model, `ollama/gpt-oss:20b`:
 
 ```shell
-cd src  # if you are in the repo root directory...
 make run-unit-benchmark-data-synthesis
 ```
 
 After some setup, the following command is executed:
 
 ```shell
-./scripts/unit-benchmark-data-synthesis.sh --model gpt-oss:20b --data temp/output/data
+time uv run src/scripts/unit-benchmark-data-synthesis.py \
+  --model ollama/gpt-oss:20b \
+  --service-url http://localhost:11434 \
+  --template-dir src/prompts/templates \
+  --output temp/output/ollama/gpt-oss_20b/unit-benchmark-data-synthesis.out \
+  --data temp/output/ollama/gpt-oss_20b/data
 ```
 
-The `--data` argument specifies where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `gpt-oss:20b`, `temp/output/data/gpt-oss_20b` will have these files of synthetic Q&A pairs:
+A different model could be specified, as discussed in the README. Note the arguments for where output is captured (`--output`) and the data Q&A pairs files are written (`--data`). Specifically, the following data files are written, examples of which can be found [here](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
 
-* `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`                
-* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml` 
-* `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml` 
+| Synthetic Data File | `gpt-oss:20b` | `llama3.2:3B` |
+| :---- | :---- | :---- |
+| `synthetic-q-and-a_patient-chatbot-emergency-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
 
-Examples from our runs can be found in the [`src/data/examples/`]({{site.gh_edit_repository}}/blob/main/src/data/examples/){:target="_blank"} directory in the project repo for `gpt-oss:20b`, `llama3.2:3B`, and `llama3.3:70b`.
-
-They cover three unit-benchmarks:
-* `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should call 911 (in the US).
+They cover three _unit-benchmarks_:
+* `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should stop using the ChatBot and call 911 (in the US) immediately.
 * `refill`: The patient is asking for a prescription refill.
 * `other`: (i.e., `non-prescription-refills`) All other patient questions.
 
-These files are generated with three invocations of `llm`, each corresponding to the following template files:
+The actual "answer" in each Q&A pair is a JSON object with one of these labels and some additional information. We mentioned in the [TDD]({{site.baseurl}}/arch-design/tdd/) chapter that generating ad-hoc text like, "It sounds like you are having an emergency. Please call 911..." doesn't make sense for FAQs. It's better to return labels and have the application reply in a deterministic way.
 
-* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml){:target="_blank"}
-* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml){:target="_blank"}
-* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml){:target="_blank"}
+Here is an example from the _emergency_ file (nicely formatted):
 
-We note that even though the system prompt tries to emphasize that we want at least 100 Q&A pairs, we rarely get that many in the actual results. 
+```json
+{
+  "question": "Since I started taking my prescription for _P_, I feel like my heart is racing and I'm short of breath.",
+  "answer": { 
+    "label": "emergency",
+    "prescription": "_P_",
+    "body-part":"heart"
+  }
+}
+```
+
+Note that the answer has the identified prescription (placeholder `_P_`) and body part found in the question.
+
+Examples from our runs can be found in the [`src/data/examples/`]({{site.gh_edit_repository}}/blob/main/src/data/examples/){:target="_blank"} directory in the project repo for `gpt-oss:20b`, `llama3.2:3B`, and `llama3.3:70b`.
+
+Each of these data files are generated with a single inference invocation, using the prompt in the corresponding template file discussed above. In some cases, output Q&A pairs don't actually fit the use case. There are times when a _prescription refill_ Q&A pair is labeled as an emergency, times when an _emergency_ Q&A pair is labeled a _refill_, etc. This is more likely to happen with smaller models. We will discuss this topic in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge), when we discuss methods for validating the quality of the synthetic Q&A pairs.
+
+Finally, even though the system prompt emphasizes that we want _at least_ 100 Q&A pairs, we rarely got that many in the actual results with `llama3.2:3B`, while using `gpt-oss:20b` over delivered. This is probably more of a quick of using a small model than a reflection of any &ldquo;defects&rdquo; or advantages of one model architecture vs. the other.
 
 ### Evaluating the Synthetic Data
 
-In the TDD example, we used a system prompt to cause the LLM to always returned a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it makes it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
+In the TDD example, we used a system prompt to cause the LLM to always return a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
 
 In the more general case, where the output isn't as deterministic, we have to lean more heavily on a [Teacher Model]({{site.glossaryurl}}#teacher-model) to evaluate a few things:
 
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
 
-We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge).
-
-### Using the Unit Benchmarks
-
-#### Integration Into a Standard Testing Framework
-
-* Ad hoc execution in your development workflows.
-* PyTest and other Python test frameworks.
+We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). We will also use this technique for evaluating the more &ldquo;deterministic&rdquo; Q&A pairs generated above.
 
 ### Experiments to Try
 
-TODO
+There is a lot to explore here:
 
-## More Advanced Benchmark Tools
+* Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
+* Add more unit benchmarks for new use cases. For example, explore requests for referrals to specialists.
+* Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
 
-### Unitxt
+({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
 
-TODO
+{: .note}
+> **Note:** Check the license for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
 
-### PleurAI Intellagent
-
-TODO
 
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
 While the best-known benchmarks tend to be broad in scope, there is a growing set of domain-specific benchmarks that could provide a good starting point for your more-specific benchmarks.
 
-Here is a partial list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
-
-{: .note}
-> **Note:** Check the license for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
+Here is a partial list of some domain-specific benchmarks that we know of. [Let us know
 
 ### General Collections of Domain-Specific Evaluations
 
@@ -248,8 +257,50 @@ Benchmarks for finance applications.
 ### Other Domains?
 
 What other domains should we list here?
+## Integration of Unit Benchmarks into Standard Testing Frameworks
 
----
+TODO. We will fill in this section with tips on adding our testing tools for:
+
+* Ad hoc execution in your development workflows.
+* Automation using PyTest and other Python test frameworks.
+
+[Contributions are welcome!]({{site.baseurl}}/contributing). See this [issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/21){:target="_blank"} for details.
+
+## More Advanced Benchmark and Evaluation Tools
+
+We are still using custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with large and diverse evaluation suites. Here are a few tools to explore. Additional tools are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/).
+
+TODO: We intend to provide more coverage of them as this user guide evolves. [Contributions are welcome!]({{site.baseurl}}/contributing). See this [issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/22){:target="_blank"} for details.
+
+### PleurAI Intellagent
+
+See [Intellagent](https://github.com/plurai-ai/intellagent) for some advanced techniques for synthetic dataset and test generation.
+
+TODO: More details...
+
+### LM Evaluation Harness Installation
+
+[LM Evaluation Harness](https://www.eleuther.ai/projects/large-language-model-evaluation){:target="lm-site"} is a de facto standard tool suite for defining and running _evaluations_.
+
+It also supports execution of evaluations written using [Unitxt](#unitxt).
+
+### Unitxt
+
+[Unitxt](https://www.unitxt.ai){:target="unitxt"} makes it easy to generate evaluations with minimal code.
+
+Some examples using `unitxt` are available in the [IBM Granite Community](https://github.com/ibm-granite-community){:target="igc"}, e.g., in the [Granite &ldquo;Snack&rdquo; Cookbook](https://github.com/ibm-granite-community/granite-snack-cookbook){:target="igc-snack"} repo. See the [`recipes/Evaluation`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation){:target="igc-snack-eval"} folder. These examples only require running [Jupyter](https://jupyter.org/){:target="jupyter"} locally, because all inference is done remotely by the community's back-end services. Here are the specific Jupyter notebooks:
+
+* [`Unitxt_Quick_Start.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Quick_Start.ipynb){:target="igc-snack-eval1"} - A quick introduction to `unitxt`.
+* [`Unitxt_Demo_Strategies.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Demo_Strategies.ipynb){:target="igc-snack-eval2"} - Various ways to use `unitxt`.
+* [`Unitxt_Granite_as_Judge.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Granite_as_Judge.ipynb){:target="igc-snack-eval3"} - Using `unitxt` to drive the _LLM as a judge_ pattern.
+
+#### Using LM Evaluation Harness and Unitxt Together
+
+Start on this [Unitxt page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:target="unitxt-lm-eval"}. Then look at the [`unitxt` tasks](https://github.com/EleutherAI/lm-evaluation-harness/tree/main/lm_eval/tasks/unitxt){:target="unitxt-lm-eval2"} described in the [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"} repo.
+
+## What's Next?
 
 Review the [highlights](#highlights) summarized above, then proceed to [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 .
+
+---

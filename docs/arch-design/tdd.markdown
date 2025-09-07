@@ -266,6 +266,8 @@ Examples of the output can be found in the repo for [`gpt-oss_20b`]({{site.gh_ed
 
 You will see some reported errors, especially for `llama3.2:3B`, but often the wording differences are trivial. How could we do more robust comparisons?
 
----
+## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to our section on [Testing Strategies]({{site.baseurl}}/testing-strategies).
+Review the [highlights](#highlights) summarized above, then proceed to our section on [Testing Strategies]({{site.baseurl}}/testing-strategies), in particular the chapter on [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
+
+---

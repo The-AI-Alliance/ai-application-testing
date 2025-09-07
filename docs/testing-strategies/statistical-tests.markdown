@@ -42,6 +42,8 @@ TODOs:
 4. Deeper discussion of Intellagent.
 
 
----
+## What's Next?
 
 Review the [highlights](#highlights) summarized above, then proceed to [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
+
+---

@@ -18,6 +18,8 @@ This section is a reminder that the tools that worked well for us in the past ar
 
 The last section in [Testing Strategies]({{site.baseurl}}/testing-strategies), [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning), discusses how we might rethink the role of testing for AI applications and put more emphasis on [Tuning]({{site.glossaryurl}}#tuning) the behaviors to align with our goals, as opposed to a cycle of testing and _bug_ fixing. This idea would influence architecture and design, too, but we'll wait to discuss this influence until that section.
 
----
+## What's Next?
 
 After exploring this section on architecture and design, [Component Design]({{site.baseurl}}/arch-design/component-design/) and [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), proceed to [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).
+
+---

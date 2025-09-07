@@ -151,6 +151,8 @@ In the Python community, [`pydantic`](https://ai.pydantic.dev){:target="pydantic
 
 A different approach to achieving greater resiliency is [OpenDXA with DANA](https://the-ai-alliance.github.io/#ai-powered-programming-language-for-agents){:target="dana"}. Here, they seek to establish better control over model behaviors by automatically learning to be more effective.
 
----
+## What's Next?
 
 Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/).
+
+---

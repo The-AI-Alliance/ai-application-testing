@@ -36,6 +36,8 @@ TODOs:
 1. Explore more general concepts and techniques from this community.
 1. Provide specific examples of how to use those concepts.
 
----
+## What's Next?
 
 Review the [highlights](#highlights) summarized above, then proceed to [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/).
+
+---

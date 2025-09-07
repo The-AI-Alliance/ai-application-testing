@@ -36,6 +36,11 @@ The judge model can also be used to decide whether or not the application model'
 
 Popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} include [`unitxt`](https://www.unitxt.ai){:target="unitxt"} and [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"}.
 
+
+## EvalAssist
+
+One popular evaluation technique is _LLM as a judge_, which uses a smart &ldquo;teacher model&rdquo; to evaluate the quality of benchmark datasets and model responses, because having humans do this is expensive and not sufficiently scalable. (This is different from data synthesis with a teacher model.) [`EvalAssist`](https://ibm.github.io/eval-assist/){:target="eval-assist"} is designed to make writing these kinds of evaluations easier, including incremental development. It uses `unitxt` to implement evaluations.
+
 IBM Research recently open-sourced [EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"}, which makes writing `unitxt`-based evaluations easier. Specifically, EvalAssist is an application that simplifies using implementing evaluations using LLM as a Judge. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
 
 ## An Example
@@ -57,6 +62,8 @@ In addition, these notebooks demonstrate other aspects of using `unitxt`:
 
 TODO
 
----
+## What's Next?
 
 Review the [highlights](#highlights) summarized above, then proceed to [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
+
+---
