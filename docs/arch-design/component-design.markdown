@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Component Design
-nav_order: 220
+nav_order: 210
 parent: Architecture and Design for Testing
 has_children: false
 ---
@@ -97,9 +97,9 @@ If you do have a chat component, what can you do _immediately_ within the compon
 
 Similarly, avoid returning &ldquo;raw&rdquo; AI-generated replies. This creates the same kind of significant burden for handling results, which this time has to be borne by the components that depend on the AI component. For _their_ benefit, can you restrict or translate the response in some way that narrows the &ldquo;space&rdquo; of possible results returned to them?
 
-Recall the example unit &ldquo;test&rdquo; benchmark we explored in the [TDD section]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai). For a _frequently asked question_, such as asking for a prescription renewal, we successfully pursued a design where all such questions are mapped to a single, _deterministic_ reply. Hence, it was easy test these responses, although we deferred the question of how to generate a full range of possible patient questions, especially edge cases. For a component depending on this chat API, handling responses is easy, at least for the special cases of known FAQs.
+In [TDD section]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai), we will explore an example involving _frequently asked questions_ in a healthcare ChatBot, such as the common request for a prescription renewal. We will see how we can successfully design our prompts so that such questions are mapped to a single, _deterministic_ reply. Hence, it is easy handle, as well as test these responses, while other patient prompts require different handling.
 
-This example is also instructive about the point above concerning how we might transform arbitrary user input into a more constrained and manageable form. In a real patient app, for prescription refill requests, you might return a response to the user like `Okay, I have your request for a refill for miracle drug. I will check your records and get back to you within the next business day.`, while at the same time you invoke a non-AI programmatic API to process the the refill request, `start_refill_request(patient_id = 1234, prescription = "miracle drug");`. No AI is required in that part of the process.
+Hence, we will see that the idea of transforming arbitrary user input into a more a constrained and manageable form, even deterministic outputs, is feasible and reduces our challenges. 
 
 ### Hide Model Details
 
@@ -109,7 +109,7 @@ If there are breaking changes that affect dependents, can you modify how you con
 
 ## Design Considerations for Test Doubles
 
-In [TDD and Generative AI]({{site.baseurl}}/arch-design/#tdd-and-generative-ai), we started our exploration of how to create tests for AI-enabled components. Now let's consider the case where we are [Unit Testing]({{site.glossaryurl}}/#unit-test) _another_, non-AI component that depends on an AI-enabled dependency. Tests, like components, should have a singular purpose, so _all_ unit tests will not want the [Stochastic]({{site.glossaryurl}}/#stochastic) behavior the AI-enabled dependency normally provides, because the unit tests we are writing now will exercise other aspects of behavior.
+In [TDD and Generative AI]({{site.baseurl}}/arch-design/#tdd-and-generative-ai), we start our exploration of how to create tests for AI-enabled components. Here, we let's consider the case where we are [Unit Testing]({{site.glossaryurl}}/#unit-test) _another_, non-AI component that depends on an AI-enabled dependency. Tests, like components, should have a singular purpose, so _all_ unit tests will not want to handle the [Stochastic]({{site.glossaryurl}}/#stochastic) behavior the AI-enabled dependency normally provides, because the unit tests we are writing now will exercise other aspects of behavior.
 
 {: .highlight}
 > We said that _all_ the unit tests for this non-AI component should use a test double, _not_ the real AI dependency. We must write unit tests to exercise how the component responds to any potential responses it might receive from the real AI dependency, but the easiest way to do this is to first understand as best we can the _space_ of all possible behaviors, including error scenarios, and then write tests for them that explore this space exhaustively and ensure the component being tested handles them all correctly. In contrast, it will be the [Integration Tests]({{site.glossaryurl}}/#integration-test) that explore what happens with real interactions.
@@ -153,4 +153,4 @@ A different approach to achieving greater resiliency is [OpenDXA with DANA](http
 
 ---
 
-Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies).
+Review the [highlights](#highlights) summarized above, then proceed to our discussion of [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/).

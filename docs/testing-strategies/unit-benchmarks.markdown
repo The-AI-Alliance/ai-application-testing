@@ -166,9 +166,9 @@ They cover three unit-benchmarks:
 
 These files are generated with three invocations of `llm`, each corresponding to the following template files:
 
-* `synthetic-q-and-a_patient-chatbot-emergency.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
-* `synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
-* `synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
+* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml){:target="_blank"}
+* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml){:target="_blank"}
+* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/llm/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml){:target="_blank"}
 
 We note that even though the system prompt tries to emphasize that we want at least 100 Q&A pairs, we rarely get that many in the actual results. 
 
@@ -239,7 +239,7 @@ Benchmarks for finance applications.
 
 ### Legal
 
-* Stanford [LegalBench](https://hazyresearch.stanford.edu/legalbench/) ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"})
+* Stanford [LegalBench](https://hazyresearch.stanford.edu/legalbench/){:target="legalbench"} ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"})
 
 ### Education
 
