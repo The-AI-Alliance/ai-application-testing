@@ -39,6 +39,7 @@ TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
 GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 
 define help_message
+
 Quick help for this make process. 
 
 Try these more specific help targets:
@@ -51,6 +52,7 @@ make print-info         # Print the current values of some make and env. variabl
 endef
 
 define help_message_docs
+
 Quick help for this make process. This Makefile is used for the website management.
 For running the example tools described there, see src/Makefile or run "make help-src".
 
@@ -69,6 +71,7 @@ make run-jekyll         # Used by "view-local"; assumes everything is already bu
 endef
 
 define help_message_code
+
 Quick help for this make process for the tools described in this website.
 For the tools used to manage the website, see the parent directory Makefile.
 
@@ -120,10 +123,11 @@ make save-examples      # Copy run output and data files for ${MODEL} to ${EXAMP
 endef
 
 define help_message_uv
+
 The Python environment management tool "uv" is required.
 See https://docs.astral.sh/uv/ for installation instructions.
 
-If you want to uninstall uv and used HomeBrew to install it,
+If you want to uninstall uv and you used HomeBrew to install it,
 use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.

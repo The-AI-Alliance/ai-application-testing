@@ -1,16 +1,16 @@
 # README for Achieving Confidence in Enterprise AI Applications
 
-[Published Documentation](https://the-ai-alliance.github.io/ai-application-testing/)
+[Published User Guide](https://the-ai-alliance.github.io/ai-application-testing/)
 
 This repo contains the code and documentation for the AI Alliance user guide and tools for _Achieving Confidence in Enterprise AI Applications_, which explores the inherent difficulties for enterprise developers who need to write the same kinds of repeatable, reliable, and automatable tests for AI behaviors that they are accustomed to writing for "traditional" code. This is much more challenging with generative AI models involved, because non-Gen AI software is (mostly) deterministic and hence predictable, while Gen AI outputs are _stochastic_, governed by a random probability model, so how do you write a _predictable_ test for that kind of behavior?? 
 
-This project contains the website for the user guide, with the GitHub Pages content in the `docs` folder, and example code in the `src` folder. A `Makefile` provides convenient `make` targets for doing most tasks.
+This project contains the website for the [user guide](https://the-ai-alliance.github.io/ai-application-testing/), with the GitHub Pages content in the `docs` folder, and example code in the `src` folder. A `Makefile` provides convenient `make` targets for doing most tasks.
 
 Next, we discuss working with the testing tools in this project. For information about working with the website documentation, see [GITHUB_PAGES.md](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/GITHUB_PAGES.md).
 
 ## Trying the Tools Yourself!
 
-We discuss how to setup and execute the tools, but you'll need to read the corresponding [website](https://the-ai-alliance.github.io/ai-application-testing/) user guide sections for details about what these tools are doing and how they work.
+We discuss how to setup and execute the tools, but you'll need to read the corresponding [website](https://the-ai-alliance.github.io/ai-application-testing/) user guide sections for details about what they are doing and how they work.
 
 ### Setup
 
