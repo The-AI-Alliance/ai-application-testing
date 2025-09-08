@@ -48,11 +48,19 @@ The judge could compare its rating and explanation with the one the generation m
 
 This exercise can also be a good way to explore potential corner cases, such as ambiguous prompts, and how to handle them effectively.
 
-## Panel of LLMs as Judges
+## Variations of LLM as a Judge
+
+Two variations complement the core features of this practice:
+
+### Panel of LLMs as Judges
 
 Suppose we use a _panel_ of judges instead of a single judge? For pass/fail verdicts, the majority vote would prevail. For a ratings system, the average of the judges' ratings could be more accurate and resilient than the opinion of a single judge.
 
 This approach is a good way to leverage smaller, more cost-effective models, rather than rely on a large, potentially expensive model. If you don't have the budget to use a third-party service's large models (e.g., from OpenAI or Anthropic) nor can you run a large, open-access model in your environment, like the larger Llama models, using a panel of small models can provide good results economically. A panel of diverse models helps compensate for the weaknesses of any single, small model.
+
+### Using External Tools for Evaluation
+
+In [A Variation of LLM as a Judge?]({{site.baseurl}}/testing-strategies/external-verification/#a-variation-of-llm-as-a-judge) in the [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/) chapter, we will discuss the idea of leveraging the feedback of external tools for validation, where the  &ldquo;judge&rdquo; model doesn't do the validation itself, but instead invokes other tools for validation and then interprets the results appropriately.
 
 ## Evaluating the Synthetic Data
 
@@ -215,8 +223,6 @@ In addition, these notebooks demonstrate other aspects of using `unitxt`:
 * [`Unitxt_Demo_Strategies.ipynb`](https://github.com/ibm-granite-community/granite-snack-cookbook/tree/main/recipes/Evaluation/Unitxt_Demo_Strategies.ipynb){:target="igc-snack-eval2"} - Various ways to use `unitxt`.
 
 ## Experiments to Try
-
-There is a lot to explore here:
 
 * While we used the same models for data synthesis and judging, for simplicity, try using a different LLM for judging than you used for data synthesis.
 * Try using a panel of judges with several small models. How do the results compare to using just one of the small models or using a single, powerful model? How do the resource costs compare?
