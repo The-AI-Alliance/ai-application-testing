@@ -17,7 +17,7 @@ has_children: false
 {:toc}
 </details>
 
-Currently, when testing AI applications with their nondeterministic model behaviors, an ad-hoc combination of existing [Benchmarks]({{site.glossaryurl}}/#benchmark) and ad hoc manual testing are used. This is a step backwards from the rigor of testing practices for non-AI applications, where deterministic, repeatable, and automated tests are the norm, covering [Unit Testing]({{site.glossaryurl}}/#unit-test) for fine-grained behavior, [Integration Testing]({{site.glossaryurl}}/#integration-test) for verifying that units work correctly together, and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test) for final validation that the [Behaviors]({{site.glossaryurl}}#behavior) of [Features]({{site.glossaryurl}}/#feature) and [Use Cases]({{site.glossaryurl}}/#use-case) are correctly implemented.
+Currently, when testing AI applications with their nondeterministic model behaviors, an ad-hoc combination of existing [Benchmarks]({{site.glossaryurl}}/#benchmark) and ad hoc manual testing are used. This is a step backwards from the rigor of testing practices for non-AI applications, where deterministic, repeatable, and automated tests are the norm, covering [Unit Testing]({{site.glossaryurl}}/#unit-test) for fine-grained behavior, [Integration Testing]({{site.glossaryurl}}/#integration-test) for verifying that units work correctly together, and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test) for final validation that the [Behaviors]({{site.glossaryurl}}/#behavior) of [Features]({{site.glossaryurl}}/#feature) and [Use Cases]({{site.glossaryurl}}/#use-case) are correctly implemented.
 
 _Unit benchmarks_ are an adaptation of benchmarking tools and techniques for the same kinds of focused tests that traditional tests provide, this time for AI components.
 
@@ -28,7 +28,7 @@ _Unit benchmarks_ are an adaptation of benchmarking tools and techniques for the
 >
 > 1. We can adapt benchmark concepts to be appropriate for unit, integration, and acceptance testing of AI components.
 > 2. Benchmarks require good datasets with prompts designed to probe how the model behaves in a certain area of interest, along with responses that represent acceptable answers. We will use the term question and answer (Q&A) pairs for these prompts and responses, following conventional practice.[^1]
-> 3. A [Teacher Model]({{site.glossaryurl}}#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
+> 3. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
 > 4. Benchmark tools can be called from tests written using Python test frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}, so they are executed as part of an application's test suites.
 > 5. There are many third-party, production-grade tools you can use for evaluation and benchmark creation and execution.
 
@@ -44,7 +44,7 @@ Why not write more focused benchmarks? In other words, embrace the nondeterminis
 
 In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages.
 
-So, we need a better dataset of Q&A pairs. A real healthcare organization will likely have many patient &ldquo;portal&rdquo; conversations logged that can be used for this purpose. They might also be used to [Tune]({{site.glossaryurl}}#tune) a &ldquo;generic&rdquo; model to be better at healthcare Q&A. Some manual curation of the data will likely be necessary, but LLMs can also be very useful for analyzing these logs and extracting useful content.
+So, we need a better dataset of Q&A pairs. A real healthcare organization will likely have many patient &ldquo;portal&rdquo; conversations logged that can be used for this purpose. They might also be used to [Tune]({{site.glossaryurl}}/#tune) a &ldquo;generic&rdquo; model to be better at healthcare Q&A. Some manual curation of the data will likely be necessary, but LLMs can also be very useful for analyzing these logs and extracting useful content.
 
 Generating synthetic data is another tool, which we will explore in depth below. First, let's discuss a few other considerations for these tests we are building.
 
@@ -138,6 +138,8 @@ In the answer,
 
 The other two prompts are similar.
 
+### Running the Data Synthesis Tool
+
 You can run this tool yourself using `make`. See the [Try It Yourself!]({{site.baseurl}}/arch-design/tdd/#try-it-yourself) section in the chapter on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) for details on setting up the tools. See also the project repo's [README]({{site.gh_edit_repository}}/){:target="_blank"}). Here is the `make` command to run the data synthesis tool with the default model, `ollama/gpt-oss:20b`:
 
 ```shell
@@ -155,13 +157,13 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
   --data temp/output/ollama/gpt-oss_20b/data
 ```
 
-A different model could be specified, as discussed in the README. Note the arguments for where output is captured (`--output`) and the data Q&A pairs files are written (`--data`). Specifically, the following data files are written, examples of which can be found [here](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
+A different model could be specified, as discussed in the README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool). Note the arguments for where output is captured (`--output`) and the data Q&A pairs files are written (`--data`). Specifically, the following data files are written, examples of which can be found [here](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
 
 | Synthetic Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
-| `synthetic-q-and-a_patient-chatbot-emergency-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-emergency-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} |
 
 They cover three _unit-benchmarks_:
 * `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should stop using the ChatBot and call 911 (in the US) immediately.
@@ -191,24 +193,26 @@ Each of these data files are generated with a single inference invocation, using
 
 Finally, even though the system prompt emphasizes that we want _at least_ 100 Q&A pairs, we rarely got that many in the actual results with `llama3.2:3B`, while using `gpt-oss:20b` over delivered. This is probably more of a quick of using a small model than a reflection of any &ldquo;defects&rdquo; or advantages of one model architecture vs. the other.
 
-### Evaluating the Synthetic Data
+## Evaluating the Synthetic Data
 
 In the TDD example, we used a system prompt to cause the LLM to always return a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
 
-In the more general case, where the output isn't as deterministic, we have to lean more heavily on a [Teacher Model]({{site.glossaryurl}}#teacher-model) to evaluate a few things:
+In the more general case, where the output isn't as deterministic, we have to lean more heavily on a [Teacher Model]({{site.glossaryurl}}/#teacher-model) to evaluate a few things:
 
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
 
 We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). We will also use this technique for evaluating the more &ldquo;deterministic&rdquo; Q&A pairs generated above.
 
-### Experiments to Try
+## Experiments to Try
 
 There is a lot to explore here:
 
 * Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
+* A way to explore the previous experiment is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Use a scale of 1-5, where one is low confidence and five is high confidence. Also ask for an explanation for why it provided that rating. We will revisit this idea in [LLM as a Judge]({{site.baseurl}}/llm-as-a-judge). Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset? Note: the more output you generate, the more time and resources will be required for the data synthesis process.
 * Add more unit benchmarks for new use cases. For example, explore requests for referrals to specialists.
 * Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
+* For all of the above, note the resource requirements, such as execution times, hardware resources required for the models, service costs if you use an inference service, etc.
 
 ({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
 
@@ -300,7 +304,6 @@ Start on this [Unitxt page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
-.
+Review the [highlights](#highlights) summarized above, then proceed to [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/).
 
 ---

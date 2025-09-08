@@ -61,6 +61,6 @@ TODOs:
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).
+Review the [highlights](#highlights) summarized above, then proceed to [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
 ---

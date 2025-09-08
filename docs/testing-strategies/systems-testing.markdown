@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Lessons from Systems Testing
-nav_order: 340
+nav_order: 350
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -38,6 +38,6 @@ TODOs:
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/).
+Review the [highlights](#highlights) summarized above, then proceed to [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
 
 ---

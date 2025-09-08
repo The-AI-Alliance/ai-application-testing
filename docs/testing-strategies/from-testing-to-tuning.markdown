@@ -89,6 +89,6 @@ Eventually, if the contradictions become too glaring and the modifications becom
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then see the [References]({{site.baseurl}}/references/) for more information.
+Review the [highlights](#highlights) summarized above, then review the [Glossary terms]({{site.glossaryurl}}/) see the [References]({{site.baseurl}}/references/) for more information.
 
 ---

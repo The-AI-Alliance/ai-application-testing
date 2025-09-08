@@ -69,7 +69,7 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 * &ldquo;My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?&rdquo;
 * ...
 
-[^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/). See also the [glossary definition]({{site.glossaryurl}}#unit-benchmark).
+[^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/). See also the [glossary definition]({{site.glossaryurl}}/#unit-benchmark).
 
 We are using _P_ as a placeholder for any prescription.
 
@@ -213,9 +213,9 @@ Our examples are written as Python tools. They are run using `make` commands.
 
 Clone the project [repo]({{site.gh_edit_repository}}/){:target="_blank"} and see the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"} for setup instructions, etc. Much of the work can be done with `make`. Try `make help` for details. All of the Python tools have their own `--help` options, too.
 
-### Running with `make`
+### Running the TDD Tool
 
-After completing the setup steps described in the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}, run this command to execute the code used above:
+After completing the setup steps described in the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}, run this `make` command to execute the code used above:
 
 ```shell
 make run-tdd-example-refill-chatbot
@@ -265,6 +265,14 @@ This program passes a number of hand-written prompts that are either prescriptio
 Examples of the output can be found in the repo for [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} and for [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) 
 
 You will see some reported errors, especially for `llama3.2:3B`, but often the wording differences are trivial. How could we do more robust comparisons?
+
+## Experiments to Try
+
+In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deeper into techniques, including &ldquo;less ad hoc&rdquo; approaches to unit benchmark creation, evaluation, and use. For now, consider these suggestions for further exploration:
+
+* Try using different models, especially larger, more powerful LLMs. How do the results compare?
+* Add one or more additional _FAQs_. How would you modify the prompts? How would you change how the results are evaluated? 
+* Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering)?
 
 ## What's Next?
 

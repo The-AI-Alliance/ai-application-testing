@@ -27,7 +27,7 @@ Sometimes we will use a term that could be defined, but we won't provide a defin
 
 ## Acceptance Test
 
-A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), and [Integration Test](#integration-test).
+A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Unit Benchmark](#unit-benchmark).
 
 ## Agent
 
@@ -58,6 +58,8 @@ What does a [Component](#component) do, either autonomously on its own (e.g., a 
 [\[1\]](#mlc) A methodology or [Function](#function) used for offline [Evaluation](#evaluation) of a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
 * A set of tests with metrics.
 * A summarization of the results.
+
+See also [Unit Benchmark](#unit-benchmark).
 
 ## Class
 
@@ -161,7 +163,7 @@ Sending information to a [Generative AI Model](#generative-ai-model) or [AI Syst
 
 A test for several [Units](#unit) or [Components](#component) working together that verifies they interoperate properly. These components could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not to explore handling of such side effects, all units with side effects should be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
 
-See also [Test](#test), [Unit Test](#unit-test), and [Acceptance Test](#acceptance-test).
+See also [Test](#test), [Unit Test](#unit-test), [Acceptance Test](#acceptance-test), and [Unit Benchmark](#unit-benchmark).
 
 ## Large Language Model
 
@@ -205,7 +207,11 @@ Contrast with [Determinism](#determinism). See also [Stochastic](#stochastic).
 
 ## Prompt
 
-The query a user (or another system) sends to an [LLM](#large-language-model). Often, additional [Context](#context) information is added by an [AI System](#ai-system) before sending the prompt to the LLM.
+The query a user (or another system) sends to an [LLM](#large-language-model). Often, additional [Context](#context) information is added by an [AI System](#ai-system) before sending the prompt to the LLM. See also [Prompt Engineering](#prompt-engineering).
+
+## Prompt Engineering
+
+A term for the careful construction of good [Prompts](#prompt) to maximize the quality of [Inference](#inference) responses. It is really considered more _art_ than _science_ or _engineering_ because of the subjective relationship between prompts and responses for [Generative AI Models](#generative-ai-model).
 
 ## Refactoring
 
@@ -303,13 +309,13 @@ For simplicity, rather than say &ldquo;unit and/or component&rdquo; frequently i
 
 ## Unit Benchmark
 
-An adaption of [Benchmark](#benchmark) tools and techniques for more fine-grained and targeted testing purposes, such as verifying [Features](#feature) and [Use Cases](#use-case) work as designed. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) section for details.
+An adaption of [Benchmark](#benchmark) tools and techniques for more fine-grained and targeted testing purposes, such as verifying [Features](#feature) and [Use Cases](#use-case) work as designed. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for details. The same idea is also useful for [Integration Tests](#integration-test) and [Acceptance Tests](#acceptance-test) of AI components.
 
 ## Unit Test
 
 A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
-See also [Test](#test), [Integration Test](#integration-test), and [Acceptance Test](#acceptance-test).
+See also [Test](#test), [Integration Test](#integration-test), [Acceptance Test](#acceptance-test), and [Unit Benchmark](#unit-benchmark).
 
 ## Use Case
 

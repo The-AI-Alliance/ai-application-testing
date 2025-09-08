@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Statistical Tests
-nav_order: 350
+nav_order: 340
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -43,7 +43,6 @@ TODOs:
 
 
 ## What's Next?
-
-Review the [highlights](#highlights) summarized above, then proceed to [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
+Review the [highlights](#highlights) summarized above, then proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).
 
 ---
