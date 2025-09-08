@@ -26,7 +26,7 @@ In _LLM as a Judge_, a separate model serves as a _judge_ of the quality of data
 >
 > 1. Human evaluation of synthetic data and production model responses don't scale and are error prone. 
 > 1. Let one or more &ldquo;smart&rdquo; _teacher models_ do the judging.
-> 1. Using more than one with _majority wins_ or _average scores_ provides more resiliency and can be used when a single large, expensive model isn't a viable choice.
+> 1. Small models don't make very good judges, but using more than one with _majority wins_ or _average scores_ provides more resiliency and can be used when a single large, expensive model isn't a viable choice.
 
 Normally, a chosen judge model is considered very &ldquo;smart&rdquo; or capable for evaluating the content in question. It may also be large and expensive to use or otherwise considered not suitable for production use in the application. As for one-time data synthesis, one-time judging of the data can be a cost-effective way to maximize application quality while keeping production costs as low as possible.
 
