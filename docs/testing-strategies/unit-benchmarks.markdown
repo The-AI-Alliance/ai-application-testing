@@ -29,6 +29,7 @@ _Unit benchmarks_ are an adaptation of benchmarking tools and techniques for the
 > 1. We can adapt benchmark concepts to be appropriate for unit, integration, and acceptance testing of AI components.
 > 2. Benchmarks require good datasets with prompts designed to probe how the model behaves in a certain area of interest, along with responses that represent acceptable answers. We will use the term question and answer (Q&A) pairs for these prompts and responses, following conventional practice.[^1]
 > 3. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
+> 4. You will have to experiment to determine a suitable number of Q&A pairs for good test coverage.
 > 4. Benchmark tools can be called from tests written using Python test frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}, so they are executed as part of an application's test suites.
 > 5. There are many third-party, production-grade tools you can use for evaluation and benchmark creation and execution.
 
@@ -138,6 +139,16 @@ In the answer,
 
 The other two prompts are similar.
 
+### How Many Q&A Pairs Do We Need?
+
+The prompts above ask for _at least 100_ Q&A pairs. This is an arbitrary number. The well-known, broad benchmarks for AI typically often have many thousands of Q&A pairs (or their equivalents).
+
+For fine-grained _unit_ benchmarks, a suitable number could vary between tens of pairs, for simpler cases, to hundreds of pairs on average, to thousands of pairs for more complex test scenarios. It could also vary from one unit benchmark to another. 
+
+There aren't any hard and fast rules; you will have to experiment to determine what works best for you. More specifically, what number of pairs gives you sufficient confidence for _this particular_ benchmark? 
+
+Because the corresponding _integration benchmarks_ and _acceptance benchmarks_ have broader scope, by design, they will usually require larger testing datasets.
+
 ### Running the Data Synthesis Tool
 
 You can run this tool yourself using `make`. See the [Try It Yourself!]({{site.baseurl}}/arch-design/tdd/#try-it-yourself) section in the chapter on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) for details on setting up the tools. See also the project repo's [README]({{site.gh_edit_repository}}/){:target="_blank"}). Here is the `make` command to run the data synthesis tool with the default model, `ollama/gpt-oss:20b`:
@@ -204,22 +215,6 @@ In the more general case, where the output isn't as deterministic, we have to le
 
 We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). We will also use this technique for evaluating the more &ldquo;deterministic&rdquo; Q&A pairs generated above.
 
-## Experiments to Try
-
-There is a lot to explore here:
-
-* Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
-* A way to explore the previous experiment is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Use a scale of 1-5, where one is low confidence and five is high confidence. Also ask for an explanation for why it provided that rating. We will revisit this idea in [LLM as a Judge]({{site.baseurl}}/llm-as-a-judge). Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset? Note: the more output you generate, the more time and resources will be required for the data synthesis process.
-* Add more unit benchmarks for new use cases. For example, explore requests for referrals to specialists.
-* Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
-* For all of the above, note the resource requirements, such as execution times, hardware resources required for the models, service costs if you use an inference service, etc.
-
-({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
-
-{: .note}
-> **Note:** Check the license for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
-
-
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
 While the best-known benchmarks tend to be broad in scope, there is a growing set of domain-specific benchmarks that could provide a good starting point for your more-specific benchmarks.
@@ -261,6 +256,7 @@ Benchmarks for finance applications.
 ### Other Domains?
 
 What other domains should we list here?
+
 ## Integration of Unit Benchmarks into Standard Testing Frameworks
 
 TODO. We will fill in this section with tips on adding our testing tools for:
@@ -301,6 +297,22 @@ Some examples using `unitxt` are available in the [IBM Granite Community](https:
 #### Using LM Evaluation Harness and Unitxt Together
 
 Start on this [Unitxt page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:target="unitxt-lm-eval"}. Then look at the [`unitxt` tasks](https://github.com/EleutherAI/lm-evaluation-harness/tree/main/lm_eval/tasks/unitxt){:target="unitxt-lm-eval2"} described in the [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"} repo.
+
+## Experiments to Try
+
+There is a lot to explore here:
+
+* Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
+* One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Use a scale of 1-5, where one is low confidence and five is high confidence. Also ask for an explanation for why it provided that rating. We will revisit this idea in [LLM as a Judge]({{site.baseurl}}/llm-as-a-judge). Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset? Note: the more output you generate, the more time and resources will be required for the data synthesis process.
+* Do different runs where you vary the number of Q&A pairs requested from tens of pairs up to many hundreds. What are the impacts for compute resources and time required? Look through the data sets. Can you develop an intuition about which sizes are sufficient large for good coverage? Is there an approximate size beyond which lots of redundancy is apparent? Save these outputs for revisiting in subsequent chapters.
+* Add more unit benchmarks for new use cases. For example, explore requests for referrals to specialists.
+* Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
+* For all of the above, note the resource requirements, such as execution times, hardware resources required for the models, service costs if you use an inference service, etc.
+
+({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
+
+{: .note}
+> **Note:** Check the license for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
 
 ## What's Next?
 

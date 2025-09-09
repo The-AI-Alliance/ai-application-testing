@@ -227,6 +227,14 @@ Automated [Tests](#test) are designed to catch regressions as soon as they occur
 
 If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, [Generative AI Models](#generative-ai-model) are _expected_ to return different results each time a query is repeated.
 
+## Retrieval-augmented Generation
+
+RAG was one of the first AI-specific design patterns for applications. It uses one or more data stores with information relevant to an application's use cases. For example, a [ChatBot](#chatbot) for automotive repair technicians would use RAG to retrieve sections from repair manuals and logs from past service jobs, selecting the ones that are most relevant to a particular problem or subsystem the technician is working on. This [Context](#context) is passed as part of the [Prompt](#prompt) to the [LLM](#large-language-model). 
+
+A key design challenge is determining relevancy and structuring the data so that relevant information is _usually_ retrieved. This is typically done by breaking the reference data into &ldquo;chunks&rdquo; and encoding each chunk in a vector representation, e.g., a _hash_, which functions as a _similarity metric_. During inference, the prompt is passed through the same encoding and the top few _nearest neighbors_, based on the metric, are returned for the context, thereby attempting to ensure maximum relevancy.
+
+See [this IBM blog post](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} for a description of RAG.
+
 ## Response
 
 The generic term for outputs from a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system). Sometimes _results_ is also used.

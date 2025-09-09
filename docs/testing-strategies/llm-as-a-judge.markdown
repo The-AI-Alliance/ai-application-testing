@@ -17,20 +17,25 @@ has_children: false
 {:toc}
 </details>
 
-In _LLM as a Judge_, a separate model serves as a _judge_ of the quality of data or model outputs. In this guide, we are using a judge to evaluate the quality of the Q&A pairs we synthesized for [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), as discussed in the [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks) chapter. An LLM could also be used to judge model outputs in a production setting, as a &ldquo;sanity check&rdquo; before returning them to a user or performing further processing.
+In _LLM as a Judge_, a separate model serves as a _judge_ of the quality of data or model outputs. In the context of testing, a judge can be used for two purposes:
+
+1. Evaluate the quality of the Q&A pairs synthesized for [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), as discussed in the [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks) chapter. 
+2. Evaluate the quality of model responses during tests.
+
+In production deployments, an LLM could also be used to judge model responses during inference, as a &ldquo;sanity check&rdquo;, before performing further processing or returning responses to a user.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. Human evaluation of synthetic data and production model responses don't scale and are error prone. 
+> 1. Human evaluation of synthetic data and model responses (during testing and inference) don't scale and are error prone. 
 > 1. Let one or more &ldquo;smart&rdquo; _teacher models_ do the judging.
 > 1. Small models don't make very good judges, but using more than one with _majority wins_ or _average scores_ provides more resiliency and can be used when a single large, expensive model isn't a viable choice.
 
 Normally, a chosen judge model is considered very &ldquo;smart&rdquo; or capable for evaluating the content in question. It may also be large and expensive to use or otherwise considered not suitable for production use in the application. As for one-time data synthesis, one-time judging of the data can be a cost-effective way to maximize application quality while keeping production costs as low as possible.
 
-Since diversity of perspectives is important here, you would normally not use the _same_ model as a judge that was used to synthesize data! However, we'll see below that sometimes the same model will rate a Q&A pair poorly that it generated itself!
+Since diversity of perspectives is important here, you would normally not use the _same_ model as a judge that was used to synthesize data or do inference in production deployments! However, this doesn't mean that the same model will always rate responses highly. We will see below that sometimes the same model will rate a Q&A pair poorly that it generated itself!
 
 Like using an LLM to synthesize benchmark data, using an LLM to judge content addresses the limitations of human evaluation: expensive, not scalable, and error prone.
 
@@ -38,13 +43,13 @@ Like using an LLM to synthesize benchmark data, using an LLM to judge content ad
 
 The judge could issue a &ldquo;pass/fail&rdquo; ruling, but given the somewhat subjective nature of the task, a rating can be more informative. In our example below, we will ask the judge to rate the quality of a Q&A pair from one to five, from bad to excellent, and to also provide a _reason_ for the judgement. 
 
-So, when using LLM as a judge as part of the process of creating unit benchmark datasets, it is a good idea for _humans_ to review of any ratings below four or five. Is the rating accurate? If a datum scored poorly, should it be discarded? If you have a lot of poorly-rated data, should you review and refine how it was created in the first place? Perhaps the prompts used for synthetic data generation could be more precise and descriptive about the expectations for the data?
+So, when using LLM as a judge as part of the process of creating unit benchmark datasets, it is a good idea for _humans_ to review any ratings below four or five. Is the rating accurate? If a datum scored poorly, should it be discarded? If you have a lot of poorly-rated data, should you review and refine how it was created in the first place? Perhaps the prompts used for synthetic data generation could be more precise and descriptive about the expectations for the data? Do you need to use more capable models for data generation?
 
-Alternatively, do low-scoring data represent good corner cases, such as ambiguous input, that might be useful for developing special handling of and testing for such corner cases? 
+Alternatively, do low-scoring pairs indicate good corner cases, such as ambiguous input, that might be useful for developing special handling of and testing for such corner cases? 
 
 This suggests a potential design refinement in our healthcare ChatBot, which we suggested in the [Unit Benchmark's]({{site.baseurl}}/testing-strategies/unit-benchmarks/) section [Experiments to Try]({{site.baseurl}}/testing-strategies/unit-benchmarks/#experiments-to-try). Suppose when we do data generation, we also ask the model to  provide a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. We also suggested asking for an explanation for why the model provided this rating.
 
-The judge could compare its rating and explanation with the one the generation model provided. There is a catch to be wary of, however; _don't_ pass the confidence rating and explanation to the judge _before_ it has rendered its opinion. Otherwise, you will bias its answer!
+The judge could compare its rating and explanation with the one the generation model provided. There is a catch to be wary of, however; _don't_ pass the synthetic data's confidence rating and explanation to the judge _before_ it has rendered its opinion. Otherwise, you will bias its answer!
 
 This exercise can also be a good way to explore potential corner cases, such as ambiguous prompts, and how to handle them effectively.
 
@@ -60,7 +65,7 @@ This approach is a good way to leverage smaller, more cost-effective models, rat
 
 ### Using External Tools for Evaluation
 
-In [A Variation of LLM as a Judge?]({{site.baseurl}}/testing-strategies/external-verification/#a-variation-of-llm-as-a-judge) in the [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/) chapter, we will discuss the idea of leveraging the feedback of external tools for validation, where the  &ldquo;judge&rdquo; model doesn't do the validation itself, but instead invokes other tools for validation and then interprets the results appropriately.
+In [A Variation of LLM as a Judge?]({{site.baseurl}}/testing-strategies/external-verification/#a-variation-of-llm-as-a-judge) in the [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/) chapter, we will discuss the idea of leveraging the feedback of external tools for validation, where the  &ldquo;judge&rdquo; model doesn't do the validation itself, but instead it invokes other tools for validation and then interprets the results appropriately.
 
 ## Evaluating the Synthetic Data
 
@@ -196,12 +201,50 @@ Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36) _emerge
 
 While a few of the ratings are accurate, the reasons shown for others don't build confidence! You can see that the model is confused at times about what label it is reviewing; is it the _file's_ label or the Q&A pair's label? It should ignore the file. Also, the last record was rated poorly, because the model assumed the question has to explicitly mention an emergency situation, etc., when in fact the goal is to interpret what the user says as signs that urgent or emergency care is required. If we really wanted to rely on a small model like `llama3.2:3B` as a judge, it would be very good to at least use it in a panel of judges with other small models in different model families.
 
+### What Is &ldquo;Good Enough&rdquo;?
+
+We are still in the process of _creating_ our unit benchmarks, specifically the validation of the test datasets we will use. Therefore, we should carefully inspect the data and the validation results to answer a few questions. You might decide, especially after gaining experience, that highly-rated Q&A pairs are probably good and don't need manual inspection. Next you can focus on low-rated pairs. 
+
+Where a low rating is incorrect, in your view, you can simply continue to use the pair, but you might want to explore if there are improvements that can be made to how pairs are rated (e.g., in the prompt), so _false negatives_ are less likely in the future.
+
+Where a low rating is valid, do you discard the pair or consider it suitable for exploring edge-case behaviors? If you keep it, consider creating separate unit benchmarks for corner cases, because you might need to define a different &ldquo;pass/fail&rdquo; threshold _for each unit benchmark_, as we'll discuss in a moment.
+
+Finally, with the pairs filtered, do you think the dataset is comprehensive overall, with sufficient coverage, but not large that it contains excess redundancy?
+
+#### What Constitutes &ldquo;Pass/Fail&rdquo;
+
+For reasonably straightforward behaviors, like our prescription refill _FAQ_, we found we could expect a high level of reliable performance, so a passing score can be _near_ 100%, if not exactly 100%. Unfortunately, this will always be a case-by-case judgment call. Even for examples like this one, you will rarely have the &ldquo;luxury&rdquo; of requiring the traditional testing standard: 100% must pass or the test run fails. 
+
+We saw that sensing urgent or emergency situations was much more ambiguous. What is pass/fail here? We might except a lower threshold for passing. Or we might decide that the use case can't be implemented this way, because our handling can't be precise enough to be trusted. We may have to explore a much different alternative. For this use case, the alternative might be to _always_ return as part of the first response to a user, "If this is an emergency, please leave this app and call 911."
+
+Testing for edge cases is a similar challenge. Can we really be confident in our replies for these queries. There is another strategy; chose a conservative design that requires a confidence rating from the model evaluating the patient query. Unless the model has high confidence in its reply, _fail over_ to a more conservative response, like "We will reply when we can" or possibly "I don't understand you question. Can you rephrase it?". In other words, don't even attempt to answer unless you are certain you know what to say.
+
+#### Checklist for Each Unit Benchmark
+
+To conclude, for _each_ unit benchmark, based in part on the complexity of the behavior being tested:
+
+* Is there a sufficient number of Q&A pairs for good coverage, but not so many that we have too much wasteful redundancy?
+* What is the threshold for pass/fail?
+* How do we handle edge cases?
+
+## Evaluating Responses During Tests
+
+Using LLM as a judge to validate synthetic data is one use of this technique for testing. A second use is to evaluate model responses during test execution.
+
+The process is very similar to how we evaluated synthetic data, except this time inference calls are are made with test questions and the judge evaluates the responses.   
+
+Now we can't reasonably have a human evaluate each answer along with the judge's analysis of it. We will have to be even more careful about thresholds for acceptable replies, and have good fallback answers for unclear situations.
+
+TODO: Provide an example of using LLM as a Judge during test runs (see [issue #25](https://github.com/The-AI-Alliance/ai-application-testing/issues/25){:target="_blank"}). As always, [help is welcome]({{site.baseurl}}/contributing)!
+
 ## Issues You Have to Consider
 
 Let's recap a few issues we discussed.
 
 1. How do you validate that the judge model is producing good Q&A pairs or accurately evaluating the student model's results, depending on the usage pattern? Most likely, some human inspection of the Q&A pairs and possibly some test results will be necessary, until sufficient confidence is established. Using a panel of judges can also improve confidence in the results. [Statistical techniques]({{site.baseurl}}/testing-strategies/statistical-tests) will be useful in establishing confidence. 
-2. If the judge model is expensive or slow, how do you use it economically? On the other hand, it won't be used during normal inference, just for the process of validating synthetic data, so the higher inference costs may not really matter. See also the [Experiments to Try](#experiments-to-try).
+2. What should you do with low-rated data? Discard it? Use it to help explore corner cases? 
+2. How do you decide on acceptable thresholds in the statistics for &ldquo;good enough&rdquo;, both for the overall quality of the dataset, and also for &ldquo;pass/fail&rdquo; for test runs?
+3. If the judge model is expensive or slow, how do you use it economically? On the other hand, it won't be used during normal inference, just for the process of validating synthetic data, so the higher inference costs may not really matter. See also the [Experiments to Try](#experiments-to-try).
 
 ## Other Tools and Examples
 
@@ -228,6 +271,7 @@ In addition, these notebooks demonstrate other aspects of using `unitxt`:
 * Try using a panel of judges with several small models. How do the results compare to using just one of the small models or using a single, powerful model? How do the resource costs compare?
 * In our experiments, the judging process was more time- and compute-consuming than the data generation process. A contributing factor is how we run a separate inference invocation for each Q&A pair. Try modifying the process to pass groups of Q&A pairs per inference invocation. Try a set of five, ten, etc. pairs, per invocation; even all the pairs at once. Do you hit a computation limit beyond a certain number of pairs, e.g., the context window size for your model? Are the rating results independent of this set size or is there a clear advantage with some sizes vs. others? Looking at the examples we showed above for poor ratings, some of which were not very good, does grouping pairs tend to improve the quality of the ratings, in general?
 * We discussed asking for a confidence rating and explanation during data synthesis and also asking the judge to compare its rating with the generated rating, etc. Try this and see what happens. Note the _caveat_ mentioned in the discussion about biasing the judge! As always, the more output you generate, the more time and resources will be required for the data judging process. Does this enhanced analysis produce better results that justify the extra time and cost?
+* In the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter, we briefly considered the question of [how many Q&A pairs do we need?]({{site.baseurl}}/testing-strategies/unit-benchmarks/#how-many-qa-pairs-do-we-need). We suggested a &ldquo;preliminary&rdquo; exploration of this question in [Experiments to Try]({{site.baseurl}}/testing-strategies/unit-benchmarks/#experiments-to-try) in that chapter. Now run the validation tool on the different-sized datasets you created. When you look at the statistics output (e.g., like the tables above), do they improve with larger datasets? Looking at particular ratings for Q&A pairs, what intuitions can you form about the overall quality and coverage for each use case?
 
 ## What's Next?
 
