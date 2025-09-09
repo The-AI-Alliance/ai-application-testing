@@ -56,7 +56,7 @@ With this background on architecture and design principles, we move to the main 
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
 * [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques for unit testing and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-testing) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-testing).
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge application behaviors.
-* [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests): Embracing statistical analysis. What's the minimum you need to know? How do you use these techniques?
+* [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Embracing statistical analysis. What's the minimum you need to know? How do you use these techniques?
 * [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning): Should we rethink testing as a strategy? If so, how would this change affect AI application architecture and design?
 
 Finally, there is a [Glossary of Terms]({{site.glossaryurl}}) and [References]({{site.baseurl}}/references) for additional information.

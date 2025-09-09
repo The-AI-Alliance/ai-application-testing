@@ -51,7 +51,7 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## Evan Miller
 
-[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
+[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
 ## IBM
 

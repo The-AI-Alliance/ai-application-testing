@@ -206,14 +206,16 @@ Finally, even though the system prompt emphasizes that we want _at least_ 100 Q&
 
 ## Evaluating the Synthetic Data
 
-In the TDD example, we used a system prompt to cause the LLM to always return a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
+In the TDD example, we used a system prompt to cause the LLM to _almost_ always return a deterministic answer for the two cases, a prescription refill request and everything else. When you have a design like this, it simplifies evaluating the Q&A pair. Essentially, we ask the teacher model, "For each question, is the corresponding answer correct?"
 
-In the more general case, where the output isn't as deterministic, we have to lean more heavily on a [Teacher Model]({{site.glossaryurl}}/#teacher-model) to evaluate a few things:
+In the more general case, where the output isn't as deterministic, but more [Stochastic]({{site.glossaryurl}}/#stochastic), we have to lean on other techniques.
+
+One of these techniques is rely on a [Teacher Model]({{site.glossaryurl}}/#teacher-model) to evaluate synthetic data on a few criteria:
 
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
 
-We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). We will also use this technique for evaluating the more &ldquo;deterministic&rdquo; Q&A pairs generated above.
+We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). Other techniques we will explore include [External Tool Verification]({{site.baseurl}}/external-verification/), and [Statistical Evaluation]({{site.baseurl}}/statistical-tests/).
 
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
@@ -298,21 +300,23 @@ Some examples using `unitxt` are available in the [IBM Granite Community](https:
 
 Start on this [Unitxt page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:target="unitxt-lm-eval"}. Then look at the [`unitxt` tasks](https://github.com/EleutherAI/lm-evaluation-harness/tree/main/lm_eval/tasks/unitxt){:target="unitxt-lm-eval2"} described in the [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"} repo.
 
+### Final Thoughts on Advanced Benchmark and Evaluation Tools
+
+[Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
+
+Be careful to check the licenses for any benchmarks or tools you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
+
 ## Experiments to Try
 
 There is a lot to explore here:
 
 * Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
-* One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Use a scale of 1-5, where one is low confidence and five is high confidence. Also ask for an explanation for why it provided that rating. We will revisit this idea in [LLM as a Judge]({{site.baseurl}}/llm-as-a-judge). Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset? Note: the more output you generate, the more time and resources will be required for the data synthesis process.
+* One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Use a scale of 1-5, where one is low confidence and five is high confidence. Also ask for an explanation for why it provided that rating. Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset? Note: the more output you generate, the more time and resources will be required for the data synthesis process. We will revisit this idea in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/). 
 * Do different runs where you vary the number of Q&A pairs requested from tens of pairs up to many hundreds. What are the impacts for compute resources and time required? Look through the data sets. Can you develop an intuition about which sizes are sufficient large for good coverage? Is there an approximate size beyond which lots of redundancy is apparent? Save these outputs for revisiting in subsequent chapters.
 * Add more unit benchmarks for new use cases. For example, explore requests for referrals to specialists.
 * Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
+* How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling. In other words, our _classifier_ only returns one label for the prompt. What if it returned a list of labels and a _confidence_ score for each?
 * For all of the above, note the resource requirements, such as execution times, hardware resources required for the models, service costs if you use an inference service, etc.
-
-({{site.baseurl}}/contributing/#join-us) of any that you find that aren't listed here!
-
-{: .note}
-> **Note:** Check the license for any benchmark you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
 
 ## What's Next?
 

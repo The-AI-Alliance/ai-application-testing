@@ -87,6 +87,10 @@ The idea of a complete reset is an established idea. [_The Structure of Scientif
 Eventually, if the contradictions become too glaring and the modifications become too strained, some researchers will abandon the established theory and allow the evidence to lead them to a fundamentally new theory. Two examples from the history of Physics are the transition from Newtonian (&ldquo;Classical&rdquo;) Mechanics to Quantum Mechanics and the emergence of the Special and General Theories of Relativity, all of which emerged in the early decades of the twentieth century. In Astronomy, it took several _millennia_  for astronomers to discard the _geocentric_ view of the solar system, where the Earth was believed to be at the center and everything else revolves around it. Astronomers developed elaborate theories about orbital mechanics involving [_epicycles_](https://en.wikipedia.org/wiki/Deferent_and_epicycle){:target="wikipedia"}, nesting of circular orbits, that were needed to explain the observed _retrograde motion_ of planetary orbits. An important breakthrough for considering a _heliocentric_ solar system, where the Sun is at the center, was the way this model greatly simplified orbital mechanics, removing the need for epicycles.
 
 
+## Experiments to Try
+
+TODO: We will provide some examples you can try.
+
 ## What's Next?
 
 Review the [highlights](#highlights) summarized above, then review the [Glossary terms]({{site.glossaryurl}}/) see the [References]({{site.baseurl}}/references/) for more information.

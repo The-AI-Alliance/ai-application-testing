@@ -95,9 +95,12 @@ Tools that perform a conventional web search about a topic provide the same util
 {: .todo}
 > **TODO:** Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
 
+## Experiments to Try
+
+TODO: We will expand this section once the working example is provided.
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
+Review the [highlights](#highlights) summarized above, then proceed to [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
 ---

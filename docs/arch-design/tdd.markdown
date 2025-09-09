@@ -204,7 +204,7 @@ In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks), we wi
 
 To automatically check the quality of synthetic Q&A test pairs, including how well each answer aligns with its question, we will explore techniques like [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 
-Finally, [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other _insignificant_ differences! This convenient certainty won't happen very often, especially if when we explore edge cases.
+Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other _insignificant_ differences! This convenient certainty won't happen very often, especially if when we explore edge cases.
 
 
 ## Try This Yourself!
@@ -273,6 +273,7 @@ In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deepe
 * Try using different models, especially larger, more powerful LLMs. How do the results compare?
 * Add one or more additional _FAQs_. How would you modify the prompts? How would you change how the results are evaluated? 
 * Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering)?
+* How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling.
 
 ## What's Next?
 
