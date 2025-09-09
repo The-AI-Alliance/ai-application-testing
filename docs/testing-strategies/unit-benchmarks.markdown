@@ -302,9 +302,11 @@ Start on this [Unitxt page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:
 
 ### Final Thoughts on Advanced Benchmark and Evaluation Tools
 
-[Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
+See also [Tuning Tools]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#tuning-tools) in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
 
 Be careful to check the licenses for any benchmarks or tools you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
+
+[Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
 
 ## Experiments to Try
 

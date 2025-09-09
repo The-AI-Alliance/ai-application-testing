@@ -223,6 +223,14 @@ When an unexpected [Behavior](#behavior) change is introduced into a previously-
 
 Automated [Tests](#test) are designed to catch regressions as soon as they occur, making it easier to diagnose the change that caused the regression, as well as detecting the regression in the first place.
 
+## Reinforcement Learning
+
+Reinforcement learning (RL) is a form of machine learning, often used for optimizing control or similar systems. In RL, an agent performs a loop where it observes the state of the &ldquo;world&rdquo; visible to it at the current time, it takes what it thinks is a suitable action for the next step, chosen to maximize a reward signal, often with the goal of maximizing the long-term reward, such as wining a game. The _reinforcement_ aspect is an update at each step that is done to a model of some kind used by the agent to assess which steps produce which rewards, given the current state. However, when choosing the next step, the _best_ choice is not always made. Some degree of randomness is introduced so that the agent explores all possible states and rewards, rather than getting stuck always making choices that are known good, but may be less optimal than unknown choices.
+
+In the generative AI context, RL is a popular tool in the suite of model [Tuning](#tuning) processes that are used to improve model performance in various ways.
+
+See also [Reinforcement Finetuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#reinforcement-finetuning) in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/). 
+
 ## Repeatable
 
 If an action, like running a test, is run repeatedly with no code or data changes, does it return the same results every time? By design, [Generative AI Models](#generative-ai-model) are _expected_ to return different results each time a query is repeated.
