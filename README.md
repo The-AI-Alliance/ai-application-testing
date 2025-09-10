@@ -8,7 +8,7 @@ This project contains the website for the [user guide](https://the-ai-alliance.g
 
 Next, we discuss working with the example application for this project. For information about working with the website documentation, see [GITHUB_PAGES.md](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/GITHUB_PAGES.md).
 
-> [!WARN]
+> [!WARNING]
 > **DISCLAIMER:** In this guide, we developed a healthcare ChatBot example application, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
 
