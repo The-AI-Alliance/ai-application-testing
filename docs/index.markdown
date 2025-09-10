@@ -22,6 +22,7 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 > 1. Use the search box at the top of this page to find specific content.
 > 2. [Capitalized Terms]({{site.glossaryurl}}/) link to glossary definitions.
 > 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
+> 4. Many chapters end with an **Experiments to Try** section for further exploration.
 
 ## The Challenge We Face
 

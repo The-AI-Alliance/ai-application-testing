@@ -74,16 +74,20 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 
 We are using _P_ as a placeholder for any prescription.
 
-For this first iteration, the answer parts of the Q&A pairs might be identical for all cases:[^2] 
+For this first iteration, the answer parts of the Q&A pairs are expected to be this identical and hence _deterministic_ text for all refill requests:[^2] 
 
 * &ldquo;Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.&rdquo;
 
-[^2]: A future feature might be able to check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
+[^2]: A future feature might check the patient's records to confirm if the refill is allowed, respond immediately with an answer, and start the refill process if it is allowed.
 
-Now we have to answer these questions:
+For all other questions that represent other patient requests, we want to return this _identical_ answer.
 
+* &ldquo;I have received your message, but I can't answer it right now. I will get back to you within the next business day.&rdquo;
+
+With these _requirements_, we have to answer these design questions:
+
+* Can we really expect an LLM to behave this way?
 * For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
-* What should happen if the request doesn't appear to be a refill request?
 * How do we create these Q&A pairs?
 * How do we run this &ldquo;unit test&rdquo;?
 * How do we validate the resulting answers?
@@ -93,10 +97,10 @@ Now we have to answer these questions:
 
 Let's explore the first two questions:
 
+* Can we really expect an LLM to behave this way?
 * For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
-* What should happen if the request doesn't appear to be a refill request?
 
-It turns out this is often easier to address than it might appear at first. Before LLMs, we would have to think about some sort of language _parser_ that finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt) that steers the LLM towards the desired behaviors. Let's see an example of how this works.
+It turns out LLMs can handle both concerns easily, even relatively small models. Before LLMs, we would have to think about some sort of language _parser_ for the questions, which finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt) that steers the LLM towards the desired behaviors. Let's see an example of how this works.
 
 First, LLMs have been trained to recognize prompt strings that might contain a system prompt along with the user query. This system prompt is usually a static, application-specific string that provides fixed context to the model. For our experiments with this example, we used two, similar system prompts. Here is the first one:
 
@@ -121,7 +125,7 @@ If the request doesn't look like a refill request, reply with this message:
 - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
 ```
 
-We found that providing examples wasn't necessary to achieve good results, at least for the two, modestly-sized models we used in our tests (GPT-OSS 20B and Llama 3.2 3B); the following, shorter system prompt _usually_ worked just as well:
+We found that providing examples wasn't necessary to achieve good results, at least for the two, modestly-sized models we used in our tests (GPT-OSS 20B and Llama 3.2 3B); the following, shorter system prompt worked just as well with rare exceptions:
 
 ```text
 You are a helpful assistant for medical patients requesting help from their care provider. 
@@ -152,9 +156,12 @@ We also tried other requests that aren't related to refills:
 
 We ran separate queries for `_P_` replaced with `prozac` and `miracle drug`.
 
-For both models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would write `Prozac`, which is arguably more correct, rather than what the &ldquo;user&rdquo; entered, `prozac`. When checking the results, the script described shortly would do a case-insensitive comparison, when necessary.
+For both models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would write `Prozac`, which is arguably more correct, rather than what the &ldquo;user&rdquo; entered, `prozac`. 
 
-Similarly, for the other prompts, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
+{: .tip}
+> **TIP:** Consider performing transformations of generated results to remove differences that don't affect the meaning of the result, but provide more uniformity for both verifying test results and using results downstream in production deployments. For example, make white space consistent and convert numbers, currencies, addresses, etc. to standard formats. For test comparisons when deterministic responses are expected, converting to lower case can eliminate trivial differences, but consider when correct case is important, like in proper names. 
+
+Similarly, for other prompts used that were not refill requests, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
 If you want to try our code yourself, see [Try This Yourself!](#try-this-yourself) below.
 
@@ -166,22 +173,24 @@ In this app, asking for a prescription refill is a _frequently asked question_ (
 
 What other FAQs are there? Analyzing historical messages sent to providers is a good way to find other potential FAQs that might benefit from special handling, such as through the system prompt. When doing that historical analysis, you could use an LLM to find groups of related questions. These groups could be the start of a Q&A pairs dataset for testing. For different applications, there may very common prompts sent to a model that can benefit from this special treatment.
 
-This suggests a next, more sophisticated step to explore. Should we build a _classifier_ model (see [Evaluation]({{site.glossaryurl}}/#evaluation) for a description), through which all messages are first passed? These models tend to be small and efficient, because they only need to output one or possibly more known labels based on the input, and not output generated text. The idea is that the classifier would first label each message with one of a fixed set of labels. So far in our example, we have one label for the prescription refill &ldquo;FAQ&rdquo; and one for &ldquo;other&rdquo; messages, covering everything else. 
+This suggests a next step to explore. Should we build a _classifier_ model, whose sole purpose is to return one or more labels for the categories a text falls within, like our refill requests case. (See [Evaluation]({{site.glossaryurl}}/#evaluation) for a more detailed description of classifiers). All messages would be passed through this model first and label(s) returned would determine subsequent processing. These models tend to be small and efficient, because they only need to output known labels, not generated text. 
 
-When a FAQ label is returned, our application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning) specifically for our known FAQs, or we perform other special handling that doesn't use generative AI. So far, we found we don't even need to tune a special model for our FAQ detection.
+So far in our example, we have the label `refill`, for the prescription refill FAQ, and the label `other`, for all other messages. 
 
-In contrast, the &ldquo;other&rdquo; messages would be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts.
+When a FAQ label is returned, the application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning) specifically for known FAQs, or we perform other special handling that doesn't use generative AI. So far, we have observed that we don't even need to tune a special model for FAQ detection and handling.
 
-Finally, thinking in terms of a classifier suggests that we don't necessarily want to hard-code in the system prompt the deterministic answer the model should return, like we did above. Instead, we should return just the label and any additional data of interest, like a drug name that is detected. This answer could be formatted in JSONL:
+In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts.
+
+Finally, thinking in terms of a classifier suggests that we don't necessarily want to hard-code in the system prompt the deterministic answers the model should return, like we did above. Instead, we should return just the label and any additional data of interest, like a drug name that is detected. This answer could be formatted in JSONL:
 
 ```json
 {"question": "...", "label": "refill-request", "drug-name": "miracle drug"}
 ```
 
-Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file, so it is easy to change the response without changing the system prompt, etc. This would also make _internalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. 
+Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file, so it is easy to change the response without a code change like the system prompt. This would also make _internalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. 
 
 {: .note}
-> **NOTE:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support.
+> **NOTE:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support!
 
 ## Creating and Using Unit Benchmarks
 
@@ -195,17 +204,17 @@ The remaining four questions we posed above are these:
 In addition, we just discovered that we could have our models return a desired, _deterministic_ response for particular &ldquo;classes&rdquo; of prompts, like various ways of asking for prescription refills. This suggests two additional questions for follow up:
 
 * How _diverse_ can the prompts be and still be correctly labeled by the LLM we use for classification?
-* If those edge cases aren't properly handled, what should we do to _fail gracefully_?
+* If those edge cases aren't properly handled, what should we do to improve handling?
 
 Several of these questions share the requirement that we need a scalable and efficient way to create lots of high-quality Q&A pairs. One drawback of our experiment above was the way we manually created a few Q&A pairs for testing. The set was not at all comprehensive. Human creation of data doesn't scale well and it is error prone, as we are bad at exhaustively exploring all possibilities, especially edge cases.
 
 Hence, we need automated techniques for data _synthesis_ to scale up our tasks beyond the ad hoc approach we used above, especially as we add more and more tests. We also need automated techniques for validating the quality of our synthetic test data.
 
-In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks), we will explore automated data synthesis techniques and we will also discuss how to run the unit benchmarks we create, moving towards the automated test suites we desire.
+In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks), we will explore automated data synthesis techniques.
 
 To automatically check the quality of synthetic Q&A test pairs, including how well each answer aligns with its question, we will explore techniques like [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 
-Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other _insignificant_ differences! This convenient certainty won't happen very often, especially if when we explore edge cases.
+Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other insignificant differences. This convenient certainty won't happen very often, especially when we explore edge cases.
 
 
 ## Try This Yourself!
@@ -215,6 +224,9 @@ Our examples are written as Python tools. They are run using `make` commands.
 Clone the project [repo]({{site.gh_edit_repository}}/){:target="_blank"} and see the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"} for setup instructions, etc. Much of the work can be done with `make`. Try `make help` for details. All of the Python tools have their own `--help` options, too.
 
 ### Running the TDD Tool
+
+{: .tip}
+> **TIP:** [A Working Example]({{site.baseurl}}/working-example) summarizes all the features implemented for the healthcare ChatBot example, and how to run the tools in standard development processes, like automated testing frameworks, etc.
 
 After completing the setup steps described in the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}, run this `make` command to execute the code used above:
 
@@ -234,7 +246,7 @@ time uv run src/scripts/tdd-example-refill-chatbot.py \
 ```
 
 {: .tip}
-> **Tip:** To see this command without running anything, pass the `-n` or `--dry-run` option when &ldquo;making&rdquo; any target.
+> **Tip:** To see this command without actually running it, pass the `-n` or `--dry-run` option to make.
 
 The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that [`uv`](https://docs.astral.sh/uv/) is used to run this tool (discussed in the README) and all other tools we will discuss later. The arguments are used as follows:
 
@@ -261,11 +273,14 @@ The only difference is the second file contains embedded examples in the prompt,
 {: .note}
 > **NOTE:** These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 
-This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output for [`ollama/gpt-oss:20b`]({{site.gh_edit_repository}}/){:target="_blank"}
+This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
 
-Examples of the output can be found in the repo for [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} and for [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) 
+* [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} 
+* [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} 
 
-You will see some reported errors, especially for `llama3.2:3B`, but often the wording differences are trivial. How could we do more robust comparisons?
+(Yes, the `ollama` names for the models mix upper- and lower-case `b`.) 
+
+You will see some reported errors, especially for `llama3.2:3B`, but often the wording differences are trivial. How could we do more robust comparisons that ignore &ldquo;trivial&rdquo; differences?
 
 ## Experiments to Try
 
