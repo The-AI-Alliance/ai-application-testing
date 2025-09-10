@@ -17,22 +17,21 @@ has_children: false
 {:toc}
 </details>
 
-In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior, for reasoning about how the system behaves, during design and implementation, and for writing tests that are repeatable, comprehensive, and automated.
+In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior for reasoning about how the system behaves during design and implementation, including writing tests that are repeatable, comprehensive, and automated.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component), like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic) processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark).
-> 1. We build our first example exploring this approach.
-> 1. For efficiency, experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt) to find the minimally-sufficient content that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt) design, including system prompts, is still something of a _black art_.
-> 2. When it is feasible, mapping a range of similar prompts to the same response, like FAQs, makes those scenarios _semi-deterministic_, and therefore much easier to design and test.
+> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component), like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic) processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark). We build our first example exploring this approach.
+> 1. Experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt) and the full [Prompt]({{site.glossaryurl}}/#prompt) to find the minimally-sufficient content (for reduced overhead) that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt) design is still something of a _black art_.
+> 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
 > 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
-> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
+> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and it allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
 
-Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will refer back to this example. 
+Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will build on this example. 
 
 ## What We Learned from Test-Driven Development
 
@@ -54,10 +53,12 @@ This methodology also leans heavily on the expectation of [Deterministic]({{site
 
 So, how can we practice TDD for tests of stochastic components? First, to be clear, we are not discussing the use of generative AI to generate traditional tests for source code. Rather, we are concerned with how to use TDD to test generative AI itself!
 
-First, what aspects of TDD _don't_ need to change? Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send messages to a healthcare provider. In some cases, an immediate reply will be generated automatically. In the rest of the cases, a response will be returned to the use that the provider will have to respond personally as soon as possible. 
+First, what aspects of TDD _don't_ need to change? We should still strive for iterative and incremental development of capabilities, with corresponding, focused tests. What changes is how we write those tests when the component behaves stochastically.
+
+Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send messages to a healthcare provider. In some cases, an immediate reply can be generated automatically. In the rest of the cases, a &ldquo;canned&rdquo; response will be returned to the user that the provider will have to respond personally as soon as possible. (The complete ChatBot application is described in [A Working Example]({{site.baseurl}}/working-example).)
 
 {: .warning}
-> **DISCLAIMER:** We will use this healthcare ChatBot example throughout this guide. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, this example _must_ only be used for educational purposes. It is not at all suitable for use in real healthcare settings.
+> **DISCLAIMER:** We will use this healthcare ChatBot example throughout this guide, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
 Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
@@ -159,7 +160,7 @@ If you want to try our code yourself, see [Try This Yourself!](#try-this-yoursel
 
 To recap what we have learned so far, we effectively created more or less _deterministic_ outputs for a narrow range of particular inputs! This suggests a design idea we should explore next.
 
-## Idea: Handling Frequently Asked Questions
+## Idea: Handling frequently-asked questions
 
 In this app, asking for a prescription refill is a _frequently asked question_ (FAQ). We observed that even small models, with a good system prompt, were able to &ldquo;map&rdquo; a range of similar questions to the same answer and even do appropriate substitutions in the text, the prescription in this case.
 

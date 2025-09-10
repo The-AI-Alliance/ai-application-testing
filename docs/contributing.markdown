@@ -9,7 +9,6 @@ nav_order: 90
 The following people and organizations have contributed to the creation and maintenance of this project:
 
 * [Dean Wampler](https://github.com/deanwampler){:target="dw-gh"} ([Alliance email](mailto:dwampler@thealliance.ai)) - IBM and The AI Alliance
-* (More coming soon...)
 
 <a name="join-us"></a>
 # How to Contribute to this Project

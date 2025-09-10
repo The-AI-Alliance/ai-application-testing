@@ -17,7 +17,7 @@ has_children: false
 {:toc}
 </details>
 
-In [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), we explored using LLMs to validate the quality of synthetic benchmark data, and generative responses during both tests and production runs responses. Fortunately, there are many scenarios where we can leverage non-AI tools during production runs to generate more precise answers, as well as use them to evaluate synthesized data for tests and generated responses during test runs. 
+In [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), we explored using LLMs to validate the quality of synthetic benchmark data, and generative responses during both tests and production runs responses. Fortunately, there are many scenarios where we can leverage non-AI tools during production runs to generate more precise answers, as well as use them to evaluate synthesized data for tests and generated responses during test runs. This chapter continues the discussion we started in [Bring in the Experts]({{site.baseurl}}/arch-design/component-design/#bring-in-the-experts-ie-other-services), about leveraging non-AI tools, in the [Component Design]({{site.baseurl}}/arch-design/component-design/) chapter.
 
 <a id="highlights"></a>
 

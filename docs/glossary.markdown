@@ -87,6 +87,12 @@ Does a [Component](#component) feel like &ldquo;one thing&rdquo; with a single p
 
 How closely connected is one [Component](#component) to others in the system? &ldquo;Loose&rdquo; coupling is preferred, because it makes it easier to test components in isolation, substitute replacements when needed, etc. Strongly coupled components often indicate poor abstraction boundaries between them.
 
+## Design by Contract
+
+[Design by Contract](https://en.wikipedia.org/wiki/Design_by_contract){:target="_blank"} (&ldquo;DbC&rdquo;) is an idea developed by [Bertran Meyer](https://en.wikipedia.org/wiki/Bertrand_Meyer){:target="_blank"} and incorporated into his [Eiffel](https://en.wikipedia.org/wiki/Eiffel_(programming_language)){:target="_blank"} programming language. In Eiffel all functions can define a _contract_ for allowed inputs, invariants, and guaranteed responses, if the input requirements are met. The runtime system would handle any failures of these contracts. A _core principle_ of DbC use is that contract failures should terminate the application immediately, forcing the developers to fix the issue. Failure to do so becomes an excuse to let bugs accumulate. If this principle was rigorously followed during development, it is often considered acceptable (or at least &ldquo;expedient&rdquo;), to log contract failures, but not terminate execution in production runs. DbC can be used in other languages through built-in features (like _assertions_), libraries, or various runtime features.
+
+DbC provides many of the same design benefits provided by [TDD](#test-driven-development), which emerged later, such as directing attention to more rigorous API design. Because of the additional benefits of TDD, DbC has largely fallen out of practice, but it's formalism for what constitutes good contracts is still highly valuable and recommended for study. 
+
 ## Dataset
 
 (See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc.
@@ -199,7 +205,7 @@ In the context of software, the quality that knowing a [Unit's](#unit) or [Compo
 
 ## Probability and Statistics
 
-Two interrelated branches of mathematics, where statistics concerns such tasks as collecting, analyzing, and interpreting data, while probability concerns observations, in particular the percentage likelihood that certain values will be measured when observations are made of a _random_ process, like heads or tails when flipping a coin. 
+Two interrelated branches of mathematics, where statistics concerns such tasks as collecting, analyzing, and interpreting data, while probability concerns observations, in particular the percentage likelihood that certain values will be measured when observations are made of a _random_ process, or more precisely, a _random probability distribution_, like heads or tails when flipping a coin. This probability distribution is the simplest possible; there is a 50-50 chance of heads or tails (assuming a _fair coin_). The probability distribution for rolling a particular sum with a pair of dice is less simple, but straightforward. The probability distribution for the heights of women in the United States is more complicated, where historical data determines the distribution, not a simple formula.
 
 Both disciplines emerged together to solve practical problems in science, industry, sociology, etc. It is common for researchers to build a mathematical _model_ (in the general sense of the word, not just an AI model) of the system being studied, in part to compare actual results with predictions from the model, confirming or rejecting the underlying theories about the system upon which the model was built. Also, if the model is accurate, it provides predictive capabilities for possible and likely future observations.
 
@@ -300,6 +306,8 @@ When adding a [Feature](#feature) to a code base using _TDD_, the tests are writ
 3. Write the new feature to make the new test (as well as all previously written tests) pass.
 
 The [Wikipedia TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="tdd"} article is a good place to start for more information.
+
+See also [Design by Contract](#design-by-contract).
 
 ## Token
 

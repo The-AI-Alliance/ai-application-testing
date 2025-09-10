@@ -9,9 +9,6 @@ has_children: true
 
 After discussing [architecture and design considerations]({{site.baseurl}}/arch-design/), we turn to testing strategies and techniques that can be used to create reliable, repeatable tests for generative AI applications. 
 
-{: .highlight}
-> **TODO:** This is a work in progress, so each page has a list of ideas we are exploring or planned additions as _TODO_ items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}. [We welcome your contributions]({{site.baseurl}}/contributing).
-
 For educational purposes, we demonstrate techniques using relatively simple tools that are easy for you to try. While they are designed to be suitable for your research and development processes, we also describe more sophisticated tools that are available for more &ldquo;advanced&rdquo; uses.
 
 The end of each chapter also has an **Experiments to Try** section for further exploration.
