@@ -38,7 +38,7 @@ TODO: Provide a _very concise_ overview of the basics the reader needs to unders
 
 This paper might be useful: [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} by [Evan Miller]({{site.baseurl}}/references/#evan-miller).
 
-## Examples of Using Statistics in AI Scenarios
+## Other Examples of Using Statistics in AI Testing Situations
 
 ### The Use of Statistics at Netflix
  

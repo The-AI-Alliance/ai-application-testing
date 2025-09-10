@@ -25,9 +25,19 @@ Sometimes we will use a term that could be defined, but we won't provide a defin
 {:toc}
 </details>
 
+## Acceptance Benchmark
+
+The analog of [Acceptance Tests](#acceptance-test) for an AI-enabled system that has [Stochastic](#stochastic) behaviors. [Benchmark](#benchmark) technology is adapted for the purpose. 
+
+See also [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), and [Acceptance Test](#acceptance-test).
+
 ## Acceptance Test
 
-A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and are sometimes executed manually. However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). See also [Test](#test), [Unit Test](#unit-test), [Integration Test](#integration-test), and [Unit Benchmark](#unit-benchmark).
+A test that verifies a user-visible feature works are required, often by driving the user interface or calling the external API. These tests are system-wide and end-to-end. They are sometimes executed manually, if automation isn't feasible.
+
+However, it is desirable to make them automated, in which case all operations with [Side Effects](#side-effects) need to be replaced with [Deterministic](#determinism) [Test Doubles](#test-double). 
+
+See also [Test](#test), [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), and [Acceptance Benchmark](#acceptance-benchmark).
 
 ## Agent
 
@@ -59,7 +69,7 @@ What does a [Component](#component) do, either autonomously on its own (e.g., a 
 * A set of tests with metrics.
 * A summarization of the results.
 
-See also [Unit Benchmark](#unit-benchmark).
+See also [Unit Benchmark](#unit-benchmark), [Integration Benchmark](#integration-benchmark), and [Acceptance Benchmark](#acceptance-benchmark).
 
 ## Class
 
@@ -105,7 +115,7 @@ In contrast, _nondeterminism_ means identical inputs yield different results, re
 
 ## Explainability
 
-Can humans understand why the system behaves the way that it does in a particular scenario? Can the system provide additional information about about why it produced a particular output?
+Can humans understand why the system behaves the way that it does in a particular [Use Case](#use-case)? Can the system provide additional information about about why it produced a particular output?
 
 ## Evaluation
 
@@ -165,11 +175,17 @@ A [Unit's](#unit) or [Component's](#component) [State](#state) cannot be modifie
 
 Sending information to a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
 
+## Integration Benchmark
+
+The analog of [Integration Tests](#integration-test) for several [Units](#unit) and [Components](#component) working together, where some of them are AI-enabled and exhibit [Stochastic](#stochastic) behaviors. [Benchmark](#benchmark) technology is adapted for the purpose. 
+
+See also [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Acceptance Test](#acceptance-test), and [Acceptance Benchmark](#acceptance-benchmark).
+
 ## Integration Test
 
-A test for several [Units](#unit) or [Components](#component) working together that verifies they interoperate properly. These components could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not to explore handling of such side effects, all units with side effects should be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
+A test for several [Units](#unit) and [Components](#component) working together that verifies they interoperate properly. These components could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not to explore handling of such side effects, all units with side effects should be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
 
-See also [Test](#test), [Unit Test](#unit-test), [Acceptance Test](#acceptance-test), and [Unit Benchmark](#unit-benchmark).
+See also [Test](#test), [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), and [Acceptance Benchmark](#acceptance-benchmark)..
 
 ## Large Language Model
 
@@ -257,6 +273,12 @@ The generic term for outputs from a [Generative AI Model](#generative-ai-model) 
 
 How well does the [AI System](#ai-system) continue to perform within acceptable limits or degrade &ldquo;gracefully&rdquo; when stressed in some way? For example, how well does a [Generative AI Model](#generative-ai-model) respond to prompts that deviate from its training data?
 
+## Scenario
+
+One _path_ through a use case, such as one &ldquo;happy path&rdquo; from beginning to end where a user completes a task or accomplishes a goal. A failure scenario is a path through the use case where the user is unable to succeed, due to system or user errors.
+
+**Note:** When the text doesn't link to this definition, it is because the word is being used generically or because the text already linked to this definition. Hopefully the context will be clear. 
+
 ## Sequential
 
 The steps of some work are performed in a predictable, repeatable order. This property is one of the requirements for [Deterministic](#determinism) [Behavior](#behavior). Contrast with [Concurrent](#concurrent).
@@ -333,14 +355,16 @@ For simplicity, rather than say &ldquo;unit and/or component&rdquo; frequently i
 
 ## Unit Benchmark
 
-An adaption of [Benchmark](#benchmark) tools and techniques for more fine-grained and targeted testing purposes, such as verifying [Features](#feature) and [Use Cases](#use-case) work as designed. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for details. The same idea is also useful for [Integration Tests](#integration-test) and [Acceptance Tests](#acceptance-test) of AI components.
+An adaption of [Benchmark](#benchmark) tools and techniques for more fine-grained and targeted testing purposes, such as verifying [Features](#feature) and [Use Cases](#use-case) work as designed. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for details. 
+
+The same idea generalizes to the analogs of [Integration Tests](#integration-test), namely [Integration Benchmarks](#integration-benchmark), and [Acceptance Tests](#acceptance-test), namely [Acceptance Benchmarks](#acceptance-benchmark).
+
+## Use Case
+
+A common term for an end-to-end user activity done with a system, often broken down into several [Scenarios](#scenario) that describe different "paths" through the use case, including error scenarios, in addition to happy paths. Hence, scenarios would be the next level of granularity. Compare with [Features](#feature), which would be the capabilities implemented one at a time to support the scenarios that make up a use case.
 
 ## Unit Test
 
 A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
-See also [Test](#test), [Integration Test](#integration-test), [Acceptance Test](#acceptance-test), and [Unit Benchmark](#unit-benchmark).
-
-## Use Case
-
-A common term for an end-to-end user activity done with a system, often broken down into several _scenarios_ that describe different "paths" through the use case, including error scenarios, in addition to happy paths. Hence, scenarios would be the next level of granularity. Compare with [Features](#feature), which would be the capabilities implemented one at a time to support scenarios and use cases.
+See also [Test](#test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), [Acceptance Benchmark](#acceptance-benchmark).

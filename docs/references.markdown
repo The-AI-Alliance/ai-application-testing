@@ -33,7 +33,7 @@ The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"
 
 [CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
 
-Among the useful tools in this repo are:
+Among the useful tools in this repository are:
 * A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for synthetic data generation.
 * Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
 

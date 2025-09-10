@@ -13,7 +13,15 @@ The following people and organizations have contributed to the creation and main
 <a name="join-us"></a>
 # How to Contribute to this Project
 
-We welcome your contributions! Visit the Alliance [`community` repo](https://github.com/The-AI-Alliance/community/){:target="_blank"}, specifically the [`CONTRIBUTING` page](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md){:target="_blank"} for general information about contributing. 
+We welcome your contributions! Here are some areas to consider:
+
+* Improving the example code to cover planned areas of the guide that we haven't yet implemented.
+* Other example code improvements, like utility for real-world use!
+* Explorations of the many **Experiments in Try** found in many chapters. _We believe some of these suggestions would be excellent topics for basic research._
+* Expand coverage of third-party tools. Incorporate their use in the example code.
+* You tell us!
+
+Visit the Alliance [`community` repo](https://github.com/The-AI-Alliance/community/){:target="_blank"}, specifically the [`CONTRIBUTING` page](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md){:target="_blank"} for general information about contributing. 
 
 Visit this project's [GitHub repo](https://github.com/The-AI-Alliance/ai-application-testing/){:target="repo"} and the [open issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} to find areas where help is needed. We welcome [pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="prs"} and suggestions as [new issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}.
 
@@ -37,6 +45,6 @@ If your organization would like to join the AI Alliance, go [here](https://theal
 
 ## Other Notes on Contributing
 
-The sources for this website are in the GitHub repo's [`docs`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/docs){:target="repo-docs"} directory. 
+The sources for this website are in the GitHub repository's [`docs`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/docs){:target="repo-docs"} directory. 
 
 Notice that every page on this website has an _Edit this page on GitHub_ link to the corresponding location for the page in the GitHub repo, making it easy to view a page, then go straight to the source, make edits, and submit a PR! This is the best way to help us fix typos and make other small improvements.

@@ -29,7 +29,7 @@ In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/te
 > 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
 > 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
-> 5. For early versions of an application, bias towards conservative handling of known scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and it allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
+> 5. For early versions of an application, bias towards conservative handling of common scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and it allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
 
 Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will build on this example. 
 
@@ -37,7 +37,7 @@ Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our fir
 
 The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Component]({{site.glossaryurl}}/#component) being designed and implemented right now, but also dependencies on other components, and how dependencies should be managed. 
 
-We will discuss the qualities that make good components in [Component Design]({{site.baseurl}}/arch-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/arch-design/component-design/#coupling-cohesion). For now, let us focus on how TDD promotes those qualities.
+We discussed the qualities that make good components in [Component Design]({{site.baseurl}}/arch-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/arch-design/component-design/#coupling-cohesion). TDD promotes those qualities.
 
 The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor) the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
@@ -48,6 +48,17 @@ After refactoring, only then is a new test written for the planned feature chang
 That doesn't mean you proceed naively or completely ignore longer-term goals. During this process, the software design decisions you make reflect the perspective, intuition, and idioms you have built up through years of experience.
 
 This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#Determinism) behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency). 
+
+### Test Scope
+
+Finally, well-designed tests, like units and components themselves, are very specific to a particular scope. 
+
+| Test Type | Scope | Purpose |
+| :-------- | :---- | :------ |
+| **Unit tests** | Very fine grained: one _unit_ | How does this unit [Behave]({{site.glossaryurl}}/#behavior), keeping everything else _invariant_? |
+| **Integration tests** | The scope of several units and components | How does this combination of units and components behave together? |
+| **Acceptance tests** | The whole application | Does this [Scenario]({{site.glossaryurl}}/#scenario) for a [Use Case]({{site.glossaryurl}}/#use-case) work as specified from end to end? |
+
 
 ## TDD and Generative AI
 

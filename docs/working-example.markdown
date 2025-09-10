@@ -12,10 +12,29 @@ This section summarizes the features of the running Healthcare ChatBox example a
 {: .warning}
 > **DISCLAIMER:** In this guide, we develop a healthcare ChatBot example application, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
-
 {: .todo}
-> **TODO:** This section will be completed soon. For now, see the discussions about the application throughout this guide and refer to the project's [`README`]({{site.gh_edit_repository}}/){:target="_blank"}
+> **TODO:** This section will be completed soon. For now, see the discussions about the application throughout this guide and refer to the project's [`README`]({{site.gh_edit_repository}}/){:target="_blank"}. 
+>
+> [Contributions are welcome!]({{site.baseurl}}/contributing). See the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues/){:target="_blank"}, in particular [#21](https://github.com/The-AI-Alliance/ai-application-testing/issues/21){:target="_blank"} and [#28](https://github.com/The-AI-Alliance/ai-application-testing/issues/28){:target="_blank"}.
 
+Tentative Outline:
+
+* Where each tool and process fits into the software development lifecycle.
+* Integration of our new tools into existing process frameworks, e.g., running _unit benchmarks_  integrated with [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"} and similar tools.
+	* Using these tools with other programming languages.
+* ...
+
+## Integration into the Software Development Lifecycle
+
+...
+
+## Writing Tests During Test-Driven Development
+
+...
+
+## Integration into Test Suites
+
+TODO: Discuss integration into PyTest and other frameworks.
 
 {: .tip}
 > **Highlights:**

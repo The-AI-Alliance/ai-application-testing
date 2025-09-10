@@ -144,7 +144,7 @@ In their experience, it was not be feasible for all AI test doubles to return de
 This also suggests that you should have test doubles that deliberately return _unacceptable_ responses, meaning out of acceptable bounds. These test doubles would be used for testing error handling and _graceful degradation_ scenarios. Note that we used the word _unacceptable_, not _unexpected_. While it's not possible to fully anticipate all possible generative model outputs, we have to work extra hard to anticipate all possible outputs, good and bad, and design handling accordingly.
 
 {: .highlight}
-> Successful, reliable software systems are designed to _expect_ all possible scenarios, including failures of _any_ kind. Encountering an unexpected scenario should be considered a design failure.
+> Successful, reliable software systems are designed to _expect_ all possible [Scenarios]({{site.glossaryurl}}/#scenario) in all [Use Cases]({{site.glossaryurl}}/#use-case), including failures of _any_ kind. Encountering an unexpected scenario should be considered a design failure.
 
 ## More Tools for APIs Design
 
