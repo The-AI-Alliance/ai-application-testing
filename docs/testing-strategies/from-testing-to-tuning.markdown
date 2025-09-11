@@ -72,13 +72,15 @@ For example, a _grader_ is used to verify outputs, analogous to [LLM as a Judge]
 
 Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
 
-TODO: More investigation and summarization here, especially the concept of _graders_. Provide an example??
+{: .todo}
+> **TODO:** More investigation and summarization here, especially the concept of _graders_. Provide an example??
 
 ## The Impact on Architecture and Design
 
 In [Architecture and Design]({{site.baseurl}}/arch-design), we discussed techniques with testing needs in mind. Making tuning an integral part of the software development process could impact the architecture and design, too, as we explore in this section.
 
-TODO - how tuning becomes a part of the development lifecycle, how testing processes might change.
+{: .todo}
+> **TODO:** How tuning becomes a part of the development lifecycle, how testing processes might change.
 
 For example, there are several tools designed to organize tuning data and processes.
 
@@ -94,7 +96,8 @@ For example, there are several tools designed to organize tuning data and proces
 
 ## Experiments to Try
 
-TODO: We will provide some examples to try along with suggestions for further experimentation.
+{: .todo}
+> **TODO:** We will provide some examples to try along with suggestions for further experimentation.
 
 ## What's Next?
 

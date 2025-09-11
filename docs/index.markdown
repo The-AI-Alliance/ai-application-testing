@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Home
+title: Achieving Confidence in Enterprise AI Applications
 nav_order: 10
 has_children: false
 ---

@@ -34,7 +34,8 @@ In the [Unit Benchmark's Experiments to Try]({{site.baseurl}}/testing-strategies
 
 ## Statistical Analysis of Data for Stochastic Systems
 
-TODO: Provide a _very concise_ overview of the basics the reader needs to understand. This can't be an exhaustive treatment. Emphasize the tools used for particular purposes. Show the formulas, but de-emphasizing understanding them in detail, because they can be coded as reusable libraries. An intuitive understanding is the goal here.
+{: .todo}
+> **TODO:** Provide a _very concise_ overview of the basics the reader needs to understand. This can't be an exhaustive treatment. Emphasize the tools used for particular purposes. Show the formulas, but de-emphasizing understanding them in detail, because they can be coded as reusable libraries. An intuitive understanding is the goal here.
 
 This paper might be useful: [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} by [Evan Miller]({{site.baseurl}}/references/#evan-miller).
 
@@ -44,13 +45,15 @@ This paper might be useful: [Adding Error Bars to Evals: A Statistical Approach 
  
 In [Testing Problems]({{site.baseurl}}/testing-problems/#this-is-not-a-new-problem), we mentioned that Netflix faced the same testing challenges back in 2008 for their recommendation systems. Part of their solution leveraged statistical analysis. They computed _plausibility_ scores that gave them sufficient confidence in the results.
 
-TODO: fill in more details.
+{: .todo}
+> **TODO:** Fill in more details.
 
 ### Plurai's Intellagent
 
 More recently, a new open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} from [Plurai.ai](https://plurai.ai){:target="_blank"} brings together recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify _alignment_ of the system to the requirements. 
 
-TODOs: Expand the explanation of what Intellagent does and show use of it in our example.
+{: .todo}
+> **TODO:** Expand the explanation of what Intellagent does and show use of it in our example.
 
 ## Evaluating Our Synthetic Data and Healthcare ChatBot Test Results
 
@@ -60,11 +63,13 @@ First, can we establish our confidence that we have a real refill request? We ra
 
 For simplicity, we will continue to ignore the possibility of a prompt containing additional content in addition to a refill request.
 
-TODO: complete...
+{: .todo}
+> **TODO:** Complete...
 
 ## Experiments to Try
 
-TODO: Expand this section once more content is provided above.
+{: .todo}
+> **TODO:** Expand this section once more content is provided above.
 
 ## What's Next?
 Review the [highlights](#highlights) summarized above, then proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).

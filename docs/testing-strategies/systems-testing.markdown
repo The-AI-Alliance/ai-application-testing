@@ -38,14 +38,16 @@ Fortunately, these kinds of nondeterminism are bounded and well understood. Stan
 
 In a sense, we explored this lesson already; our healthcare ChatBot is designed to detect FAQs, like prescription refill requests. Our analog of the TCP handling of lost packets roughly corresponds to our questions about handling edge cases; messages that are ambiguous and may or may not be actual refill requests. However, the situation in our example is less clear-cut, so we explored statistical techniques for decision making in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
-TODOs:
-
-1. Research the work of experts in this area. For example, explore the work pioneered by Netflix for deliberately triggering component failures so that the the systems were appropriately designed to handle them as _normal_ occurrences. 
-1. Provide specific examples of how to use those concepts.
+{: .todo}
+> **TODOs:**
+>
+> 1. Research the work of experts in this area. For example, explore the work pioneered by Netflix for deliberately triggering component failures so that the the systems were appropriately designed to handle them as _normal_ occurrences. 
+> 1. Provide specific examples of how to use those concepts.
 
 ## Experiments to Try
 
-TODO: We will expand this section once more content is provided above.
+{: .todo}
+> **TODO:** We will expand this section once more content is provided above.
 
 ## What's Next?
 
