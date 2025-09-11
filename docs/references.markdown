@@ -27,13 +27,13 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 ## Alignment Forum
 
-The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of [_alignment_]({{site.glossaryurl}}/#alignment).
+The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
 
 ## CVS Health
 
 [CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
 
-Among the useful tools in this repo are:
+Among the useful tools in this repository are:
 * A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for synthetic data generation.
 * Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
 
@@ -47,11 +47,19 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## EleutherAI
 
-[EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in our [glossary definition]({{site.glossaryurl}}/#alignment).
+[EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [Alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in the glossary definition for it.
 
 ## Evan Miller
 
-[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Tests]({{site.baseurl}}/testing-strategies/statistical-tests/).
+[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
+
+## Hamel Husain
+
+[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/) is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
+
+## IBM
+
+This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation).
 
 ## James Thomas
 
@@ -69,15 +77,15 @@ The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offer
 
 ## Merriam-Webster Dictionary
 
-The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [glossary]({{site.glossaryurl}}) for several terms.
+The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [Glossary]({{site.glossaryurl}}) for several terms.
 
 ## Michael Feathers
 
-[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/testing-strategies/coupling-cohesion/#abstractions-encapsulate-complexities).
+[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/arch-design/component-design/#abstractions-encapsulate-complexities).
 
 ## MLCommons Glossary
 
-The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [glossary]({{site.glossaryurl}}).
+The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [Glossary]({{site.glossaryurl}}).
 
 ## Nathan Lambert
 
@@ -85,16 +93,26 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## NIST Risk Management Framework
 
-The U.S. National Institute of Science and Technology's ([NIST](https://www.nist.gov/){:target="nist"}) Artificial Intelligence [Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf"} (AI RMF 1.0) is used to inform our [glossary]({{site.glossaryurl}}).
+The U.S. National Institute of Science and Technology's ([NIST](https://www.nist.gov/){:target="nist"}) Artificial Intelligence [Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf"} (AI RMF 1.0) is used to inform our [Glossary]({{site.glossaryurl}}).
 
 ## OpenAI
 
 An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
 
+[Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
+
 ## Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
 
+## PlurAI
+
+[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+
+## University of Tübingen
+
+[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
+
 ## Wikipedia
 
-Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [glossary]({{site.glossaryurl}}) and other places.
+Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.glossaryurl}}) and other places.

@@ -1,0 +1,10 @@
+[project]
+name = "ai-application-testing"
+version = "0.1.0"
+description = "code and documentation for the AI Alliance user guide and tools for 'Achieving Confidence in Enterprise AI Applications'."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "litellm>=1.76.2",
+    "openai>=1.106.1",
+]

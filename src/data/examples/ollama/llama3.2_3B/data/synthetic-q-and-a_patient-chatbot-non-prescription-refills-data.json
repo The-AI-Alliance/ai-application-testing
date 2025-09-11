@@ -1,0 +1,27 @@
+{"question": "I am taking _P_ and I am experiencing some side effects.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "When is my next appointment?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _B_ hurts when I do this.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I am having some trouble with my medication. Can you help?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "How long does _P_ take to start working?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a doctor's note for my _B_ pain?", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}
+{"question": "I need to reschedule my appointment.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "My _P_ seems to be making me sick. Can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I have been having some issues with my _B_ lately.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can you tell me more about the benefits of taking _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to schedule a follow-up appointment.", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "My _B_ is feeling really sore today.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "How do I take _P_ correctly?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I am having some issues with my medication regimen.", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "Can I get a copy of my prescription for _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I am experiencing some side effects from taking _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "My _B_ is swelling up. What should I do?", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}
+{"question": "Can you help me with my medication questions?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I am having some trouble breathing. I think it might be related to _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a list of my prescription refills?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "My _B_ pain is really bad today.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "I am experiencing some nausea from taking _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a note explaining why I need to take _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I am having some issues with my _B_ lately.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
+{"question": "Can you help me understand my medication regimen?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "I am experiencing some dizziness from taking _P_.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "My _B_ is feeling really sore today.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}
