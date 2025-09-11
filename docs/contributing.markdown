@@ -23,7 +23,7 @@ We welcome your contributions! Here are some areas to consider:
 
 Visit the Alliance [`community` repo](https://github.com/The-AI-Alliance/community/){:target="_blank"}, specifically the [`CONTRIBUTING` page](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md){:target="_blank"} for general information about contributing. 
 
-Visit this project's [GitHub repo](https://github.com/The-AI-Alliance/ai-application-testing/){:target="repo"} and the [open issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} to find areas where help is needed. We welcome [pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="prs"} and suggestions as [new issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}.
+Visit this project's [GitHub repo](https://github.com/The-AI-Alliance/ai-application-testing/){:target="repo"} and look at the [open issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} to find areas where help is needed. We welcome [pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="prs"} and suggestions as [new issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}. [Discussions](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"} are a great way to participate, too.
 
 Finally, you can provide feedback using [email](mailto:contact@thealliance.ai). Be sure to mention this particular project.
 
