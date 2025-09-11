@@ -17,21 +17,21 @@ has_children: false
 {:toc}
 </details>
 
-In [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), we explored using LLMs to validate the quality of synthetic benchmark data, and generative responses during both tests and production runs responses. Fortunately, there are many scenarios where we can leverage non-AI tools during production runs to generate more precise answers, as well as use them to evaluate synthesized data for tests and generated responses during test runs. This chapter continues the discussion we started in [Bring in the Experts]({{site.baseurl}}/arch-design/component-design/#bring-in-the-experts-ie-other-services), about leveraging non-AI tools, in the [Component Design]({{site.baseurl}}/arch-design/component-design/) chapter.
+In [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), we explored using LLMs to validate the quality of synthetic benchmark data, and generative responses during both tests and production runs responses. Fortunately, there are many scenarios where we can leverage non-AI tools during production runs to generate more precise answers, as well as use them to evaluate synthesized data for tests and generated responses during test runs. This chapter builds on the discussion we started in [Bring in the Experts]({{site.baseurl}}/arch-design/component-design/#bring-in-the-experts-ie-other-services), about leveraging non-AI tools, in the [Component Design]({{site.baseurl}}/arch-design/component-design/) chapter.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. Many non-AI tools are much better than generative AI tools at doing particular tasks, especially where precise, accurate, and deterministic answers are necessary and feasible.
-> 2. Not only can these tools be used as part of an [Agent]({{site.glossaryurl}}/#agent)-based architecture, then can also be used to support test data validation and the responses during test and production runs.
+> 1. Many non-AI tools are much better than generative AI tools at doing particular tasks, especially where precise, accurate, and deterministic answers are feasible and necessary.
+> 2. These tools be used as part of an [Agentic]({{site.glossaryurl}}/#agent) architecture to maximize the performance of AI applications. They can also be used to support validation of test data and the responses during test runs.
 
-When interest in generative AI exploded after the unveiling of ChatGPT, it become quickly apparently that LLMs are better at some tasks than others, and other kinds of tools are superior choices for many tasks. This led to application design patterns like [Retrieval-Augmented Generation]({{site.glossaryurl}}/#retrieval-augmented-generation) (RAG) and [Agents]({{site.glossaryurl}}/#agent). 
+When interest in generative AI exploded after the unveiling of ChatGPT, it become quickly apparently that LLMs are better at some tasks than others, and other kinds of tools that predate generative AI are superior choices to perform many tasks. This led to application design patterns like [Retrieval-Augmented Generation]({{site.glossaryurl}}/#retrieval-augmented-generation) (RAG) and [Agents]({{site.glossaryurl}}/#agent). 
 
-In RAG, knowledge relevant to a prompt is retrieved and sent with the prompt as part of the [Context]({{site.glossaryurl}}/#context) during inference invocations. This helps the model generate more accurate responses. Uses include sourcing information about news events that occurred after a model was trained to support related queries, and retrieval of proprietary information with details needed for effective responses, for example a ChatBot that assists an aviation repair technician can query relevant repair manuals and logs of past problem diagnosis and repair sessions.
+In RAG, knowledge relevant to a prompt is retrieved and sent with the prompt as part of the [Context]({{site.glossaryurl}}/#context) during inference invocations. This helps the model generate more accurate responses. Uses include sourcing information about news events that occurred after a model was trained, so the model can generate relevant responses, and retrieval of proprietary information with details needed for effective responses, for example a ChatBot that assists an aviation repair technician can query relevant repair manuals, service bulletins, and logs of past repair sessions.
 
-Agent systems extend this data-retrieval model to more general tool invocations, such as web searches, with the additional enhancement that LLMs perform an &ldquo;orchestration&rdquo; role of determining from the prompt what kinds of information to gather from tools, which tools to invoke to get the information, invoking those tools, and formulating a response based on the tool replies. The process might also include automatic invocation of actions on behalf of the user.
+Agentic systems extend this data-retrieval model to more general tool invocations, such as web searches, with the additional enhancement that LLMs perform an &ldquo;orchestration&rdquo; role of determining from the prompt what kinds of information to gather from tools, which tools to invoke to get the information, invoking those tools, and formulating a response based on the tool replies. The process might also include automatic invocation of actions on behalf of the user.
 
 We are interested in using such tools in a testing context, to validate synthetic data and to evaluate model or application outputs during tests.
 
@@ -41,11 +41,19 @@ First, let's consider the &ldquo;mechanics&rdquo; of using external tools.
 
 ### How to Invoke Tools
 
-No matter what tools we might use, we can either hard-code invocations of them or we can use an [Agent]({{site.glossaryurl}}/#agent)-based implementation to handle this integration automatically. Either way, one or more tools are invoked with the relevant data for analysis, either synthetic data for validation or a response during a test run. The results of the analysis are interpreted either with hand-written code (e.g., did the compilation of generated source code succeed or fail?) or the analysis is passed through an LLM for interpretation to determine if the synthetic data is good or the test run passed. 
+To use any tool, one option is to hard-code invoking it and doing some ad hoc processing of the response. For example, in a code generation application, the generated code can be passed to a parser for analysis. If the analysis succeeds, the code is used as is, but if the analysis fails (i.e., the code has syntax errors), then the user is presented with the error output and asked if she wants to fix the errors herself or have the LLM try fixing the code or generating new code.
+
+The [Agent]({{site.glossaryurl}}/#agent) design pattern emerged to lean on LLMs to eliminate these manual steps of writing code to integrate tools, deciding when to invoke them, doing the invocation, and processing the results. Hence, agents handle this integration automatically with greater flexibility and more dynamic flexibility, depending on the application use cases and prompts received. 
 
 ### A Variation of LLM as a Judge?
 
-If an LLM is used to interpret the analysis, then this implementation of external tool verification can be considered a variation of [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/). Instead of relying on the LLM's ability to judge by itself, the LLM is used to interpret the analysis of other tools, in order to determine a judgement.
+In the context of checking the quality of test data or inference responses during tests, if an LLM is used to interpret the analysis done by the tools, then this implementation of external tool verification can be considered a variation of [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/). Instead of relying on the LLM's ability to judge by itself, the LLM is used to interpret the analysis of other tools, in order to determine a judgement.
+
+### Another Way of Generating Test Data?
+
+If we are using external tools to validate test data, should we use them to generate the data in the first place? We would replace calls to an LLM to synthesize data with calls to an agent system instead.
+
+For our ChatBot, if the patient reports experiencing some symptoms, we could query a database of known symptoms and possible causes. We will investigate this idea, too.
 
 ## Example Tools
 
@@ -64,7 +72,7 @@ Generated code can be checked for quality and validity and, in some cases, autom
 
 ### Data Stores
 
-This is the RAG pattern, but possibly generalized. As discussed in the [RAG glossary entry]({{site.glossaryurl}}/#retrieval-augmented-generation) reference data &ldquo;chunks&rdquo; are encoded into _vectors_ with a similarity metric. At inference time, prompts are similarly encoded to find and return _nearest neighbor_ reference chunks, so the extra context data returned is more likely to the most relevant for the prompt.
+This is the RAG pattern, but possibly generalized. As discussed in the [RAG glossary entry]({{site.glossaryurl}}/#retrieval-augmented-generation) reference data &ldquo;chunks&rdquo; are encoded into _vectors_ with a similarity metric. At inference time, prompts are similarly encoded to find and return _nearest neighbor_ reference chunks, so the extra context data returned is more likely to be the most relevant for the prompt.
 
 Generalizing this approach in a typical [Agent]({{site.glossaryurl}}/#agent) implementation, any data store of domain-relevant or other data can be queried and interpreted by an LLM for the desired use. In this case, we might use such data to judge the accuracy or utility of synthesized data or responses from inference during test or production runs.
 
@@ -72,7 +80,7 @@ Generalizing this approach in a typical [Agent]({{site.glossaryurl}}/#agent) imp
 
 Planning is a common technique used in industrial applications. Examples include designing and optimizing assembly lines, determining near-optimal routing, e.g., for package delivery and moving goods around storage facilities or factories, and other purposes.
 
-AI-generated plans can be checked against digital simulations of these scenarios. Why not just use the digital simulation in the first place? This is preferable, but in many cases the model might produce candidate results faster, while the simulation might provide fast verification, thereby providing overall time and resource savings. In other cases, the model's abilities might compensate for limitations of the simulation implementation.
+AI-generated plans can be checked against digital simulations of these scenarios. Why not just use the digital simulation in the first place? This is preferable, but in many cases the model might produce candidate results faster, while the simulation might provide fast verification, thereby providing overall time and resource savings.
 
 ### Reasoning, Logic, and Other Mathematics
 
@@ -95,9 +103,15 @@ Tools that perform a conventional web search about a topic provide the same util
 {: .todo}
 > **TODO:** Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
 
+## Using External Tools to Generate Healthcare ChatBot Synthetic Data
+
+{: .todo}
+> **TODO:** Provide an implementation of external tool use for creating datasets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
+
 ## Experiments to Try
 
-TODO: We will expand this section once the working example is provided.
+{: .todo}
+> **TODO:** We will expand this section once the working example is provided.
 
 ## What's Next?
 

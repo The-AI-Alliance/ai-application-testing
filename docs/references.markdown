@@ -53,6 +53,10 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
+## Hamel Husain
+
+[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/) is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
+
 ## IBM
 
 This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation).
@@ -95,13 +99,19 @@ The U.S. National Institute of Science and Technology's ([NIST](https://www.nist
 
 An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
 
-## PlurAI
-
-[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+[Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
 
 ## Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
+
+## PlurAI
+
+[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+
+## University of Tübingen
+
+[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
 
 ## Wikipedia
 

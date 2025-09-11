@@ -27,11 +27,12 @@ When testing AI applications with their [Stochastic]({{site.glossaryurl}}/#stoch
 > **Highlights:**
 >
 > 1. We can adapt [Benchmark]({{site.glossaryurl}}/#benchmark) concepts to be appropriate for unit, integration, and acceptance testing of AI components, creating analogs we call [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark), and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark), respectively.
-> 2. Benchmarks require good datasets with prompts designed to probe how a model or AI-enabled component behaves in a certain area of interest, along with responses that represent acceptable answers. Following conventional practice,[^1] we will use the term question and answer (Q&A) pairs for these prompts and responses.
-> 3. The best way to get good Q&A pairs is to synthesize them, because the process of collecting or writing examples manually is slow, expensive, and error prone, as humans are not good at finding and exploring corner cases, where bugs often occur.
-> 3. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
-> 4. We have to run experiments to generate good Q&A pairs and to determine the number of them we need for comprehensive and effective test coverage.
-> 5. There are many [Evaluation]({{site.glossaryurl}}/#evaluation) tools that can be used for synthetic data generation and benchmark creation and execution.
+> 1. Benchmarks require good datasets with prompts designed to probe how a model or AI-enabled component behaves in a certain area of interest, along with responses that represent acceptable answers. Following conventional practice,[^1] we will use the term question and answer (Q&A) pairs for these prompts and responses.
+> 1. We may have suitable data for our domain that we can adapt for this purpose, for example logs of past customer interactions. However, adapting this data can be time consuming and expensive.
+> 1. When we don't have enough test data available already, we should synthesize the test data we need using generative tools. This is much faster than collecting data or writing examples manually, which is slow, expensive, and error prone, as humans are not good at finding and exploring corner cases, where bugs often occur.
+> 1. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
+> 1. We have to run experiments to generate good Q&A pairs and to determine the number of them we need for comprehensive and effective test coverage.
+> 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation) tools that can be used for synthetic data generation and benchmark creation and execution.
 
 [^1]: Not all benchmarks use Q&A pair datasets like this. For example, some benchmarks use a specially-trained model to evaluate content, like detecting SPAM or hate speech. For simplicity, we will only consider benchmarks that work with Q&A pairs, but most of the principles we will study generalize to other benchmark techniques.
 
@@ -43,41 +44,34 @@ Why not write more focused benchmarks? In other words, embrace the nondeterminis
 
 ## Revisiting our TDD Example
 
-In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages.
+In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages. We need better datasets of Q&A pairs. 
 
-There are a many publicly-available ChatBot benchmark suites, but they tend to be generic, broadly covering overall conversational abilities. They are worth investigating for testing the general Q&A abilities of the application, but they rarely cover specific domains, like healthcare, and none are fine-grained in the ways that we need.
+### Acquiring the Test Data Required
 
-So, we need a better dataset of Q&A pairs. A real healthcare organization will likely have many patient &ldquo;portal&rdquo; conversations logged that can be used for this purpose. They might also be used to [Tune]({{site.glossaryurl}}/#tune) a &ldquo;generic&rdquo; model to be better at healthcare Q&A. Some manual curation of the data will likely be necessary, but LLMs can also be very useful for analyzing these logs and extracting useful content.
+There are a many publicly-available ChatBot benchmark suites, but they tend to be generic, broadly covering overall conversational abilities. They are worth investigating for testing the general Q&A abilities of the application, but they rarely cover more specific domains and they are very unlikely to cover our specific use cases. Hence, none of them are fine-grained in the ways that we need.
 
-Generating synthetic data is another tool, which we will explore in depth below. First, let's discuss a few other considerations for these tests we are building.
+We may have historical data we can adapt into test data, such as saved online chats and phone calls between patients and providers, for our example. Adapting this data into suitable Q&A pairs for testing is labor intensive, although LLMs can accelerate this process. For example, you can feed one or more sessions to a good LLM and ask it to generate Q&A pairs based on the conversation. Everything we will discuss about validating test data, from manual inspection to automated techniques, still applies.
 
-### Thinking about Overhead
+Also, for some domains, we may have good data, but it may have tight restrictions on use, like patient healthcare data subject to privacy laws. Using such data for testing purposes may be disallowed.
 
-What about the cost of running lots of examples through an LLM? Say we have 100 examples in each fine-grained unit benchmark and we have 100 of those benchmarks. How long will each full test run take for those 10,000 invocations and how expensive will they be? We will have to benchmark these runs to answer these questions. If we use a commercial service for model inference during tests, we may need to watch those costs carefully.
+For completeness, another use for domain-specific historical data is to [Tune]({{site.glossaryurl}}/#tune) a &ldquo;generic&rdquo; model to be better at our use cases. The tuned model is then used for testing and production inference. Tuning is not yet a widespread technique for building AI applications, but tuning tools and techniques are becoming easier to use by non experts, so we anticipate that tuning will become more routine over time.
 
-For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. Instantaneous would be ideal, but running unit benchmarks are likely to be much slower, especially for larger datasets and doing inference during tests with larger models. Using a hosted service for inference vs. local inference _may_ be slower, but if the development machine is hitting resource limits when doing inference, it may be slower than going over the Internet for a hosted-service inference call!
-
-When we [discuss integration]({{site.baseurl}}/working-example/#integration-into-test-suites) of our benchmarks into our testing suites, like PyTest, We can try to ensure that only a relevant subset of them are invoked for incremental feature changes, while the full suite is invoked less frequently, such as during PR (pull request) processes. 
-
-Similarly, runs of the integration and acceptance tests, which are relatively slow and expensive, are typically run a few times per day. 
-
-To reduce testing time and costs, we will want to experiment with model choices, both for the production deployments and for development purposes. For example, if we have picked a production version of a model, there may be smaller versions we can use successfully during development. We might have to trade off the quality of responses, as long as the results during testing remain &ldquo;good enough&rdquo;. 
-
-However, since acceptance tests are designed to confirm that a feature is working in real production scenarios (or as close to those as possible in our test environment), we must use the full production models for acceptance tests. 
+Suppose we don't have enough historical test data for our needs, for whatever reasons. Generation of synthetic data is our tool of choice.
 
 ## Synthetic Data Generation and Validation
 
-Let us now explore systematic approaches to synthetic data generation.
-
-So far, our narrowly-focused unit benchmark from the [TDD]({{site.baseurl}}/arch-design/tdd/) chapter exercised one behavior, detecting and handling a prescription refill request or any &ldquo;other&rdquo; message.
+So far, our narrowly-focused unit benchmark from the [TDD]({{site.baseurl}}/arch-design/tdd/) chapter exercised one behavior, detecting and handling a prescription refill request or any &ldquo;other&rdquo; message. From now on, we will think of this as _two_ units of behavior from the point of view of benchmarking: handing refill requests and handling all other queries for which we don't support special handling.
 
 We will continue to follow this strategy:
 
-* Identify a new _unit_ (behavior) to implement.
-* Write one or more new unit benchmarks for it, including...
-  * Generate a separate dataset of Q&A pairs for the benchmark. 
+1. Identify a new _unit_ (behavior) to implement.
+1. Write one or more new unit benchmarks for it, including...
+  1. Generate a separate dataset of Q&A pairs for the benchmark. 
+1. Write whatever application logic is required for the unit, including suitable prompts for the generative models involved.
 
-In addition to synthesizing Q&A pairs for the two behaviors we already identified, we will add a new unit of behavior and a corresponding benchmark; detect situations where the patient's prompt appears to indicate he or she requires urgent or emergency care, in which case we want the response to be that the patient should call 911 (in the USA) immediately[^2].
+We will focus on the first two steps. The third step will be covered in [A Working Example]({{site.baseurl}}/working-example).
+
+In addition to synthesizing Q&A pairs for the two behaviors we already have, we will add a new unit of behavior and a corresponding benchmark to study detection of prompts where the patient appears to require urgent or emergency care, in which case we want the response to be that the patient should call 911 (in the USA) immediately[^2].
 
 [^2]: Anyone who has called a doctor's office in the USA has heard the automated message, "If this is a medical emergency, please hang up and dial 911."
 
@@ -153,8 +147,21 @@ For fine-grained _unit_ benchmarks, a suitable number could vary between tens of
 
 Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark) and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark) have broader scope, by design, they will usually require relatively larger datasets.
 
-There aren't any hard and fast rules; we will have to experiment to determine what works best for each case. More specifically, as we study the results of a particular benchmark's runs, what number of pairs gives us sufficient, &ldquo;intuitive&rdquo; confidence for this benchmark? 
+There aren't any hard and fast rules; we will have to experiment to determine what works best for each case. More specifically, as we study the results of a particular benchmark's runs, what number of pairs gives us sufficient, comprehensive coverage and therefore confidence that this benchmark thoroughly exercises the behavior? We can always err on the side of too much test data, but we may run into overhead concerns. 
 
+### Thinking about Overhead
+
+What about the cost of running lots of examples through an LLM? Say we have 100 examples in each fine-grained unit benchmark and we have 100 of those benchmarks. How long will each full test run take for those 10,000 invocations and how expensive will they be? We will have to benchmark these runs to answer these questions. If we use a commercial service for model inference during tests, we may need to watch those costs carefully.
+
+For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. Instantaneous would be ideal, but running unit benchmarks are likely to be much slower, especially for larger datasets and doing inference during tests with larger models. Using a hosted service for inference vs. local inference _may_ be slower, but if the development machine is hitting resource limits when doing inference, it may be slower than going over the Internet for a hosted-service inference call!
+
+When we [discuss integration]({{site.baseurl}}/working-example/#integration-into-test-suites) of our benchmarks into our testing suites, like PyTest, We can try to ensure that only a relevant subset of them are invoked for incremental feature changes, while the full suite is invoked less frequently, such as during PR (pull request) processes. 
+
+Similarly, runs of the integration and acceptance tests, which are relatively slow and expensive, are typically run a few times per day. 
+
+To reduce testing time and costs, we will want to experiment with model choices, both for the production deployments and for development purposes. For example, if we have picked a production version of a model, there may be smaller versions we can use successfully during development. We might have to trade off the quality of responses, as long as the results during testing remain &ldquo;good enough&rdquo;. 
+
+However, since acceptance tests are designed to confirm that a feature is working in real production scenarios (or as close to those as possible in our test environment), we must use the full production models for acceptance tests. 
 
 ### Running the Data Synthesis Tool
 
@@ -233,6 +240,7 @@ While the best-known benchmarks tend to be too broad in scope and generic for ou
 Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation), including datasets and tools for safety purposes. Many of the datasets and tools discussed below use this term, so we call it out here for clarity.
 
 Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here.
+
 
 ### General Collections of Domain-Specific Evaluations
 
