@@ -274,7 +274,7 @@ What other domains would you like to see here?
 
 We are still using custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are a few tools to explore. 
 
-Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools-and-examples) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#tuning-tools).
+Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#tuning-tools).
 
 See also [A Working Example]({{site.baseurl}}/working-example) for a discussion of integrating new tools into existing frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}.
 

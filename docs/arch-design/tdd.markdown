@@ -259,7 +259,7 @@ time uv run src/scripts/tdd-example-refill-chatbot.py \
 {: .tip}
 > **Tip:** To see this command without actually running it, pass the `-n` or `--dry-run` option to make.
 
-The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that [`uv`](https://docs.astral.sh/uv/) is used to run this tool (discussed in the README) and all other tools we will discuss later. The arguments are used as follows:
+The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that [`uv`](https://docs.astral.sh/uv/){:target="_blank"} is used to run this tool (discussed in the README) and all other tools we will discuss later. The arguments are used as follows:
 
 | Argument | Purpose |
 | :------- | :------ |
@@ -282,7 +282,7 @@ The script runs two experiments, each with these two templates files:
 The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same.
 
 {: .note}
-> **NOTE:** These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
+> **NOTE:** These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 
 This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
 
