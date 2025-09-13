@@ -45,7 +45,7 @@ The goals of this project are two fold:
 1. Develop and document strategies and techniques for testing generative AI applications that eliminate nondeterminism, where feasible, and where not feasible, still allow us to write effective, repeatable and automatable tests. This work also impacts architecture and design decisions.
 2. Publish detailed, reusable examples and guidance for developers and AI experts on these strategies and techniques.
 
-{: .highlight}
+{: .attention}
 > **TODO:** This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
 
 ## Overview of This Site

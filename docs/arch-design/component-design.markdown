@@ -57,7 +57,7 @@ An AI application is like any other application, except it adds one or more [Gen
 
 The first lesson we should apply is to clearly encapsulate AI dependencies separately from the rest of the components that behave deterministically. Then we can focus on the nondeterministic behaviors and how to design and test them.
 
-{: .highlight }
+{: .attention }
 > All units and components that don't encapsulate models or directly handle model responses should be designed and implemented to be as deterministic as possible and tested using the traditional, deterministic testing techniques.
 
 ## Bring in the Experts (i.e., Other Services)
@@ -92,7 +92,7 @@ It is common for any interface to an underlying component to do some transformat
 
 For an AI-enabled unit, allowing open-ended prompts greatly increases the care required to prevent undesirable use and the resulting testing burden. How can the allowed inputs to this unit be constrained, so the AI benefits are still available, but the potential downsides are easier to manage? 
 
-{: .highlight}
+{: .attention}
 > From the perspective of good software engineering practices, exchanging free-form text between humans and tools or between tools is the _**worst possible interface you can use**_, because it is impossible to reason about the behavior, enforce constraints, predict all possible behaviors, and write repeatable, reliable, and comprehensive tests. This is a general paradox for APIs; _**the more open-ended the &ldquo;exchanges&rdquo; that are allowed, the more progress and utility are constrained**_. So, we will get the benefits of generative AI only if we successfully manage for this serious disadvantage vs. its potential benefits.
 
 When possible, don't provide an open-ended chat interface for inputs, but instead constrain inputs to a set of values from which a prompt is generated for the underlying AI model. This approach allows you to retain the control you need, while often providing a better user experience, too.
@@ -117,7 +117,7 @@ If there are breaking changes that affect dependents, can you modify how you con
 
 In [TDD and Generative AI]({{site.baseurl}}/arch-design/#tdd-and-generative-ai), we start our exploration of how to create tests for AI-enabled components. Here, we consider the case where we are [Unit Testing]({{site.glossaryurl}}/#unit-test) _another_, non-AI component that depends on an AI-enabled dependency. Tests, like components, should have a single purpose (_cohesion_), so _all_ unit tests will not want to handle the [Stochastic]({{site.glossaryurl}}/#stochastic) behavior the AI-enabled dependency normally provides, because the unit tests we are writing now will exercise other aspects of behavior and require deterministic behaviors so these tests are reliable.
 
-{: .highlight}
+{: .attention}
 > We said that _all_ the unit tests for this non-AI component should use a test double, _not_ the real AI dependency. We must write unit tests to exercise how the component responds to any potential responses it might receive from the real AI dependency, but the easiest way to do this is to first understand as best we can the _space_ of all possible behaviors, including error scenarios, and then write tests for them that explore this space exhaustively and ensure the component being tested handles them all correctly. In contrast, it should be the [Integration Tests]({{site.glossaryurl}}/#integration-test) that explore what happens with real interactions.
 
 So, we still need to test the behavior of the component when it interacts with the real AI dependency. This is the role of some of the [Integration Tests]({{site.glossaryurl}}/#integration-test). We fully expect these tests to occasionally catch query-response interactions that we didn't anticipate in our _space_ analysis of possibilities, so they aren't covered by our existing test doubles and unit tests. When this happens, we will need to add or modify our unit tests and test doubles to account for the new behaviors observed.
@@ -130,7 +130,7 @@ So, [Test Doubles]({{site.glossaryurl}}/#test-double) take the place of dependen
 
 In traditional software, it is somewhat uncommon for a component developer to also deliver test doubles of the component for use in tests for other components that depend on the component. At best, the test suite for the dependency might cover all known behaviors the dependency might exhibit, but it is also essential to test _other_ components that use it to ensure they _respond_ to all these behaviors correctly. Hence, they need a way to trigger all possible behaviors in the dependency. In current practice, it is up to the user of a dependency to understand all the behaviors (which is good to do) and write her own test doubles to simulate all these behaviors (which is a burden).
 
-{: .highlight}
+{: .attention}
 > For a component with non-trivial behaviors, especially complex error scenarios, AI-based or not, consider delivering test doubles of the component along with the real component, where the test doubles simulate every possible component behavior.
 
 ### Lessons Learned Writing Test Doubles at Netflix
@@ -143,7 +143,7 @@ In their experience, it was not be feasible for all AI test doubles to return de
 
 This also suggests that you should have test doubles that deliberately return _unacceptable_ responses, meaning out of acceptable bounds. These test doubles would be used for testing error handling and _graceful degradation_ scenarios. Note that we used the word _unacceptable_, not _unexpected_. While it's not possible to fully anticipate all possible generative model outputs, we have to work extra hard to anticipate all possible outputs, good and bad, and design handling accordingly.
 
-{: .highlight}
+{: .attention}
 > Successful, reliable software systems are designed to _expect_ all possible [Scenarios]({{site.glossaryurl}}/#scenario) in all [Use Cases]({{site.glossaryurl}}/#use-case), including failures of _any_ kind. Encountering an unexpected scenario should be considered a design failure.
 
 ## More Tools for APIs Design

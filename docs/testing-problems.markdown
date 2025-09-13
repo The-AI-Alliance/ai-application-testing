@@ -47,7 +47,7 @@ Therefore, model outputs are an example of a [Stochastic]({{site.glossaryurl}}/#
 
 Actually, some models support an adjustable parameter, called the _temperature_, that controls how much randomness is allowed in token selection. In these models, you can turn this parameter down to _zero_, which forces the model to always pick the _most probable_ token in every situation. This makes the output effectively deterministic for any given prompt! However, we normally want some variability. Nevertheless, a zero temperature can be useful in some tests.
 
-{: .highlight}
+{: .attention}
 > _Temperature_ is a useful metaphor for randomness; think of how the surface of a pot of water behaves as you heat it up, going from cold and flat (and &ldquo;predictable&rdquo;) to hot and very bubbly, where the height at any point on the surface can vary a lot around the average level.
 
 Two other simple random probability distribution examples are useful to consider. Consider the behavior of flipping a _fair_ (unweighted) coin. For each flip, you have no way of knowing whether you will observe a head or a tail, each of which has a 50% probability of occurring. However, if you flip the coin 100 times, you will have observed approximately 50 heads and 50 tails. For 1000 flips, the split is even more likely to be 500 heads and 500 tails. A less simple example distribution is the values observed when rolling two, six-sided dice. Without going into details, it is much more probable to get two values that add up to 5, 6, or 7 on a roll, for example, than to get a total of 2 or 12.

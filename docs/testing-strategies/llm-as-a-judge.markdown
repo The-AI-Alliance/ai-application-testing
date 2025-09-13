@@ -48,7 +48,7 @@ So, when using LLM as a judge as part of the process of creating unit benchmark 
 
 Alternatively, do low-scoring pairs indicate good corner cases, such as ambiguous input, that might be useful for developing new unit benchmarks and implementation logic for testing and handling such corner cases? 
 
-{: .highlight}
+{: .attention}
 > Corner (or edge) cases in any software are a frequent source of bugs and production failures when they are unanticipated and poorly handled. They are even more likely to occur when using generative AI, where the _space_ of possible prompts and responses is large. Therefore, the effort spent to detect and test corner cases is usually well spent.
 
 ### A Potential Design Refinement
