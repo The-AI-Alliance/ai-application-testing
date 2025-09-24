@@ -233,6 +233,14 @@ One of the best techniques is to rely on a [Teacher Model]({{site.glossaryurl}}/
 
 We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). Other techniques we will explore include [External Tool Verification]({{site.baseurl}}/external-verification/), and [Statistical Evaluation]({{site.baseurl}}/statistical-tests/).
 
+## Other Tools for Synthetic Data Generation
+
+While our tools are simple, flexible, and sufficient for our needs, larger organizations may want more scalable and feature rich tools.
+
+### synthetic-data-kit
+
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/tree/main){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
 While the best-known benchmarks tend to be too broad in scope and generic for our needs, they are good sources of ideas and sometimes actually data. There is also a growing set of domain-specific benchmarks that could provide good starting points for test benchmarks.
@@ -245,7 +253,17 @@ Here is a list of some domain-specific benchmarks that we know of. [Let us know]
 ### General Collections of Domain-Specific Evaluations
 
 * [Weval](https://weval.org/sandbox){:target="weval"} from the [Collective Intelligence Project](https://www.cip.org/){:target="cip"}, is a community-driven collection of domain-specific evaluations, designed to allow non-experts to contribute and use evaluation suites relevant to their needs. 
-* [ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciencies and ethics.
+* [ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciences and ethics.
+
+### Education
+
+* The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
+
+### Finance
+
+Benchmarks for finance applications.
+
+* Patronus AI [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"}
 
 ### Healthcare 
 
@@ -254,25 +272,24 @@ Benchmarks for testing health-related use cases.
 * OpenAI [Healthbench](https://openai.com/index/healthbench/){:target="oai-hb"}
 * Stanford HELM for healthcare, [MedHELM](https://crfm.stanford.edu/helm/medhelm/latest/){:target="medhelm"}
 
-### Software Engineering
+### Industrial Systems
 
-Benchmarks for testing software engineering use cases.
+I.e., manufacturing, shipping, etc.
 
-* Open AI [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"}
-
-### Finance
-
-Benchmarks for finance applications.
-
-* Patronus AI [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"}
+* FailureSensorIQ
+  * [paper](https://arxiv.org/abs/2506.03278){:target="_blank"} &ldquo;... a novel Multi-Choice Question-Answering (MCQA) benchmarking system designed to assess the ability of Large Language Models (LLMs) to reason and understand complex, domain-specific scenarios in Industry 4.0. Unlike traditional QA benchmarks, our system focuses on multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets.&rdquo;
+  * [GitHub](https://github.com/IBM/FailureSensorIQ){:target="_blank"}
+  * [Dataset](https://huggingface.co/datasets/ibm-research/AssetOpsBench){:target="_blank"}
 
 ### Legal
 
 * Stanford [LegalBench](https://hazyresearch.stanford.edu/legalbench/){:target="legalbench"} ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"})
 
-### Education
+### Software Engineering
 
-* The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
+Benchmarks for testing software engineering use cases.
+
+* Open AI [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"}
 
 ### Other Domains?
 
