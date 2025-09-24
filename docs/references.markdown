@@ -81,7 +81,7 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 ## Meta
 
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/tree/main){:target="_blank"} (discussed in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} (discussed in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
 
 ## Michael Feathers
 

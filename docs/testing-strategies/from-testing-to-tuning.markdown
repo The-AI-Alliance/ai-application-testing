@@ -88,7 +88,7 @@ For example, there are several tools designed to organize tuning data and proces
 
 #### synthetic-data-kit
 
-We introduced Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/tree/main){:target="_blank"} in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit), where we mentioned its scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+We introduced Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit), where we mentioned its scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
 
 {: .todo}
 > **TODO:** Expand discussion, show example of use.

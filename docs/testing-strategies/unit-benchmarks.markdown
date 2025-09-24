@@ -239,7 +239,7 @@ While our tools are simple, flexible, and sufficient for our needs, larger organ
 
 ### synthetic-data-kit
 
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/tree/main){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
 
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
