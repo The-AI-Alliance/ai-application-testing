@@ -67,7 +67,7 @@ Generated code can be checked for quality and validity and, in some cases, autom
   * For languages like Python with optional type hints, run the type checker, too.
 * Execute the code (in a safe, sand boxed environment!) to verify it is logically correct. If tests already exist for the generated code (see [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development)), verify the generated code allows the tests to pass.
 * Scan for conformance to project code formatting conventions.
-* Check for excessive complexity, e.g., using [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="cyclomatic-complexity"}.
+* Check for excessive complexity, e.g., using [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="_wikipedia"}.
 * Scan for security vulnerabilities. For example, check that the code only uses allowed third-party libraries and allowed versions of them, e.g., those libraries approved by the organization and versions that have no known vulnerabilities.
 
 ### Data Stores

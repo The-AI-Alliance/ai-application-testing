@@ -301,13 +301,15 @@ Let's recap a few issues we discussed.
 1. What should we do with low-rated pairs? Discard them or use them to help explore corner cases? 
 3. If the judge model is expensive or slow, how do we use it economically? On the other hand, if we aren't using this model during normal inference, but just for the process of judging, are the higher inference costs manageable? See also the [Experiments to Try](#experiments-to-try).
 
-## Other Tools
+<a id="other-tools"/>
+
+## Other Tools for LLM as a Judge
 
 We discussed several popular frameworks for implementing [_evaluations_](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/). Here is an additional tool that focuses on making use of _LLM as a Judge_ easier and more robust.
 
 ### EvalAssist
 
-[`EvalAssist`](https://ibm.github.io/eval-assist/){:target="eval-assist"} is designed to make writing these kinds of evaluations easier, including incremental development. It uses [Unitxt](https://www.unitxt.ai){:target="unitxt"} to implement evaluations. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
+[`EvalAssist`](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873){:target="_blank"}) is designed to make writing these kinds of evaluations easier, including incremental development. It uses [Unitxt](https://www.unitxt.ai){:target="unitxt"} to implement evaluations. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
 
 ## Other Examples
 

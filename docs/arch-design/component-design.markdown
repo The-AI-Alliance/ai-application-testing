@@ -97,7 +97,7 @@ For an AI-enabled unit, allowing open-ended prompts greatly increases the care r
 
 When possible, don't provide an open-ended chat interface for inputs, but instead constrain inputs to a set of values from which a prompt is generated for the underlying AI model. This approach allows you to retain the control you need, while often providing a better user experience, too.
 
-A familiar analog is the known security vulnerability, [SQL Injection](https://en.wikipedia.org/wiki/SQL_injection){:target="_blank"}, where we should never allow users to specify SQL fragments in plain text that are executed by the system. A malicious user could cause a destructive query to execute. Instead, the user is offered a constrained interface for data and actions that are permitted. The underlying SQL query is generated from that input.
+A familiar analog is the known security vulnerability, [SQL Injection](https://en.wikipedia.org/wiki/SQL_injection){:target="_wikipedia"}, where we should never allow users to specify SQL fragments in plain text that are executed by the system. A malicious user could cause a destructive query to execute. Instead, the user is offered a constrained interface for data and actions that are permitted. The underlying SQL query is generated from that input.
 
 If you do have a chat component, what can you do _immediately_ within the component to transform the user input into a safer, more usable form? 
 

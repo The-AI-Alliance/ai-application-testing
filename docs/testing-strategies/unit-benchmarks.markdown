@@ -233,14 +233,6 @@ One of the best techniques is to rely on a [Teacher Model]({{site.glossaryurl}}/
 
 We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). Other techniques we will explore include [External Tool Verification]({{site.baseurl}}/external-verification/), and [Statistical Evaluation]({{site.baseurl}}/statistical-tests/).
 
-## Other Tools for Synthetic Data Generation
-
-While our tools are simple, flexible, and sufficient for our needs, larger organizations may want more scalable and feature rich tools.
-
-### synthetic-data-kit
-
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
-
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 
 While the best-known benchmarks tend to be too broad in scope and generic for our needs, they are good sources of ideas and sometimes actually data. There is also a growing set of domain-specific benchmarks that could provide good starting points for test benchmarks.
@@ -295,26 +287,44 @@ Benchmarks for testing software engineering use cases.
 
 What other domains would you like to see here?
 
-## More Advanced Benchmark and Evaluation Tools
+<a id="other-tools"/>
 
-We are still using custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are a few tools to explore. 
+## Other Tools for Unit Benchmarks
 
-Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#tuning-tools).
+We are using relatively-simple, custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are some additional tools to explore. 
+
+Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#other-tools).
 
 See also [A Working Example]({{site.baseurl}}/working-example) for a discussion of integrating new tools into existing frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}.
+
+### Other Tools for Synthetic Data Generation
+
+If you use synthetic data generation a lot in your organization, it will become necessary to understand some of the potential complexities that you might encounter. [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are doing. 
+
+#### synthetic-data-kit
+
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+
+#### Older Synthetic Data Tools
+
+[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation, serving different purposes. For example, several use [Generative Adversarial Networks]({{site.glossaryurl}}/#generative-adversarial-networks), a technique most popular in the late 2010s.
+
+### More Advanced Benchmark and Evaluation Tools
+
+Similarly, there are other general-purpose tools for authoring, managing, and running benchmarks and evaluations. 
 
 {: .todo}
 > **TODO:** The following sections are placeholders. We intend to provide more coverage of these tools, as well as add new tools as we become aware of them. [Contributions are welcome!]({{site.baseurl}}/contributing). See [issue #22](https://github.com/The-AI-Alliance/ai-application-testing/issues/22){:target="_blank"} for details. Other [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues/){:target="_blank"} discuss particular tools on our radar for investigation.
 
-### PleurAI Intellagent
+#### PleurAI Intellagent
 
 [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} demonstrates some advanced techniques developed by [Plurai](https://www.plurai.ai/){:target="_blank"} for understanding a project's requirements and interdependencies, then using this _graph_ of information to generate synthetic datasets and tests.
 
-### LM Evaluation Harness Installation
+#### LM Evaluation Harness
 
 [LM Evaluation Harness](https://www.eleuther.ai/projects/large-language-model-evaluation){:target="lm-site"} is a de facto standard tool suite for defining and running evaluations. Its distribution comes with a rich suite of evaluations for safety and other topics.
 
-### Unitxt
+#### Unitxt
 
 [Unitxt](https://www.unitxt.ai){:target="unitxt"} makes it easy to generate evaluations with minimal coding required. Its distribution comes with a rich suite of evaluations for safety and other topics.
 
@@ -328,7 +338,7 @@ Some examples using `unitxt` are available in the [IBM Granite Community](https:
 
 Evaluations implemented with `unitxt` can be executed by LM Evaluation Harness. Start with [this `unitxt` documentation page](https://www.unitxt.ai/en/latest/docs/lm_eval.html){:target="unitxt-lm-eval"}, then look at the [`unitxt` tasks](https://github.com/EleutherAI/lm-evaluation-harness/tree/main/lm_eval/tasks/unitxt){:target="unitxt-lm-eval2"} described in the [`lm-evaluation-harness`](https://github.com/EleutherAI/lm-evaluation-harness){:target="lm-eval"} repo.
 
-### Final Thoughts on Advanced Benchmark and Evaluation Tools
+#### Final Thoughts on Advanced Benchmark and Evaluation Tools
 
 Be careful to check the licenses for any benchmarks or tools you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
 

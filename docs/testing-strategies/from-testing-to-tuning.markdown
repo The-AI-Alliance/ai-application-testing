@@ -41,7 +41,7 @@ Of course, tuning is already used by model builders to improve their models' per
 
 What's still missing is an _active_ integration of tuning into iterative and incremental development processes, which will be necessary to do incremental tuning for each new use case or feature implemented. 
 
-This kind of fine-grained tuning of models is still a research and development topic, in part because each incremental improvement needs to be automatically evaluated to detect regressions in behavior, as well as improved performance in the area where tuning is focused. This continuous verification is exactly how tests are used for traditional software in organizations with mature testing practices; it is integral to [DevOps](https://en.wikipedia.org/wiki/DevOps){:target="_blank"}, specifically. Our hope is that AI benchmarking and testing practices will evolve similarly so that rapid, targeted, and automatic execution of these tools can similarly be performed when doing incremental tuning.
+This kind of fine-grained tuning of models is still a research and development topic, in part because each incremental improvement needs to be automatically evaluated to detect regressions in behavior, as well as improved performance in the area where tuning is focused. This continuous verification is exactly how tests are used for traditional software in organizations with mature testing practices; it is integral to [DevOps](https://en.wikipedia.org/wiki/DevOps){:target="_wikipedia"}, specifically. Our hope is that AI benchmarking and testing practices will evolve similarly so that rapid, targeted, and automatic execution of these tools can similarly be performed when doing incremental tuning.
 
 ## Tuning Ideas for Further Exploration
 
@@ -82,22 +82,23 @@ In [Architecture and Design]({{site.baseurl}}/arch-design), we discussed techniq
 {: .todo}
 > **TODO:** How tuning becomes a part of the development lifecycle, how testing processes might change.
 
-For example, there are several tools designed to organize tuning data and processes.
 
-### Tuning Tools
+<a id="other-tools"/>
 
-#### synthetic-data-kit
+## Other Tools for Model Tuning
 
-We introduced Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit), where we mentioned its scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+Model tuning requires domain-specific datasets. In [Other Tools]({{site.baseurl}}/testing-strategies/unit-benchmarks/#other-tools) in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter, we discussed tools like Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} for data synthesis. We mentioned its scalable support for larger-scale data synthesis and processing, such as translating between formats, especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models. Similarly [Other Tools]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) in the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter explored tools for validation of synthetic data.
+
+Here are some other tools for model tuning. 
 
 {: .todo}
 > **TODO:** Expand discussion, show example of use.
 
-#### InstructLab
+### InstructLab
 
 [InstructLab](https://instructlab.ai){:target="instructlab"} is project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
 
-#### Open Instruct
+### Open Instruct
 
 [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI tries to meet similar goals as InstructLab. It is mentioned by Nathan Lambert in the [Reinforcement Finetuning](#reinforcement-finetuning) content discussed above.
 
@@ -114,6 +115,6 @@ Review the [highlights](#highlights) summarized above and optionally the [Append
 
 The idea of a complete reset is an established idea. [_The Structure of Scientific Revolutions_](https://en.wikipedia.org/wiki/The_Structure_of_Scientific_Revolutions){:target="ssr"}, published in 1962, studied how scientists approach new evidence that appears to contradict an established theory. They don't immediately discard the established theory. Instead, they first attempt to accommodate the new evidence into the existing theory, making modifications as necessary.
 
-Eventually, if the contradictions become too glaring and the modifications become too strained, some researchers will abandon the established theory and allow the evidence to lead them to a fundamentally new theory. Two examples from the history of Physics are the transition from Newtonian (&ldquo;Classical&rdquo;) Mechanics to Quantum Mechanics and the emergence of the Special and General Theories of Relativity, all of which emerged in the early decades of the twentieth century. In Astronomy, it took several _millennia_  for astronomers to discard the _geocentric_ view of the solar system, where the Earth was believed to be at the center and everything else revolves around it. Astronomers developed elaborate theories about orbital mechanics involving [_epicycles_](https://en.wikipedia.org/wiki/Deferent_and_epicycle){:target="wikipedia"}, nesting of circular orbits, that were needed to explain the observed _retrograde motion_ of planetary orbits. An important breakthrough for considering a _heliocentric_ solar system, where the Sun is at the center, was the way this model greatly simplified orbital mechanics, removing the need for epicycles.
+Eventually, if the contradictions become too glaring and the modifications become too strained, some researchers will abandon the established theory and allow the evidence to lead them to a fundamentally new theory. Two examples from the history of Physics are the transition from Newtonian (&ldquo;Classical&rdquo;) Mechanics to Quantum Mechanics and the emergence of the Special and General Theories of Relativity, all of which emerged in the early decades of the twentieth century. In Astronomy, it took several _millennia_  for astronomers to discard the _geocentric_ view of the solar system, where the Earth was believed to be at the center and everything else revolves around it. Astronomers developed elaborate theories about orbital mechanics involving [_epicycles_](https://en.wikipedia.org/wiki/Deferent_and_epicycle){:target="_wikipedia"}, nesting of circular orbits, that were needed to explain the observed _retrograde motion_ of planetary orbits. An important breakthrough for considering a _heliocentric_ solar system, where the Sun is at the center, was the way this model greatly simplified orbital mechanics, removing the need for epicycles.
 
 ---

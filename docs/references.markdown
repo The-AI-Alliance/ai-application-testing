@@ -29,7 +29,11 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
 
-## CVS Health
+## Babeş-Bolyai University
+
+[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are doing
+
+## CVS Health Data Science Team
 
 [CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
 
@@ -105,6 +109,10 @@ An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/for
 
 [Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
 
+## Open Data Science
+
+[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation.
+
 ## Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
@@ -119,4 +127,15 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 ## Wikipedia
 
-Several [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.glossaryurl}}) and other places.
+Many [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.glossaryurl}}) and other locations.
+
+* [Bertrand Meyer](https://en.wikipedia.org/wiki/Bertrand_Meyer){:target="_wikipedia"}
+* [Cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="_wikipedia"}
+* [Design by contract](https://en.wikipedia.org/wiki/Design_by_contract){:target="_wikipedia"}
+* [DevOps](https://en.wikipedia.org/wiki/DevOps){:target="_wikipedia"}
+* [Eiffel (programming language)](https://en.wikipedia.org/wiki/Eiffel_(programming_language)){:target="_wikipedia"}
+* [Deferent and epicycle](https://en.wikipedia.org/wiki/Deferent_and_epicycle){:target="_wikipedia"}
+* [Generative adversarial network](https://en.wikipedia.org/wiki/Generative_adversarial_network){:target="_wikipedia"}
+* [SQL injection](https://en.wikipedia.org/wiki/SQL_injection){:target="_wikipedia"}
+* [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development){:target="_wikipedia"} 
+* [Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol){:target="_wikipedia"}

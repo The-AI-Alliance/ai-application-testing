@@ -9,7 +9,7 @@ has_children: true
 
 After discussing [architecture and design considerations]({{site.baseurl}}/arch-design/), we turn to testing strategies and techniques that can be used to create reliable, repeatable tests for generative AI applications. 
 
-For educational purposes, we demonstrate techniques using relatively simple tools that are easy for you to try. While they are designed to be suitable for your research and development processes, we also describe more sophisticated tools that are available for more &ldquo;advanced&rdquo; uses.
+For educational purposes, we demonstrate techniques using relatively simple tools that are easy for you to try. While they are designed to be suitable for research and development processes, we also describe more sophisticated tools that may be necessary for more &ldquo;advanced&rdquo; uses, larger teams, etc. These additional tools are described in sections with titles that begin with **Other Tools...** near the end of each chapter. Also, note that many startups and consulting organizations now offer proprietary tools and services to aid developer testing, but we won't cover those options.
 
 The end of each chapter has an **Experiments to Try** section for further exploration.
 
