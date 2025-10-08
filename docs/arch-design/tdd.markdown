@@ -26,10 +26,10 @@ In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/te
 >
 > 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component), like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic) processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark). We build our first example exploring this approach.
 > 1. Experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt) and the full [Prompt]({{site.glossaryurl}}/#prompt) to find the minimally-sufficient content (for reduced overhead) that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt) design is still something of a _black art_.
-> 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test.
+> 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test. Furthermore, to optimize costs, consider first passing prompts through a low-overhead classifier model. For some classifications, like FAQs, the application can return a pre-formatted response, while for other other classifications, the prompt can be routed to a more powerfully, but more expensive model for inference.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
 > 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
-> 5. For early versions of an application, bias towards conservative handling of common scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and it allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.  
+> 5. For early versions of an application, bias towards conservative handling of common scenarios and falling-back to human intervention for everything else. This lowers the risks associated with unexpected inputs and undesirable results, makes testing easier, and it allows you to build confidence incrementally as you work to improve the breadth and resiliency of the prompt and response handling in the application.
 
 Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our first example of how to test an AI component. In our subsequent discussion about architecture and design, we will build on this example. 
 
@@ -190,7 +190,13 @@ So far in our example, we have the label `refill`, for the prescription refill F
 
 When a FAQ label is returned, the application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning) specifically for known FAQs, or we perform other special handling that doesn't use generative AI. So far, we have observed that we don't even need to tune a special model for FAQ detection and handling.
 
-In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts.
+In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts. This design is illustrated in the Figure 1:
+
+![Simple Design with Two Models]({{site.baseurl}}/assets/images/prompt-routing.png "Simple Design with Two Models")
+
+**Figure 1:** A simple design combining a classifier and inference model.
+
+The prompt is passed to a &ldquo;classifier&rdquo; (steps 1 and 2), which can be a small, general-purpose LLM, like we used above, or a trained classifier. If the label, such as a FAQ, can be processed immediately with a deterministic answer (3a), no further inference is required. Otherwise, the prompt is sent to the inference model for more general handling (3b), returning the response to the app for downstream processing.
 
 Finally, thinking in terms of a classifier suggests that we don't necessarily want to hard-code in the system prompt the deterministic answers the model should return, like we did above. Instead, we should return just the label and any additional data of interest, like a drug name that is detected. This answer could be formatted in JSONL:
 
@@ -198,10 +204,10 @@ Finally, thinking in terms of a classifier suggests that we don't necessarily wa
 {"question": "...", "label": "refill-request", "drug-name": "miracle drug"}
 ```
 
-Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file, so it is easy to change the response without a code change like the system prompt. This would also make _internalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. 
+Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file, so it is easy to change the response without a code change like the system prompt. This would also make _internationalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. 
 
 {: .note}
-> **NOTE:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support!
+> **NOTE:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support! We will need language-specific tests, too.
 
 ## Creating and Using Unit Benchmarks
 

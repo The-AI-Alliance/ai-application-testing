@@ -12,7 +12,7 @@ has_children: false
 {: .highlight }
 > **I am an Enterprise Developer: How Do I Test My AI Applications??**
 >
-> I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **nondeterministic**.
+> I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**.
 
 Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Applications**. We are building the knowledge and tools you need to achieve the same testing confidence for your AI applications that you have for your traditional applications.
 
@@ -28,9 +28,9 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 
 We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Determinism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected [Behavior]({{site.glossaryurl}}/#behavior) and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to _most_ [Functions]({{site.glossaryurl}}/#function) (with some exceptions), we will get the same answer back consistently. This property enables our core testing techniques, which give us _**the essential confidence**_ that our applications meet our requirements, that they implement the [Use Cases]({{site.glossaryurl}}/#use-case) our customers expect. We are accustomed to unambiguous _pass/fail_ answers!
 
-Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#genenerative-ai-model), where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic) and hence _nondeterministic_. We can't write the same kinds of tests now, so what alternative approaches should we use instead?
+Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#genenerative-ai-model), where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic), meaning the outputs are governed by a probability model, and hence _nondeterministic_. We can't write the same kinds of tests now, so what alternative approaches should we use instead?
 
-In contrast, our AI-expert colleagues (researchers and data scientists) use the tools of [Probability and Statistics]({{site.glossaryurl}}/#probability-and-statistics) to analyze stochastic model responses and assess how well the models perform against particular objectives. For example, a model might score 85% on a [Benchmark]({{site.glossaryurl}}/#benchmark) for high school-level mathematical knowledge. Is that good enough? It depends on the application in mind! Rarely are simple _pass/fail_ answers available.
+In contrast, our AI-expert colleagues (researchers and data scientists) use the tools of [Probability and Statistics]({{site.glossaryurl}}/#probability-and-statistics) to analyze stochastic model responses and to assess how well the models perform against particular objectives. For example, a model might score 85% on a [Benchmark]({{site.glossaryurl}}/#benchmark) for high school-level mathematical knowledge. Is that good enough? It depends on the application in mind! Rarely are simple _pass/fail_ answers available.
 
 ![Developer to AI Expert Spectrum]({{site.baseurl}}/assets/images/developer-to-AI-expert-spectrum.png "Developer to AI Expert Spectrum")
 

@@ -98,15 +98,17 @@ Like for planning, sometimes a model can generate candidate ideas faster than ru
 
 Tools that perform a conventional web search about a topic provide the same utility as they do when used by people. However, tool-based web searches have the same drawbacks, too. Care is required to validate the veracity of the results or at least the trustworthiness of the sources found. 
 
-## Using External Tools to Validate Healthcare ChatBot Synthetic Data
-
-{: .todo}
-> **TODO:** Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
-
 ## Using External Tools to Generate Healthcare ChatBot Synthetic Data
 
 {: .todo}
 > **TODO:** Provide an implementation of external tool use for creating datasets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
+
+TODO: Look at an offline medical reference that can be "scraped" and used to generate and validate data.
+
+## Using External Tools to Validate Healthcare ChatBot Synthetic Data
+
+{: .todo}
+> **TODO:** Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
 
 ## Experiments to Try
 

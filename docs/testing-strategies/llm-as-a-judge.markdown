@@ -309,7 +309,13 @@ We discussed several popular frameworks for implementing [_evaluations_](https:/
 
 ### EvalAssist
 
-[`EvalAssist`](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873){:target="_blank"}) is designed to make writing these kinds of evaluations easier, including incremental development. It uses [Unitxt](https://www.unitxt.ai){:target="unitxt"} to implement evaluations. It also helps users refine evaluation criteria iteratively using a web-based user experience. 
+[EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used above, or pair-wise comparisons, where the best of two answers is chosen. With pair-wise comparisons, several forms of judgement bias can occur: 
+
+1. **Positional bias**, where the judge tends to pick the first or second option preferentially.
+2. **Self-enhancement bias**, where an LLM prefers its own responses.
+3. **Verbosity bias**, where an LLM judge favors longer responses even if they are not the best choice.
+
+EvalAssist uses [Unitxt](https://www.unitxt.ai){:target="unitxt"} (first discussed in [Unit Benchmarks](testing-strategies/unit-benchmarks/#unitxt)) to implement evaluations. 
 
 ## Other Examples
 
@@ -336,3 +342,4 @@ In addition, these notebooks demonstrate other aspects of using `unitxt`:
 Review the [highlights](#highlights) summarized above, then proceed to [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 
 ---
+  
