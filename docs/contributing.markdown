@@ -39,7 +39,7 @@ Check any of these boxes on the form:
 - [ ] Applications and Tools WG (left-hand side)
 - [ ] Evaluations (performance, quality, trust, safety,...) (right-hand side)
 
-In the &ldquo;Message&rdquo; box mention this project, **Achieving Confidence in Enterprise AI Applications**, and add anything else you would like us to know.
+In the &ldquo;Message&rdquo; box mention this project, **Testing Generative AI Applications**, and add anything else you would like us to know.
 
 If your organization would like to join the AI Alliance, go [here](https://thealliance.ai/membership){:target="join-org"}.
 

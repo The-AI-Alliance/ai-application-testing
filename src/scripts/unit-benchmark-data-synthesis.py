@@ -26,9 +26,9 @@ def check_label(json_line: str, expected_label: str, output_file) -> bool:
         label = js['answer']['label']
         return expected_label == label
     except KeyError as ke:
-        warning(f" JSON doesn't have a label field (exception: {ke}): {line}", files=[output_file])
+        warning(f" JSON doesn't have a label field (exception: {ke}): {json_line}", files=[output_file])
     except json.decoder.JSONDecodeError as je:
-        warning(f" JSON parsing failed (exception: {je}): {line}", files=[output_file])
+        warning(f" JSON parsing failed (exception: {je}): {json_line}", files=[output_file])
     return False
 
 def expected_lines(expected_label: str, data_file: str, output_file) -> int:

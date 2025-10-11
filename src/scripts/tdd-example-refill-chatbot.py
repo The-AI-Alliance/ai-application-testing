@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 from litellm import completion
 from openai import OpenAIError
-from utils import info, error, load_yaml, make_full_prompt, extract_content
+from utils import info, warning, error, load_yaml, make_full_prompt, extract_content
 
 default_model = "ollama/gpt-oss:20b"
 default_service_url = "http://localhost:11434"
