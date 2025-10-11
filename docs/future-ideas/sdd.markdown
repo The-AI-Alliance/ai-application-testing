@@ -24,7 +24,19 @@ has_children: false
 >
 > 1. TODO
 
-TODO
+{: .todo}
+> **TODO:** The following are preliminary notes. Further study is required and this chapter needs to be fleshed out.
+
+Specification-driven development (SDD) is one way that AI might transform how software is developed more radically than just accelerating the productivity of existing processes. It attempts to structure how prompts specify desired outcomes to the results are better. Free-form prompts are rarely ideal.
+
+We will compare and contrast SDD with [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) (TDD).
+
+Here are some sources of information about SDD:
+
+* https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/
+* https://speckit.org/
+* https://developer.microsoft.com/blog/spec-driven-development-spec-kit
+* https://github.com/andreskull/spec-driven-ai-coding
 
 
 ## Experiments to Try

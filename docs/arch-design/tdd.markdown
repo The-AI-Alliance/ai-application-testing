@@ -310,6 +310,6 @@ In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deepe
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to our section on [Testing Strategies]({{site.baseurl}}/testing-strategies), in particular the chapter on [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/).
+Review the [highlights](#highlights) summarized above, then proceed to our section on [Testing Strategies]({{site.baseurl}}/testing-strategies), in particular the chapter on [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/). See also [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/) in the [Future Ideas]({{site.baseurl}}/future-ideas/) section. 
 
 ---
