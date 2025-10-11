@@ -5,16 +5,16 @@ nav_order: 10
 has_children: false
 ---
 
-# Achieving Confidence in Enterprise AI Applications
+# Testing Generative AI Applications
 
-(Previous Title: _AI Application Testing for Developers_)
+(Previous Title: _Achieving Confidence in Enterprise AI Applications_)
 
 {: .highlight }
 > **I am an Enterprise Developer: How Do I Test My AI Applications??**
 >
 > I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**.
 
-Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Applications**. We are building the knowledge and tools you need to achieve the same testing confidence for your AI applications that you have for your traditional applications.
+Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Applications**. We are building the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
 {: .tip}
 > **Tips:**
@@ -63,7 +63,7 @@ Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts
 
 With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
 
-* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques, including _synthetic data generation, for [Unit Testing]({{site.glossaryurl}}/#unit-test) and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test).
+* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques, including _synthetic data generation_, for [Unit Testing]({{site.glossaryurl}}/#unit-test) and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test).
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.

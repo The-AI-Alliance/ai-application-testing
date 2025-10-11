@@ -12,7 +12,7 @@ OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
-CLEAN_CODE_DIRS       ?= ${TEMP_DIR}
+CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 TIME                  ?= time  # time execution of long processes
 
 ## One way to prevent execution of scripts is to invoke make this way:
@@ -76,19 +76,23 @@ Quick help for this make process for the tools described in this website.
 For the tools used to manage the website, see the parent directory Makefile.
 
 make all-code           # Clean and run all the tools.
-make clean-code         # Remove build artifacts, etc., such as outputs in ${OUTPUT_DIR}
+make run-code           # Run all the tools without cleaning first.
 
-make one-time-setup     # Synonym for the setup target...
 make setup              # One-time setup tasks; e.g., builds target install-uv.
+make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
 
+make clean-code         # Remove build artifacts in ${OUTPUT_DIR}.
+make clean-all-code     # Remove ALL build artifacts for all models in ${TEMP_DIR}.
+make clean-temp         # Synonym for "clean-all-code".
 make clean-setup        # Undoes everything done by the setup target or provides
-                        # instructions for what to do manually in some cases.
+                        # instructions for what you must do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
 
-For scripts run by the following targets, which invoke inference, ${MODEL} served by
-ollama is used, by default. To specify a different model, invoke make as in this example:
+For scripts run by the following targets, which invoke inference, ${MODEL} 
+served by ollama is used by default. The make variable MODEL specifies the
+model, so if you want to use a different model, invoke make as in this example:
 
   MODEL=ollama/llama3.2:3B make run-tdd-example-refill-chatbot
 
@@ -107,7 +111,7 @@ make run-unit-benchmark-data-synthesis
 
 make run-ubdv           # Shorthand for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
-                        # Run the code for validating the synthetic data for the "unit benchmark".
+                        # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
 
 Miscellaneous tasks for help, debugging, setup, etc.
@@ -118,7 +122,8 @@ The "uv" CLI tool is required:
 
 make help-uv            # Prints specific information about "uv", including installation.
 
-make save-examples      # Copy run output and data files for ${MODEL} to ${EXAMPLE_DATA}.
+make save-examples      # Copy run output and data files for MODEL=${MODEL} 
+                        # to ${EXAMPLE_DATA}.
 
 endef
 
@@ -263,16 +268,20 @@ setup-jekyll:: ruby-installed-check bundle-ruby-command-check
 
 # Code Targets
 
-.PHONY: all-code clean-code
+.PHONY: all-code run-code clean-code clean-all-code clean-temp
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
-.PHONY: before-run uv-venv save-examples
+.PHONY: before-run save-examples
 
-all-code:: clean-code run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
+all-code:: clean-code run-code
+run-code:: run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
 
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}   
+
+clean-all-code clean-temp::
+	rm -rf ${TEMP_DIR}
 
 define run-tdd-example-refill-chatbot-message
 *** Running the TDD example.
@@ -297,11 +306,8 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 		--output ${OUTPUT_DIR}/${@:run-%=%}.out \
 		--data ${OUTPUT_DATA_DIR}
 
-before-run:: uv-venv ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
+before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
-
-uv-venv:: uv-command-check 
-	uv venv
 
 ${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
 	mkdir -p $@
@@ -314,9 +320,9 @@ save-examples::
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-llm-templates 
-.PHONY: install-uv
+.PHONY: install-uv uv-venv
 
-setup one-time-setup:: install-uv
+setup one-time-setup:: install-uv uv-venv
 
 clean-setup:: clean-uv
 
@@ -328,6 +334,9 @@ clean-uv::
 install-uv:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
 		echo "$$cmd is already installed" || ${MAKE} help-$$cmd
+
+uv-venv:: uv-command-check 
+	uv venv
 
 %-error:
 	$(error ${${@}-message})
