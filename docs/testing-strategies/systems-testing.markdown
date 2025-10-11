@@ -51,6 +51,6 @@ In a sense, we explored this lesson already; our healthcare ChatBot is designed 
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
+Review the [highlights](#highlights) summarized above, then proceed to [Future Ideas]({{site.baseurl}}/future-ideas/).
 
 ---

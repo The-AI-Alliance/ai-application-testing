@@ -24,6 +24,10 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 > 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
 > 4. Many chapters end with an **Experiments to Try** section for further exploration.
 
+{: note}
+> **Note:**
+> This site isn't about using AI to generate conventional tests (or code). You can find many resources that cover that topic. Instead, this site focuses on the problem of how to do _any_ testing of applications with generative AI components, given the nondeterminism introduced.
+
 ## The Challenge We Face
 
 We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable) and [Automatable]({{site.glossaryurl}}/#automatable) tests. In particular, we rely on [Determinism]({{site.glossaryurl}}/#determinism) when we write tests to verify expected [Behavior]({{site.glossaryurl}}/#behavior) and to ensure that no [Regressions]({{site.glossaryurl}}/#regression) occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to _most_ [Functions]({{site.glossaryurl}}/#function) (with some exceptions), we will get the same answer back consistently. This property enables our core testing techniques, which give us _**the essential confidence**_ that our applications meet our requirements, that they implement the [Use Cases]({{site.glossaryurl}}/#use-case) our customers expect. We are accustomed to unambiguous _pass/fail_ answers!
@@ -53,16 +57,23 @@ The goals of this project are two fold:
 We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
 
 Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts that are informed by the need for effective testing to ensure our AI applications are reliable and do what we expect of them. We explore how tried and true principles still apply, but updates are often needed:
+
 * [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/): TDD is really a _design_ methodology as much as a _testing_ discipline, despite the name, promoting incremental delivery and iterative development. What tools are provided by TDD for attacking the AI testing challenge? What do AI-specific tests look like in a TDD context?
 * [Component Design]({{site.baseurl}}/arch-design/component-design): How do classic principles of _coupling_ and _cohesion_ help us encapsulate generative AI behaviors in ways that make them easier to develop, test, and integrate into whole systems?
 
 With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
+
 * [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark) techniques, including _synthetic data generation, for [Unit Testing]({{site.glossaryurl}}/#unit-test) and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test) and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test).
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
-* [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning): Should we rethink testing as a strategy? If so, how would this change affect AI application architecture and design? We explore one possibility.
+
+The final section is more speculative. It considers ways that generative AI might change software development generally, and testing specifically, in more fundamental ways:
+
+* [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
+* [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/): Building on the idea of eliminating source code, can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
+* [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior?
 
 Throughout this guide, we use a healthcare ChatBot example. [A Working Example]({{site.baseurl}}/working-example) summarizes all the features discussed for this example.
 

@@ -265,7 +265,7 @@ Reinforcement learning (RL) is a form of machine learning, often used for optimi
 
 In the generative AI context, RL is a popular tool in the suite of model [Tuning](#tuning) processes that are used to improve model performance in various ways.
 
-See also [Reinforcement Finetuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/#reinforcement-finetuning) in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/). 
+See also [Reinforcement Finetuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/#reinforcement-finetuning) in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
 
 ## Repeatable
 

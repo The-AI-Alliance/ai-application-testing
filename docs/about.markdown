@@ -27,6 +27,7 @@ This website is built with [GitHub Pages](https://pages.github.com/){:target="gi
 
 | Version  | Date       |
 | :------- | :--------- |
+| V0.2.2   | 2025-10-12 |
 | V0.2.1   | 2025-09-27 |
 | V0.2.0   | 2025-09-11 |
 | V0.1.2   | 2025-08-21 |

@@ -97,7 +97,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## Nathan Lambert
 
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}.
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}.
 
 ## NIST Risk Management Framework
 
@@ -105,7 +105,7 @@ The U.S. National Institute of Science and Technology's ([NIST](https://www.nist
 
 ## OpenAI
 
-An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning/).
+An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
 
 [Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
 
