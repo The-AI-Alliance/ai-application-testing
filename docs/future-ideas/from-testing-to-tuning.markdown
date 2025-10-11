@@ -94,7 +94,7 @@ Model tuning requires domain-specific datasets. In [Other Tools]({{site.baseurl}
 Here are some other tools for model tuning. 
 
 {: .todo}
-> **TODO:** Expand discussion, show example of use.
+> **TODO:** Revamp this list with newer tools. Expand the discussion and show one or more examples of use.
 
 ### InstructLab
 
