@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Can We Eliminate Source Code?
-nav_order: 410
+nav_order: 420
 parent: Future Ideas
 has_children: false
 ---
@@ -47,7 +47,7 @@ Other approaches, such as &ldquo;drag-and-drop&rdquo; graphical environments hav
 
 ### Writing Applications with Generative AI
 
-The generative AI community has rapidly improved the ability of models to automate many of the manual activities involving source code, especially code generation from prompts. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called _vibe coding_.
+The generative AI community has rapidly improved the ability of models to automate many of the manual activities involving source code, especially code generation from prompts. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called [Vibe Coding]({{site.glossaryurl}}/#vibe-coding).
 
 However, current implementations still generate source code, sometimes imperfectly. For &ldquo;important&rdquo; applications, the resulting code still requires all the same engineering processes to validate it works correctly. The technology has already demonstrated significant productivity boosts, but it is still immature enough that being able to read, understand, and modify the generated source code is usually necessary to ensure the desired results.
 
@@ -75,6 +75,6 @@ A related improvement language communities should do is to aggressive convert co
 
 ## What's Next?
 
-Whether or not we replace source code, we mentioned that user prompts need to be specific enough for LLMs to generate the applications we want. After reviewing the [highlights](#highlights) summarized above, proceed to [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur.
+After reviewing the [highlights](#highlights) summarized above, proceed to [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
 
 ---

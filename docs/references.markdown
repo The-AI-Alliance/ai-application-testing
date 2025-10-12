@@ -6,7 +6,7 @@ nav_order: 80
 
 # References
 
-References for more details on testing, especially in the AI context. Note that outside references to particular tools are not shown here.
+References for more details on testing, especially in the AI context, and other topics. Note that outside references to particular tools that are mentioned in this web site are not repeated here. 
 
 <details open markdown="block">
   <summary>
@@ -120,6 +120,21 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 ## PlurAI
 
 [Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+
+## Specification-Driven Development
+
+SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references. See the discussion in the [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/) chapter, where we explore them.
+
+* [How I Apply Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"}
+  * [`spec-driven-ai-coding` repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}
+  * Inspirations:
+    * [My current AI coding workflow](https://carlrannaberg.medium.com/my-current-ai-coding-workflow-f6bdc449df7f){:target="_blank"}
+    * [My LLM codegen workflow atm](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/){:target="_blank"}
+* Spec Kit
+  * [Spec-driven development with AI: Get started with a new open source toolkit](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/){:target="_blank"}
+  * [Diving Into Spec-Driven Development With GitHub Spec Kit](https://developer.microsoft.com/blog/spec-driven-development-spec-kit){:target="_blank"}
+  * [Spec Kit website](https://speckit.org/){:target="_blank"}
+  * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
 
 ## University of Tübingen
 

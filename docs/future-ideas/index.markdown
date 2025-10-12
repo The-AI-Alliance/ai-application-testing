@@ -13,12 +13,12 @@ However, both sections assumed that software development principles and practice
 
 We consider three topics:
 
+* [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/): As the scope and power of code generation improves, it becomes more and more important to structure effective prompts. How can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
 * [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
-* [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/): Building on the idea of eliminating source code, can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
 * [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior?
 
 ## What's Next?
 
-Start with [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/) Refer to the [Glossary]({{site.glossaryurl}}/) regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
+Start with [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur. Refer to the [Glossary]({{site.glossaryurl}}/) regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
 
 ---

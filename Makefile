@@ -4,7 +4,7 @@
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
-MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
+MODEL_FILE_NAME       ?= $(subst :,_,${MODEL}) # Covert any ':' to '_'.
 SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
@@ -99,17 +99,17 @@ model, so if you want to use a different model, invoke make as in this example:
 All these "run-*" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important!
 
-make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
+make terc run-terc      # Shorthands for the run-tdd-example-refill-chatbot target.
 make run-tdd-example-refill-chatbot   
                         # Run the code for the TDD example "unit benchmark".
                         # See the TDD chapter in the website for details.
 
-make run-ubds           # Shorthand for the run-unit-benchmark-data-synthesis target.
+make ubds run-ubds      # Shorthands for the run-unit-benchmark-data-synthesis target.
 make run-unit-benchmark-data-synthesis
                         # Run the code for "unit benchmark" data synthesis.
                         # See the Unit Benchmark chapter in the website for details.
 
-make run-ubdv           # Shorthand for the run-unit-benchmark-data-validation target.
+make ubdv run-ubdv      # Shorthands for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
@@ -293,9 +293,9 @@ define run-unit-benchmark-data-validation-message
 *** Running the unit benchmark synthetic data validation example.
 endef
 	
-run-terc:: run-tdd-example-refill-chatbot
-run-ubds:: run-unit-benchmark-data-synthesis
-run-ubdv:: run-unit-benchmark-data-validation
+terc run-terc:: run-tdd-example-refill-chatbot
+ubds run-ubds:: run-unit-benchmark-data-synthesis
+ubdv run-ubdv:: run-unit-benchmark-data-validation
 
 run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
 	$(info ${$@-message})

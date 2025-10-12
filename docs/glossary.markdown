@@ -63,6 +63,12 @@ Can an action, like a test, be automated so it can be executed without human int
 
 What does a [Component](#component) do, either autonomously on its own (e.g., a security monitoring tool that is constantly running) or when invoked by another component through an API or [Function](#function) call? This is a general-purpose term that could cover a single [Feature](#feature), a whole [Use Case](#use-case) or anything in between.
 
+## Behavior-Driven Development
+
+Behavior-Driven Development (BDD) is an evolution of [TDD](#test-driven-development) where the testing APIs more explicitly express the language of specifying behaviors. Hence, writing tests in a BDD style means creating _executable specifications_. 
+
+Popular examples include [RSpec](https://rspec.info/){:target="_blank"} for the Ruby language community and several BDD-inspired dialects supported by [ScalaTest](https://www.scalatest.org/user_guide/selecting_a_style){:target="_blank"} for Scala. While useful for thinking through requirements, there was a tendency for these APIs to be verbose to use, so practitioners often combined these APIs with more concise testing APIs. See also [Test-Driven Development](#test-driven-development), [Specification-Driven Development](#specification-driven-development), [Property-Based testing](#property-based-testing), and [Design by Contract](#design-by-contract).
+
 ## Benchmark
 
 [\[1\]](#mlc) A methodology or [Function](#function) used for offline [Evaluation](#evaluation) of a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) for a particular purpose and to interpret the results. It consists of:
@@ -74,6 +80,19 @@ See also [Unit Benchmark](#unit-benchmark), [Integration Benchmark](#integration
 ## Class
 
 The primary [Component](#component) abstraction in [Object-Oriented Programming](#object-oriented-programming), although not necessarily the only one.
+
+## Coding Agent
+
+An AI-powered IDE or tool specifically designed for AI-assisted software development. Here is a partial list of _coding agents_:
+
+* [AWS Kiro](https://kiro.dev/){:target="_blank"} (an AI IDE designed to support [Specification-Driven Development](#specification-driven-development))
+* [Gemini CLI](https://github.com/google-gemini/gemini-cli){:target="_blank"}
+* [Claude Code](https://www.anthropic.com/claude-code){:target="_blank"}
+* [Cline](https://cline.bot/){:target="_blank"}
+* [Cursor](https://cursor.com/){:target="_blank"}
+* [GitHub Copilot](https://code.visualstudio.com/){:target="_blank"}
+* [Roo Code](https://roocode.com/){:target="_blank"}
+* [Windsurf](https://windsurf.com/){:target="_blank"}
 
 ## Component
 
@@ -249,6 +268,16 @@ The query a user (or another system) sends to an [LLM](#large-language-model). O
 
 A term for the careful construction of good [Prompts](#prompt) to maximize the quality of [Inference](#inference) responses. It is really considered more _art_ than _science_ or _engineering_ because of the subjective relationship between prompts and responses for [Generative AI Models](#generative-ai-model).
 
+## Property-Based Testing
+
+Property-Based Testing (PBT) is sometimes also called _property-based development_ or _property-driven development_. This variation of [Test-Driven Development](#test-driven-development) emphasizes the mathematical properties of [Units](#unit) being tested. Obvious examples are arithmetic functions on integers, but properties and the &ldquo;laws&rdquo; they impose can be much more general. For example, all programming languages support concatenation (e.g., &ldquo;addition&rdquo;) of strings, where an empty string is the &ldquo;zero&rdquo;. Hence, `length("foo") == length("foo" + "") == 3`. Sting addition is associative, `(a+b)+c == a+(b+c)`, but not commutative, `a+b ≠ b+a`.
+
+All libraries that support PBT let you define the properties that must hold and a way of defining allowed values of the &ldquo;types&rdquo; in question. At test time, the library generates a large set of representative instances of the types and verifies the properties hold for all instances.
+
+Property-based testing emerged in the [Functional Programming](#functional-programming) community.
+
+See also [Design by Contract](#design-by-contract), [Specification-Driven Development](#specification-driven-development), [Behavior-Driven Development](#behavior-driven-development), and [Test-Driven Development](#test-driven-development).
+
 ## Refactoring
 
 Modifying code to change its structure as required to support a new feature. _No [Behavior](#behavior) changes are introduced_, so that the existing automated [Tests](#test) can verify that no regressions are introduced as the code is modified. This is first step in the [Test-Driven Development](#test-driven-development) cycle.
@@ -301,6 +330,12 @@ The steps of some work are performed in a predictable, repeatable order. This pr
 
 Reading and/or writing [State](#state) shared outside a [Unit](#unit), i.e., a [Function](#function) with other functions. See also [Determinism](#determinism). If a [Component](#component) contains unit that perform side effects, then the component itself is considered to perform side effects.
 
+## Specification-Driven Development
+
+Abbreviated _SDD_ and also known as _Spec-Driven Development_. In our context, this refers to [an idea introduced by GitHub and Microsoft]({{site.baseurl}}/references/#specification-driven-development), that we should structure code generation prompts in a more-precise format to ensure we get the code we need. The argument is that many models are already perfectly capable of generating this code, but they are &ldquo;literal minded&rdquo; and need to be told precisely what is needed from them.
+
+We discuss SDD at length in the [Specification-Driven Development]({{site.baseurl}}/specification-driven-development) chapter. SDD is similar in its goals to [Test-Driven Development](#test-driven-development), although arguably closer to the emphasis in [Behavior-Driven Development](#behavior-driven-development).
+
 ## State
 
 Used in software to refer to a set of values in some context, like a [Component](#component). The values determine how the component will behave in subsequent invocations to perform some work. The values can sometimes be read directly by other components. If the component is [Mutable](#mutable), then the state can be changed by other components either directly or through invocations of the component that cause state transitions to occur. (For example, popping the top element of a stack changes the contents of the stack, the number of elements it currently holds, etc.) 
@@ -341,9 +376,11 @@ When adding a [Feature](#feature) to a code base using _TDD_, the tests are writ
 2. Write a [Test](#test) for the new feature. This is _primarily_ a _design_ exercise, because thinking about testing makes you think about usability, [Behavior](#behavior), etc., even though you are also creating a reusable test that will become part of the [Regression](#regression) test suite. Note that the test suite will fail to run at the moment, because the code doesn't yet exist to make it pass!
 3. Write the new feature to make the new test (as well as all previously written tests) pass.
 
+TDD not only promotes iterative and incremental development, with a growing suite of tests resulting from the process, it effectively turns the writing of executable tests into a form of specification of the desired behavior, writing before the code is written to implement the specification. [Behavior-Driven Development](#behavior-driven-development) would take this idea to its logical conclusion, that tests are _executable specifications_. 
+
 The [Wikipedia TDD](https://en.wikipedia.org/wiki/Test-driven_development){:target="_wikipedia"} article is a good place to start for more information.
 
-See also [Design by Contract](#design-by-contract).
+See also [Design by Contract](#design-by-contract), [Specification-Driven Development](#specification-driven-development), [Behavior-Driven Development](#behavior-driven-development), and [Property-Based Testing](#property-based-testing).
 
 ## Token
 
@@ -382,3 +419,12 @@ A common term for an end-to-end user activity done with a system, often broken d
 A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
 See also [Test](#test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), [Acceptance Benchmark](#acceptance-benchmark).
+
+## Vibe Coding
+
+A term [coined by Andrej Karpathy](https://x.com/karpathy/status/1886192184808149383) for just going with the code generated by an LLM, tweaking the prompt as needed to get the LLM to fix bugs and incorrect behavior. Hence, it's a completely &ldquo;non-engineered&rdquo; approach to coding, which can work well for quick coding needs, especially for non-programmers, but generally is not sufficient for longer-term projects. Hence, the term has a slightly negative connotation for many people, as in &ldquo;this is not a serious way to write software&rdquo;. Contrast with [Vibe Engineering](#vibe-engineering).
+
+## Vibe Engineering
+
+[Simon Willison's term](https://simonwillison.net/2025/Oct/7/vibe-engineering/), made half in jest, for a more engineering-oriented approach to [Vibe Coding](#vibe-coding), which incorporates various engineering practices to ensure that quality and maintainability requirements can be met, longer term. As such, this blog post is a good counter argument to those who believe that AI coding assistants are now sufficiently reliable and powerful to completely take over from humans.
+

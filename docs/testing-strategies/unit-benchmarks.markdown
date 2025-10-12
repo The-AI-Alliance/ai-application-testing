@@ -344,6 +344,8 @@ Be careful to check the licenses for any benchmarks or tools you use, as some of
 
 [Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
 
+While use of benchmarks with synthetic data generation of Q&A pairs is standard practice, see [this &ldquo;Beyond Benchmarks&rdquo; discussion]({{site.baseurl}}/references/#university-of-tübingen) about a possible alternative approach.
+
 ## Experiments to Try
 
 There is a lot to explore here:
