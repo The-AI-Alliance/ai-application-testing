@@ -135,6 +135,7 @@ SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;ph
   * [Diving Into Spec-Driven Development With GitHub Spec Kit](https://developer.microsoft.com/blog/spec-driven-development-spec-kit){:target="_blank"}
   * [Spec Kit website](https://speckit.org/){:target="_blank"}
   * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
+* [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
 
 ## University of Tübingen
 
