@@ -68,6 +68,7 @@ With this background on architecture and design principles, we move to the main 
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test), etc. What lessons can we learn here?
+* [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents): Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. This chapter explores the requirements and available approaches.
 
 The final section is more speculative. It considers ways that generative AI might change software development, and testing specifically, in more fundamental ways:
 

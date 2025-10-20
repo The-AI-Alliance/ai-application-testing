@@ -63,6 +63,8 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## IBM
 
+[EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. See the [EvalAssist]({{site.baseurl}}/testing-strategies/llm-as-a-judge/evalassist) discussion in the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details.
+
 This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation).
 
 ## James Thomas

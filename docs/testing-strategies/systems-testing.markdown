@@ -51,6 +51,6 @@ In a sense, we explored this lesson already; our healthcare ChatBot is designed 
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [Future Ideas]({{site.baseurl}}/future-ideas/).
+Review the [highlights](#highlights) summarized above, then proceed to [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/).
 
 ---
