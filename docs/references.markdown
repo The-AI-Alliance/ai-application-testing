@@ -89,6 +89,10 @@ John Snow Labs has created [langtest](https://langtest.org/){:target="_blank"}, 
 
 The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offers a commercial [testing system](https://pacific.ai/testing/){:target="_blank"} with similar features.
 
+## LastMile AI
+
+[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol.
+
 ## Merriam-Webster Dictionary
 
 The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [Glossary]({{site.glossaryurl}}) for several terms.
@@ -126,6 +130,10 @@ An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/for
 ## Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
+
+[FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"} is their benchmark for finance applications.
+
+[Evaluating Copyright Violations in LLMs](https://github.com/patronus-ai/copyright-evals){:target="ecvil"} has data and tools for detecting examples of responses that violate one or more copyrights.
 
 ## PlurAI
 
