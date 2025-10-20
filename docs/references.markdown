@@ -63,11 +63,13 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## IBM
 
-[EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. See the [EvalAssist]({{site.baseurl}}/testing-strategies/llm-as-a-judge/evalassist) discussion in the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details.
-
 This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation).
 
-the [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance dataset benchmark for natural language queries.
+[EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. See the [EvalAssist]({{site.baseurl}}/testing-strategies/llm-as-a-judge/evalassist) discussion in the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details.
+
+[HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific datasets such as finance, legal, climate, and cybersecurity. 
+
+[FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance dataset benchmark for natural language queries.
 
 ## James Thomas
 
