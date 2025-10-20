@@ -98,7 +98,7 @@ Here are some other tools for model tuning.
 
 ### InstructLab
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
 
 ### Open Instruct
 

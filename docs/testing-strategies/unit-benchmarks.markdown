@@ -285,6 +285,11 @@ Benchmarks for testing software engineering use cases.
 
 * Open AI [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"}
 
+Benchmarks for software systems performance and reliability include the following:
+
+* The [Llama Stack](https://github.com/llamastack/llama-stack/){:target="ls"} project's [Kubernetes Benchmark](https://github.com/llamastack/llama-stack/tree/main/benchmarking/k8s-benchmark){:target="ls-kb"} suite.
+
+
 ### Other Domains?
 
 What other domains would you like to see here?
@@ -310,6 +315,10 @@ Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/)
 #### A Survey of Data Synthesis Techniques
 
 [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs.
+
+#### InstructLab
+
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.baseurl}}/references/) and [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
 
 #### Older Synthetic Data Tools
 

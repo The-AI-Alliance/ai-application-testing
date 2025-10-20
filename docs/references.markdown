@@ -25,6 +25,10 @@ References for more details on testing, especially in the AI context, and other 
 
 The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
 
+### Allen Institute of AI
+
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI tries to meet similar goals as [InstructLab](#redhat). It is discussed by [Nathan Lambert](#nathan-lambert) (below). See [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
+
 ## Alignment Forum
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
@@ -114,6 +118,8 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) and the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapters for more details.
 
+The [Llama Stack](https://github.com/llamastack/llama-stack/){:target="ls"} project provides a [Kubernetes Benchmark](https://github.com/llamastack/llama-stack/tree/main/benchmarking/k8s-benchmark){:target="ls-kb"} suite.
+
 ## Michael Feathers
 
 [Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/arch-design/component-design/#abstractions-encapsulate-complexities).
@@ -124,7 +130,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## Nathan Lambert
 
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapter.
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapter and the [Allen Institute of AI](#allen-institute-of-ai) entry above.
 
 ## NIST Risk Management Framework
 
@@ -151,6 +157,14 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 ## PlurAI
 
 [Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases. See the [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/) chapter for more details.
+
+## RedHat
+
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
+
+## RedMonk
+
+The analyst firm [RedMonk](https://redmonk.com/) posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/).
 
 ## ServiceNow
 
