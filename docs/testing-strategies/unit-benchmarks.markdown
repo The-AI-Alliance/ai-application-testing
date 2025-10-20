@@ -256,6 +256,7 @@ Here is a list of some domain-specific benchmarks that we know of. [Let us know]
 Benchmarks for finance applications.
 
 * Patronus AI [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"}
+* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"}.
 
 ### Healthcare 
 
