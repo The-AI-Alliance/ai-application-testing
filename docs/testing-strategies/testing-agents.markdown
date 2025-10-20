@@ -51,6 +51,10 @@ DoomArena enables detailed threat modeling, adaptive testing, and fine-grained s
 
 Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions.
 
+### Google's Agent Development Kit
+
+Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
+
 
 ## Experiments to Try
 

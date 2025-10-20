@@ -57,6 +57,10 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
 
+## Google
+
+Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
+
 ## Hamel Husain
 
 [Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/) is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
