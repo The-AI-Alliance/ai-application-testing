@@ -19,11 +19,11 @@ References for more details on testing, especially in the AI context, and other 
 
 ## Adrian Cockcroft
 
-[Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this website. See also [Dean Wampler](#dean-wampler)
+[Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this website. See also [Dean Wampler](#dean-wampler) and the discussion in [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems).
 
 ## AI for Education
 
-The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}
+The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
 
 ## Alignment Forum
 
@@ -31,7 +31,7 @@ The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"
 
 ## Babeş-Bolyai University
 
-[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are doing
+[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are explore in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere.
 
 ## CVS Health Data Science Team
 
@@ -47,7 +47,7 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ### Ekimetrics
 
-[ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciencies and ethics.
+[ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciencies and ethics. See also the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter.
 
 ## EleutherAI
 
@@ -59,7 +59,7 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 ## Google
 
-Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
+Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents. See the discussion in the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter.
 
 ## Hamel Husain
 
@@ -67,13 +67,25 @@ Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="ad
 
 ## IBM
 
+### RAG
+
 This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation).
 
-[EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. See the [EvalAssist]({{site.baseurl}}/testing-strategies/llm-as-a-judge/evalassist) discussion in the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details.
+### Evaluation and Benchmark Tools
 
-[HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific datasets such as finance, legal, climate, and cybersecurity. 
+For the following tool, see the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details:
 
-[FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance dataset benchmark for natural language queries.
+* [EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. 
+
+For the following tool, see the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details:
+
+* [AssetOpsBench](https://github.com/IBM/AssetOpsBench){:target="ibm-aob"} is a unified framework for developing, orchestrating, and evaluating domain-specific AI agents in industrial asset operations and maintenance. It is designed for maintenance engineers, reliability specialists, and facility planners, it allows reproducible evaluation of multi-step workflows in simulated industrial environments.
+
+For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details:
+
+* [FailureSensorIQ](https://github.com/IBM/FailureSensorIQ){:target="faiq"} is a dataset for multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets. 
+* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance dataset benchmark for natural language queries.
+* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific datasets such as finance, legal, climate, and cybersecurity. 
 
 ## James Thomas
 
@@ -91,7 +103,8 @@ The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offer
 
 ## LastMile AI
 
-[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol.
+[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details.
+
 
 ## Merriam-Webster Dictionary
 
@@ -99,7 +112,7 @@ The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:t
 
 ## Meta
 
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} (discussed in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#synthetic-data-kit) and [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) and the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapters for more details.
 
 ## Michael Feathers
 
@@ -111,7 +124,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## Nathan Lambert
 
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}.
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapter.
 
 ## NIST Risk Management Framework
 
@@ -125,19 +138,19 @@ An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/for
 
 ## Open Data Science
 
-[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation.
+[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks) chapter for more details.
 
 ## Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
 
-[FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"} is their benchmark for finance applications.
+[FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"} is their benchmark for finance applications. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks) chapter for more details.
 
-[Evaluating Copyright Violations in LLMs](https://github.com/patronus-ai/copyright-evals){:target="ecvil"} has data and tools for detecting examples of responses that violate one or more copyrights.
+[Evaluating Copyright Violations in LLMs](https://github.com/patronus-ai/copyright-evals){:target="ecvil"} has data and tools for detecting examples of responses that violate one or more copyrights. (This work isn't discussed elsewhere in this user guide.)
 
 ## PlurAI
 
-[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases.
+[Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases. See the [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/) chapter for more details.
 
 ## ServiceNow
 
@@ -145,7 +158,7 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 DoomArena enables detailed threat modeling, adaptive testing, and fine-grained security evaluations through real-world case studies, such as τ-Bench and BrowserGym. These case studies showcase how DoomArena evaluates vulnerabilities in AI agents interacting in airline customer service and e-commerce contexts.
 
-Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions.
+Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details.
 
 ## Specification-Driven Development
 
@@ -165,7 +178,7 @@ SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;ph
 
 ## University of Tübingen
 
-[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
+[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details.
 
 ## Wikipedia
 

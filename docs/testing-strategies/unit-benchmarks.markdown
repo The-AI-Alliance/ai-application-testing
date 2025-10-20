@@ -307,6 +307,10 @@ If you use synthetic data generation a lot in your organization, it will become 
 
 Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
 
+#### A Survey of Data Synthesis Techniques
+
+[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs.
+
 #### Older Synthetic Data Tools
 
 [Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation, serving different purposes. For example, several use [Generative Adversarial Networks]({{site.glossaryurl}}/#generative-adversarial-networks), a technique most popular in the late 2010s.
