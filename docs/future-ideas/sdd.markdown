@@ -41,7 +41,7 @@ Several different people and groups are exploring this idea in related ways.
 
 ## Carl Annaberg's AI Coding Workflow
 
-In June, 2025, [Carl Annaberg](https://carlrannaberg.medium.com/){:target="_blank"} wrote a blog post [My current AI coding workflow](https://carlrannaberg.medium.com/my-current-ai-coding-workflow-f6bdc449df7f) ([repo](https://github.com/carlrannaberg/ai-coding){:target="_blank"}) where he described a workflow he uses with [Cursor](https://cursor.com/){:target="_blank"}, one of the most popular coding agents.
+In June, 2025, [Carl Annaberg](https://carlrannaberg.medium.com/){:target="_blank"} wrote a blog post [My current AI coding workflow](https://carlrannaberg.medium.com/my-current-ai-coding-workflow-f6bdc449df7f){:target="_blank"} ([repo](https://github.com/carlrannaberg/ai-coding){:target="_blank"}) where he described a workflow he uses with [Cursor](https://cursor.com/){:target="_blank"}, one of the most popular coding agents.
 
 He realized that Cursor produces better results if he uses separate **planning** and **execution** &ldquo;phases&rdquo;, implemented as Cursor _modes_, **plan** and **act**, respectively (but he uses these names interchangeably). The ideas were inspired by Harper Reed's blog post, [My LLM codegen workflow atm](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/){:target="_blank"}, by [Cline's](https://cline.bot/){:target="_blank"} _plan and act_ modes, and by [Windsurf's](https://windsurf.com/){:target="_blank"} _planning_ mode.
 
@@ -82,7 +82,7 @@ Highlights of this approach include the following:
 
 ## Andres Kull's Spec-Driven AI Coding
 
-In July, 2025, Andres Kull adapted Annaberg's ideas for his take on [Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/) ([repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}). 
+In July, 2025, Andres Kull adapted Annaberg's ideas for his take on [Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"} ([repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}). 
 
 He added portability to other _coding agents_ besides Cursor, including [Claude Code](https://www.anthropic.com/claude-code){:target="_blank"}, [AWS Kiro](https://kiro.dev/){:target="_blank"} (an AI IDE designed to support specification-driven development), and [Gemini CLI](https://github.com/google-gemini/gemini-cli){:target="_blank"}.
 

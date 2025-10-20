@@ -104,6 +104,13 @@ Here are some other tools for model tuning.
 
 [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI tries to meet similar goals as InstructLab. It is mentioned by Nathan Lambert in the [Reinforcement Finetuning](#reinforcement-finetuning) content discussed above.
 
+### Unsloth
+
+Unsloth is an OSS tool suite for model training and tuning, with useful guides on the following topics:
+
+* [Fine-tuning LLMs](https://docs.unsloth.ai/get-started/fine-tuning-llms-guide){:target="u-ft"}
+* [Reinforcement Learning](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide){:target="u-rl"}
+
 ## Experiments to Try
 
 {: .todo}

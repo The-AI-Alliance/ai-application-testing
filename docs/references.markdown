@@ -67,7 +67,7 @@ Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="ad
 
 ## Hamel Husain
 
-[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/) is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
+[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/){:target="_blank"} is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
 
 ## IBM
 
@@ -164,7 +164,7 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 ## RedMonk
 
-The analyst firm [RedMonk](https://redmonk.com/) posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/).
+The analyst firm [RedMonk](https://redmonk.com/){:target="redmonk"} posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/).
 
 ## ServiceNow
 
@@ -193,6 +193,12 @@ SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;ph
 ## University of Tübingen
 
 [Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details.
+
+## Unsloth
+
+[Unsloth](https://unsloth.ai/){:target="unsloth"} is an OSS tool suite for model training and tuning. Their documentation includes guides for the following:
+* [Fine-tuning LLMs](https://docs.unsloth.ai/get-started/fine-tuning-llms-guide){:target="unsloth-ft"}
+* [Reinforcement Learning](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide){:target="unsloth-rl"}
 
 ## Wikipedia
 
