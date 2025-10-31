@@ -10,7 +10,7 @@ has_children: false
 (Previous Title: _Achieving Confidence in Enterprise AI Applications_)
 
 {: .highlight }
-> **I am an Enterprise Developer: How Do I Test My AI Applications??**
+> **I am an enterprise developer; how do I test my AI applications??**
 >
 > I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**.
 
