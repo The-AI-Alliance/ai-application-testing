@@ -5,7 +5,7 @@ from litellm import completion
 from openai import OpenAIError
 from utils import load_yaml, make_full_prompt, extract_content
 from utils import (
-    get_default_log_file, make_logger, 
+    common_defaults, get_default_log_file, make_logger, 
     load_yaml, make_full_prompt, extract_content
 )
 
@@ -54,12 +54,12 @@ class TDDExampleRefillChatbot:
         errors = 0
         self.logger.info(f"Queries that are {label} requests:")
 
-        not_null(queries_responses[label], f'No queries and expected responses are known for key {label}.')
+        not_none(queries_responses[label], f'No queries and expected responses are known for key {label}.')
 
         queries = queries_responses[label]['queries']
         expected_response = queries_responses[label]['expected_response']
-        not_null(queries, f'No queries are known for key {label}.')
-        not_null(expected_responses, f'No expected responses are known for key {label}.')
+        not_none(queries, f'No queries are known for key {label}.')
+        not_none(expected_responses, f'No expected responses are known for key {label}.')
         
         for template_name in template_names:
             self.logger.info(f"  Using template {template_name} in {self.template_dir}:")
@@ -109,10 +109,10 @@ def main():
     """Main function."""
     import argparse
 
-    default_model = "ollama/gpt-oss:20b"
-    default_service_url = "http://localhost:11434"
-    default_template_dir = "src/prompts/templates"
-    default_data_dir = "data"
+    default_model        = common_defaults['model']
+    default_service_url  = common_defaults['service_url']
+    default_template_dir = common_defaults['template_dir']
+    default_data_dir     = common_defaults['data_dir']
 
     script = os.path.basename(__file__)
     default_log_file = get_default_log_file(script)

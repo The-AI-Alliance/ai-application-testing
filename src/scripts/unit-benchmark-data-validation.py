@@ -9,7 +9,7 @@ from pathlib import Path
 from litellm import completion
 from openai import OpenAIError
 from utils import (
-    get_default_log_file, make_logger, 
+    common_defaults, get_default_log_file, make_logger, 
     load_yaml, model_dir_name, ensure_dirs_exist, 
     use_cases, make_full_prompt, extract_content
 )
@@ -154,12 +154,10 @@ class BenchMarkDataValidator:
 
 def main():
 
-    # Default settings
-    default_model = "ollama/gpt-oss:20b"
-    default_service_url = "http://localhost:11434"
-    default_template_dir = "src/prompts/templates"
-    default_data_dir = "data"
-    default_model_dir_name = model_dir_name(default_model)
+    default_model        = common_defaults['model']
+    default_service_url  = common_defaults['service_url']
+    default_template_dir = common_defaults['template_dir']
+    default_data_dir     = common_defaults['data_dir']
 
     script = os.path.basename(__file__)
     default_log_file = get_default_log_file(script)

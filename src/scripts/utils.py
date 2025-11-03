@@ -5,6 +5,13 @@ import logger
 from datetime import datetime
 from pathlib import Path
 
+common_defaults = {
+    "model":        "ollama/gpt-oss:20b",
+    "service_url":  "http://localhost:11434",
+    "template_dir": "src/prompts/templates",
+    "data_dir":     "data",
+}
+
 def now() -> datetime:
     return datetime.now()
 
@@ -38,7 +45,7 @@ def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO
     logger.set_level(level)
     return logger
 
-def make_parent_dirs(file: str, , exist_ok: bool = True) -> Path:
+def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
     path = Path(file)
     if file == path.name:  # no path prefix
         return Path('.')
@@ -55,10 +62,10 @@ def ensure_dirs_exist(dirs: list[str], logger: logger.Logger):
         logger.error(f"These directories don't exit: {missing_dirs}")
         sys.exit(1)
 
-def not_null(value, message: str):
-    if not value:
-    self.logger.error(message)
-    sys.exit(1)
+def not_none(value, message: str):
+    if value is None:
+        self.logger.error(message)
+        sys.exit(1)
     
 def make_full_prompt(prompt: str, system_prompt: dict) -> str:
     return f"""
