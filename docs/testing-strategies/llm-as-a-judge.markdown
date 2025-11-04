@@ -131,11 +131,13 @@ time uv run src/scripts/unit-benchmark-data-validation.py \
   --model ollama/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --output temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out \
-  --data temp/output/ollama/gpt-oss_20b/data
+  --data-dir temp/output/ollama/gpt-oss_20b/data \
+  --log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
 
-In this case, the `--data` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"} directory:
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+
+In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"} directory:
 
 | Validation Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |

@@ -180,13 +180,15 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
   --model ollama/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --output temp/output/ollama/gpt-oss_20b/unit-benchmark-data-synthesis.out \
-  --data temp/output/ollama/gpt-oss_20b/data
+  --data-dir temp/output/ollama/gpt-oss_20b/data \
+  --log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
+
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
 
 Recall that a different model can be specified, i.e., `make MODEL=ollama/llama3.2:3B`run-unit-benchmark-data-synthesis`. (See the project README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool).) 
 
-Note the arguments for where output is captured (`--output`) and the data Q&A pairs files are written (`--data`). Specifically, the following data files are written, examples of which can be found [in the repository](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
+Note the arguments for where log output is captured (`--log`) and the data Q&A pairs files are written (`--data-dir`). Specifically, the following data files are written, examples of which can be found [in the repository](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
 
 | Synthetic Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |

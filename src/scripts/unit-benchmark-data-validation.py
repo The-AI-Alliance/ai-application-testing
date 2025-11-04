@@ -1,6 +1,5 @@
 import os
 import sys
-import argparse
 import json
 import glob
 import logging
@@ -9,7 +8,8 @@ from pathlib import Path
 from litellm import completion
 from openai import OpenAIError
 from utils import (
-    common_defaults, get_default_log_file, make_logger, 
+    common_defaults, parse_common_args, 
+    get_default_log_file, make_logger, 
     load_yaml, model_dir_name, ensure_dirs_exist, 
     use_cases, make_full_prompt, extract_content
 )
@@ -154,34 +154,16 @@ class BenchMarkDataValidator:
 
 def main():
 
-    default_model        = common_defaults['model']
-    default_service_url  = common_defaults['service_url']
-    default_template_dir = common_defaults['template_dir']
-    default_data_dir     = common_defaults['data_dir']
-
     script = os.path.basename(__file__)
-    default_log_file = get_default_log_file(script)
-
-    parser = argparse.ArgumentParser(description="Generate Q&A pairs for the healthcare ChatBot.")
-    parser.add_argument("-m", "--model", default=default_model, 
-        help=f"Use MODEL. Default {default_model}")
-    parser.add_argument("-s", "--service-url", default=default_service_url,
-        help=f"Use SERVICE_URL as the inference hosting service URL. Default: {default_service_url}")
-    parser.add_argument("-t", "--template-dir", default=default_template_dir,
-        help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {default_template_dir}")
-    parser.add_argument("-d", "--data-dir", default=default_data_dir, 
-        help=f"Directory where data files are written. Default: {default_data_dir}")
+    parser = parse_common_args("Validate synthesized Q&A pairs for the healthcare ChatBot.", script)
     parser.add_argument("-j", "--just-stats", action='store_true', default=False, 
-        help="Just report the final statistics for existing validation data. Default: False")
-    parser.add_argument("-o", "--output", default=default_log_file, 
-        help=f"Where logging is written. Default: {default_log_file}.")
-    
+        help="Just report the final statistics for existing validation data. Default: False")    
     args = parser.parse_args()
     
-    logger = make_logger(args.output)
-    print(f'Logging to {args.output}, level INFO')
+    logger = make_logger(args.log)
+    print(f'Logging to {args.log}, level INFO')
 
-    ensure_dirs_exist([template_dir, data_dir], logger)
+    ensure_dirs_exist([args.template_dir, args.data_dir], logger)
 
     logging.info(f"{script}:")
     logging.info(f"  Model:             {args.model}")
@@ -189,7 +171,7 @@ def main():
     logging.info(f"  Template dir:      {args.template_dir}")
     logging.info(f"  Data dir:          {args.data_dir}")
     logging.info(f"  Just report stats? {args.just_stats}")
-    logging.info(f"  Log:               {args.output}")
+    logging.info(f"  Log:               {args.log}")
 
     validator = BenchMarkDataValidator(
         args.just_stats, args.model, args.service_url, args.template_dir, args.data_dir, logger)

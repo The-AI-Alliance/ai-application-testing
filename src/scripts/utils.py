@@ -2,6 +2,7 @@ import os
 import sys
 import yaml
 import logger
+import argparse
 from datetime import datetime
 from pathlib import Path
 
@@ -11,6 +12,21 @@ common_defaults = {
     "template_dir": "src/prompts/templates",
     "data_dir":     "data",
 }
+
+def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser
+    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser.add_argument("-m", "--model", default=common_defaults['model'], 
+        help=f"Use MODEL. Default {common_defaults['model']}")
+    parser.add_argument("-s", "--service-url", default=common_defaults['service_url'],
+        help=f"Use SERVICE_URL as the inference hosting service URL. Default: {common_defaults['service_url']}")
+    parser.add_argument("-t", "--template-dir", default=common_defaults['template_dir'],
+        help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template_dir']}")
+    parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
+        help=f"Directory where data files are written. Default: {common_defaults['data_dir']}")
+    default_log_file = get_default_log_file(script)
+    parser.add_argument("-l", "--log", default=default_log_file, 
+        help=f"Where logging is written. Default: {default_log_file}.")
+    return parser
 
 def now() -> datetime:
     return datetime.now()
@@ -80,3 +96,4 @@ def extract_content(litellm_reponse) -> str:
     response_dict = litellm_reponse.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
     return response_dict['choices'][0]['message']['content']
+

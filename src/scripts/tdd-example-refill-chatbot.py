@@ -107,38 +107,20 @@ class TDDExampleRefillChatbot:
 
 def main():
     """Main function."""
-    import argparse
-
-    default_model        = common_defaults['model']
-    default_service_url  = common_defaults['service_url']
-    default_template_dir = common_defaults['template_dir']
-    default_data_dir     = common_defaults['data_dir']
 
     script = os.path.basename(__file__)
-    default_log_file = get_default_log_file(script)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--model", default=default_model,
-            help=f"Use MODEL as the inference model. Default: {default_model}")
-    parser.add_argument("-s", "--service-url", default=default_service_url,
-            help=f"Use SERVICE_URL as the inference hosting service URL. Default: {default_service_url}")
-    parser.add_argument("-t", "--template-dir",  default=default_template_dir,
-            help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {default_template_dir}")
-    parser.add_argument("-d", "--data-dir", default=default_data_dir,
-            help=f"Directory where data files are written. IGNORED; NOT CURRENTLY USED! Default: {default_data_dir}")
-    parser.add_argument("-o", "--output", default=default_log_file, 
-            help=f"Where logging is written. Default: {default_log_file}.")
+    parser = parse_common_args("TDD Example 'refill' use case for the healthcare ChatBot.", script,
+        epilog="NOTE: the --data-dir argument is currently ignored!")
     args = parser.parse_args()
-
-    logger = make_logger(args.output)
-    print(f'Logging to {args.output}, level INFO')
+    
+    logger = make_logger(args.log)
+    print(f'Logging to {args.log}, level INFO')
 
     logger.info(f"{script}:")
     logger.info(f"  Model:        {args.model}")
     logger.info(f"  Service URL:  {args.service_url}")
     logger.info(f"  Template dir: {args.template_dir}")
-    # logger.info(f"  Data dir:     {args.data_dir}")
-    logger.info(f"  Log:          {args.output}")
+    logger.info(f"  Log:          {args.log}")
 
     tdd = TDDExampleRefillChatbot(args.model, args.service_url, args.template_dir, logger)
     tdd.trial("refill",)

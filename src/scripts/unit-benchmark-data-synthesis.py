@@ -1,6 +1,5 @@
 import os
 import sys
-import argparse
 import json
 import logging
 from pathlib import Path
@@ -117,43 +116,19 @@ class BenchMarkDataSynthesizer:
 
 def main():
 
-    default_model        = common_defaults['model']
-    default_service_url  = common_defaults['service_url']
-    default_template_dir = common_defaults['template_dir']
-    default_data_dir     = common_defaults['data_dir']
-
     script = os.path.basename(__file__)
-    default_log_file = get_default_log_file(script)
-
-    parser = argparse.ArgumentParser(description="Generate Q&A pairs for the healthcare ChatBot.")
-    parser.add_argument("-m", "--model", default=default_model, 
-        help="Use MODEL instead of the default")
-    parser.add_argument("-s", "--service-url", default=default_service_url,
-        help=f"Use SERVICE_URL as the inference hosting service URL. Default: {default_service_url}")
-    parser.add_argument("-t", "--template-dir", default=default_template_dir,
-        help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {default_template_dir}")
-    parser.add_argument("-d", "--data-dir", default=default_data_dir, 
-        help=f"Directory where data files are written. Default: {default_data_dir}")
-    parser.add_argument("-o", "--output", default=default_log_file, 
-        help=f"Where logging is written. Default: {default_log_file}.")
-    
+    parser = parse_common_args("Synthesize Q&A pairs for the healthcare ChatBot.", script)
     args = parser.parse_args()
     
-    model_name = args.model
-    service_url = args.service_url
-    template_dir = args.template_dir
-    data_dir = args.data
-    log_file = args.output
-
-    logger = make_logger(log_file)
-    print(f'Logging to {log_file}, level INFO')
+    logger = make_logger(args.log)
+    print(f'Logging to {args.log}, level INFO')
 
     logger.info(f"{script}:")
     logger.info(f"  Model:           {args.model}")
     logger.info(f"  Service URL:     {args.service_url}")
     logger.info(f"  Template dir:    {args.template_dir}")
     logger.info(f"  Data dir:        {args.data_dir}")
-    logger.info(f"  Log:             {args.output}")
+    logger.info(f"  Log:             {args.log}")
     
     synthesizer = BenchMarkDataSynthesizer(
         args.model, args.service_url, args.template_dir, args.data_dir, logger)

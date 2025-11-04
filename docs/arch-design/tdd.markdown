@@ -258,9 +258,11 @@ time uv run src/scripts/tdd-example-refill-chatbot.py \
   --model ollama/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --output temp/output/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out \
-  --data temp/output/ollama/gpt-oss_20b/data
+  --data-dir temp/output/ollama/gpt-oss_20b/data \
+  --log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
+
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
 
 {: .tip}
 > **Tip:** To see this command without actually running it, pass the `-n` or `--dry-run` option to make.
@@ -272,8 +274,8 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | `--model ollama/gpt-oss:20b` | The model to use. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
-| `--output temp/output/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out` | Where console output is captured. |
-| `--data temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 {: .tip}
 > **Tips:**
