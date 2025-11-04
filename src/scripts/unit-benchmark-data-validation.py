@@ -50,7 +50,7 @@ class BenchMarkDataValidator:
                 if len(line.strip()) == 0:
                     continue
                 total_count += 1
-                rating = get_rating(line, )
+                rating = self.get_rating(line, )
                 if rating < 0:
                     error_count += 1
                 elif rating > 5:
