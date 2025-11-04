@@ -88,7 +88,7 @@ class BenchMarkDataValidator:
             self.logger.error(f"OpenAIError thrown: {e}")
             sys.exit(1)
 
-    def validate() -> dict:
+    def validate(self) -> dict:
         """Validate the generated data labeling."""    
         system_prompt = self.template['system']
         if len(system_prompt) == 0:
