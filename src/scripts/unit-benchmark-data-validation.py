@@ -26,7 +26,7 @@ class BenchMarkDataValidator:
         self.data_dir     = data_dir
         self.logger       = logger
 
-        template_file = Path(template_dir, template_prefix+".yaml")
+        template_file = Path(template_dir, self.template_prefix+".yaml")
         self.logger.info(f"Using template file: {template_file}")
         self.template = load_yaml(template_file)
 
@@ -77,6 +77,7 @@ class BenchMarkDataValidator:
                 }], 
                 api_base = self.service_url, 
                 stream = False,
+                verbose = False,
                 # format = "json",
             )
             actual = extract_content(response)

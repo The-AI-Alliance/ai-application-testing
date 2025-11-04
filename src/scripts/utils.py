@@ -1,7 +1,7 @@
 import os
 import sys
 import yaml
-import logger
+import logging
 import argparse
 from datetime import datetime
 from pathlib import Path
@@ -13,7 +13,7 @@ common_defaults = {
     "data_dir":     "data",
 }
 
-def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser
+def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     parser.add_argument("-m", "--model", default=common_defaults['model'], 
         help=f"Use MODEL. Default {common_defaults['model']}")
@@ -51,14 +51,14 @@ def use_cases() -> dict:
     }
 
 def get_default_log_file(script_name: str) -> str:
-    dir = f'logs/{now_str()}'
-    return f'{log_dir}/{script}.log'
+    log_dir = f'logs/{now_str()}'
+    return f'{log_dir}/{script_name}.log'
 
 def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO) -> logging.Logger:
     make_parent_dirs(log_file)
     logging.basicConfig(filename=log_file, level=level)
     logger = logging.getLogger(name)
-    logger.set_level(level)
+    logger.setLevel(level)
     return logger
 
 def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
@@ -70,10 +70,11 @@ def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
         os.makedirs(dirs, exist_ok=exist_ok)
         return dirs
 
-def ensure_dirs_exist(dirs: list[str], logger: logger.Logger):
+def ensure_dirs_exist(dirs: list[str], logger: logging.Logger):
     missing_dirs=()
     for dir in dirs:
-        missing_dirs.append(dir) if not os.path.isdir(dir)
+        if not os.path.isdir(dir):
+            missing_dirs.append(dir) 
     if len(missing_dirs) > 0:
         logger.error(f"These directories don't exit: {missing_dirs}")
         sys.exit(1)

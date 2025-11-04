@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 import logging
@@ -5,8 +6,8 @@ from litellm import completion
 from openai import OpenAIError
 from utils import load_yaml, make_full_prompt, extract_content
 from utils import (
-    common_defaults, get_default_log_file, make_logger, 
-    load_yaml, make_full_prompt, extract_content
+    common_defaults, parse_common_args, get_default_log_file, make_logger, 
+    load_yaml, make_full_prompt, extract_content, not_none
 )
 
 class TDDExampleRefillChatbot:
@@ -54,19 +55,19 @@ class TDDExampleRefillChatbot:
         errors = 0
         self.logger.info(f"Queries that are {label} requests:")
 
-        not_none(queries_responses[label], f'No queries and expected responses are known for key {label}.')
+        not_none(self.queries_responses[label], f'No queries and expected responses are known for key {label}.')
 
-        queries = queries_responses[label]['queries']
-        expected_response = queries_responses[label]['expected_response']
+        queries = self.queries_responses[label]['queries']
+        expected_response = self.queries_responses[label]['expected_response']
         not_none(queries, f'No queries are known for key {label}.')
-        not_none(expected_responses, f'No expected responses are known for key {label}.')
+        not_none(expected_response, f'No expected responses are known for key {label}.')
         
-        for template_name in template_names:
+        for template_name in self.template_names:
             self.logger.info(f"  Using template {template_name} in {self.template_dir}:")
             template = load_yaml(Path(self.template_dir, template_name+".yaml"))
 
             for query in queries:
-                for drug in drugs:
+                for drug in self.drugs:
                     expected = expected_response.replace("_P_", drug)
                     expected_lc = expected.lower()
                     resp_str = "SUCCESS!"
@@ -74,13 +75,14 @@ class TDDExampleRefillChatbot:
 
                     try:
                         response = completion(
-                            model = model_name, 
+                            model = self.model_name, 
                             messages = [{ 
                                 "content": make_full_prompt(query_with_drug, template['system']),
                                 "role": "user",
                             }], 
-                            api_base = service_url, 
+                            api_base = self.service_url, 
                             stream = False,
+                            verbose = False,
                         )
                         count += 1
                         actual = extract_content(response)

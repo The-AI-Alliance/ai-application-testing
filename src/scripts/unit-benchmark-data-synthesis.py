@@ -7,7 +7,7 @@ from pathlib import Path
 from litellm import completion
 from openai import OpenAIError
 from utils import (
-    common_defaults, get_default_log_file, make_logger, 
+    common_defaults, parse_common_args, get_default_log_file, make_logger, 
     load_yaml, model_dir_name, ensure_dirs_exist, 
     use_cases, extract_content
 )
@@ -27,7 +27,7 @@ class BenchMarkDataSynthesizer:
         ensure_dirs_exist([self.template_dir, self.data_dir], self.logger)
 
     def template_name(self, which_one: str) -> str:
-        return f"{template_prefix}-{which_one}"
+        return f"{self.template_prefix}-{which_one}"
 
     def check_label(self, json_line: str, expected_label: str) -> bool:
         try:
@@ -38,6 +38,8 @@ class BenchMarkDataSynthesizer:
             self.logger.warning(f" JSON doesn't have a label field (exception: {ke}): {json_line}")
         except json.decoder.JSONDecodeError as je:
             self.logger.warning(f" JSON parsing failed (exception: {je}): {json_line}")
+        except Exception as e:
+            self.logger.warning(f" JSON malformed? (Other exception thrown: {e}): {json_line}")
         return False
 
     def expected_lines(self, expected_label: str, data_file: str) -> int:
@@ -49,7 +51,7 @@ class BenchMarkDataSynthesizer:
                     line2 = line.strip()
                     if len(line2) == 0:
                         continue  # skip blanks
-                    if not self.check_label(line2, expected_label, output_file):
+                    if not self.check_label(line2, expected_label):
                         unexpected_lines.append(line2)
                 if len(unexpected_lines) > 0:
                     self.logger.warning(f"{len(unexpected_lines)} lines in {data_file} do not have expected label {expected_label}!")
@@ -77,6 +79,7 @@ class BenchMarkDataSynthesizer:
                 }], 
                 api_base = self.service_url, 
                 stream = False,
+                verbose = False,
                 # format = "json",
             )
             actual = extract_content(response)
@@ -91,7 +94,7 @@ class BenchMarkDataSynthesizer:
             return num_unexpected_lines
 
         except OpenAIError as e:
-            self.loggererror(f"OpenAIError thrown: {e}")
+            self.logger.error(f"OpenAIError thrown: {e}")
             sys.exit(1)
 
     def generate(self, which_one: str, expected_label: str) -> int:

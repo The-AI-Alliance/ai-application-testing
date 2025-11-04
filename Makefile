@@ -4,7 +4,7 @@
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
-MODEL_FILE_NAME       ?= $(subst :,_,${MODEL}) # Covert any ':' to '_'.
+MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
@@ -208,33 +208,33 @@ help-docs help-code help-uv::
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "For the GitHub Pages website:"
-	@echo "  GitHub Pages URL:      ${PAGES_URL}"
-	@echo "  current dir:           ${PWD}"
-	@echo "  docs dir:              ${DOCS_DIR}"
-	@echo "  site dir:              ${SITE_DIR}"
-	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
+	@echo "  GitHub Pages URL:      '${PAGES_URL}'"
+	@echo "  current dir:           '${PWD}'"
+	@echo "  docs dir:              '${DOCS_DIR}'"
+	@echo "  site dir:              '${SITE_DIR}'"
+	@echo "  JEKYLL_PORT:           '${JEKYLL_PORT}'"
 	@echo
 
 print-info-code::
 	@echo "For the code examples:"
-	@echo "  model:                 ${MODEL}"
-	@echo "  inference service:     ${INFERENCE_SERVICE}"
-	@echo "  prompt templates dir:  ${PROMPTS_TEMPLATES_DIR}"
-	@echo "  output dir:            ${OUTPUT_DIR}"
-	@echo "  output data dir:       ${OUTPUT_DATA_DIR}"
-	@echo "  example data dir:      ${EXAMPLE_DATA}"
-	@echo "  src dir:               ${SRC_DIR}"
+	@echo "  model:                 '${MODEL}'"
+	@echo "  inference service:     '${INFERENCE_SERVICE}'"
+	@echo "  prompt templates dir:  '${PROMPTS_TEMPLATES_DIR}'"
+	@echo "  output dir:            '${OUTPUT_DIR}'"
+	@echo "  output data dir:       '${OUTPUT_DATA_DIR}'"
+	@echo "  example data dir:      '${EXAMPLE_DATA}'"
+	@echo "  src dir:               '${SRC_DIR}'"
 	@echo
 
 print-info-env::
 	@echo "The environment:"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
-	@echo "  TIMESTAMP:             ${TIMESTAMP}"
-	@echo "  MAKEFLAGS:             ${MAKEFLAGS}"
-	@echo "  MAKEFLAGS_RECURSIVE:   ${MAKEFLAGS_RECURSIVE}"
-	@echo "  UNAME:                 ${UNAME}"
-	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo "  GIT_HASH:              '${GIT_HASH}'"
+	@echo "  TIMESTAMP:             '${TIMESTAMP}'"
+	@echo "  MAKEFLAGS:             '${MAKEFLAGS}'"
+	@echo "  MAKEFLAGS_RECURSIVE:   '${MAKEFLAGS_RECURSIVE}'"
+	@echo "  UNAME:                 '${UNAME}'"
+	@echo "  ARCHITECTURE:          '${ARCHITECTURE}'"
+	@echo "  GIT_HASH:              '${GIT_HASH}'"
 
 # Docs Targets
 
@@ -304,7 +304,7 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${OUTPUT_DATA_DIR} \
-		--log ${OUTPUT_DIR}/logs/${TIMESTAMP}/${@:run-%=%}.log 
+		--log ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
 
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
