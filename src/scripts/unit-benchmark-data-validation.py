@@ -1,5 +1,6 @@
 import os
 import sys
+import io
 import json
 import glob
 import logging
