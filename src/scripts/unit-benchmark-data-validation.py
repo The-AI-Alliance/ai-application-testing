@@ -152,7 +152,7 @@ class BenchMarkDataValidator:
         line.append(col_fmt.format(sum(all_ratings)))
         self.logger.info("".join(line))
         self.logger.info(border_fmt.format("-"*name_len))
-        self.logger.info(f"Total count: {all_count} (includes errors), total errors: {all_error_count}", files=[output_file])
+        self.logger.info(f"Total count: {all_count} (includes errors), total errors: {all_error_count}")
 
 def main():
 
