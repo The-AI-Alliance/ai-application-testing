@@ -99,7 +99,7 @@ class BenchMarkDataValidator:
         for data_file_name in glob.iglob('*-data.json', root_dir=self.data_dir, recursive=False, include_hidden=False):
             data_file = os.path.join(self.data_dir, data_file_name)
             validation_file = os.path.splitext(data_file)[0]+'-validation.json' 
-            if not just_stats:
+            if not self.just_stats:
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:
                         for line in synthetic_data_file.readlines():
