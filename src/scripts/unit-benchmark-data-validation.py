@@ -162,7 +162,7 @@ def main():
         help="Just report the final statistics for existing validation data. Default: False")    
     args = parser.parse_args()
     
-    logger = make_logger(args.log)
+    logger = make_logger(args.log, name=script)
     print(f'Logging to {args.log}, level INFO')
 
     ensure_dirs_exist([args.template_dir, args.data_dir], logger)

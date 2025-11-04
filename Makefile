@@ -1,5 +1,14 @@
 # Makefile for the ai-application-testing website and repo example code.
 
+# Some Environment variables
+MAKEFLAGS              = -w  # --warn-undefined-variables
+MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
+UNAME                 ?= $(shell uname)
+ARCHITECTURE          ?= $(shell uname -m)
+TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
+## Used for version tagging release artifacts.
+GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
+
 # Definitions for the example code.
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
@@ -9,7 +18,7 @@ SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
 OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
-OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
+OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs/${TIMESTAMP}
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
@@ -28,15 +37,6 @@ CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 
 ## Override when running `make view-local` using e.g., `JEKYLL_PORT=8000 make view-local`
 JEKYLL_PORT           ?= 4000
-
-# Other Environment variables
-MAKEFLAGS              = -w  # --warn-undefined-variables
-MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
-UNAME                 ?= $(shell uname)
-ARCHITECTURE          ?= $(shell uname -m)
-TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
-## Used for version tagging release artifacts.
-GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 
 define help_message
 
@@ -99,17 +99,20 @@ model, so if you want to use a different model, invoke make as in this example:
 All these "run-*" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important!
 
-make terc run-terc      # Shorthands for the run-tdd-example-refill-chatbot target.
+make terc               # Shorthand for the run-tdd-example-refill-chatbot target.
+make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
 make run-tdd-example-refill-chatbot   
                         # Run the code for the TDD example "unit benchmark".
                         # See the TDD chapter in the website for details.
 
-make ubds run-ubds      # Shorthands for the run-unit-benchmark-data-synthesis target.
+make ubds               # Shorthands for the run-unit-benchmark-data-synthesis target.
+make run-ubds           # Shorthands for the run-unit-benchmark-data-synthesis target.
 make run-unit-benchmark-data-synthesis
                         # Run the code for "unit benchmark" data synthesis.
                         # See the Unit Benchmark chapter in the website for details.
 
-make ubdv run-ubdv      # Shorthands for the run-unit-benchmark-data-validation target.
+make ubdv               # Shorthands for the run-unit-benchmark-data-validation target.
+make run-ubdv           # Shorthands for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.

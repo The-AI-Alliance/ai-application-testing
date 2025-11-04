@@ -96,7 +96,7 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
 | `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMPtdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 > [!TIP]
 > If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have already saved example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B`. See also the `.out` files that capture "stdout".

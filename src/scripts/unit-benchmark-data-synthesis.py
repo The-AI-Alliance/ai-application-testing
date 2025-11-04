@@ -86,7 +86,7 @@ class BenchMarkDataSynthesizer:
             with open(data_file, 'w') as f:
                 f.write(actual)
             with open(data_file, 'r') as f:
-                num_qa_pairs=sum(1 for line in f.readlines() if 'question:' in line)
+                num_qa_pairs=sum(1 for line in f.readlines() if '"question":' in line)
                 self.logger.info(f"Approximately {num_qa_pairs} Q&A pairs generated.")
             
             # Check if all lines have the expected label
@@ -123,7 +123,7 @@ def main():
     parser = parse_common_args("Synthesize Q&A pairs for the healthcare ChatBot.", script)
     args = parser.parse_args()
     
-    logger = make_logger(args.log)
+    logger = make_logger(args.log, name=script)
     print(f'Logging to {args.log}, level INFO')
 
     logger.info(f"{script}:")

@@ -7,10 +7,11 @@ from datetime import datetime
 from pathlib import Path
 
 common_defaults = {
-    "model":        "ollama/gpt-oss:20b",
-    "service_url":  "http://localhost:11434",
-    "template_dir": "src/prompts/templates",
-    "data_dir":     "data",
+    "model":                        "ollama/gpt-oss:20b",
+    "service_url":                  "http://localhost:11434",
+    "template_dir":                 "src/prompts/templates",
+    "data_dir":                     "data",
+    "levenshtein-ratio-threshold":  0.95,
 }
 
 def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser:
