@@ -30,7 +30,7 @@ class BenchMarkDataValidator:
         self.logger.info(f"Using template file: {template_file}")
         self.template = load_yaml(template_file)
 
-    def get_rating(self.line: str) -> int:
+    def get_rating(self, line: str) -> int:
         try:
             js = json.loads(line)
             return js['rating']
