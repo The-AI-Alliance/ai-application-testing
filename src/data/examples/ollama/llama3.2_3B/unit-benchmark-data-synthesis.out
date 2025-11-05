@@ -1,6 +1,0 @@
-INFO: src/scripts/unit-benchmark-data-synthesis.py:
-INFO:   Model:        ollama/llama3.2:3B
-INFO:   Service URL:  http://localhost:11434
-INFO:   Template dir: src/prompts/templates
-INFO:   Output:       temp/output/ollama/llama3.2_3B/unit-benchmark-data-synthesis.out
-INFO:   Data dir:     temp/output/ollama/llama3.2_3B/data

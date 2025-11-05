@@ -13,6 +13,8 @@ GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
+# Other model used:
+#MODEL                 ?= ollama/llama3.2:3B
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
