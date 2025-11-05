@@ -1,27 +1,69 @@
-{"question": "I am taking _P_ and I am experiencing some side effects.", "label": "other", "rating": 5, "reason": "The question is asking about side effects of a prescription, which does not necessarily imply a request for refill, emergency care, or any other purpose."}
-{"question": "When is my next appointment?", "label": "other", "rating": 5, "reason": "The question does not contain any reference to prescriptions or body parts, only a general inquiry about an upcoming appointment."}
-{"question": "My _B_ hurts when I do this.", "label": "other", "rating": 5, "reason": "The question is asking about a specific body part and its relation to an action, which doesn't align with the medical requests of refill or emergency."}
-{"question": "I am having some trouble with my medication. Can you help?", "label": "other", "rating": 4, "reason": "The question seems to be related to medication, but the context is more about general assistance rather than a refill request."}
-{"question": "How long does _P_ take to start working?", "label": "other", "rating": 5, "reason": "The label is an excellent match because the question is asking for information about the onset of a prescription's effects, which is outside the scope of the ChatBot."}
-{"question": "Can I get a doctor's note for my _B_ pain?", "label": "other", "rating": 3, "reason": "The label refill is likely a poor match because the question does not explicitly ask about a prescription refill, but rather asks for a doctor's note, which could be used to request a refill. However, the mention of body part _B_ and pain suggests that the patient may have a condition that requires a prescription, so the match is not perfect."}
-{"question": "I need to reschedule my appointment.", "label": "other", "rating": 5, "reason": "The question is a generic inquiry about rescheduling an appointment, which does not relate to prescription refills or urgent medical needs."}
-{"question": "My _P_ seems to be making me sick. Can I get a refill?", "label": "refill", "rating": 5, "reason": "The question clearly asks for a prescription refill and includes the placeholder _P_ as the name of the affected medication."}
-{"question": "I have been having some issues with my _B_ lately.", "label": "other", "rating": 5, "reason": "The label 'other' is an excellent match for the question as it doesn't contain any specific request for a prescription refill or mention of an emergency situation."}
-{"question": "Can you tell me more about the benefits of taking _P_?", "label": "refill", "rating": 5, "reason": "The question is asking for information about a specific prescription (_P_), which indicates that it's related to taking medication."}
-{"question": "I need to schedule a follow-up appointment.", "label": "other", "rating": 5, "reason": "The question does not ask for a prescription refill or mention an emergency situation; it is about scheduling a follow-up appointment."}
-{"question": "My _B_ is feeling really sore today.", "label": "other", "rating": 5, "reason": "The question does not contain any mention of a prescription refill, and the body part being referred to is clearly indicated by the use of \"_B_\" as a placeholder."}
-{"question": "How do I take _P_ correctly?", "label": "other", "rating": 5, "reason": "The question is asking for information on the correct usage of a prescription, not requesting a refill."}
-{"question": "I am having some issues with my medication regimen.", "label": "other", "rating": 4, "reason": "The question mentions medication regimen but does not specify a particular issue or need (e.g. refill), which aligns well with the 'other' label."}
-{"question": "Can I get a copy of my prescription for _P_?", "label": "refill", "rating": 5, "reason": "The label is an excellent match because the question explicitly asks for a copy of the prescription and includes the placeholder _P_ which is also present in the answer."}
-{"question": "I am experiencing some side effects from taking _P_.", "label": "refill", "rating": 1, "reason": "The question is asking about side effects from a prescription (_P_), which does not match the 'emergency' label that suggests a urgent care situation."}
-{"question": "My _B_ is swelling up. What should I do?", "label": "other", "rating": 2, "reason": "The question appears to be requesting help with a medical issue, but it does not explicitly mention a prescription refill. The answer provided seems to focus on the body part rather than a medication."}
-{"question": "Can you help me with my medication questions?", "label": "other", "rating": 5, "reason": "The question does not mention any prescription or body part, it is a general inquiry about assistance with medication questions."}
-{"question": "I am having some trouble breathing. I think it might be related to _P_.", "label": "emergency", "rating": 5, "reason": "The question clearly states that the patient is experiencing breathing difficulties and suspects a relation with their prescription (_P_), which is a strong indication of an emergency situation."}
-{"question": "Can I get a list of my prescription refills?", "label": "refill", "rating": 5, "reason": "The question explicitly mentions requesting a prescription refill."}
-{"question": "My _B_ pain is really bad today.", "label": "emergency", "rating": 1, "reason": "The label emergency does not match the question because it seems to describe a medical issue rather than an urgent situation."}
-{"question": "I am experiencing some nausea from taking _P_.", "label": "refill", "rating": 1, "reason": "The question is about nausea caused by a prescription, but the label indicates emergency which doesn't match."}
-{"question": "Can I get a note explaining why I need to take _P_?", "label": "refill", "rating": 5, "reason": "The question is requesting information about the prescription _P_, which matches the label refill. The answer provided by the ChatBot also confirms this by labeling it as a refill."}
-{"question": "I am having some issues with my _B_ lately.", "label": "other", "rating": 5, "reason": "The question is a good match for the label 'other' because it does not mention anything related to prescription refills or emergency situations."}
-{"question": "Can you help me understand my medication regimen?", "label": "other", "rating": 3, "reason": "The question is asking for help with understanding their medication regimen, but the label 'refill' suggests a request for a prescription refill, which may not be the case in this scenario. The answer provided does not contain any information about a patient's body part or a specific prescription name, which further supports the 'other' classification."}
-{"question": "I am experiencing some dizziness from taking _P_.", "label": "refill", "rating": 1, "reason": "The question is about side effects of a medication (_P_), not requesting a refill."}
-{"question": "My _B_ is feeling really sore today.", "label": "other", "rating": 5, "reason": "The label 'other' matches the question well because it does not contain any prescription-related terms or references to urgent care."}
+{"question": "I am having trouble sleeping at night. Could this be related to my prescription?", "label": "other", "rating": 5, "reason": "The question is asking for a general opinion about the relationship between sleep troubles and prescriptions, which is not directly related to any specific medical issue or symptom."}
+
+{"question": "My medication for P seems to make me more anxious during the day.", "label": "other", "rating": 3, "reason": "The question mentions a potential side effect of a prescription (P) but does not explicitly ask about refills or urgent care, which are the main concerns."}
+
+{"question": "Can you tell me when my next appointment is?", "label": "refill", "rating": 2, "reason": "Although the label 'refill' seems relevant, the question itself is asking about an upcoming appointment, which may not necessarily involve refills or urgent care."}
+
+{"question": "I am having some pain in my B after a fall.", "label": "other", "rating": 5, "reason": "The question is describing a specific symptom (pain) in a body part (B), but does not explicitly ask about refills or emergency situations."}
+
+{"question": "How can I manage my blood pressure without taking P?", "label": "refill", "rating": 1, "reason": "The question is asking for alternatives to a specific prescription (P) while managing a medical condition (blood pressure), which may not be the primary focus of urgent care or emergency situations."}
+
+{"question": "I need to refill my prescription for B.", "label": "refill", "rating": 5, "reason": "The question is explicitly asking about refilling a specific prescription (B) and does not mention any urgent care concerns."}
+
+{"question": "Can I get a copy of my medical records online?", "label": "other", "rating": 5, "reason": "The question is asking about accessing medical information in general, which may not be directly related to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some issues.", "label": "refill", "rating": 3, "reason": "Although the label 'refill' seems relevant, the question itself is vague and does not explicitly ask about urgent care concerns or symptoms."}
+
+{"question": "I am having trouble breathing.", "label": "emergency", "rating": 5, "reason": "The question describes a severe symptom (trouble breathing) that requires immediate attention, which aligns with emergency situations."}
+
+{"question": "Can you recommend a new exercise routine for me?", "label": "other", "rating": 5, "reason": "The question is asking for general advice on exercising and does not explicitly relate to refills or emergency care concerns."}
+
+{"question": "I am having some pain in my B that is getting worse.", "label": "emergency", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that is worsening, which may indicate an urgent need for attention."}
+
+{"question": "Can I get a transfer of care to a different doctor?", "label": "other", "rating": 5, "reason": "The question is asking about changing medical providers, which does not directly relate to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some nausea.", "label": "refill", "rating": 2, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (nausea) that is not directly related to urgent care concerns or refills."}
+
+{"question": "Can I get a list of all my medications and dosages?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information, which may not be directly relevant to refills or emergency situations."}
+
+{"question": "I am having some pain in my B that is getting better.", "label": "refill", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that is improving, which may indicate that the issue has been resolved or managed through refills."}
+
+{"question": "Can I get a transfer of care to a different specialist?", "label": "other", "rating": 5, "reason": "The question is asking about changing medical specialists, which does not directly relate to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some fatigue.", "label": "refill", "rating": 3, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (fatigue) that is not explicitly linked to urgent care concerns or refills."}
+
+{"question": "Can I get a copy of my insurance information?", "label": "other", "rating": 5, "reason": "The question is asking about general administrative tasks and does not directly relate to refills or emergency situations."}
+
+{"question": "I am having some pain in my B that is not causing me any problems.", "label": "refill", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that does not appear to be severe enough to warrant urgent attention."}
+
+{"question": "Can I get a list of all my upcoming appointments?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information and scheduling, which does not directly relate to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some anxiety.", "label": "refill", "rating": 2, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (anxiety) that is not explicitly linked to urgent care concerns or refills."}
+
+{"question": "Can I get a transfer of care to a different clinic?", "label": "other", "rating": 5, "reason": "The question is asking about changing medical facilities, which does not directly relate to refills or emergency situations."}
+
+{"question": "I need to schedule an appointment.", "label": "refill", "rating": 2, "reason": "Although the label 'refill' seems relevant, the question itself is asking about scheduling a new appointment, which may not be directly related to urgent care concerns."}
+
+{"question": "My P seems to be causing me some hair loss.", "label": "refill", "rating": 3, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (hair loss) that is not explicitly linked to urgent care concerns or refills."}
+
+{"question": "Can I get a list of all my allergies?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information and allergy management, which does not directly relate to refills or emergency situations."}
+
+{"question": "I am having some pain in my B that is getting better.", "label": "refill", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that is improving, which may indicate that the issue has been resolved or managed through refills."}
+
+{"question": "Can I get a copy of my medical history?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information and access to historical records, which does not directly relate to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some muscle weakness.", "label": "refill", "rating": 3, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (muscle weakness) that is not explicitly linked to urgent care concerns or refills."}
+
+{"question": "Can I get a list of all my test results?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information and test management, which does not directly relate to refills or emergency situations."}
+
+{"question": "I am having some pain in my B that is not causing me any problems.", "label": "refill", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that does not appear to be severe enough to warrant urgent attention."}
+
+{"question": "Can you recommend a new doctor for me?", "label": "other", "rating": 5, "reason": "The question is asking about general medical advice and finding a new provider, which does not directly relate to refills or emergency situations."}
+
+{"question": "My P seems to be causing me some dizziness.", "label": "refill", "rating": 2, "reason": "Although the label 'refill' seems relevant, the question itself mentions a symptom (dizziness) that is not explicitly linked to urgent care concerns or refills."}
+
+{"question": "Can I get a transfer of care to a different specialist?", "label": "other", "rating": 5, "reason": "The question is asking about changing medical specialists, which does not directly relate to refills or emergency situations."}
+
+{"question": "I am having some pain in my B that is getting better.", "label": "refill", "rating": 4, "reason": "The question describes a symptom (pain) in a body part (B) that is improving, which may indicate that the issue has been resolved or managed through refills."}
+
+{"question": "Can I get a list of all my medications and dosages?", "label": "other", "rating": 5, "reason": "The question is asking about general medical information and medication management, which does not directly relate to refills or emergency situations."}

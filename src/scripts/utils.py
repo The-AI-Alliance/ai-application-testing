@@ -1,27 +1,39 @@
 import os
 import sys
 import yaml
+import logging
+import argparse
+from datetime import datetime
 from pathlib import Path
 
-def log(label: str, message: str, files=[]):
-    """Logs a message to stderr and optionally also any files specified."""
-    msg = f"{label}: {message}\n"
-    sys.stderr.write(msg)
-    for file in files:
-        file.write(msg)
+common_defaults = {
+    "model":                        "ollama/gpt-oss:20b",
+    "service_url":                  "http://localhost:11434",
+    "template_dir":                 "src/prompts/templates",
+    "data_dir":                     "data",
+    "levenshtein-ratio-threshold":  0.95,
+}
 
-def error(message: str, files=[]):
-    """Prints an error message to stderr and optionally also any files specified, then exits."""
-    log("ERROR", message, files)
-    sys.exit(1)
+def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser.add_argument("-m", "--model", default=common_defaults['model'], 
+        help=f"Use MODEL. Default {common_defaults['model']}")
+    parser.add_argument("-s", "--service-url", default=common_defaults['service_url'],
+        help=f"Use SERVICE_URL as the inference hosting service URL. Default: {common_defaults['service_url']}")
+    parser.add_argument("-t", "--template-dir", default=common_defaults['template_dir'],
+        help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template_dir']}")
+    parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
+        help=f"Directory where data files are written. Default: {common_defaults['data_dir']}")
+    default_log_file = get_default_log_file(script)
+    parser.add_argument("-l", "--log", default=default_log_file, 
+        help=f"Where logging is written. Default: {default_log_file}.")
+    return parser
 
-def warning(message: str, files=[]):
-    """Prints an warning message to stderr and optionally also any files specified."""
-    log("WARNING", message, files)
+def now() -> datetime:
+    return datetime.now()
 
-def info(message: str, files=[]):
-    """Prints an info message to stderr and optionally also any files specified."""
-    log("INFO", message, files)
+def now_str(fmt: str = '%Y-%m-%d_%H-%M-%S') -> str:
+    return now().strftime(fmt)
 
 def load_yaml(path: Path) -> dict:
     return yaml.safe_load(path.read_text())
@@ -39,11 +51,40 @@ def use_cases() -> dict:
         "emergency": "emergency",
     }
 
-def ensure_dir_exists(dir: str, label="", files=[]):
-    if not os.path.isdir(dir):
-        lbl = "" if len(label) == 0 else " "+label
-        error(f"The{lbl} directory {dir} doesn't exit!", files=files)
+def get_default_log_file(script_name: str) -> str:
+    log_dir = f'logs/{now_str()}'
+    return f'{log_dir}/{script_name}.log'
 
+def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO) -> logging.Logger:
+    make_parent_dirs(log_file)
+    logging.basicConfig(filename=log_file, level=level)
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    return logger
+
+def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
+    path = Path(file)
+    if file == path.name:  # no path prefix
+        return Path('.')
+    else:
+        dirs = path.parent
+        os.makedirs(dirs, exist_ok=exist_ok)
+        return dirs
+
+def ensure_dirs_exist(dirs: list[str], logger: logging.Logger):
+    missing_dirs=()
+    for dir in dirs:
+        if not os.path.isdir(dir):
+            missing_dirs.append(dir) 
+    if len(missing_dirs) > 0:
+        logger.error(f"These directories don't exit: {missing_dirs}")
+        sys.exit(1)
+
+def not_none(value, message: str):
+    if value is None:
+        self.logger.error(message)
+        sys.exit(1)
+    
 def make_full_prompt(prompt: str, system_prompt: dict) -> str:
     return f"""
 SYSTEM PROMPT: 
@@ -57,3 +98,4 @@ def extract_content(litellm_reponse) -> str:
     response_dict = litellm_reponse.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
     return response_dict['choices'][0]['message']['content']
+

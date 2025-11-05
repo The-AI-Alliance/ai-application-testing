@@ -76,9 +76,11 @@ time uv run src/scripts/tdd-example-refill-chatbot.py \
 	--model ollama/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir src/prompts/templates \
-	--output temp/output/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out \
-	--data temp/output/ollama/gpt-oss_20b/data
+	--data-dir temp/output/ollama/gpt-oss_20b/data \
+	--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
+
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
 
 > [!TIP]
 > To see this command without running anything, pass the `-n` or `--dry-run` option when &ldquo;making&rdquo; any target.
@@ -93,8 +95,8 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | `--model ollama/gpt-oss:20b` | The model to use, as discussed above. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
-| `--output temp/output/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out` | Where console output is captured. |
-| `--data temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 > [!TIP]
 > If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have already saved example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B`. See also the `.out` files that capture "stdout".
@@ -121,11 +123,14 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
 	--model ollama/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir src/prompts/templates \
-	--output temp/output/ollama/gpt-oss_20b/unit-benchmark-data-synthesis.out \
-	--data temp/output/ollama/gpt-oss_20b/data
+	--data-dir temp/output/ollama/gpt-oss_20b/data \
+	--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
 
-The arguments are the same as before, but in this case, the `--data` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (`:` is an invalid character for MacOS file paths) will have these files of synthetic Q&A pairs:
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+```
+
+The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (`:` is an invalid character for MacOS file paths) will have these files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
@@ -159,11 +164,11 @@ time uv run src/scripts/unit-benchmark-data-validation.py \
 	--model ollama/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir src/prompts/templates \
-	--output temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out \
-	--data temp/output/ollama/gpt-oss_20b/data
+	--data-dir temp/output/ollama/gpt-oss_20b/data \
+	--log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
 
-In this case, the `--data` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
+In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data-validation.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.yaml`

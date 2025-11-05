@@ -1,15 +1,26 @@
 # Makefile for the ai-application-testing website and repo example code.
 
+# Some Environment variables
+MAKEFLAGS              = -w  # --warn-undefined-variables
+MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
+UNAME                 ?= $(shell uname)
+ARCHITECTURE          ?= $(shell uname -m)
+TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
+## Used for version tagging release artifacts.
+GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
+
 # Definitions for the example code.
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
 MODEL                 ?= ollama/gpt-oss:20b
-MODEL_FILE_NAME       ?= $(subst :,_,${MODEL}) # Covert any ':' to '_'.
+# Other model used:
+#MODEL                 ?= ollama/llama3.2:3B
+MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
 OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
-OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs
+OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs/${TIMESTAMP}
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
@@ -28,15 +39,6 @@ CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 
 ## Override when running `make view-local` using e.g., `JEKYLL_PORT=8000 make view-local`
 JEKYLL_PORT           ?= 4000
-
-# Other Environment variables
-MAKEFLAGS              = -w  # --warn-undefined-variables
-MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
-UNAME                 ?= $(shell uname)
-ARCHITECTURE          ?= $(shell uname -m)
-TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
-## Used for version tagging release artifacts.
-GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 
 define help_message
 
@@ -99,17 +101,20 @@ model, so if you want to use a different model, invoke make as in this example:
 All these "run-*" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important!
 
-make terc run-terc      # Shorthands for the run-tdd-example-refill-chatbot target.
+make terc               # Shorthand for the run-tdd-example-refill-chatbot target.
+make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
 make run-tdd-example-refill-chatbot   
                         # Run the code for the TDD example "unit benchmark".
                         # See the TDD chapter in the website for details.
 
-make ubds run-ubds      # Shorthands for the run-unit-benchmark-data-synthesis target.
+make ubds               # Shorthands for the run-unit-benchmark-data-synthesis target.
+make run-ubds           # Shorthands for the run-unit-benchmark-data-synthesis target.
 make run-unit-benchmark-data-synthesis
                         # Run the code for "unit benchmark" data synthesis.
                         # See the Unit Benchmark chapter in the website for details.
 
-make ubdv run-ubdv      # Shorthands for the run-unit-benchmark-data-validation target.
+make ubdv               # Shorthands for the run-unit-benchmark-data-validation target.
+make run-ubdv           # Shorthands for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
@@ -208,33 +213,33 @@ help-docs help-code help-uv::
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "For the GitHub Pages website:"
-	@echo "  GitHub Pages URL:      ${PAGES_URL}"
-	@echo "  current dir:           ${PWD}"
-	@echo "  docs dir:              ${DOCS_DIR}"
-	@echo "  site dir:              ${SITE_DIR}"
-	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
+	@echo "  GitHub Pages URL:      '${PAGES_URL}'"
+	@echo "  current dir:           '${PWD}'"
+	@echo "  docs dir:              '${DOCS_DIR}'"
+	@echo "  site dir:              '${SITE_DIR}'"
+	@echo "  JEKYLL_PORT:           '${JEKYLL_PORT}'"
 	@echo
 
 print-info-code::
 	@echo "For the code examples:"
-	@echo "  model:                 ${MODEL}"
-	@echo "  inference service:     ${INFERENCE_SERVICE}"
-	@echo "  prompt templates dir:  ${PROMPTS_TEMPLATES_DIR}"
-	@echo "  output dir:            ${OUTPUT_DIR}"
-	@echo "  output data dir:       ${OUTPUT_DATA_DIR}"
-	@echo "  example data dir:      ${EXAMPLE_DATA}"
-	@echo "  src dir:               ${SRC_DIR}"
+	@echo "  model:                 '${MODEL}'"
+	@echo "  inference service:     '${INFERENCE_SERVICE}'"
+	@echo "  prompt templates dir:  '${PROMPTS_TEMPLATES_DIR}'"
+	@echo "  output dir:            '${OUTPUT_DIR}'"
+	@echo "  output data dir:       '${OUTPUT_DATA_DIR}'"
+	@echo "  example data dir:      '${EXAMPLE_DATA}'"
+	@echo "  src dir:               '${SRC_DIR}'"
 	@echo
 
 print-info-env::
 	@echo "The environment:"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
-	@echo "  TIMESTAMP:             ${TIMESTAMP}"
-	@echo "  MAKEFLAGS:             ${MAKEFLAGS}"
-	@echo "  MAKEFLAGS_RECURSIVE:   ${MAKEFLAGS_RECURSIVE}"
-	@echo "  UNAME:                 ${UNAME}"
-	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo "  GIT_HASH:              '${GIT_HASH}'"
+	@echo "  TIMESTAMP:             '${TIMESTAMP}'"
+	@echo "  MAKEFLAGS:             '${MAKEFLAGS}'"
+	@echo "  MAKEFLAGS_RECURSIVE:   '${MAKEFLAGS_RECURSIVE}'"
+	@echo "  UNAME:                 '${UNAME}'"
+	@echo "  ARCHITECTURE:          '${ARCHITECTURE}'"
+	@echo "  GIT_HASH:              '${GIT_HASH}'"
 
 # Docs Targets
 
@@ -303,8 +308,8 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
-		--output ${OUTPUT_DIR}/${@:run-%=%}.out \
-		--data ${OUTPUT_DATA_DIR}
+		--data-dir ${OUTPUT_DATA_DIR} \
+		--log ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
 
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
