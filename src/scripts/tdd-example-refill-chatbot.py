@@ -4,7 +4,7 @@ from pathlib import Path
 import logging
 from litellm import completion
 from openai import OpenAIError
-from utils import setup, load_yaml, make_full_prompt, extract_content
+from utils import setup, load_yaml, make_full_prompt, extract_content, not_none
 
 class TDDExampleRefillChatbot:
 
