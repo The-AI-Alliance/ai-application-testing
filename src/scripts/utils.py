@@ -8,10 +8,11 @@ from datetime import datetime
 from pathlib import Path
 
 common_defaults = {
-    "model":        "ollama/gpt-oss:20b",
-    "service_url":  "http://localhost:11434",
-    "template_dir": "src/prompts/templates",
-    "data_dir":     "data",
+    "model":                        "ollama/gpt-oss:20b",
+    "service_url":                  "http://localhost:11434",
+    "template_dir":                 "src/prompts/templates",
+    "data_dir":                     "data",
+    "levenshtein-ratio-threshold":  0.95,
 }
 
 timestamp_str_fmt  = '%Y:%m:%d %H:%M:%S'

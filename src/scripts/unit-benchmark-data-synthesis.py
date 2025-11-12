@@ -82,7 +82,7 @@ class BenchMarkDataSynthesizer:
             with open(data_file, 'w') as f:
                 f.write(actual)
             with open(data_file, 'r') as f:
-                num_qa_pairs=sum(1 for line in f.readlines() if 'question:' in line)
+                num_qa_pairs=sum(1 for line in f.readlines() if '"question":' in line)
                 self.logger.info(f"Approximately {num_qa_pairs} Q&A pairs generated.")
             
             # Check if all lines have the expected label

@@ -299,7 +299,31 @@ This program passes a number of hand-written prompts that are either prescriptio
 
 (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) 
 
-You will see some reported errors, especially for `llama3.2:3B`, but often the wording differences are trivial. How could we do more robust comparisons that ignore &ldquo;trivial&rdquo; differences?
+You may see some reported errors, especially for `llama3.2:3B`, when an actual response differs from an expected response, but often the wording differences are trivial. Here is one example observed during a test run with an earlier version of the `tdd-example-refill-chatbot.py` script, where we have taken a log file entry and reformatted it so you can visually compare the actual and expected strings:
+
+```text
+Query: My prescription for xanax upsets my stomach. => FAILURE! 
+Actual response:   I have received your message, but I can’t answer it right now...
+Expected response: I have received your message, but I can't answer it right now...
+```
+
+Do you see the difference? It's `can’t` vs. `can't`, i.e., different ways of writing a right single quote. Clearly this difference is not likely to be meaningful.
+
+How could we do more robust comparisons that ignore such trivial differences? The `tdd-example-refill-chatbot.py` script hard-codes a partial solution; it converts both the expected and actual strings to lower case and removes some commonly-observed _markdown_ formatting. In our tests, this eliminated a lot of trivial differences. However, approaches like this are limited, fragile, and quickly grow unwieldy if you try to account for too many kinds of differences. 
+
+In addition to these simple modifications, a more resilient approach is a comparison algorithm that helps us decide on _close enough_. One such algorithm is the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance){:target="lev"}, which is a measure of the &ldquo;distance&rdquo; between two strings.[^2] This distance is calculated from the minimum number of single-character edits, including insertions, deletions, and substitutions necessary to convert one of the strings to the other string. See the [Wikipedia page](https://en.wikipedia.org/wiki/Levenshtein_distance){:target="lev"} for the algorithm's details. The current version of `tdd-example-refill-chatbot.py` uses this distance calculation.
+
+[^2]: There are other, similar distance calculations. See the [Levenshtein Wikipedia page](https://en.wikipedia.org/wiki/Levenshtein_distance){:target="lev"} and the [Python module documentation](https://rapidfuzz.github.io/Levenshtein/levenshtein.html){:target="lev-py"} for more details.
+
+The Python [Levenshtein](https://rapidfuzz.github.io/Levenshtein/levenshtein.html){:target="lev-py"} library is used in the script. Rather than using the distance itself, we use the _ratio_, defined as follows, where `s1` is the first string, `s2` is the second string, and `distance` is the Levenshtein distance between them:
+
+```
+1 - (distance / (len(s1) + len(s2)))
+```
+
+This is number a between `0.0` and `1.0`, where `1.0` means the strings are identical. The ratio is convenient for defining a threshold above which we will consider the strings &ldquo;close enough&rdquo;. We use `0.95` as the default threshold. A command-line argument can be used to specify a different value. Note that using the Levenshtein distance still doesn't _prove_ the strings are sufficiently, _semantically_ identical; we are making an assumption here that a low distance (or high ratio) means we can safely ignore small differences. 
+
+Also, we still have the limitation that we must define the expected results for every case, which is not a scalable solution. In the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, we will explore using a second LLM to _judge_ the quality and utility of responses. This is both more resilient and it eliminates the need to manually curate expected responses.
 
 ## Experiments to Try
 
@@ -309,6 +333,7 @@ In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deepe
 * Add one or more additional _FAQs_. How would you modify the prompts? How would you change how the results are evaluated? 
 * Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering)?
 * How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling.
+* Try running the script many times and look carefully at the actual vs. expected strings, especially for any cases where the differences are greater than the Levenshtein distance ratio threshold we use (0.95). Are the differences really significant? If not, what could you do in the comparison to automatically treat them as _close enough_?
 
 ## What's Next?
 
