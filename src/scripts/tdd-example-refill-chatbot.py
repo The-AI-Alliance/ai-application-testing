@@ -4,11 +4,7 @@ from pathlib import Path
 import logging
 from litellm import completion
 from openai import OpenAIError
-from utils import load_yaml, make_full_prompt, extract_content
-from utils import (
-    common_defaults, parse_common_args, get_default_log_file, make_logger, 
-    load_yaml, make_full_prompt, extract_content, not_none
-)
+from utils import setup, load_yaml, make_full_prompt, extract_content
 
 class TDDExampleRefillChatbot:
 
@@ -108,21 +104,11 @@ class TDDExampleRefillChatbot:
             self.logger.warning(f'"{label}" run had errors, but we will continue running.')
 
 def main():
-    """Main function."""
 
     script = os.path.basename(__file__)
-    parser = parse_common_args("TDD Example 'refill' use case for the healthcare ChatBot.", script,
-        epilog="NOTE: the --data-dir argument is currently ignored!")
-    args = parser.parse_args()
-    
-    logger = make_logger(args.log)
-    print(f'Logging to {args.log}, level INFO')
-
-    logger.info(f"{script}:")
-    logger.info(f"  Model:        {args.model}")
-    logger.info(f"  Service URL:  {args.service_url}")
-    logger.info(f"  Template dir: {args.template_dir}")
-    logger.info(f"  Log:          {args.log}")
+    description = "TDD Example 'refill' use case for the healthcare ChatBot."
+    epilog = "NOTE: the --data-dir argument is currently ignored!"
+    args, logger = setup(script, description, epilog = epilog)
 
     tdd = TDDExampleRefillChatbot(args.model, args.service_url, args.template_dir, logger)
     tdd.trial("refill",)

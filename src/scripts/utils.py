@@ -3,6 +3,7 @@ import sys
 import yaml
 import logging
 import argparse
+from typing import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -13,7 +14,34 @@ common_defaults = {
     "data_dir":     "data",
 }
 
-def parse_common_args(description: str, script: str, epilog: str = None) -> argparse.ArgumentParser:
+timestamp_str_fmt  = '%Y:%m:%d %H:%M:%S'
+timestamp_file_fmt = '%Y-%m-%d_%H-%M-%S'
+
+
+def setup(
+        script: str, 
+        description: str, 
+        epilog: str = '', 
+        add_arguments: Callable[[argparse.ArgumentParser], None] = None
+    ) -> (argparse.Namespace, logging.Logger):
+    parser = parser_with_common_args(
+        script, 
+        description,
+        epilog=epilog)
+    if add_arguments:
+        add_arguments(parser)
+    args = parser.parse_args()
+    
+    logger = make_logger(args.log_file, name=script, level=args.log_level)
+    log_args(logger, script, args, epilog=epilog)
+    return args, logger
+
+def parser_with_common_args(script: str, description: str, epilog: str = None) -> argparse.ArgumentParser:
+    """
+    Returns an `ArgumentParser` with the default arguments and a format string 
+    that can be used by the calling program to print the actual values specified
+    by the user.
+    """
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     parser.add_argument("-m", "--model", default=common_defaults['model'], 
         help=f"Use MODEL. Default {common_defaults['model']}")
@@ -24,14 +52,38 @@ def parse_common_args(description: str, script: str, epilog: str = None) -> argp
     parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
         help=f"Directory where data files are written. Default: {common_defaults['data_dir']}")
     default_log_file = get_default_log_file(script)
-    parser.add_argument("-l", "--log", default=default_log_file, 
+    default_log_level = get_default_log_level(script)
+    parser.add_argument("-l", "--log-file", default=default_log_file, 
         help=f"Where logging is written. Default: {default_log_file}.")
+    parser.add_argument("--log-level", default=logging.INFO, 
+        help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ({logging_level_to_string(default_log_level)}).")
     return parser
+
+def add_info_str(label: str, value: str, separator: str = ':') -> str:
+    lbl = label + separator
+    return f"  {lbl:20s} {value}"
+
+def logging_level_to_string(level: int = -1):
+    if level < 0:
+        level = logger.getEffectiveLevel()
+    return logging.getLevelName(level)
+
+def log_args(logger: logging.Logger, script: str, args: argparse.Namespace, epilog: str = None):
+    ns = now_str(fmt = timestamp_str_fmt)
+    logging.info(f" ({ns}) Running {script} with these argument values:")
+    for k, v in vars(args).items():
+        if k == 'log_level':
+            v = f"{v} (== logging.{logging_level_to_string(v)})"
+        logging.info(add_info_str(k, v))
+
+    if epilog:
+        logging.info('')  
+        logging.info(' '+epilog)  
 
 def now() -> datetime:
     return datetime.now()
 
-def now_str(fmt: str = '%Y-%m-%d_%H-%M-%S') -> str:
+def now_str(fmt: str = timestamp_str_fmt) -> str:
     return now().strftime(fmt)
 
 def load_yaml(path: Path) -> dict:
@@ -51,14 +103,20 @@ def use_cases() -> dict:
     }
 
 def get_default_log_file(script_name: str) -> str:
-    log_dir = f'logs/{now_str()}'
+    log_dir = f'logs/{now_str(fmt = timestamp_file_fmt)}'
     return f'{log_dir}/{script_name}.log'
+
+def get_default_log_level(ignored: str) -> int:
+    return logging.INFO
 
 def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO) -> logging.Logger:
     make_parent_dirs(log_file)
     logging.basicConfig(filename=log_file, level=level)
     logger = logging.getLogger(name)
     logger.setLevel(level)
+    
+    level_str = logging.getLevelName(level)
+    print(f'Logging to {log_file}, level {level_str}')    
     return logger
 
 def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:

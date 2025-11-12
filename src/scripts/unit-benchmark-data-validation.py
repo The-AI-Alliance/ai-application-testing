@@ -8,12 +8,7 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from utils import (
-    common_defaults, parse_common_args, 
-    get_default_log_file, make_logger, 
-    load_yaml, model_dir_name, ensure_dirs_exist, 
-    use_cases, make_full_prompt, extract_content
-)
+from utils import setup, load_yaml, ensure_dirs_exist, make_full_prompt, extract_content
 
 class BenchMarkDataValidator:
 
@@ -26,6 +21,8 @@ class BenchMarkDataValidator:
         self.template_dir = template_dir
         self.data_dir     = data_dir
         self.logger       = logger
+
+        ensure_dirs_exist([self.template_dir, self.data_dir], self.logger)
 
         template_file = Path(template_dir, self.template_prefix+".yaml")
         self.logger.info(f"Using template file: {template_file}")
@@ -157,23 +154,12 @@ class BenchMarkDataValidator:
 def main():
 
     script = os.path.basename(__file__)
-    parser = parse_common_args("Validate synthesized Q&A pairs for the healthcare ChatBot.", script)
-    parser.add_argument("-j", "--just-stats", action='store_true', default=False, 
-        help="Just report the final statistics for existing validation data. Default: False")    
-    args = parser.parse_args()
-    
-    logger = make_logger(args.log)
-    print(f'Logging to {args.log}, level INFO')
-
-    ensure_dirs_exist([args.template_dir, args.data_dir], logger)
-
-    logging.info(f"{script}:")
-    logging.info(f"  Model:             {args.model}")
-    logging.info(f"  Service URL:       {args.service_url}")
-    logging.info(f"  Template dir:      {args.template_dir}")
-    logging.info(f"  Data dir:          {args.data_dir}")
-    logging.info(f"  Just report stats? {args.just_stats}")
-    logging.info(f"  Log:               {args.log}")
+    description = "Validate synthesized Q&A pairs for the healthcare ChatBot."
+    args, logger = setup(script, description, 
+        add_arguments = lambda p: p.add_argument("-j", "--just-stats", 
+            action='store_true', 
+            default=False, 
+            help="Just report the final statistics for existing validation data. Default: False"))
 
     validator = BenchMarkDataValidator(
         args.just_stats, args.model, args.service_url, args.template_dir, args.data_dir, logger)
