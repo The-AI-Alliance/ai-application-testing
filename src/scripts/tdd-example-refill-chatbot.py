@@ -5,7 +5,7 @@ import logging
 import Levenshtein
 from litellm import completion
 from openai import OpenAIError
-from utils import setup, load_yaml, make_full_prompt, extract_content, not_none
+from utils import setup, common_defaults, load_yaml, make_full_prompt, extract_content, not_none
 
 class TDDExampleRefillChatbot:
 
@@ -122,13 +122,6 @@ def main():
     if args.lev_threshold < 0.0 or args.lev_threshold > 1.0:
         logger.error(f"The Levenshtein ratio threshold must be between 0.0 and 1.0, inclusive: {args.lev_threshold}")
         sys.exit(1)
-
-    logger.info(f"{script}:")
-    logger.info(f"  Model:                        {args.model}")
-    logger.info(f"  Levenshtein ratio threshold:  {args.lev_threshold}")
-    logger.info(f"  Service URL:                  {args.service_url}")
-    logger.info(f"  Template dir:                 {args.template_dir}")
-    logger.info(f"  Log:                          {args.log}")
 
     tdd = TDDExampleRefillChatbot(args.model, args.lev_threshold, args.service_url, args.template_dir, logger)
     tdd.trial("refill",)

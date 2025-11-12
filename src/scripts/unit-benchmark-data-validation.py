@@ -28,14 +28,14 @@ class BenchMarkDataValidator:
         self.logger.info(f"Using template file: {template_file}")
         self.template = load_yaml(template_file)
 
-    def get_rating(self, line: str) -> int:
+    def get_rating(self, line: str, line_number: int) -> int:
         try:
             js = json.loads(line)
             return js['rating']
         except KeyError as ke:
-            self.logger.warning(f" JSON doesn't have a rating field (exception: {ke}): {line}")
+            self.logger.warning(f" JSON doesn't have a rating field (exception: {ke}):  line #{line_number} = {line}")
         except json.decoder.JSONDecodeError as je:
-            self.logger.warning(f" JSON parsing failed (exception: {je}): {line}")
+            self.logger.warning(f" JSON parsing failed (exception: {je}): line #{line_number} = {line}")
         return -1
 
     def return_stats(self, data_file: str, validation_file: str) -> dict:
@@ -47,7 +47,7 @@ class BenchMarkDataValidator:
                 if len(line.strip()) == 0:
                     continue
                 total_count += 1
-                rating = self.get_rating(line, )
+                rating = self.get_rating(line, total_count)
                 if rating < 0:
                     error_count += 1
                 elif rating > 5:
