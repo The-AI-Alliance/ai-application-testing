@@ -6,11 +6,7 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from utils import (
-    common_defaults, parse_common_args, get_default_log_file, make_logger, 
-    load_yaml, model_dir_name, ensure_dirs_exist, 
-    use_cases, extract_content
-)
+from utils import setup, load_yaml, ensure_dirs_exist, use_cases, extract_content
 
 class BenchMarkDataSynthesizer:
 
@@ -120,18 +116,8 @@ class BenchMarkDataSynthesizer:
 def main():
 
     script = os.path.basename(__file__)
-    parser = parse_common_args("Synthesize Q&A pairs for the healthcare ChatBot.", script)
-    args = parser.parse_args()
-    
-    logger = make_logger(args.log, name=script)
-    print(f'Logging to {args.log}, level INFO')
-
-    logger.info(f"{script}:")
-    logger.info(f"  Model:           {args.model}")
-    logger.info(f"  Service URL:     {args.service_url}")
-    logger.info(f"  Template dir:    {args.template_dir}")
-    logger.info(f"  Data dir:        {args.data_dir}")
-    logger.info(f"  Log:             {args.log}")
+    description = "Synthesize Q&A pairs for the healthcare ChatBot."
+    args, logger = setup(script, description)
     
     synthesizer = BenchMarkDataSynthesizer(
         args.model, args.service_url, args.template_dir, args.data_dir, logger)

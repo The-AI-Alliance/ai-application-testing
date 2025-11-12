@@ -132,7 +132,7 @@ time uv run src/scripts/unit-benchmark-data-validation.py \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
   --data-dir temp/output/ollama/gpt-oss_20b/data \
-  --log temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
+  --log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.

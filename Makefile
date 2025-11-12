@@ -309,7 +309,7 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${OUTPUT_DATA_DIR} \
-		--log ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
+		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
 
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
