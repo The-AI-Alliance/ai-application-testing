@@ -101,7 +101,7 @@ Tools that perform a conventional web search about a topic provide the same util
 ## Using External Tools to Generate Healthcare ChatBot Synthetic Data
 
 {: .todo}
-> **TODO:** Provide an implementation of external tool use for creating datasets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
+> **TODO:** Provide an implementation of external tool use for creating data sets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
 
 TODO: Look at an offline medical reference that can be "scraped" and used to generate and validate data.
 

@@ -27,7 +27,7 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 ### Allen Institute of AI
 
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI tries to meet similar goals as [InstructLab](#redhat). It is discussed by [Nathan Lambert](#nathan-lambert) (below). See [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is discussed by [Nathan Lambert](#nathan-lambert) below. It tries to meet similar goals as [InstructLab](#redhat). See [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
 
 ## Alignment Forum
 
@@ -87,9 +87,9 @@ For the following tool, see the [Testing Agents](({{site.baseurl}}/testing-strat
 
 For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details:
 
-* [FailureSensorIQ](https://github.com/IBM/FailureSensorIQ){:target="faiq"} is a dataset for multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets. 
-* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance dataset benchmark for natural language queries.
-* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific datasets such as finance, legal, climate, and cybersecurity. 
+* [FailureSensorIQ](https://github.com/IBM/FailureSensorIQ){:target="faiq"} is a data set for multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets. 
+* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance data set benchmark for natural language queries.
+* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
 
 ## James Thomas
 
@@ -130,7 +130,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## Nathan Lambert
 
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. It is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapter and the [Allen Institute of AI](#allen-institute-of-ai) entry above.
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. The same content can be found in [this Interconnects blog post](https://www.interconnects.ai/p/frontier-model-post-training){:target="nl"}. [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) discusses these ideas. See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [Allen Institute of AI](#allen-institute-of-ai) entry above.
 
 ## NIST Risk Management Framework
 

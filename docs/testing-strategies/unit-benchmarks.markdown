@@ -27,14 +27,14 @@ When testing AI applications with their [Stochastic]({{site.glossaryurl}}/#stoch
 > **Highlights:**
 >
 > 1. We can adapt [Benchmark]({{site.glossaryurl}}/#benchmark) concepts to be appropriate for unit, integration, and acceptance testing of AI components, creating analogs we call [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark), and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark), respectively.
-> 1. Benchmarks require good datasets with prompts designed to probe how a model or AI-enabled component behaves in a certain area of interest, along with responses that represent acceptable answers. Following conventional practice,[^1] we will use the term question and answer (Q&A) pairs for these prompts and responses.
+> 1. Benchmarks require good data sets with prompts designed to probe how a model or AI-enabled component behaves in a certain area of interest, along with responses that represent acceptable answers. Following conventional practice,[^1] we will use the term question and answer (Q&A) pairs for these prompts and responses.
 > 1. We may have suitable data for our domain that we can adapt for this purpose, for example logs of past customer interactions. However, adapting this data can be time consuming and expensive.
 > 1. When we don't have enough test data available already, we should synthesize the test data we need using generative tools. This is much faster than collecting data or writing examples manually, which is slow, expensive, and error prone, as humans are not good at finding and exploring corner cases, where bugs often occur.
 > 1. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
 > 1. We have to run experiments to generate good Q&A pairs and to determine the number of them we need for comprehensive and effective test coverage.
 > 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation) tools that can be used for synthetic data generation and benchmark creation and execution.
 
-[^1]: Not all benchmarks use Q&A pair datasets like this. For example, some benchmarks use a specially-trained model to evaluate content, like detecting SPAM or hate speech. For simplicity, we will only consider benchmarks that work with Q&A pairs, but most of the principles we will study generalize to other benchmark techniques.
+[^1]: Not all benchmarks use Q&A pair data sets like this. For example, some benchmarks use a specially-trained model to evaluate content, like detecting SPAM or hate speech. For simplicity, we will only consider benchmarks that work with Q&A pairs, but most of the principles we will study generalize to other benchmark techniques.
 
 Benchmarks are the most popular tool used to [Evaluate]({{site.glossaryurl}}/#evaluation) how well models perform in &ldquo;categories&rdquo; of activity with broad scope, like code generation, Q&A (question and answer sessions), instruction following, Mathematics, avoiding hate speech, avoiding hallucinations, etc. The typical, popular benchmarks attempt to provide a wide range of examples across the category and report a single number for the evaluation, the percentage of passing results between 0 and 100%. (We discuss a few examples [here](#adapting-third-party-public-domain-specific-benchmarks).)
 
@@ -44,7 +44,7 @@ Why not write more focused benchmarks? In other words, embrace the nondeterminis
 
 ## Revisiting our TDD Example
 
-In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages. We need better datasets of Q&A pairs. 
+In [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/), we discussed a hypothetical healthcare ChatBot and wrote an informal [unit benchmark]({{site.baseurl}}/arch-design/tdd/#tdd-and-generative-ai) for it. We created a handful of Q&A pairs for testing, but we also remarked that this manual curation is not scalable and it is error prone, as it is difficult to cover all the ways someone might request a refill, including potential corner cases, such as ambiguous messages. We need better data sets of Q&A pairs. 
 
 ### Acquiring the Test Data Required
 
@@ -66,7 +66,7 @@ We will continue to follow this strategy:
 
 1. Identify a new _unit_ (behavior) to implement.
 1. Write one or more new unit benchmarks for it, including...
-  1. Generate a separate dataset of Q&A pairs for the benchmark. 
+  1. Generate a separate data set of Q&A pairs for the benchmark. 
 1. Write whatever application logic is required for the unit, including suitable prompts for the generative models involved.
 
 We will focus on the first two steps. The third step will be covered in [A Working Example]({{site.baseurl}}/working-example).
@@ -145,7 +145,7 @@ The prompts above ask for _at least 100_ Q&A pairs. This is an arbitrary number.
 
 For fine-grained _unit_ benchmarks, a suitable number could vary between tens of pairs, for simpler test scenarios, to hundreds of pairs for &ldquo;average&rdquo; complexity test scenarios, to thousands of pairs for complex test scenarios. The optimal number will also vary from one unit benchmark to another. 
 
-Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark) and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark) have broader scope, by design, they will usually require relatively larger datasets.
+Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark) and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark) have broader scope, by design, they will usually require relatively larger data sets.
 
 There aren't any hard and fast rules; we will have to experiment to determine what works best for each case. More specifically, as we study the results of a particular benchmark's runs, what number of pairs gives us sufficient, comprehensive coverage and therefore confidence that this benchmark thoroughly exercises the behavior? We can always err on the side of too much test data, but we may run into overhead concerns. 
 
@@ -153,7 +153,7 @@ There aren't any hard and fast rules; we will have to experiment to determine wh
 
 What about the cost of running lots of examples through an LLM? Say we have 100 examples in each fine-grained unit benchmark and we have 100 of those benchmarks. How long will each full test run take for those 10,000 invocations and how expensive will they be? We will have to benchmark these runs to answer these questions. If we use a commercial service for model inference during tests, we may need to watch those costs carefully.
 
-For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. Instantaneous would be ideal, but running unit benchmarks are likely to be much slower, especially for larger datasets and doing inference during tests with larger models. Using a hosted service for inference vs. local inference _may_ be slower, but if the development machine is hitting resource limits when doing inference, it may be slower than going over the Internet for a hosted-service inference call!
+For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. Instantaneous would be ideal, but running unit benchmarks are likely to be much slower, especially for larger data sets and doing inference during tests with larger models. Using a hosted service for inference vs. local inference _may_ be slower, but if the development machine is hitting resource limits when doing inference, it may be slower than going over the Internet for a hosted-service inference call!
 
 When we [discuss integration]({{site.baseurl}}/working-example/#integration-into-test-suites) of our benchmarks into our testing suites, like PyTest, We can try to ensure that only a relevant subset of them are invoked for incremental feature changes, while the full suite is invoked less frequently, such as during PR (pull request) processes. 
 
@@ -239,7 +239,7 @@ We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/
 
 While the best-known benchmarks tend to be too broad in scope and generic for our needs, they are good sources of ideas and sometimes actually data. There is also a growing set of domain-specific benchmarks that could provide good starting points for test benchmarks.
 
-Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation), including datasets and tools for safety purposes. Many of the datasets and tools discussed below use this term, so we call it out here for clarity.
+Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation), including data sets and tools for safety purposes. Many of the data sets and tools discussed below use this term, so we call it out here for clarity.
 
 Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here.
 
@@ -248,7 +248,7 @@ Here is a list of some domain-specific benchmarks that we know of. [Let us know]
 
 * [Weval](https://weval.org/sandbox){:target="weval"} from the [Collective Intelligence Project](https://www.cip.org/){:target="cip"}, is a community-driven collection of domain-specific evaluations, designed to allow non-experts to contribute and use evaluation suites relevant to their needs. 
 * [ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciences and ethics.
-* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific datasets such as finance, legal, climate, and cybersecurity. 
+* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
 
 ### Education
 
@@ -275,7 +275,7 @@ I.e., manufacturing, shipping, etc.
 * FailureSensorIQ
   * [paper](https://arxiv.org/abs/2506.03278){:target="_blank"} &ldquo;... a novel Multi-Choice Question-Answering (MCQA) benchmarking system designed to assess the ability of Large Language Models (LLMs) to reason and understand complex, domain-specific scenarios in Industry 4.0. Unlike traditional QA benchmarks, our system focuses on multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets.&rdquo;
   * [GitHub](https://github.com/IBM/FailureSensorIQ){:target="_blank"}
-  * [Dataset](https://huggingface.co/datasets/ibm-research/AssetOpsBench){:target="_blank"}
+  * [Data set](https://huggingface.co/datasets/ibm-research/AssetOpsBench){:target="_blank"}
 
 ### Legal
 
@@ -335,7 +335,7 @@ Similarly, there are other general-purpose tools for authoring, managing, and ru
 
 #### PleurAI Intellagent
 
-[Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} demonstrates some advanced techniques developed by [Plurai](https://www.plurai.ai/){:target="_blank"} for understanding a project's requirements and interdependencies, then using this _graph_ of information to generate synthetic datasets and tests.
+[Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} demonstrates some advanced techniques developed by [Plurai](https://www.plurai.ai/){:target="_blank"} for understanding a project's requirements and interdependencies, then using this _graph_ of information to generate synthetic data sets and tests.
 
 #### LM Evaluation Harness
 
@@ -368,7 +368,7 @@ While use of benchmarks with synthetic data generation of Q&A pairs is standard 
 There is a lot to explore here:
 
 * Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
-* One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Try this experiment using a scale of 1-5, where one is low confidence and five is high confidence. Make sure to also ask for an explanation for why it provided that rating. Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output dataset?  
+* One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Try this experiment using a scale of 1-5, where one is low confidence and five is high confidence. Make sure to also ask for an explanation for why it provided that rating. Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output data set?  
 * Try different runs where you vary the requested number of Q&A pairs in the prompts from tens of pairs up to many hundreds. What are the impacts for compute resources and time required? Look through the data sets. Can you develop an intuition about which sizes are sufficient large for good coverage? Is there an approximate size beyond which lots of redundancy is apparent? Save these outputs for revisiting in subsequent chapters. 
 * Add more unit benchmarks for new behaviors. For example, explore requests for referrals to specialists.
 * Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.

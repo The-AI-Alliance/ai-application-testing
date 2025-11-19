@@ -18,6 +18,9 @@ We discuss how to setup and execute the tools, but you'll need to read the corre
 
 ### Setup
 
+> [!NOTE]
+> The `make` process assumes you are using a shell like `zsh` or `bash`, but the tools described below are written in Python, so the commands shown for running them should work on any operating system with minor adjustments (such as paths to files). [Let us know](https://github.com/The-AI-Alliance/ai-application-testing/discussions) about your experiences.
+
 Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run the following `make` command to do "one-time" setup steps, such as installing tools required. Assuming you are in the repo root directory, run this command:
 
 ```shell

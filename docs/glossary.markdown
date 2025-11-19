@@ -39,6 +39,10 @@ However, it is desirable to make them automated, in which case all operations wi
 
 See also [Test](#test), [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), and [Acceptance Benchmark](#acceptance-benchmark).
 
+## Adaptation
+
+A general term used by [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert) for the addition [Tuning](#tuning) performed on a [Trained](#trained) [Generative AI Model](#generative-ai-model) to improve its [Alignment](#alignment) for user goals, like better domain-specific awareness, instruction following, and awareness of social norms, etc.
+
 ## Agent
 
 An old concept in AI, but now experiencing a renaissance as the most flexible architecture pattern for AI-based applications. Agents are orchestrations of [Generative AI Model](#generative-ai-model) and external service invocations, e.g., planners, schedulers, reasoning engines, data sources (weather, search, ...), etc. In this architecture, the best capabilities of each service and model are leveraged, rather than assuming that models can do everything successfully themselves. Agent-based applications sometimes use multiple models, one per agent, where each one provides some specific capabilities. For example, one model might be process user prompts into back-end API invocations, including to other models, and interpret the results into user-friendly responses.
@@ -49,7 +53,7 @@ An old concept in AI, but now experiencing a renaissance as the most flexible ar
 
 ## AI System
 
-Umbrella term for an application or system with AI [Components](#component), including [Datasets](#dataset), [Generative AI Models](#generative-ai-model) (e.g., [LLMs](#large-language-model), [Evaluation Frameworks](#evaluation-framework) and [Evaluations](#evaluations) for safety detection and mitigation, etc., plus external services, databases for runtime queries, and other application logic that together provide functionality.
+Umbrella term for an application or system with AI [Components](#component), including [Data Sets](#data-set), [Generative AI Models](#generative-ai-model) (e.g., [LLMs](#large-language-model), [Evaluation Frameworks](#evaluation-framework) and [Evaluations](#evaluations) for safety detection and mitigation, etc., plus external services, databases for runtime queries, and other application logic that together provide functionality.
 
 ## Alignment
 
@@ -122,9 +126,9 @@ How closely connected is one [Component](#component) to others in the system? &l
 
 DbC provides many of the same design benefits provided by [TDD](#test-driven-development), which emerged later, such as directing attention to more rigorous API design. Because of the additional benefits of TDD, DbC has largely fallen out of practice, but it's formalism for what constitutes good contracts is still highly valuable and recommended for study. 
 
-## Dataset
+## Data Set
 
-(See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given dataset has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc.
+(See also [\[1\]](#mlc)) A collection of data items used for training, evaluation, etc. Usually, a given data set has a schema (which may be “this is unstructured text”) and some metadata about provenance, licenses for use, transformations and filters applied, etc.
 
 ## Determinism
 
@@ -142,7 +146,7 @@ Much like other software, models and AI systems need to be trusted and useful to
 
 An particular evaluation is the capability of measuring and quantifying how a [Generative AI Model](#generative-ai-model), e.g., an [LLM](#large-language-model), or an [AI System](#ai-system) as a whole handles [Prompts](#prompt) and the kinds of [Responses](#response) produced. For example, an evaluation might be used to see if hate speech is detected in prompts and responses, if responses contain hallucinations, measure the overhead (time and compute) for processing, and for our purposes, implements a required [Use Case]({{site.glossaryurl}}/#use-case), etc.
 
-An evaluation may be implemented in one of several ways. A _classifier_ [LLM](#large-language-model) or another kind of model might be used to score content. A [Dataset](#dataset) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
+An evaluation may be implemented in one of several ways. A _classifier_ [LLM](#large-language-model) or another kind of model might be used to score content. A [Data Set](#data-set) of examples is commonly used. For our purposes, an implementation is API compatible for execution within an [Evaluation Framework](#evaluation-framework). 
 
 See also [Evaluation Framework](#evaluation-framework).
 
@@ -157,6 +161,10 @@ Does the [AI system's](#ai-system) responses exhibit social biases, preferential
 ## Feature
 
 For our purposes, a small bit of functionality provided by an application. It is the increment of change in a single cycle of the [Test-Driven Development](#test-driven-development) process, which could be enhancing some user-visible functionality or adding new functionality in small increments. See also [Use Case](#use-case)
+
+## Fine Tuning
+
+A more specific term for [Tuning](#tuning), a part of [Post-training](#post-training), that emphasizes that after the major learning has happened during [Pre-training](#pre-training), the model behavior is refined and improved with additional training techniques.
 
 ## Function
 
@@ -182,7 +190,7 @@ Quoting from the [Wikipedia page on GANs](https://en.wikipedia.org/wiki/Generati
 
 {: .attention}
 
-> Given a training set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics...
+> Given a training data set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics...
 >
 > The core idea of a GAN is based on the "indirect" training through the discriminator, another neural network that can tell how "realistic" the input seems, which itself is also being updated dynamically. This means that the generator is not trained to minimize the distance to a specific image, but rather to fool the discriminator. This enables the model to learn in an unsupervised manner.
 
@@ -190,7 +198,7 @@ The &ldquo;adversarial&rdquo; part is how the generator attempts to _fool_ the d
 
 ## Generative AI Model
 
-A combination of data and code, usually trained on a [Dataset](#dataset), to support [Inference](#inference) of some kind. 
+A combination of data and code, usually trained on a [Data Set](#data-set), to support [Inference](#inference) of some kind. 
 
 For convenience, in the text, we use the shorthand term _model_ to refer to the generative AI [Component](#component) that has [Nondeterministic](#determinism) [Behavior](#behavior), whether it is a model invoked directly through an API in the same application or invoked by calling another service (e.g., ChatGPT). The goal of this project is to better understand how developers can test models.
 
@@ -208,6 +216,10 @@ A [Unit's](#unit) or [Component's](#component) [State](#state) cannot be modifie
 
 Sending information to a [Generative AI Model](#generative-ai-model) or [AI System](#ai-system) to have it return an analysis of some kind, summarization of the input, or newly generated information, such as text. The term _query_ is typically used when working with [LLMs](#large-language-model). The term _inference_ comes from traditional statistical analysis, including model building, that is used to _infer_ information from data.
 
+## Instruction Fine Tuning
+
+Often abbreviated _IFT_. A form of [Supervised Fine Tuning](#supervised-fine-tuning) that uses a [Labeled Data](#labeled-data) set of instruction prompts and responses. It is designed to improve model performance for specific tasks and for following instructions in general. See also [Tuning](#tuning).
+
 ## Integration Benchmark
 
 The analog of [Integration Tests](#integration-test) for several [Units](#unit) and [Components](#component) working together, where some of them are AI-enabled and exhibit [Stochastic](#stochastic) behaviors. [Benchmark](#benchmark) technology is adapted for the purpose. 
@@ -219,6 +231,15 @@ See also [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integratio
 A test for several [Units](#unit) and [Components](#component) working together that verifies they interoperate properly. These components could be distributed systems, too. When any of the units that are part of the test have [Side Effects](#side-effects) _and_ the purpose of the test is not to explore handling of such side effects, all units with side effects should be replaced with [Test Doubles](#test-double) to make the test [Deterministic](#determinism). 
 
 See also [Test](#test), [Unit Test](#unit-test), [Unit Benchmark](#unit-benchmark), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), and [Acceptance Benchmark](#acceptance-benchmark)..
+
+## Labeled Data
+
+Labeled data contains content used to train a model and corresponding _labels_ of expected outcomes. A classic example is a labeled data set for [Training](#training) a SPAM filter, where example emails are labeled SPAM or not SPAM. In contrast, [Unlabeled Data](#unlabeled-data) contains no such labels. Labeled data is used in model [Tuning](#tuning), while sets of unlabeled data are used for training raw [Generative AI Models](#generative-aI-models). 
+
+In the context of [Generative AI Models](#generative-aI-models), there are several popular formats for labeled data:
+
+* **Question and answer (Q&A) pairs:** A prompt, such as a question or an instruction to do something, is accompanied by an answer to the question or an expected response to the instruction.
+* **Preference data:** Similar to Q&A pairs, but in addition to the _preferred_ or _chosen_ answer, a _rejected_ answer is provided, which supports teaching about responses that are good as well as bad.
 
 ## Large Language Model
 
@@ -251,6 +272,14 @@ From the [_Merriam-Webster Dictionary_]({{site.baseurl}}/references/#merriam-web
 ## Predictable
 
 In the context of software, the quality that knowing a [Unit's](#unit) or [Components](#component) history of past [Behavior](#behavior) and its design, you can predict its future behavior reliably. See also [State Machine](#state-machine).
+
+## Pre-training
+
+See [Training](#training). A more precise term in the context of [Generative AI Model](#generative-ai-model) training, where pre-training uses massive datasets to teach models from scratch, followed by a [Post-training](#post-training) ([Tuning](#tuning)) process to refine the behaviors as needed.
+
+## Post-training
+
+See [Tuning](#tuning). A more precise term in the context of [Generative AI Model](#generative-ai-model) training, where [Pre-training](#pre-training) uses massive datasets to teach models from scratch, followed by a ost training (tuning) process to refine the behaviors as needed.
 
 ## Probability and Statistics
 
@@ -288,13 +317,29 @@ When an unexpected [Behavior](#behavior) change is introduced into a previously-
 
 Automated [Tests](#test) are designed to catch regressions as soon as they occur, making it easier to diagnose the change that caused the regression, as well as detecting the regression in the first place.
 
+## Reinforcement Fine Tuning
+
+TODO. 
+
+See the discussion of [Reinforcement Fine Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/#reinforcement-fine-tuning) in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
+
 ## Reinforcement Learning
 
-Reinforcement learning (RL) is a form of machine learning, often used for optimizing control or similar systems. In RL, an agent performs a loop where it observes the state of the &ldquo;world&rdquo; visible to it at the current time, it takes what it thinks is a suitable action for the next step, chosen to maximize a reward signal, often with the goal of maximizing the long-term reward, such as wining a game. The _reinforcement_ aspect is an update at each step that is done to a model of some kind used by the agent to assess which steps produce which rewards, given the current state. However, when choosing the next step, the _best_ choice is not always made. Some degree of randomness is introduced so that the agent explores all possible states and rewards, rather than getting stuck always making choices that are known good, but may be less optimal than unknown choices.
+Reinforcement learning (RL) is a form of machine learning, often used for optimizing control or similar systems. In RL, an agent performs a loop where it observes the state of the &ldquo;world&rdquo; visible to it at the current time, it takes what it thinks is a suitable action for the next step, chosen to maximize a reward signal, often with the goal of maximizing the long-term reward, such as wining a game. The _reinforcement_ aspect is an update at each step that is done to a _policy_ of some kind that used by the agent to decide which actions in subsequent steps are most likely to produce maximize long-term, cummulative reward, given the current known state. However, when choosing the next step, the _best_ choice is not always made. Some degree of randomness is introduced so that the agent explores all possible states and rewards, rather than getting stuck always choosing the same actions that are known good, but may be less optimal than actions that have not yet been tried. 
 
-In the generative AI context, RL is a popular tool in the suite of model [Tuning](#tuning) processes that are used to improve model performance in various ways.
+Variations include having a dedicated _reward model_ that calculates the reward based on the chosen action. When RL is used for a game, for example, it might be obvious what the reward is for any action and state combination, i.e., did you land on square that reveals a &ldquo;boost&rdquo; of some kind. In contrast, reward determination like deciding if an LLM output is a good response to a prompt, etc. is not so simple. 
 
-See also [Reinforcement Finetuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/#reinforcement-finetuning) in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
+In the generative AI context, RL is a popular tool in the suite of model [Tuning](#tuning) processes that are used to improve model performance in various ways. In particular, [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback) (RLHF) is a popular technique for [Adaptation](#adaptation).
+
+See also the discussion of [Reinforcement Fine Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/#reinforcement-fine-tuning) in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/), which describes RL in more detail. 
+
+## Reinforcement Learning with Human Feedback
+
+A [Reinforcement Learning](#reinforcement-learning) introduced by OpenAI that uses human data to train a reward model, which is then used with RL to improve the training of the [Generative AI Model](#generative-ai-model). This is an expensive process, because of the expense of acquiring human generated, often expert, data. 
+
+## Reinforcement Learning with Verifiable Rewards
+
+A [Reinforcement Learning](#reinforcement-learning) approach for LLMs where the response from a model during an RL step can be verified externally. For example, does the generated code compile and pass existing unit tests? See [Awesome RLVR](https://github.com/opendilab/awesome-RLVR){:target="_blank"} for more details.
 
 ## Repeatable
 
@@ -350,6 +395,10 @@ A formal model of how the [State](#state) of a component can transition from one
 
 The behavior of a system where observed values are governed by a random probability distribution. For example, when flipping a coin repeatedly, the observed values, heads or tails, are governed by a distribution that predicts 50% of the time heads will be observed and 50% of the time tails will be observed, assuming a _fair coin_ (not weighted on one side or the other). The value you observe for any given flip is random; you can't predict exactly which possibility will happen, only that there is an equal probability of heads or tails. After performing more and more flips, the total count of heads and tails should be very close to equal. See also [Probabilities and Statistics](#probabilities-and-statistics).
 
+## Supervised Fine Tuning
+
+Often abbreviated _SFT_. A more general term than [Instruction Fine Tuning](#instruction-fine-tuning), but often used synonymously. _Supervised_ is an old term in machine learning for any kind of training algorithm that uses [Labeled Data](#labeled-data), i.e., data that includes the expected answers. See also [Tuning](#tuning).
+
 ## System Prompt
 
 A commonly-used, statically-coded part of the [Context](#context) information added by an [AI System](#ai-system) the [Prompt](#prompt) before sending it to the [LLM](#large-language-model). System prompts are typically used to provide the model with overall guidance about the application's purpose and how the LLM should respond. For example, it might include phrases like &ldquo;You are a helpful software development assistant.&rdquo;
@@ -388,15 +437,13 @@ For language [Generative AI Models](#generative-ai-model), the training texts an
 
 ## Training
 
-In our context, training is the processes used to teach a model, such as a [Generative AI Models](#generative-ai-model) how to do its intended job. 
+In our context, training is the processes used to teach a model, such as a [Generative AI Models](#generative-ai-model) how to do its intended job. A more precise term used in generative AI model development is _pre-training_, the training process that uses a massive data corpus to teach the model facts about the world, how to speak and understand human language, and do some skills. However, the resulting model uses does poorly on specialized tasks and even basic skills like following a user's instructions, conforming to social norms (e.g., avoiding hate speech), etc. 
 
-In the generative AI case, we often speak of _pretraining_, the training process that uses a massive data corpus to teach the model facts about the world, how to speak and understand human language, and do some skills. However, the resulting model often does poorly on specialized tasks and even basic skills like following a user's instructions, conforming to social norms (e.g., avoiding hate speech), etc. 
-
-That's where a second [Tuning](#tuning) phase comes in, a suite of processes used to improve the models performance on many general or specific skills.
+That's where a second [Tuning](#tuning) (also sometimes called _post-training_) phase comes in, a suite of processes used to improve the models performance on many general or specific skills.
 
 ## Tuning
 
-Tuning refers to one or more processes used to transform a [Pretrained](#training) model into one that exhibits much better desired [Behaviors](#behavior) (like instruction following) or specialized domain knowledge.
+Tuning, or _post-training_, refers to one or more processes used to transform a [Pre-trained](#training) model into one that exhibits much better desired [Behaviors](#behavior) (like instruction following) or specialized domain knowledge. The term _fine tuning_ (sometimes spelled _finetuning_) is also widely used, e.g., for [Instruction Fine Tuning](#instruction-fine-tuning) and [Supervised Fine Tuning](#supervised-fine-tuning)
 
 ## Unit
 
@@ -419,6 +466,10 @@ A common term for an end-to-end user activity done with a system, often broken d
 A test for a [Unit](#unit) that exercises its [Behavior](#behavior) in isolation from all other [Functions](#function) and [State](#state). When the unit being tested has [Side Effects](#side-effects), because of other units it invokes, all such side effects must be replaced with [Test Doubles](#test-double) to make the test [Deterministic](determinism). Note that writing a unit test as part of [Test-Driven Development](#test-driven-development) inevitably begins with a [Refactoring](#refactoring) step to modify the code, while preserving the current behavior, so that it is better positioned to support implementing the new functionality.
 
 See also [Test](#test), [Unit Benchmark](#unit-benchmark), [Integration Test](#integration-test), [Integration Benchmark](#integration-benchmark), [Acceptance Test](#acceptance-test), [Acceptance Benchmark](#acceptance-benchmark).
+
+## Unlabeled Data
+
+Data without labels indicating expected &ldquo;information&rdquo; about the data, such as objects in images or themes in text examples. Massive sets of unlabeled data are used for [Training](#training) raw [Generative AI Models](#generative-ai-models), while [Labeled Data](#labeled-data) is typically used for [Tuning](#tuning) to improve those models to meet specific requirements.
 
 ## Vibe Coding
 
