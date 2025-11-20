@@ -51,7 +51,7 @@ Our goal is for AI benchmarking and testing practices to evolve similarly so tha
 
 ## Tuning Ideas for Further Exploration
 
-Here are some ideas we are investigating.
+Here are some ideas we are investigating. See also the [&ldquo;rough notes&rdquo;]({{site.baseurl}}/future-ideas/notes-on-tuning/) on tuning techniques, which will eventually be refined and incorporated into other chapters, especially this one.
 
 ### Reinforcement Fine Tuning
 
@@ -102,13 +102,9 @@ Here are some other tools for model tuning.
 {: .todo}
 > **TODO:** Revamp this list with newer tools. Expand the discussion and show one or more examples of use.
 
-### InstructLab
-
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
-
 ### Open Instruct
 
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI tries to meet similar goals as InstructLab. It is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine tuning) content discussed above.
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is a tool suite for instruction tuning of models. It is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine-tuning) content discussed above. See also [InstructLab](#instructlab).
 
 ### Unsloth
 
@@ -116,6 +112,10 @@ Unsloth is an OSS tool suite for model training and tuning, with useful guides o
 
 * [Fine-tuning LLMs](https://docs.unsloth.ai/get-started/fine-tuning-llms-guide){:target="u-ft"}
 * [Reinforcement Learning](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide){:target="u-rl"}
+
+### InstructLab
+
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab has similar goals compared to [Open Instruct](#open-instruct). It provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab provides an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
 
 ## Examples of Domain-specific Tuned Models
 

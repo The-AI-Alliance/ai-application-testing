@@ -11,11 +11,13 @@ In [Architecture and Design for Testing]({{site.baseurl}}/arch-design/), we disc
 
 However, both sections assumed that software development principles and practices won't change fundamentally with the introduction of AI. This section explores how AI might stimulate more fundamental changes in software development, both generally and in the specific context of application testing. Because this section is more forward looking, it is also more speculative.
 
-We consider three topics:
+We consider the following topics:
 
 * [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/): As the scope and power of code generation improves, it becomes more and more important to structure effective prompts. How can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
 * [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
 * [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior?
+
+There is also a chapter of [&ldquo;rough notes&rdquo;]({{site.baseurl}}/future-ideas/notes-on-tuning/) on tuning techniques. They will eventually be refined and incorporated into other chapters, especially [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
 
 ## What's Next?
 
