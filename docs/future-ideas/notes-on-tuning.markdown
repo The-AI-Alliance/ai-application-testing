@@ -30,15 +30,18 @@ This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning) te
 > 1. Tuning has different meanings and goals for different people, which determines the best techniques to use, along with different data and compute requirements.
 >     1. For model builders, tuning means taking a raw model and making it better at general instruction following, adherence to social norms, etc. This task requires the largest data sets and most sophisticated, leading-edge techniques.
 >     1. For end users building apps, tuning means taking one of those tuned models and further tuning it for domain-specific behaviors, etc. This task requires much smaller data sets, although they will need to be more specialized for the domain-specific behaviors, and more straightforward tuning techniques, such as [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning).
-> 1. Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is recommended for learning about tuning techniques.
+> 1. Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is recommended for learning about tuning techniques. Their [LLM Course](https://huggingface.co/learn/llm-course/chapter1/1){:target="_blank"} is recommended for a general introduction to LLMs.
 
 ## Hugging Face Training on Model Tuning
 
-Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning). It is not yet complete, but projected to be done by the end of 2025.
+Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning). It is not yet complete, but projected to be done by the end of 2025. 
+
+Some of the modules, like for [instruction tuning](huggingface.co/learn/smol-course/unit1/1){:target="_blank"} are more relevant when tuning &ldquo;raw&rdquo; base models to be better at instruction following, aligned with social norms, etc. For domain-specific tuning, such as we discuss in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning), you would normally start with a model that is already instruction tuned and proceed from there.
 
 {: .tip}
 > **TIP:** This is the best place to start for practical training on tuning.
 
+Also recommended is their more general [LLM Course](https://huggingface.co/learn/llm-course/chapter1/1){:target="_blank"}, which provides useful background information that is assumed by the smol course.
 
 ## &ldquo;How to approach post-training for AI applications&rdquo; - Nathan Lamb0
 This section summarizes of [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert)'s NeurIPS 2024 talk, [How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} (December 10, 2024), along with the following supporting blog posts and other links that are referenced in the presentation and listed here in reverse chronological order. Some terms in this list will be defined later:
