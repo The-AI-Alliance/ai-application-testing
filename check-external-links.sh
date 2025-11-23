@@ -13,6 +13,12 @@ For markdown files, it prints anchor tags ("[name](url)") that don't
 have a "{:target=...}" appended to them. For HTML files, it looks for 
 the equivalent "<a href="..." target="...">...</a>".
 
+It also handles our way of referencing the separate glossary site, where
+the markdown URL will be '[Term]({{site.glossaryurl}}/#term)' and not have
+an explicit 'http...' leader. 
+
+It incorrectly flags image URLs, e.g., '![label](https://example.com/image.png)'.
+
 It doesn't exit with an error if such links are found, because in some
 cases, this might be intentional.
 
@@ -79,6 +85,10 @@ do
 		echo "$path $dir"
 	fi
 	$eg -nHoR '\(https?[^)]+\)(\S*)' \
+		--include '*.markdown' --include '*.md' \
+		--exclude-dir '_site' --exclude-dir '_sass' \
+		$path | $eg -v 'target='
+	$eg -nHoR '\(\{\{site.glossaryurl\}\}[^)]*\)(\S*)' \
 		--include '*.markdown' --include '*.md' \
 		--exclude-dir '_site' --exclude-dir '_sass' \
 		$path | $eg -v 'target='
