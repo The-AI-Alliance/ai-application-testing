@@ -19,7 +19,7 @@ has_children: false
 
 In _LLM as a Judge_, a separate model serves as a _judge_ of the quality of data or model outputs. In the context of testing, a judge can be used for two purposes:
 
-1. Evaluate the quality of the Q&A pairs synthesized for [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), as discussed in the [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks) chapter. 
+1. Evaluate the quality of the Q&A pairs synthesized for [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark){:target="_glossary"}, as discussed in the [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks) chapter. 
 2. Evaluate the quality of model responses during test runs.
 
 In production deployments, an LLM could also be used to judge model responses during inference, as a &ldquo;sanity check&rdquo;, before allowing the response to be used in further processing or returned to a user. 

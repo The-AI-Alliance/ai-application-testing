@@ -17,28 +17,28 @@ has_children: false
 {:toc}
 </details>
 
-When testing AI applications with their [Stochastic]({{site.glossaryurl}}/#stochastic) model behaviors, an ad-hoc combination of existing [Benchmarks]({{site.glossaryurl}}/#benchmark) and &ldquo;playing around&rdquo; manual testing are typically used. This is a step backwards from the rigor of testing practices for non-AI applications, where deterministic, repeatable, and automated tests are the norm, covering [Unit Testing]({{site.glossaryurl}}/#unit-test) for fine-grained behavior, [Integration Testing]({{site.glossaryurl}}/#integration-test) for verifying that units work correctly together, and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test) for final validation that the [Behaviors]({{site.glossaryurl}}/#behavior) of [Features]({{site.glossaryurl}}/#feature) and [Use Cases]({{site.glossaryurl}}/#use-case) are correctly implemented.
+When testing AI applications with their [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"} model behaviors, an ad-hoc combination of existing [Benchmarks]({{site.glossaryurl}}/#benchmark){:target="_glossary"} and &ldquo;playing around&rdquo; manual testing are typically used. This is a step backwards from the rigor of testing practices for non-AI applications, where deterministic, repeatable, and automated tests are the norm, covering [Unit Testing]({{site.glossaryurl}}/#unit-test){:target="_glossary"} for fine-grained behavior, [Integration Testing]({{site.glossaryurl}}/#integration-test){:target="_glossary"} for verifying that units work correctly together, and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test){:target="_glossary"} for final validation that the [Behaviors]({{site.glossaryurl}}/#behavior){:target="_glossary"} of [Features]({{site.glossaryurl}}/#feature){:target="_glossary"} and [Use Cases]({{site.glossaryurl}}/#use-case){:target="_glossary"} are correctly implemented.
 
-[&ldquo;Unit Benchmarks&rdquo;]({{site.glossaryurl}}/#unit-benchmark) are an adaptation of benchmarking tools and techniques for the same kinds of focused tests that traditional tests provide, this time for AI components. The goal is to use them, in combination with more traditional tests, to return to the practice of comprehensive, repeatable, and automatable testing, even for AI-enabled applications. The concepts generalize to [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark) and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark).
+[&ldquo;Unit Benchmarks&rdquo;]({{site.glossaryurl}}/#unit-benchmark){:target="_glossary"} are an adaptation of benchmarking tools and techniques for the same kinds of focused tests that traditional tests provide, this time for AI components. The goal is to use them, in combination with more traditional tests, to return to the practice of comprehensive, repeatable, and automatable testing, even for AI-enabled applications. The concepts generalize to [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark){:target="_glossary"} and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark){:target="_glossary"}.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. We can adapt [Benchmark]({{site.glossaryurl}}/#benchmark) concepts to be appropriate for unit, integration, and acceptance testing of AI components, creating analogs we call [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark), [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark), and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark), respectively.
+> 1. We can adapt [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} concepts to be appropriate for unit, integration, and acceptance testing of AI components, creating analogs we call [Unit Benchmarks]({{site.glossaryurl}}/#unit-benchmark){:target="_glossary"}, [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark){:target="_glossary"}, and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark){:target="_glossary"}, respectively.
 > 1. Benchmarks require good data sets with prompts designed to probe how a model or AI-enabled component behaves in a certain area of interest, along with responses that represent acceptable answers. Following conventional practice,[^1] we will use the term question and answer (Q&A) pairs for these prompts and responses.
 > 1. We may have suitable data for our domain that we can adapt for this purpose, for example logs of past customer interactions. However, adapting this data can be time consuming and expensive.
 > 1. When we don't have enough test data available already, we should synthesize the test data we need using generative tools. This is much faster than collecting data or writing examples manually, which is slow, expensive, and error prone, as humans are not good at finding and exploring corner cases, where bugs often occur.
-> 1. A [Teacher Model]({{site.glossaryurl}}/#teacher-model) can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
+> 1. A [Teacher Model]({{site.glossaryurl}}/#teacher-model){:target="_glossary"} can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
 > 1. We have to run experiments to generate good Q&A pairs and to determine the number of them we need for comprehensive and effective test coverage.
-> 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation) tools that can be used for synthetic data generation and benchmark creation and execution.
+> 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"} tools that can be used for synthetic data generation and benchmark creation and execution.
 
 [^1]: Not all benchmarks use Q&A pair data sets like this. For example, some benchmarks use a specially-trained model to evaluate content, like detecting SPAM or hate speech. For simplicity, we will only consider benchmarks that work with Q&A pairs, but most of the principles we will study generalize to other benchmark techniques.
 
-Benchmarks are the most popular tool used to [Evaluate]({{site.glossaryurl}}/#evaluation) how well models perform in &ldquo;categories&rdquo; of activity with broad scope, like code generation, Q&A (question and answer sessions), instruction following, Mathematics, avoiding hate speech, avoiding hallucinations, etc. The typical, popular benchmarks attempt to provide a wide range of examples across the category and report a single number for the evaluation, the percentage of passing results between 0 and 100%. (We discuss a few examples [here](#adapting-third-party-public-domain-specific-benchmarks).)
+Benchmarks are the most popular tool used to [Evaluate]({{site.glossaryurl}}/#evaluation){:target="_glossary"} how well models perform in &ldquo;categories&rdquo; of activity with broad scope, like code generation, Q&A (question and answer sessions), instruction following, Mathematics, avoiding hate speech, avoiding hallucinations, etc. The typical, popular benchmarks attempt to provide a wide range of examples across the category and report a single number for the evaluation, the percentage of passing results between 0 and 100%. (We discuss a few examples [here](#adapting-third-party-public-domain-specific-benchmarks).)
 
-We discussed in [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/#test-scope) that good software components and tests are very specific to a particular scope. A unit test that examines one specific [Behavior]({{site.glossaryurl}}/#behavior) of a [Unit]({{site.glossaryurl}}/#unit), while keeping everything else _invariant_. The scope of an integration test is scope of the units and [Components]({{site.glossaryurl}}/#component) it examines, while the scope of an acceptance test is one end-to-end [Use Case]({{site.glossaryurl}}/#use-case) [Scenario]({{site.glossaryurl}}/#scenario).
+We discussed in [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/#test-scope) that good software components and tests are very specific to a particular scope. A unit test that examines one specific [Behavior]({{site.glossaryurl}}/#behavior){:target="_glossary"} of a [Unit]({{site.glossaryurl}}/#unit){:target="_glossary"}, while keeping everything else _invariant_. The scope of an integration test is scope of the units and [Components]({{site.glossaryurl}}/#component){:target="_glossary"} it examines, while the scope of an acceptance test is one end-to-end [Use Case]({{site.glossaryurl}}/#use-case){:target="_glossary"} [Scenario]({{site.glossaryurl}}/#scenario){:target="_glossary"}.
 
 Why not write more focused benchmarks? In other words, embrace the nondeterminism of models and use the benchmark concept, just focused narrowly for each particular scope?
 
@@ -54,7 +54,7 @@ We may have historical data we can adapt into test data, such as saved online ch
 
 Also, for some domains, we may have good data, but it may have tight restrictions on use, like patient healthcare data subject to privacy laws. Using such data for testing purposes may be disallowed.
 
-For completeness, another use for domain-specific historical data is to [Tune]({{site.glossaryurl}}/#tune) a &ldquo;generic&rdquo; model to be better at our use cases. The tuned model is then used for testing and production inference. Tuning is not yet a widespread technique for building AI applications, but tuning tools and techniques are becoming easier to use by non experts, so we anticipate that tuning will become more routine over time.
+For completeness, another use for domain-specific historical data is to [Tune]({{site.glossaryurl}}/#tune){:target="_glossary"} a &ldquo;generic&rdquo; model to be better at our use cases. The tuned model is then used for testing and production inference. Tuning is not yet a widespread technique for building AI applications, but tuning tools and techniques are becoming easier to use by non experts, so we anticipate that tuning will become more routine over time.
 
 Suppose we don't have enough historical test data for our needs, for whatever reasons. Generation of synthetic data is our tool of choice.
 
@@ -145,7 +145,7 @@ The prompts above ask for _at least 100_ Q&A pairs. This is an arbitrary number.
 
 For fine-grained _unit_ benchmarks, a suitable number could vary between tens of pairs, for simpler test scenarios, to hundreds of pairs for &ldquo;average&rdquo; complexity test scenarios, to thousands of pairs for complex test scenarios. The optimal number will also vary from one unit benchmark to another. 
 
-Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark) and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark) have broader scope, by design, they will usually require relatively larger data sets.
+Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark){:target="_glossary"} and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark){:target="_glossary"} have broader scope, by design, they will usually require relatively larger data sets.
 
 There aren't any hard and fast rules; we will have to experiment to determine what works best for each case. More specifically, as we study the results of a particular benchmark's runs, what number of pairs gives us sufficient, comprehensive coverage and therefore confidence that this benchmark thoroughly exercises the behavior? We can always err on the side of too much test data, but we may run into overhead concerns. 
 
@@ -226,9 +226,9 @@ Finally, even though the system prompt emphasizes that we want _at least_ 100 Q&
 
 In the TDD example, we used a system prompt to cause the LLM to _almost_ always return a deterministic answer for the two cases, a prescription refill request and everything else. When you have a scenario like this, it simplifies evaluating the Q&A pair. We were able to hard-code logic in the tool to compare the actual and expected outputs, after some minor reformatting of the actual output to eliminate some trivial differences.
 
-For the more general case, where the output isn't as deterministic, but more [Stochastic]({{site.glossaryurl}}/#stochastic), we have to lean on other techniques.
+For the more general case, where the output isn't as deterministic, but more [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"}, we have to lean on other techniques.
 
-One of the best techniques is to rely on a [Teacher Model]({{site.glossaryurl}}/#teacher-model) to evaluate synthetic data based on a few criteria:
+One of the best techniques is to rely on a [Teacher Model]({{site.glossaryurl}}/#teacher-model){:target="_glossary"} to evaluate synthetic data based on a few criteria:
 
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
@@ -239,7 +239,7 @@ We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/
 
 While the best-known benchmarks tend to be too broad in scope and generic for our needs, they are good sources of ideas and sometimes actually data. There is also a growing set of domain-specific benchmarks that could provide good starting points for test benchmarks.
 
-Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation), including data sets and tools for safety purposes. Many of the data sets and tools discussed below use this term, so we call it out here for clarity.
+Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"}, including data sets and tools for safety purposes. Many of the data sets and tools discussed below use this term, so we call it out here for clarity.
 
 Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here.
 
@@ -312,7 +312,7 @@ If you use synthetic data generation a lot in your organization, it will become 
 
 #### synthetic-data-kit
 
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning) with Llama models.
+Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models.
 
 #### A Survey of Data Synthesis Techniques
 
@@ -324,7 +324,7 @@ Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/)
 
 #### Older Synthetic Data Tools
 
-[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation, serving different purposes. For example, several use [Generative Adversarial Networks]({{site.glossaryurl}}/#generative-adversarial-networks), a technique most popular in the late 2010s.
+[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation, serving different purposes. For example, several use [Generative Adversarial Networks]({{site.glossaryurl}}/#generative-adversarial-networks){:target="_glossary"}, a technique most popular in the late 2010s.
 
 ### More Advanced Benchmark and Evaluation Tools
 

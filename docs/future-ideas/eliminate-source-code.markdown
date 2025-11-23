@@ -47,7 +47,7 @@ Other approaches, such as &ldquo;drag-and-drop&rdquo; graphical environments hav
 
 ### Writing Applications with Generative AI
 
-The generative AI community has rapidly improved the ability of models to automate many of the manual activities involving source code, especially code generation from prompts. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called [Vibe Coding]({{site.glossaryurl}}/#vibe-coding).
+The generative AI community has rapidly improved the ability of models to automate many of the manual activities involving source code, especially code generation from prompts. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"}.
 
 However, current implementations still generate source code, sometimes imperfectly. For &ldquo;important&rdquo; applications, the resulting code still requires all the same engineering processes to validate it works correctly. The technology has already demonstrated significant productivity boosts, but it is still immature enough that being able to read, understand, and modify the generated source code is usually necessary to ensure the desired results.
 
@@ -55,7 +55,7 @@ However, current implementations still generate source code, sometimes imperfect
 
 If generative AI can (or will be able to) create complete applications from user prompts, it begs the question; can we finally replace source code with something better, a representation that avoids the limitations of source code?
 
-At a minimum, the alternative would have to support a comprehensive library of [Components]({{site.glossaryurl}}/#component) with clear, unambiguous abstraction boundaries and behaviors, so the application generation can join them together to implement the desired functionality. Also, the user will need some way to ensure correct behavior, or be assured by the system that the behavior is correct. Once deployed, these applications will still require monitoring tools, in part to support the required ability to detect, diagnose, and fix problems. 
+At a minimum, the alternative would have to support a comprehensive library of [Components]({{site.glossaryurl}}/#component){:target="_glossary"} with clear, unambiguous abstraction boundaries and behaviors, so the application generation can join them together to implement the desired functionality. Also, the user will need some way to ensure correct behavior, or be assured by the system that the behavior is correct. Once deployed, these applications will still require monitoring tools, in part to support the required ability to detect, diagnose, and fix problems. 
 
 Hence, if the alternative representation isn't human readable itself, it would need to expose enough information, let's call it _metadata_, for humans to intervene as necessary, at least until AI can perform these tasks autonomously instead. Determining the right amount metadata won't be easy, and it may turn out to be very close to just having source code itself!
 

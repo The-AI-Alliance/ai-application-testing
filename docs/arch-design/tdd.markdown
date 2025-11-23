@@ -17,15 +17,15 @@ has_children: false
 {:toc}
 </details>
 
-In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism) into applications that break our traditional reliance on deterministic behavior for reasoning about how the system behaves during design and implementation, including writing tests that are repeatable, comprehensive, and automated.
+In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems/), we discussed how Generative AI introduces new forms of [Nondeterminism]({{site.glossaryurl}}/#determinism){:target="_glossary"} into applications that break our traditional reliance on deterministic behavior for reasoning about how the system behaves during design and implementation, including writing tests that are repeatable, comprehensive, and automated.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component), like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic) processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark). We build our first example exploring this approach.
-> 1. Experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt) and the full [Prompt]({{site.glossaryurl}}/#prompt) to find the minimally-sufficient content (for reduced overhead) that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt) design is still something of a _black art_.
+> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component){:target="_glossary"}, like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic){:target="_glossary"} processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark){:target="_glossary"}. We build our first example exploring this approach.
+> 1. Experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt){:target="_glossary"} and the full [Prompt]({{site.glossaryurl}}/#prompt){:target="_glossary"} to find the minimally-sufficient content (for reduced overhead) that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt){:target="_glossary"} design is still something of a _black art_.
 > 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test. Furthermore, to optimize costs, consider first passing prompts through a low-overhead classifier model. For some classifications, like FAQs, the application can return a pre-formatted response, while for other other classifications, the prompt can be routed to a more powerfully, but more expensive model for inference.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
 > 4. Include robust fall-back handling when a good response is not obvious. Spend time on designing for edge cases and _graceful recovery_.
@@ -35,11 +35,11 @@ Let us talk about &ldquo;traditional&rdquo; testing first, and introduce our fir
 
 ## What We Learned from Test-Driven Development
 
-The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior) of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Component]({{site.glossaryurl}}/#component) being designed and implemented right now, but also dependencies on other components, and how dependencies should be managed. 
+The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development){:target="_glossary"} (TDD) several decades ago made it clear that TDD is really a _design_ discipline as much as a _testing_ discipline. When you write a test before you write the code necessary to make the test pass, you are in the frame of mind of specifying the expected [Behavior]({{site.glossaryurl}}/#behavior){:target="_glossary"} of the new code, expressed in the form of a test. This surfaces good, minimally-sufficient abstraction boundaries organically, both the [Component]({{site.glossaryurl}}/#component){:target="_glossary"} being designed and implemented right now, but also dependencies on other components, and how dependencies should be managed. 
 
 We discussed the qualities that make good components in [Component Design]({{site.baseurl}}/arch-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/arch-design/component-design/#coupling-cohesion). TDD promotes those qualities.
 
-The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor) the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
+The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor){:target="_glossary"} the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
 Hence, the application design also evolves incrementally and iteratively, and it is effectively maintained to be _optimal_ for the _current_ feature set, without premature over-engineering that doesn't support the current working system. However, refactoring enables the system to evolve as new design requirements emerge in subsequent work.
 
@@ -47,7 +47,7 @@ After refactoring, only then is a new test written for the planned feature chang
 
 That doesn't mean you proceed naively or completely ignore longer-term goals. During this process, the software design decisions you make reflect the perspective, intuition, and idioms you have built up through years of experience.
 
-This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#Determinism) behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency). 
+This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#Determinism){:target="_glossary"} behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency){:target="_glossary"}. 
 
 ### Test Scope
 
@@ -55,9 +55,9 @@ Finally, well-designed tests, like units and components themselves, are very spe
 
 | Test Type | Scope | Purpose |
 | :-------- | :---- | :------ |
-| **Unit tests** | Very fine grained: one _unit_ | How does this unit [Behave]({{site.glossaryurl}}/#behavior), keeping everything else _invariant_? |
+| **Unit tests** | Very fine grained: one _unit_ | How does this unit [Behave]({{site.glossaryurl}}/#behavior){:target="_glossary"}, keeping everything else _invariant_? |
 | **Integration tests** | The scope of several units and components | How does this combination of units and components behave together? |
-| **Acceptance tests** | The whole application | Does this [Scenario]({{site.glossaryurl}}/#scenario) for a [Use Case]({{site.glossaryurl}}/#use-case) work as specified from end to end? |
+| **Acceptance tests** | The whole application | Does this [Scenario]({{site.glossaryurl}}/#scenario){:target="_glossary"} for a [Use Case]({{site.glossaryurl}}/#use-case){:target="_glossary"} work as specified from end to end? |
 
 
 ## TDD and Generative AI
@@ -66,14 +66,14 @@ So, how can we practice TDD for tests of stochastic components? First, to be cle
 
 First, what aspects of TDD _don't_ need to change? We should still strive for iterative and incremental development of capabilities, with corresponding, focused tests. What changes is how we write those tests when the component behaves stochastically.
 
-Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot) for patients to send messages to a healthcare provider. In some cases, an immediate reply can be generated automatically. In the rest of the cases, a &ldquo;canned&rdquo; response will be returned to the user that the provider will have to respond personally as soon as possible. (The complete ChatBot application is described in [A Working Example]({{site.baseurl}}/working-example).)
+Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot){:target="_glossary"} for patients to send messages to a healthcare provider. In some cases, an immediate reply can be generated automatically. In the rest of the cases, a &ldquo;canned&rdquo; response will be returned to the user that the provider will have to respond personally as soon as possible. (The complete ChatBot application is described in [A Working Example]({{site.baseurl}}/working-example).)
 
 {: .warning}
 > **DISCLAIMER:** We will use this healthcare ChatBot example throughout this guide, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
 Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
-Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt). So, let's write a &ldquo;unit benchmark&rdquo;[^1], an analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
+Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test){:target="_glossary"}. A conventional test relying on fixed inputs and fixed corresponding responses won't work. We don't want to require a patient to use a very limited and fixed format [Prompt]({{site.glossaryurl}}/#prompt){:target="_glossary"}. So, let's write a &ldquo;unit benchmark&rdquo;[^1], an analog of a unit test. This will be a very focused set of Q&A pairs, where the questions should cover as much variation as possible in the ways a patient might request a refill, e.g.,
 
 * &ldquo;I need my _P_ refilled.&rdquo;
 * &ldquo;I need my _P_ drug refilled.&rdquo;
@@ -81,7 +81,7 @@ Next we need to write a first [Unit Test]({{site.glossaryurl}}/#unit-test). A co
 * &ldquo;My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?&rdquo;
 * ...
 
-[^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/). See also the [glossary definition]({{site.glossaryurl}}/#unit-benchmark).
+[^1]: We define what we really mean by the term _unit benchmark_ [here]({{site.baseurl}}/testing-strategies/unit-benchmarks/). See also the [glossary definition]({{site.glossaryurl}}/#unit-benchmark){:target="_glossary"}.
 
 We are using _P_ as a placeholder for any prescription.
 
@@ -111,7 +111,7 @@ Let's explore the first two questions:
 * Can we really expect an LLM to behave this way?
 * For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
 
-It turns out LLMs can handle both concerns easily, even relatively small models. Before LLMs, we would have to think about some sort of language _parser_ for the questions, which finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt) that steers the LLM towards the desired behaviors. Let's see an example of how this works.
+It turns out LLMs can handle both concerns easily, even relatively small models. Before LLMs, we would have to think about some sort of language _parser_ for the questions, which finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt){:target="_glossary"} that steers the LLM towards the desired behaviors. Let's see an example of how this works.
 
 First, LLMs have been trained to recognize prompt strings that might contain a system prompt along with the user query. This system prompt is usually a static, application-specific string that provides fixed context to the model. For our experiments with this example, we used two, similar system prompts. Here is the first one:
 
@@ -184,11 +184,11 @@ In this app, asking for a prescription refill is a _frequently asked question_ (
 
 What other FAQs are there? Analyzing historical messages sent to providers is a good way to find other potential FAQs that might benefit from special handling, such as through the system prompt. When doing that historical analysis, you could use an LLM to find groups of related questions. These groups could be the start of a Q&A pairs data set for testing. For different applications, there may very common prompts sent to a model that can benefit from this special treatment.
 
-This suggests a next step to explore. Should we build a _classifier_ model, whose sole purpose is to return one or more labels for the categories a text falls within, like our refill requests case. (See [Evaluation]({{site.glossaryurl}}/#evaluation) for a more detailed description of classifiers). All messages would be passed through this model first and label(s) returned would determine subsequent processing. These models tend to be small and efficient, because they only need to output known labels, not generated text. 
+This suggests a next step to explore. Should we build a _classifier_ model, whose sole purpose is to return one or more labels for the categories a text falls within, like our refill requests case. (See [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"} for a more detailed description of classifiers). All messages would be passed through this model first and label(s) returned would determine subsequent processing. These models tend to be small and efficient, because they only need to output known labels, not generated text. 
 
 So far in our example, we have the label `refill`, for the prescription refill FAQ, and the label `other`, for all other messages. 
 
-When a FAQ label is returned, the application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning) specifically for known FAQs, or we perform other special handling that doesn't use generative AI. So far, we have observed that we don't even need to tune a special model for FAQ detection and handling.
+When a FAQ label is returned, the application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning){:target="_glossary"} specifically for known FAQs, or we perform other special handling that doesn't use generative AI. So far, we have observed that we don't even need to tune a special model for FAQ detection and handling.
 
 In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts. This design is illustrated in the Figure 1:
 
@@ -331,7 +331,7 @@ In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deepe
 
 * Try using different models, especially larger, more powerful LLMs. How do the results compare?
 * Add one or more additional _FAQs_. How would you modify the prompts? How would you change how the results are evaluated? 
-* Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering)?
+* Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}?
 * How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling.
 * Try running the script many times and look carefully at the actual vs. expected strings, especially for any cases where the differences are greater than the Levenshtein distance ratio threshold we use (0.95). Are the differences really significant? If not, what could you do in the comparison to automatically treat them as _close enough_?
 

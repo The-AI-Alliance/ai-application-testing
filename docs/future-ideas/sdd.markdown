@@ -28,12 +28,12 @@ has_children: false
 > 1. The more we rely on LLMs to do our work, the more important good prompts become.
 > 1. LLMs do best when they are asked to do small increments of work, rather than larger amounts of work all at once. Separating different process &ldquo;phases&rdquo; is an example.
 > 1. Structured prompts and carefully-chosen support tools for each &ldquo;phase&rdquo; provide the best results.
-> 1. For software development having [Coding Agents]({{site.glossaryurl}}/#coding-agent) do all work as iteratively and incrementally as possible improves results. For example, using iterative prompting to build up complete requirements, one step at a time, results in better, more complete requirements than one-shot LLM generation or other approaches. Similarly, code should be implemented or modified one small [Unit]({{site.glossaryurl}}/#unit) at a time with individual commits to `git`.
+> 1. For software development having [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"} do all work as iteratively and incrementally as possible improves results. For example, using iterative prompting to build up complete requirements, one step at a time, results in better, more complete requirements than one-shot LLM generation or other approaches. Similarly, code should be implemented or modified one small [Unit]({{site.glossaryurl}}/#unit){:target="_glossary"} at a time with individual commits to `git`.
 > 1. Carl Annaberg's AI Coding Workflow has two phases, **planning** and **execution**, while GitHub's Spec Kit adds a first step **specify** to create the specification, splits planning into two, more-granular phases, **plan** and **tasks**, then finishes with an **implement** phase that is similar to Annaberg's **execution** phase.
 
-The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agent), the more crucial it becomes to write prompts that produce the results we need. Generative models are &ldquo;literal minded&rdquo; (just like all computing systems). We have to use very precise instructions to get the results we want.
+The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}, the more crucial it becomes to write prompts that produce the results we need. Generative models are &ldquo;literal minded&rdquo; (just like all computing systems). We have to use very precise instructions to get the results we want.
 
-Specification-driven development (SDD), also known as _spec-driven development_ and  _spec-driven coding_, attempts to impose more structure on prompts so models do a better job generating source code that we actually need. Similarly, it identifies different &ldquo;phases&rdquo; of software creation and customizes the prompts and tools used for each one. The ad hoc, free-form prompts we currently use for [Vibe Coding]({{site.glossaryurl}}/#vibe-coding) and [Vibe Engineering]({{site.glossaryurl}}/#vibe-engineering) are not adequate for our needs.
+Specification-driven development (SDD), also known as _spec-driven development_ and  _spec-driven coding_, attempts to impose more structure on prompts so models do a better job generating source code that we actually need. Similarly, it identifies different &ldquo;phases&rdquo; of software creation and customizes the prompts and tools used for each one. The ad hoc, free-form prompts we currently use for [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"} and [Vibe Engineering]({{site.glossaryurl}}/#vibe-engineering){:target="_glossary"} are not adequate for our needs.
 
 For an industry analyst's perspective on SDD, see [this RedMonk piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"}.
 
@@ -99,7 +99,7 @@ The GitHub blog post describes their take on SDD this way:
 {: .highlight}
 > Instead of coding first and writing docs later, in spec-driven development, you start with a (you guessed it) spec. This is a contract for how your code should behave and becomes the source of truth your tools and AI agents use to generate, test, and validate code. The result is less guesswork, fewer surprises, and higher-quality code.
 
-Of course, this philosophy of _specifications as code_ was introduced by [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development) in the late 1990s. A variant of TDD, called [Behavior-Driven Development]({{site.glossaryurl}}/#behavior-driven-development), took TDD's emphasis on tests as living specifications to the logical limit, where the corresponding testing APIs expose constructs for defining _executable specifications_, so the tests read more like specifications than like conventional tests. A more Mathematics-oriented, but similar approach pioneered around the same time is [Property-Based Testing]({{site.glossaryurl}}/#property-based-testing).
+Of course, this philosophy of _specifications as code_ was introduced by [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development){:target="_glossary"} in the late 1990s. A variant of TDD, called [Behavior-Driven Development]({{site.glossaryurl}}/#behavior-driven-development){:target="_glossary"}, took TDD's emphasis on tests as living specifications to the logical limit, where the corresponding testing APIs expose constructs for defining _executable specifications_, so the tests read more like specifications than like conventional tests. A more Mathematics-oriented, but similar approach pioneered around the same time is [Property-Based Testing]({{site.glossaryurl}}/#property-based-testing){:target="_glossary"}.
 
 The blog post argues that coding agents are already fully capable of generating the code we need, but because they behave like very literal-minded pair programmers, we have to give them unambiguous instructions, not unlike the way programming languages are designed to be as unambiguous as possible.
 
@@ -178,7 +178,7 @@ While designed primarily for [Claude Code](https://www.anthropic.com/claude-code
 
 ## What's Next?
 
-A list of resources about SDD, most of which were discussed here, can be found in the [References]({{site.baseurl}}/references/#specification-driven-development). See also [this list of coding agents]({{site.glossaryurl}}/#coding-agent).
+A list of resources about SDD, most of which were discussed here, can be found in the [References]({{site.baseurl}}/references/#specification-driven-development). See also [this list of coding agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}.
 
 Review the [highlights](#highlights) summarized above, then proceed to [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/).
 

@@ -21,6 +21,6 @@ There is also a chapter of [&ldquo;rough notes&rdquo;]({{site.baseurl}}/future-i
 
 ## What's Next?
 
-Start with [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur. Refer to the [Glossary]({{site.glossaryurl}}/) regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
+Start with [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur. Refer to the [Glossary]({{site.glossaryurl}}/){:target="_glossary"} regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
 
 ---

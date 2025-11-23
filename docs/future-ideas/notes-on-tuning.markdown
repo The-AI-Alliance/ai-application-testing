@@ -17,7 +17,7 @@ has_children: false
 {:toc}
 </details>
 
-This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning) techniques, including those use by foundation model builders who have broader goals than the incremental refinement tuning that interest us in this guide. Hence, not all the techniques and ideas discussed here will be important for our purposes.
+This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} techniques, including those use by foundation model builders who have broader goals than the incremental refinement tuning that interest us in this guide. Hence, not all the techniques and ideas discussed here will be important for our purposes.
 
 {: .warning}
 > **WARNING:** These are raw notes. They are not very well organized, but if you are interested in the state of the art for model tuning, these notes provide a good place to start, with plenty of links to more advanced materials. Eventually, these notes will be refined and incorporated into other chapters, especially [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
@@ -29,12 +29,12 @@ This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning) te
 >
 > 1. Tuning has different meanings and goals for different people, which determines the best techniques to use, along with different data and compute requirements.
 >     1. For model builders, tuning means taking a raw model and making it better at general instruction following, adherence to social norms, etc. This task requires the largest data sets and most sophisticated, leading-edge techniques.
->     1. For end users building apps, tuning means taking one of those tuned models and further tuning it for domain-specific behaviors, etc. This task requires much smaller data sets, although they will need to be more specialized for the domain-specific behaviors, and more straightforward tuning techniques, such as [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning).
+>     1. For end users building apps, tuning means taking one of those tuned models and further tuning it for domain-specific behaviors, etc. This task requires much smaller data sets, although they will need to be more specialized for the domain-specific behaviors, and more straightforward tuning techniques, such as [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"}.
 > 1. Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is recommended for learning about tuning techniques. Their [LLM Course](https://huggingface.co/learn/llm-course/chapter1/1){:target="_blank"} is recommended for a general introduction to LLMs.
 
 ## Hugging Face Training on Model Tuning
 
-Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning). It is not yet complete, but projected to be done by the end of 2025. 
+Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}. It is not yet complete, but projected to be done by the end of 2025. 
 
 Some of the modules, like for [instruction tuning](huggingface.co/learn/smol-course/unit1/1){:target="_blank"} are more relevant when tuning &ldquo;raw&rdquo; base models to be better at instruction following, aligned with social norms, etc. For domain-specific tuning, such as we discuss in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning), you would normally start with a model that is already instruction tuned and proceed from there.
 
@@ -49,7 +49,7 @@ This section summarizes of [Nathan Lambert]({{site.baseurl}}/references/#nathan-
 * [OpenAI's Reinforcement Finetuning and RL for the masses](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"} (December 11, 2024) - A description of OpenAI's recently announced research program combining RL and fine tuning (our spelling here). There is a link in the post to an OpenAI web page for this, but it appears to be gone now.
 * [SimPO: A New Way to Teach AI Models to Follow Human Preferences](https://pli.princeton.edu/blog/2024/simpo-new-way-teach-ai-models-follow-human-preferences){:target="_blank"} (December 2, 2024) - Another replacement for RLHF that provides very efficient and effective fine tuning of instruction models.
 * [OpenAI’s Strawberry, LM self-talk, inference scaling laws, and spending more on inference](https://www.interconnects.ai/p/openai-strawberry-and-inference-scaling-laws){:target="_blank"} (September 6, 2024) - Details on _inference scaling laws_ and uses of it to improve inference.
-* [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"} (August 07, 2024), which discusses the general topic of state-of-the-art [Post-training]({{site.glossaryurl}}/#post-training) a [Pre-trained]({{site.glossaryurl}}/#pre-training) model.
+* [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"} (August 07, 2024), which discusses the general topic of state-of-the-art [Post-training]({{site.glossaryurl}}/#post-training){:target="_glossary"} a [Pre-trained]({{site.glossaryurl}}/#pre-training){:target="_glossary"} model.
 * [Do we need RL for RLHF?](){:target="_blank"} (December 6, 2023) - &ldquo;Direct (DPO) vs. RL methods for preferences, more RLHF models, and hard truths in open RLHF work. We have more questions than answers.&rdquo;
 * [RLHF progress: Scaling DPO to 70B, DPO vs PPO update, Tülu 2, Zephyr-β, meaningful evaluation, data contamination](https://www.interconnects.ai/p/rlhf-progress-scaling-dpo-to-70b){:target="_blank"} (November 22nd, 2023)
 
@@ -57,7 +57,7 @@ I put in the dates, because everything is moving rapidly and it helps to know th
 
 Incidentally, Nathan also co-presented a [tutorial on language modeling](https://docs.google.com/presentation/d/179dpzWSQ9G7EAUlvaJdeE0av9PLuk9Rl33nfhHSJ4xI/edit?slide=id.g31b08bdaca5_0_238#slide=id.g31b08bdaca5_0_238){:target="_blank"} at the same NeurIPS conference.
 
-Nathan also has a [new book](https://rlhfbook.com){:target="_blank"} on [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback) (RLHF).
+Nathan also has a [new book](https://rlhfbook.com){:target="_blank"} on [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback){:target="_glossary"} (RLHF).
 
 ### Introduction
 
@@ -65,14 +65,14 @@ As the presentation points out: _The raw pre-trained LMs are neither safe nor ro
 
 Where the terms are as follows
 
-* [Pre-training]({{site.glossaryurl}}/#pre-training) creates the raw LLM.
-* [Adaptation]({{site.glossaryurl}}/#adaptation) is the process for [Alignment]({{site.glossaryurl}}/#alignment), so that the resulting model is better in the following ways:
+* [Pre-training]({{site.glossaryurl}}/#pre-training){:target="_glossary"} creates the raw LLM.
+* [Adaptation]({{site.glossaryurl}}/#adaptation){:target="_glossary"} is the process for [Alignment]({{site.glossaryurl}}/#alignment){:target="_glossary"}, so that the resulting model is better in the following ways:
   * It follows natural language instructions better.
   * It is aware of harmful behaviors.
   * It responds according to human preferences.
   * It has improved core skills.
 
-In the blog post, [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"}, he mentions that some seminal projects on adaptation, [InstructGPT](https://arxiv.org/abs/2203.02155){:target="_blank"}, [WebGPT](https://arxiv.org/abs/2112.09332){:target="_blank"}, [Sparrow](https://deepmind.google/discover/blog/building-safer-dialogue-agents/){:target="_blank"}, [Summarizing from Human Feedback](https://arxiv.org/abs/2009.01325){:target="_blank"}, and [Helpful and Harmless Assistant](https://arxiv.org/abs/2204.05862){:target="_blank"} are becoming out of date with how tuning, especially with [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback) (RLHF), is done today. While the goals, high-level tools, and some of the evaluations are still relevant the details of data curation and other aspects are now dated.
+In the blog post, [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"}, he mentions that some seminal projects on adaptation, [InstructGPT](https://arxiv.org/abs/2203.02155){:target="_blank"}, [WebGPT](https://arxiv.org/abs/2112.09332){:target="_blank"}, [Sparrow](https://deepmind.google/discover/blog/building-safer-dialogue-agents/){:target="_blank"}, [Summarizing from Human Feedback](https://arxiv.org/abs/2009.01325){:target="_blank"}, and [Helpful and Harmless Assistant](https://arxiv.org/abs/2204.05862){:target="_blank"} are becoming out of date with how tuning, especially with [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback){:target="_glossary"} (RLHF), is done today. While the goals, high-level tools, and some of the evaluations are still relevant the details of data curation and other aspects are now dated.
 
 He cites the [Llama 3.1 paper](https://ai.meta.com/research/publications/the-llama-3-herd-of-models/){:target="llama31"}, an [Apple paper](https://machinelearning.apple.com/papers/apple_intelligence_foundation_language_models.pdf){:target="apple"} ([arXiv](https://arxiv.org/abs/2407.21075v1){:target="archive"}), and others as more up-to-date descriptions.
 
@@ -91,13 +91,13 @@ This section summarizes part of the blog post, [A recipe for frontier model post
 
 Nathan says the focus of the original RLHF pipeline was on human data, which came in two primary forms: 1) human data for instruction-tuning on specialized tasks and 2) human preference data on model completions. The data sets were costly to create with few OSS data sets available. Also, while he was at Hugging Face, his team found that success tuning one model didn't always translate to success tuning other models.
 
-These days, the only human-generated data widely used appears to be preference data, used for [Instruction Fine Tuning]({{site.glossaryurl}}/#instruction-fine-tuning) (IFT) (the most common form of [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning) - SFT). Human-generated data is expensive to acquire. Based on what information is available about Llama 2's training, Nathan speculates that Meta spent at least $10-20 million on preference data. In contrast, Nemotron was developed with a large amount of synthetic data to replace the human data, but the model is not considered comparably strong.
+These days, the only human-generated data widely used appears to be preference data, used for [Instruction Fine Tuning]({{site.glossaryurl}}/#instruction-fine-tuning){:target="_glossary"} (IFT) (the most common form of [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"} - SFT). Human-generated data is expensive to acquire. Based on what information is available about Llama 2's training, Nathan speculates that Meta spent at least $10-20 million on preference data. In contrast, Nemotron was developed with a large amount of synthetic data to replace the human data, but the model is not considered comparably strong.
 
 Because of the expense of human data, there is a need and therefore an opportunity for the open community to pioneer reducing human input with [LLM-as-a-judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) or reward modeling techniques (the latter for reinforcement learning).
 
 #### 2. Scaling RLHF
 
-[Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback) (RLHF) is considered by many researchers to be more scalable and more productive than instruction fine tuning, so much so that many model builders may stop using IFT. At the very least, the current consensus is to use IFT initially, especially for domain-specific tuning, then switch to RLHF.
+[Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback){:target="_glossary"} (RLHF) is considered by many researchers to be more scalable and more productive than instruction fine tuning, so much so that many model builders may stop using IFT. At the very least, the current consensus is to use IFT initially, especially for domain-specific tuning, then switch to RLHF.
 
 RLHF is an iterative process of refinement, with each model generation improving over its predecessor. An open question is how many rounds are optimal. The Llama 2 paper and the Nemotron paper detail about five training rounds. Llama 3.1 used six rounds and Nemotron used four. Multiple instruction tuning rounds were done before these RLHF rounds. 
 
@@ -123,7 +123,7 @@ I won't repeat the explanation here...
 See also:
 * An Interconnects post [Do we need RL for RLHF?](https://www.interconnects.ai/p/the-dpo-debate){:target="_blank"}
 * An Ai2 [video](https://www.youtube.com/watch?v=YJMCSVLRUNs){:target="_blank"} on DPO.
-* [Unsloth documentation](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide/reinforcement-learning-dpo-orpo-and-kto) on different RL algorithms.
+* [Unsloth documentation](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide/reinforcement-learning-dpo-orpo-and-kto){:target="_blank"} on different RL algorithms.
 * Sebastian Raschka's [detailed description of RLHF](https://magazine.sebastianraschka.com/p/llm-training-rlhf-and-its-alternatives){:target="_blank"} published two years ago, shortly before DPO came out.
 
 #### 3. Synthetic Data
@@ -249,7 +249,7 @@ Nathan goes into this in more detail in his post [OpenAI’s Strawberry, LM self
 
 ### Reinforcement Fine Tuning
 
-Back to [Nathan's NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, which was published four months after the blog post, he discusses OpenAI's recently announced RL approach called [Reinforcement Fine Tuning]({{site.glossaryurl}}/#reinforcement-fine-tuning)[^2] (RFT), which is described in [this OpenAI page](https://openai.com/form/rft-research-program/){:target="openai-rf"} (no longer online!). He also discusses RFT in [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. 
+Back to [Nathan's NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, which was published four months after the blog post, he discusses OpenAI's recently announced RL approach called [Reinforcement Fine Tuning]({{site.glossaryurl}}/#reinforcement-fine-tuning){:target="_glossary"}[^2] (RFT), which is described in [this OpenAI page](https://openai.com/form/rft-research-program/){:target="openai-rf"} (no longer online!). He also discusses RFT in [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. 
 
 [^2]: Nathan spells it _finetuning_, but we spell it as two words. Often, people hyphenate it: _fine-tuning_.
 
@@ -280,11 +280,11 @@ RFT is entirely focused on conventional model tuning, but it may fit our goals o
 
 Nathan also discusses RFT in [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-fine-tuning){:target="openai-rf"}. 
 
-In RFT, a _grader_ is used to verify outputs, analogous to [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge). Hence, it is worth exploring what suite of graders would be useful for many AI-centric [Use Cases]({{site.glossaryurl}}/#use-case). John Allard from OpenAI describes them in [this X post](https://x.com/john__allard/status/1865520756559614090?s=46&mx=2){:target="x"}. Graders may be useful for testing, as well as tuning.
+In RFT, a _grader_ is used to verify outputs, analogous to [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge). Hence, it is worth exploring what suite of graders would be useful for many AI-centric [Use Cases]({{site.glossaryurl}}/#use-case){:target="_glossary"}. John Allard from OpenAI describes them in [this X post](https://x.com/john__allard/status/1865520756559614090?s=46&mx=2){:target="x"}. Graders may be useful for testing, as well as tuning.
 
 Nathan says that the data used includes a prompt and an answer, so basically Q&A pairs, but it's not clear if OpenAI allows _open-ended_ questions and answers or if more structure is expected. 
 
-He points out that Ai2's [Open Instruct](https://github.com/allenai/open-instruct){:target="_blank"} uses a similar approach to RFT for post training. See this paper, [TÜLU 3: Pushing Frontiers in Open Language Model Post-Training](https://arxiv.org/abs/2411.15124){:target="_blank"}. His slides include a screen shot of [this Ai2 dataset on HuggingFace](https://huggingface.co/datasets/allenai/RLVR-IFeval/viewer/default/train?row=0&views%5B%5D=train){:target="_blank"}, which is part of the Tülu 3 release, a dataset containing instruction-following data formatted for use with Ai2's [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} system, specifically supporting [Reinforcement Learning with Verifiable Rewards]({{site.glossaryurl}}/#reinforcement-learning-with-verifiable-rewards) (RLVR). 
+He points out that Ai2's [Open Instruct](https://github.com/allenai/open-instruct){:target="_blank"} uses a similar approach to RFT for post training. See this paper, [TÜLU 3: Pushing Frontiers in Open Language Model Post-Training](https://arxiv.org/abs/2411.15124){:target="_blank"}. His slides include a screen shot of [this Ai2 dataset on HuggingFace](https://huggingface.co/datasets/allenai/RLVR-IFeval/viewer/default/train?row=0&views%5B%5D=train){:target="_blank"}, which is part of the Tülu 3 release, a dataset containing instruction-following data formatted for use with Ai2's [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} system, specifically supporting [Reinforcement Learning with Verifiable Rewards]({{site.glossaryurl}}/#reinforcement-learning-with-verifiable-rewards){:target="_glossary"} (RLVR). 
 
 OpenAI uses a special LM to extract the answer for reward computation. Nathan cites the example challenge of recognizing that, for example, "`.05`, `1/20`, `\frac{1}{20}` (LaTex), `5E-02`, and `5 x 10^-2`, …" all refer to the same value and the answer extractor needs to account for such differences.
 

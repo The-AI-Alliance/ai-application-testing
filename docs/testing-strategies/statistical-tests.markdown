@@ -17,12 +17,12 @@ has_children: false
 {:toc}
 </details>
 
-So far, we have explored various techniques for testing the [Stochastic]({{site.glossaryurl}}/#stochastic) behaviors of the application where generative AI is used. We found scenarios where we could enforce mostly-deterministic behavior, such as handling FAQs in our example ChatBot. However, in general, we need the ability to assess the non-deterministic behaviors, such as deciding on appropriate thresholds for when an AI-related test can be considered to pass or fail, and when a synthetic datum is acceptable or not.
+So far, we have explored various techniques for testing the [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"} behaviors of the application where generative AI is used. We found scenarios where we could enforce mostly-deterministic behavior, such as handling FAQs in our example ChatBot. However, in general, we need the ability to assess the non-deterministic behaviors, such as deciding on appropriate thresholds for when an AI-related test can be considered to pass or fail, and when a synthetic datum is acceptable or not.
 
 {: .todo}
 > **TODO:** This chapter needs contributions from experts in statistics. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/27){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
-In the [Unit Benchmark's Experiments to Try]({{site.baseurl}}/testing-strategies/unit-benchmarks/#experiments-to-try) and in various parts of [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge) chapter, we raised questions to begin thinking about these decisions. Now we will put the concepts on a more formal foundation. Specifically, we will apply [Statistical Analysis]({{site.glossaryurl}}/#statistical-analysis) to test results and use that information to inform our thinking.
+In the [Unit Benchmark's Experiments to Try]({{site.baseurl}}/testing-strategies/unit-benchmarks/#experiments-to-try) and in various parts of [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge) chapter, we raised questions to begin thinking about these decisions. Now we will put the concepts on a more formal foundation. Specifically, we will apply [Statistical Analysis]({{site.glossaryurl}}/#statistical-analysis){:target="_glossary"} to test results and use that information to inform our thinking.
 
 <a id="highlights"></a>
 

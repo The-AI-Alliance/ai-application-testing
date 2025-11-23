@@ -30,7 +30,7 @@ Quality assurance professionals have long dealt with the challenges of testing w
 >
 > TODO
 
-Most real-world, &ldquo;enterprise-grade&rdquo; applications today are distributed systems where various services (generically, [&ldquo;Components&rdquo;]({{site.glossaryurl}}/#component)) are invoked asynchronously, sometimes across different cloud environments, and the application has to orchestrate the invocations and processing of responses. This leads to all sorts of derived requirements, like effective security, _graceful failure_ when network or subsystem failures occur, etc.
+Most real-world, &ldquo;enterprise-grade&rdquo; applications today are distributed systems where various services (generically, [&ldquo;Components&rdquo;]({{site.glossaryurl}}/#component){:target="_glossary"}) are invoked asynchronously, sometimes across different cloud environments, and the application has to orchestrate the invocations and processing of responses. This leads to all sorts of derived requirements, like effective security, _graceful failure_ when network or subsystem failures occur, etc.
 
 However, for our purposes, the most interesting aspect is the inherently nondeterministic behavior in such systems, because distributed and concurrent invocations of components won't have deterministic response times and results. As one example, network congestion between distributed services means that responses won't arrive in a predictable order. For example, the ubiquitous networking protocol [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol){:target="_wikipedia"} is designed with the _expectation_ that the packets for a message will arrive in any order and they must be re-sequenced once all are received.
 

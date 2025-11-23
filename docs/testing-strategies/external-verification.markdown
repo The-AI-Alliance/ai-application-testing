@@ -25,11 +25,11 @@ In [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), we exp
 > **Highlights:**
 >
 > 1. Many non-AI tools are much better than generative AI tools at doing particular tasks, especially where precise, accurate, and deterministic answers are feasible and necessary.
-> 2. These tools be used as part of an [Agentic]({{site.glossaryurl}}/#agent) architecture to maximize the performance of AI applications. They can also be used to support validation of test data and the responses during test runs.
+> 2. These tools be used as part of an [Agentic]({{site.glossaryurl}}/#agent){:target="_glossary"} architecture to maximize the performance of AI applications. They can also be used to support validation of test data and the responses during test runs.
 
-When interest in generative AI exploded after the unveiling of ChatGPT, it become quickly apparently that LLMs are better at some tasks than others, and other kinds of tools that predate generative AI are superior choices to perform many tasks. This led to application design patterns like [Retrieval-Augmented Generation]({{site.glossaryurl}}/#retrieval-augmented-generation) (RAG) and [Agents]({{site.glossaryurl}}/#agent). 
+When interest in generative AI exploded after the unveiling of ChatGPT, it become quickly apparently that LLMs are better at some tasks than others, and other kinds of tools that predate generative AI are superior choices to perform many tasks. This led to application design patterns like [Retrieval-Augmented Generation]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"} (RAG) and [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}. 
 
-In RAG, knowledge relevant to a prompt is retrieved and sent with the prompt as part of the [Context]({{site.glossaryurl}}/#context) during inference invocations. This helps the model generate more accurate responses. Uses include sourcing information about news events that occurred after a model was trained, so the model can generate relevant responses, and retrieval of proprietary information with details needed for effective responses, for example a ChatBot that assists an aviation repair technician can query relevant repair manuals, service bulletins, and logs of past repair sessions.
+In RAG, knowledge relevant to a prompt is retrieved and sent with the prompt as part of the [Context]({{site.glossaryurl}}/#context){:target="_glossary"} during inference invocations. This helps the model generate more accurate responses. Uses include sourcing information about news events that occurred after a model was trained, so the model can generate relevant responses, and retrieval of proprietary information with details needed for effective responses, for example a ChatBot that assists an aviation repair technician can query relevant repair manuals, service bulletins, and logs of past repair sessions.
 
 Agentic systems extend this data-retrieval model to more general tool invocations, such as web searches, with the additional enhancement that LLMs perform an &ldquo;orchestration&rdquo; role of determining from the prompt what kinds of information to gather from tools, which tools to invoke to get the information, invoking those tools, and formulating a response based on the tool replies. The process might also include automatic invocation of actions on behalf of the user.
 
@@ -43,7 +43,7 @@ First, let's consider the &ldquo;mechanics&rdquo; of using external tools.
 
 To use any tool, one option is to hard-code invoking it and doing some ad hoc processing of the response. For example, in a code generation application, the generated code can be passed to a parser for analysis. If the analysis succeeds, the code is used as is, but if the analysis fails (i.e., the code has syntax errors), then the user is presented with the error output and asked if she wants to fix the errors herself or have the LLM try fixing the code or generating new code.
 
-The [Agent]({{site.glossaryurl}}/#agent) design pattern emerged to lean on LLMs to eliminate these manual steps of writing code to integrate tools, deciding when to invoke them, doing the invocation, and processing the results. Hence, agents handle this integration automatically with greater flexibility and more dynamic flexibility, depending on the application use cases and prompts received. 
+The [Agent]({{site.glossaryurl}}/#agent){:target="_glossary"} design pattern emerged to lean on LLMs to eliminate these manual steps of writing code to integrate tools, deciding when to invoke them, doing the invocation, and processing the results. Hence, agents handle this integration automatically with greater flexibility and more dynamic flexibility, depending on the application use cases and prompts received. 
 
 ### A Variation of LLM as a Judge?
 
@@ -65,16 +65,16 @@ Generated code can be checked for quality and validity and, in some cases, autom
 
 * Use a parser or compiler to verify the syntax is valid.
   * For languages like Python with optional type hints, run the type checker, too.
-* Execute the code (in a safe, sand boxed environment!) to verify it is logically correct. If tests already exist for the generated code (see [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development)), verify the generated code allows the tests to pass.
+* Execute the code (in a safe, sand boxed environment!) to verify it is logically correct. If tests already exist for the generated code (see [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development){:target="_glossary"}), verify the generated code allows the tests to pass.
 * Scan for conformance to project code formatting conventions.
 * Check for excessive complexity, e.g., using [cyclomatic complexity](https://en.wikipedia.org/wiki/Cyclomatic_complexity){:target="_wikipedia"}.
 * Scan for security vulnerabilities. For example, check that the code only uses allowed third-party libraries and allowed versions of them, e.g., those libraries approved by the organization and versions that have no known vulnerabilities.
 
 ### Data Stores
 
-This is the RAG pattern, but possibly generalized. As discussed in the [RAG glossary entry]({{site.glossaryurl}}/#retrieval-augmented-generation) reference data &ldquo;chunks&rdquo; are encoded into _vectors_ with a similarity metric. At inference time, prompts are similarly encoded to find and return _nearest neighbor_ reference chunks, so the extra context data returned is more likely to be the most relevant for the prompt.
+This is the RAG pattern, but possibly generalized. As discussed in the [RAG glossary entry]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"} reference data &ldquo;chunks&rdquo; are encoded into _vectors_ with a similarity metric. At inference time, prompts are similarly encoded to find and return _nearest neighbor_ reference chunks, so the extra context data returned is more likely to be the most relevant for the prompt.
 
-Generalizing this approach in a typical [Agent]({{site.glossaryurl}}/#agent) implementation, any data store of domain-relevant or other data can be queried and interpreted by an LLM for the desired use. In this case, we might use such data to judge the accuracy or utility of synthesized data or responses from inference during test or production runs.
+Generalizing this approach in a typical [Agent]({{site.glossaryurl}}/#agent){:target="_glossary"} implementation, any data store of domain-relevant or other data can be queried and interpreted by an LLM for the desired use. In this case, we might use such data to judge the accuracy or utility of synthesized data or responses from inference during test or production runs.
 
 ### Planning
 
