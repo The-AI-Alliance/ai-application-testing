@@ -11,7 +11,6 @@ as opposed to a different page in the same site.
 <!DOCTYPE html>
 <html>
 <head>
-	<!-- <meta http-equiv="Refresh" content="0; url=http://www.domain.com/newlocation" /> -->
 	<link rel="canonical" href="{{ page.redirect_url }}"/>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="refresh" content="0;url={{ page.redirect_to }}" />
