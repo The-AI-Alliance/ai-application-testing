@@ -1,125 +1,307 @@
+{"question":"My prescription for _P_ upsets my stomach.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I don't understand how I am supposed to take my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have trouble sleeping, ever since I started taking _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"When is my next appointment?","answer":{"label":"other","prescription":"","body-part":""}}
+{"question":"I need to schedule my next appointment.","answer":{"label":"other","prescription":"","body-part":""}}
+{"question":"I need to schedule an appointment.","answer":{"label":"other","prescription":"","body-part":""}}
+{"question":"I am having pain in my _B_. What should I do?","answer":{"label":"other","prescription":"","body-part":"_B_"}}
+{"question":"I am having pain in my _B_. I think I need a referral to a specialist.","answer":{"label":"other","prescription":"","body-part":"_B_"}}
+{"question":"I am having some swelling in my _B_. What should I do?","answer":{"label":"other","prescription":"","body-part":"_B_"}}
+{"question":"I am having some swelling in my _B_. I think I need a referral to a specialist.","answer":{"label":"other","prescription":"","body-part":"_B_"}}
+{"question":"Do I need to adjust the dosage of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
 {"question":"Can I take my prescription for _P_ with food?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I would like to schedule my next appointment.","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"Do I need to wait for a test result before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have minor headaches after starting my prescription for _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":"_B_"}} 
-{"question":"Is it okay to combine my prescription for _P_ with a vitamin supplement?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Where can I find instructions on how to use my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When is the next appointment I need to schedule?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"My prescription for _P_ causes mild nausea. Should I stop taking it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will my prescription for _P_ interact with my daily coffee?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need to reschedule my follow‑up appointment for next week.","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"I am having pain in my _B_ after a workout. Should I see a specialist?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"What should I do about swelling in my _B_ this morning?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"I have trouble sleeping since I started taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I use the medication for my prescription for _P_ for more than 4 weeks?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Is it possible to change the dosage of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Where can I get information about side effects of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I am having pain in my _B_ after falling. Is it okay to apply ice?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"I am having some swelling in my _B_. What should I do?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"Can I take my prescription for _P_ after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Do I need a prescription refills for my _P_ medication?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"Should my prescription for _P_ be taken at bedtime?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What is the best way to store my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need to make an appointment for a routine check‑up. What's the process?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"I had a mild reaction after taking my prescription for _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ makes me feel jittery. Have others experienced this?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When will I receive my lab results for the last test?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"I’m feeling a little drowsy after the first dose of my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Is it okay to skip a dose of my prescription for _P_ if I forgot?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Should I take my prescription for _P_ with or without alcohol?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have questions about the dosage schedule for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Should I wear a support bandage for the swelling in my _B_?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"Can I use OTC pain relief for my pain in the _B_?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"What should I do if I feel dizziness while taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ makes me feel hot. Is that normal?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How do I know when to call for help about my symptoms?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"Where can I find a video tutorial about my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Is it safe to drive while taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need a doctor’s note for taking my prescription for _P_ out of the country?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How long does it take for my prescription for _P_ to take effect?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Where can I find my prescription details online?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"I had a mild rash after starting my prescription for _P_. Who should I contact?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I want to schedule a telehealth appointment next week. Can I do that?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"What does my prescription for _P_ say about side effects?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I take my prescription for _P_ if I have a mild fever?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Do I need a new prescription for my medication _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ causes occasional headaches. Is that normal?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need help understanding the pharmacy instructions for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Where can I find the refill instructions for my prescription for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"What could cause swelling in my _B_ after taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":"_B_"}} 
-{"question":"Is it recommended to keep taking my prescription for _P_ if I feel a little tired?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I’m experiencing mild fatigue after starting my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I take my prescription for _P_ while pregnant?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Do I need a doctor’s clearance to take my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When should I schedule my yearly physical exam?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"Can I combine my prescription for _P_ with a sleep aid?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I want to learn more about the mechanism of my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have a question about my prescription list for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will my prescription for _P_ affect my ability to work from home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need to cancel my scheduled appointment next Friday.","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"How do I schedule an urgent follow‑up if something changes?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"I have a question about my health plan benefits for prescription _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will my insurance cover my prescription for _P_ for the next year?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I am having pain in my _B_ after a long walk. What do I do?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"How can I improve the side effect profile of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Do I need to take my prescription for _P_ with a large volume of water?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ interact with my current supplements?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How often should I take my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
 {"question":"What are the common side effects of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have questions about how to safely dispose of my unused _P_ medication?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need a replacement prescription for my _P_ medication. Can I get it?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"Can I use my prescription for _P_ for more than the prescribed number of days?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I am concerned about the long term effect of my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ has a new label. Is that okay?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I would like to get a duplicate prescription for _P_.","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"Where can I check the pharmacy's hours for pick‑up?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"Can I take my prescription for _P_ in the morning or should it be in the evening?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have a question about my medication _P_ schedule timing?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How can I set up a reminder to take my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What is the recommended storage temperature for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ has a side effect of mild dizziness. I want to know if that is common.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I am having slight swelling in my _B_. Is that a typical response?","answer":{"label":"other","prescription":"","body-part":"_B_"}} 
-{"question":"I would like to learn how to properly use my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I keep my prescription for _P_ after the medication ends?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Do I need a written prescription for my _P_ medication?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"Where can I find a PDF of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I request an appointment to review my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need to understand the dosage for my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"In the event I miss a dose of my prescription for _P_, what's the next step?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I'm worried about drug interaction between my prescription for _P_ and an over‑the‑counter cough syrup. Should I avoid it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I want to confirm if my prescription for _P_ is still valid. How can I check?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What if the pharmacy runs out of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When is the next refill date for my prescription for _P_?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"I would like to reschedule my medication pickup for next week. How do I do that?","answer":{"label":"other","prescription":"","body-part":""}}
-{"question":"Can I have my prescription for _P_ delivered to my home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Is there a difference between the generic and brand name of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"If my prescription for _P_ is missing a label, can I still use it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How often should I review my prescription for _P_ with my provider?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will the new policy affect coverage of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What's the maximum duration I can keep my prescription for _P_ on hand?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What is the recommended schedule for taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Could my prescription for _P_ cause mild constipation?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I would like to confirm I have a correct copy of my prescription for _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ has been changed by the pharmacy. Is that allowed?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Where can I find the dosage chart for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I use my prescription for _P_ if I have a mild sinus infection?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"My prescription for _P_ seems to be coming in smaller bottles. Is that normal?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will my prescription for _P_ still be accepted for international travel?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I want to transfer my prescription for _P_ to another pharmacy. How do I do it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I bring my prescription for _P_ to a different facility for check‑up?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need to update my address to match the prescription for _P_ shipping. How could I do that?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will taking my prescription for _P_ affect my school schedule?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How many refills should I have for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I want to know if my prescription for _P_ is covered by my supplemental plan.","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Does my prescription for _P_ have a specific expiration date?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When can I expect to receive a new prescription for _P_ after I run out?","answer":{"label":"refill","prescription":"_P_","body-part":""}}
-{"question":"Can I purchase over the counter alternatives for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I have found a discount program for my prescription for _P_. Should I use it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I noticed a change in color of my prescription for _P_. Is that safe?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Will my prescription for _P_ interact with my blood pressure medication?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"How can I keep track of my prescription for _P_ dosage adjustments?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I would like to discuss my prescription for _P_ with the pharmacist. How to arrange it?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I switch to a different brand of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"What if I need to interrupt my prescription for _P_ for a short period?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Should I change my diet when taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"I need clarification on my prescription for _P_ labeling. What does the logo mean?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"Can I take my prescription for _P_ if I also have an iron deficiency?","answer":{"label":"other","prescription":"_P_","body-part":""}}
-{"question":"When will my prescription for _P_ be updated?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I feel a slight dizziness after taking my prescription for _P_. Is this normal?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I drive after taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there a risk of addiction with my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to stop eating late at night while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How should I store my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What should I do if I miss a dose of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe during pregnancy?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I continue my prescription for _P_ while breastfeeding?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any weight gain?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I use my prescription for _P_ if I have kidney issues?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to get a lab test before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How long does my prescription for _P_ take to show results?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ with other medications?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to take my prescription for _P_ during winter?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What should I do if my prescription for _P_ starts to taste metallic?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I am traveling?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Should I avoid alcohol while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ change my heart rate?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I noticed my prescription for _P_ made my skin rash a bit worse. What to do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How do I know if my prescription for _P_ is working?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there an alternative to my prescription for _P_ that has fewer side effects?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause my blood sugar to rise?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How do I take my prescription for _P_ if I have a stomach upset?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I use my prescription for _P_ for an injury?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there a reason to change my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a physical exam before continuing my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ with caffeine?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to swim?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What do I do if I accidentally double dose my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for elderly patients?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have asthma?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Should I be concerned about my prescription for _P_ and my cholesterol?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ impact my sleep patterns?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to change my diet while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I get a second opinion on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How do I know if my prescription for _P_ is too strong?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my weight?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What are the contraindications for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I use my prescription for _P_ if I have a heart condition?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there a risk of drowsiness with my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What is the best time of day to take my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent surgery?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my memory?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How do I handle nausea from my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to combine my prescription for _P_ with vitamin D supplements?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my blood pressure reading?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ during a workout?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Should I change my dosage if I feel too tired on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to monitor my blood sugar while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a migraine?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ impact my liver enzymes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there a special schedule for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What should I do if my prescription for _P_ causes constipation?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ after a meal?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ interfere with my vision tests?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"How can I avoid the side effects of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I share my prescription for _P_ with a family member?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause changes in my menstrual cycle?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe during flu season?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I combine my prescription for _P_ with a gluten-free diet?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What is the maximum daily dose for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hearing?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with anxiety?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent infection?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Should I avoid spicy food while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause my hair to fall out?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What to do if my prescription for _P_ makes me feel light-headed?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of ulcers?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my lung capacity?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a cool place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of seizures?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause swelling in my hands?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a check-up for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What should I do if my prescription for _P_ makes my mouth dry?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ with a protein shake?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my bone density?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to travel while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to monitor my heart rate on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a low iron level?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause changes in my appetite?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Should I avoid grapefruit while taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ away from children?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I use my prescription for _P_ for a skin rash?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision after use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is there a risk of dizziness when I start my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of depression?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my urinary tract?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a lab test for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of high cholesterol?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my muscle strength?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of kidney stones?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my breathing?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a follow-up for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I combine my prescription for _P_ with a low-carb diet?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my immune system?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in my backpack?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"What is the best way to dispose of my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of anemia?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my gait?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ out of reach of pets?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to take before a long flight?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to drive?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent fracture?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my vision?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at room temperature?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to monitor my blood pressure while on my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of liver disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my cholesterol levels?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with hypertension?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of asthma?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any muscle aches?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ away from sunlight?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ while breastfeeding?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of gastrointestinal issues?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hormone levels?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a lockbox?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use with a ketogenic diet?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of blood clotting disorders?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of kidney disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ out of reach of children?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a car?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my gait?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent diagnosis of diabetes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to drive long distances?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ at a specific temperature?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ if I have a history of liver issues?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any swelling in my limbs?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a dry place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ on my nightstand?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of allergies?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my blood sugar levels?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of chronic pain?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my hearing?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ out of reach of pets?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ if I have a history of kidney problems?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid issues?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness during the day?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up visit for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of depression?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart palpitations?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my bone density?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a cool, dry place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ if I have a history of migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of asthma attacks?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any swelling in my face?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before starting my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of diabetes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of anemia?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision during the night?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ away from strong odors?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a pocket?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of blood disorders?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my gait?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use if I have a history of high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of chronic headaches?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after exercise?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a special container?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid problems?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hearing after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of kidney disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any swelling in my limbs?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use with a low-carb diet?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of high cholesterol?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to drive safely?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a dry area?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart palpitations?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness during the night?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a follow-up visit for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of hypertension?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of chronic pain?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my hearing?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ out of reach of children?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a bag?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of allergies?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of chronic headaches?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a special location?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to use my prescription for _P_ if I have a history of kidney disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my bone density?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to keep at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness during exercise?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ out of reach of pets?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a pocket?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of anemia?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before starting my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of depression?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart palpitations?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any swelling in my face?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a follow-up visit for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use if I have a history of migraines?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent injury?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my bone density?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a secure place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a bag?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid issues?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of chronic headaches?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any swelling in my hands?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up visit for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to keep at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after exercise?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of diabetes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of anemia?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hearing after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in my pocket?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid problems?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use if I have a history of high blood pressure?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent diagnosis of diabetes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to drive safely?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a specific place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my gait?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to schedule a follow-up appointment for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of chronic pain?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent diagnosis of diabetes?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my ability to drive long distances?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before starting my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to use if I have a history of thyroid problems?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart palpitations?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after exercise?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a dry place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a pocket?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of allergies?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my blood sugar levels?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of hypertension?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent fracture?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any changes in my vision?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ away from heat?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of heart disease?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my bone density?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before starting my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of depression?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of low blood sugar?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness during the day?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a cool place?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid disorders?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hearing after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a special container?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of anemia?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my vision after long use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review for my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ suitable for people with a history of hypertension?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a recent injury?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ cause any dizziness after meals?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need a medication review before taking my prescription for _P_?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is my prescription for _P_ safe to keep at home?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can I take my prescription for _P_ if I have a history of thyroid problems?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Will my prescription for _P_ affect my hearing after prolonged use?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Do I need to keep my prescription for _P_ in a cool location?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Is it safe to keep my prescription for _P_ in a bag?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"Can you tell me more about the medication?","answer":{"text":"Sure! In your example you have the …"}

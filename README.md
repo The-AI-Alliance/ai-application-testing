@@ -36,24 +36,32 @@ The `one-time-setup` target provides instructions for how to install required to
 
 Python library dependencies are managed using `uv`. They are installed automatically, as needed, when running the tools described below. In particular, we use [LiteLLM](https://docs.litellm.ai/#basic-usage) for invoking inference services.
 
-If you install `ollama`, download your models of choice. By default, we use `gpt-oss:20b` as our inference model in the `Makefile`, but we also executed our examples with `llama3.2:3B`. (We provide example results for both in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/`src/data/examples/ollama`). We found that `gpt-oss:20b` is too large for many developer machines, but acceptable results, especially for learning purposes, are provided when using the much smaller `llama3.2:3B`. (We encourage you to experiment with many models!)
+If you install `ollama`, download your models of choice. By default, we use `gpt-oss:20b` as our inference model in the `Makefile`, but we also executed our examples with `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest` (also a `3B` parameter model). (We provide example results for them in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). We found that `gpt-oss:20b` is too large for many developer machines (more details below), but acceptable results, especially for learning purposes, are provided when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and different model families. Which combinations work best for you?
 
-To install one or both of these models, use these commands:
+To install one or all of these models, use these commands:
 
 ```shell
-ollama pull llama3.2:3B
 ollama pull gpt-oss:20b
+ollama pull llama3.2:3B
+ollama pull smollm2:1.7b-instruct-fp16
+ollama pull granite4:latest
 ```
 
-(Yes, it is `B` for one and `b` for the other, as shown...)
+(Yes, some models use `B` and others use `b`, as shown...)
 
 > [!TIP]
-> Using `ollama` for local inference, we observed the following while testing. On Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b`, when a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`. Having 64GB of memory allowed `gpt-oss:20b` to work well. We found you can use the even larger `llama3.3:70B` on a 64GB machine if you keep the background activity low and you don't mind waiting longer for results. Pick a small enough model that you can run in your environment. Of course, the quality of the output will generally be better for larger models.
+> Using `ollama` for local inference, we observed the following while testing. On Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b`, when a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest`. Having 64GB of memory allowed `gpt-oss:20b` to work well. We found you can use the even larger `llama3.3:70B` on a 64GB machine if you keep the background activity low and you don't mind waiting longer for results. Using a _quantized_ version of a model also helps. Pick a small enough model that you can run in your environment. Of course, the quality of the output will generally be better for larger models.
 
-If you don't want to use our default model setting, `gpt-oss:20b`, there are two ways to specify your preferred model:
+If you don't want to use the default model setting, `gpt-oss:20b`, there are two ways to specify your preferred model:
 
 1. Edit [`src/Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/Makefile) and change the definition of `MODEL` to be your choice, e.g., `ollama/llama3.2:3B`. This will make the change permanent for all examples. The `ollama/` prefix is required if you are using `ollama`. 
-1. Override the definition of `MODEL` when you run `make`, e.g., `make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot`. This is the best way to run trials with different models.
+1. Override the definition of `MODEL` when you run `make`, e.g., `make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot`. This is the easiest way to try different models.
+
+If you want to try _all_ four models above with one command, use `make all-models-...`, where `...` is one of the other other make targets, like `all-code`, which runs all the examples for each model, e.g.,
+
+```shell
+make all-models-all-code
+```
 
 > [!NOTE]
 > See the [LiteLLM documentation](https://docs.litellm.ai/#basic-usage) for guidance on how to specify models for different inference services. If you use a service other than `ollama`, you will need to be sure the required environment variables are set in your environment, e.g., an API key, and you may need to change the arguments passed in our Python scripts to the LiteLLM `completion` function. We plan to make this more [automatic](https://github.com/The-AI-Alliance/ai-application-testing/issues/20).
@@ -61,6 +69,9 @@ If you don't want to use our default model setting, `gpt-oss:20b`, there are two
 ### Running the Examples with `make`
 
 Use `make` to run the examples. The actual commands are printed out, so you can run them subsequently without `make`, if you prefer. Hence, you can run the Python scripts directly or use `make`. 
+
+> [!TIP]
+> You can run all the examples discussed below at once with the command `make all-code`. You can run all the examples for all four models discussed above using `make all-models-all-code`.
 
 ### Run `tdd-example-refill-chatbot`
 
@@ -70,6 +81,13 @@ Run this `make` command:
 
 ```shell
 make run-tdd-example-refill-chatbot 
+```
+
+There are shorthand "aliases" for this target:
+
+```shell
+make run-terc
+make terc
 ```
 
 This does some setup, then runs the following command (default arguments):
@@ -102,7 +120,7 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | `--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 > [!TIP]
-> If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have already saved example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B`. See also the `.out` files that capture "stdout".
+> If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have included example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B` in the repo (at the time of this writing; other models may be added later). See also the `.out` files that capture "stdout".
 
 The script runs two experiments, each with these two templates files `q-and-a_patient-chatbot-prescriptions.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and once with `q-and-a_patient-chatbot-prescriptions-with-examples.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same.
 
@@ -119,6 +137,13 @@ Described in [Unit Benchmarks](https://the-ai-alliance.github.io/ai-application-
 make run-unit-benchmark-data-synthesis
 ```
 
+There are shorthand "aliases" for this target:
+
+```shell
+make run-ubds
+make ubds
+```
+
 After some setup, the following command is executed:
 
 ```shell
@@ -131,7 +156,6 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
-```
 
 The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (`:` is an invalid character for MacOS file paths) will have these files of synthetic Q&A pairs:
 
@@ -158,6 +182,13 @@ Described in [LLM as a Judge](https://the-ai-alliance.github.io/ai-application-t
 
 ```shell
 make run-unit-benchmark-data-validation
+```
+
+There are shorthand "aliases" for this target:
+
+```shell
+make run-ubdv
+make ubdv
 ```
 
 After some setup, the following command is executed:

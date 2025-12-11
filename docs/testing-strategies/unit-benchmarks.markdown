@@ -331,7 +331,9 @@ Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/)
 Similarly, there are other general-purpose tools for authoring, managing, and running benchmarks and evaluations. 
 
 {: .todo}
-> **TODO:** The following sections are placeholders. We intend to provide more coverage of these tools, as well as add new tools as we become aware of them. [Contributions are welcome!]({{site.baseurl}}/contributing). See [issue #22](https://github.com/The-AI-Alliance/ai-application-testing/issues/22){:target="_blank"} for details. Other [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues/){:target="_blank"} discuss particular tools on our radar for investigation.
+> **TODO:** 
+> 
+> The following sections are placeholders. We intend to provide more coverage of these tools, as well as add new tools as we become aware of them. [Contributions are welcome!]({{site.baseurl}}/contributing). See [issue #22](https://github.com/The-AI-Alliance/ai-application-testing/issues/22){:target="_blank"} for details. Other [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues/){:target="_blank"} discuss particular tools on our radar for investigation.
 
 #### PleurAI Intellagent
 

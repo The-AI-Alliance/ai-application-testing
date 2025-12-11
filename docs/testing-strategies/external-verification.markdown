@@ -101,19 +101,25 @@ Tools that perform a conventional web search about a topic provide the same util
 ## Using External Tools to Generate Healthcare ChatBot Synthetic Data
 
 {: .todo}
-> **TODO:** Provide an implementation of external tool use for creating data sets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
+> **TODO:** 
+> 
+> Provide an implementation of external tool use for creating data sets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
 
 TODO: Look at an offline medical reference that can be "scraped" and used to generate and validate data.
 
 ## Using External Tools to Validate Healthcare ChatBot Synthetic Data
 
 {: .todo}
-> **TODO:** Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
+> **TODO:** 
+> 
+> Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
 
 ## Experiments to Try
 
 {: .todo}
-> **TODO:** We will expand this section once the working example is provided.
+> **TODO:** 
+> 
+> We will expand this section once the working example is provided.
 
 ## What's Next?
 

@@ -57,7 +57,7 @@ Here are some ideas we are investigating. See also the [&ldquo;rough notes&rdquo
 
 For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} by [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert), where he discusses a recent evolution of [Reinforcement Learning]({{site.glossaryurl}}/#reinforcement-learning){:target="_glossary"}, called _reinforcement fine tuning_[^2]:
 
-{: .highlight }
+{: .attention }
 > **What Is Reinforcement Fine Tuning?**
 >
 > Reinforcement fine tuning uses repeated passes over the data with reinforcement learning (RL) to encourage the model to figure out more robust behaviors in domains.
@@ -81,14 +81,18 @@ For example, a _grader_ is used to verify outputs, analogous to [LLM as a Judge]
 Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
 
 {: .todo}
-> **TODO:** More investigation and summarization here, especially the concept of _graders_. Provide an example??
+> **TODO:** 
+> 
+> More investigation and summarization here, especially the concept of _graders_. Provide an example??
 
 ## The Impact on Architecture and Design
 
 In [Architecture and Design]({{site.baseurl}}/arch-design), we discussed techniques with testing needs in mind. Making tuning an integral part of the software development process could impact the architecture and design, too, as we explore in this section.
 
 {: .todo}
-> **TODO:** How tuning becomes a part of the development lifecycle, how testing processes might change.
+> **TODO:** 
+> 
+> How tuning becomes a part of the development lifecycle, how testing processes might change.
 
 
 <a id="other-tools"/>
@@ -100,7 +104,9 @@ Model tuning requires domain-specific data sets. In [Other Tools]({{site.baseurl
 Here are some other tools for model tuning. 
 
 {: .todo}
-> **TODO:** Revamp this list with newer tools. Expand the discussion and show one or more examples of use.
+> **TODO:** 
+> 
+> Revamp this list with newer tools. Expand the discussion and show one or more examples of use.
 
 ### Open Instruct
 
@@ -128,7 +134,9 @@ Unsloth is an OSS tool suite for model training and tuning, with useful guides o
 ## Experiments to Try
 
 {: .todo}
-> **TODO:** We will provide some examples to try along with suggestions for further experimentation.
+> **TODO:** 
+> 
+> We will provide some examples to try along with suggestions for further experimentation.
 
 ## What's Next?
 

@@ -1,7 +1,7 @@
 # Makefile for the ai-application-testing website and repo example code.
 
 # Some Environment variables
-MAKEFLAGS              = -w  # --warn-undefined-variables
+MAKEFLAGS              = --warn-undefined-variables
 MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
 UNAME                 ?= $(shell uname)
 ARCHITECTURE          ?= $(shell uname -m)
@@ -12,15 +12,23 @@ GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1
 # Definitions for the example code.
 INFERENCE_SERVICE     ?= ollama
 INFERENCE_URL         ?= http://localhost:11434
-MODEL                 ?= ollama/gpt-oss:20b
-# Other model used:
-#MODEL                 ?= ollama/llama3.2:3B
+
+# Different models we have used. See the "all-models-*" targets:
+MODEL_GPT_OSS         ?= ollama/gpt-oss:20b
+MODEL_LLAMA32         ?= ollama/llama3.2:3B
+MODEL_SMOLLM2         ?= ollama/smollm2:1.7b-instruct-fp16
+MODEL_GRANITE4        ?= ollama/granite4:latest
+MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+# Default model!
+MODEL                 ?= ${MODEL_GPT_OSS}
+
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
 PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
 TEMP_DIR              ?= temp
 OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
-OUTPUT_LOGS_DIR       ?= ${OUTPUT_DIR}/logs/${TIMESTAMP}
+OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
+OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
@@ -77,6 +85,11 @@ define help_message_code
 Quick help for this make process for the tools described in this website.
 For the tools used to manage the website, see the parent directory Makefile.
 
+make all-models-*       # Extract "*" as one of the other targets (such as, "all-code"),
+                        # that is everything to the right of "all-models-", and 
+                        # make it for ALL the models defined by variable "MODELS":
+                        #   ${MODELS}
+                        # (Not useful for model-agnostic targets, like "setup"...)
 make all-code           # Clean and run all the tools.
 make run-code           # Run all the tools without cleaning first.
 
@@ -92,13 +105,15 @@ make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
 
-For scripts run by the following targets, which invoke inference, ${MODEL} 
-served by ollama is used by default. The make variable MODEL specifies the
-model, so if you want to use a different model, invoke make as in this example:
+For scripts run by the following targets, which invoke inference, the model 
+${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
+you want to use a different model, invoke make as in this example:
 
   MODEL=ollama/llama3.2:3B make run-tdd-example-refill-chatbot
 
-All these "run-*" targets may run setup dependencies that are redundant most of the time,
+See also the description of "all-models-*" above.
+
+All the following" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important!
 
 make terc               # Shorthand for the run-tdd-example-refill-chatbot target.
@@ -277,7 +292,28 @@ setup-jekyll:: ruby-installed-check bundle-ruby-command-check
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
-.PHONY: before-run save-examples
+.PHONY: before-run save-examples post-all-models
+
+# Extract the "%" as a target, then make it for all the MODELS.
+# Use the same timestamp for all of them.
+all-models-% :: 
+	@timestamp=${TIMESTAMP}; \
+	target=${@:all-models-%=%}; \
+	echo "Making target \"$$target\" for all models: ${MODELS}"; \
+	for model in ${MODELS}; \
+	do \
+		echo "\nModel = $$model"; \
+		echo ${MAKE} ${MAKEFLAGS} TIMESTAMP=$$timestamp MODEL="$$model" $$target; \
+		${NOOP} ${MAKE} MODEL="$$model" $$target; \
+	done; \
+	echo "Output log files (if any) can be found under:"; \
+	for model in ${MODELS}; \
+	do \
+		echo "  ${TEMP_DIR}/output/$$model/logs/$$timestamp"; \
+	done
+
+foo::
+	@echo "MODEL = ${MODEL}"
 
 all-code:: clean-code run-code
 run-code:: run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
@@ -302,14 +338,18 @@ terc run-terc:: run-tdd-example-refill-chatbot
 ubds run-ubds:: run-unit-benchmark-data-synthesis
 ubdv run-ubdv:: run-unit-benchmark-data-validation
 
+# LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
+# for our purposes. See the LiteLLM docs for logging configuration details.
 run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
 	$(info ${$@-message})
+	@export LITELLM_LOG="ERROR"; \
 	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${OUTPUT_DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)

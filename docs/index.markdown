@@ -9,24 +9,17 @@ has_children: false
 
 (Previous Title: _Achieving Confidence in Enterprise AI Applications_)
 
-{: .highlight }
-> **I am an enterprise developer; how do I test my AI applications??**
+{: .attention }
+> _**I am an enterprise developer; how do I test my AI applications??**_
 >
-> I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**.
+> _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
 
 Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Applications**. We are building the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
-{: .tip}
-> **Tips:**
->
-> 1. Use the search box at the top of this page to find specific content.
-> 2. [Capitalized Terms]({{site.glossaryurl}}/){:target="_glossary"} link to glossary definitions.
-> 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
-> 4. Many chapters end with an **Experiments to Try** section for further exploration.
-
 {: note}
 > **Note:**
-> This site isn't about using AI to generate conventional tests (or code). You can find many resources that cover that topic. Instead, this site focuses on the problem of how to do _any_ testing of applications with generative AI components, given the nondeterminism introduced.
+>
+> This site isn't about using AI to generate conventional tests (or code). You can find many online resources about that topic. Instead, this site focuses on the problem of how to do testing of any kind when an application contains generative AI components, given the nondeterminism they introduce.
 
 ## The Challenge We Face
 
@@ -50,9 +43,20 @@ The goals of this project are two fold:
 2. Publish detailed, reusable examples and guidance for developers and AI experts on these strategies and techniques.
 
 {: .attention}
-> **TODO:** This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
+> **TODO:** 
+> 
+> This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
 
 ## Overview of This Site
+
+{: .tip}
+> **Tips:**
+>
+> 1. Use the search box at the top of any page to find specific content.
+> 2. [Capitalized Terms]({{site.glossaryurl}}/){:target="_glossary"} link to glossary definitions.
+> 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
+> 4. Many chapters end with an **Experiments to Try** section for further exploration.
+> 5. [This AI Alliance blog post](https://www.aialliance.org/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
 
 We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
 
@@ -98,7 +102,7 @@ See also [About Us]({{site.baseurl}}/about) for more details about this project 
 	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>
 	* <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>
 * The AI Alliance: 
-	* [Website](https://thealliance.ai){:target="ai-alliance"}
+	* [Website](https://aialliance.org){:target="ai-alliance"}
 	* [The Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} 
 
 | **Authors**     | The AI Alliance [Trust and Safety](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} and [Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-apps"} work groups. (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |

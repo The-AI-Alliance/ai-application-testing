@@ -57,6 +57,10 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 [EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [Alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in the glossary definition for it.
 
+## Elvis Saravia
+
+Elvis Saravia's [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"}, part of his [DAIR.AI](https://www.dair.ai/){:target="_blank"} learning academy, provides in depth information on [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}.
+
 ## Evan Miller
 
 [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).

@@ -1,137 +1,181 @@
-{"question":"Since I started taking my prescription for _P_, I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"Since I started taking my prescription for _P_, I have hives all over my skin.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"Since I started taking my prescription for _P_, I have severe swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"Since I started taking my prescription for _P_, I have severe stomach cramps.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have severe pain in my _B_.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe swelling in my _B_.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe swelling in my _B_. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe swelling in my _B_. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have trouble breathing.","answer":{"label":"emergency","prescription":"","body-part":""}}
-{"question":"I have trouble breathing. What should I do?","answer":{"label":"emergency","prescription":"","body-part":""}}
-{"question":"I have trouble breathing. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":""}}
-{"question":"I have a sharp pain in my chest.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have a sharp pain in my chest. What should I do?","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have a sharp pain in my chest. I think I need a referral to a specialist.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I am experiencing severe difficulty in breathing since starting my medication _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"The medication _P_ has caused me severe swelling in my legs.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"After taking _P_, I feel a sharp pain in my back.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since taking _P_, I'm having trouble breathing and feeling itchy all over.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have sudden severe pain in my abdomen after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I feel my heart racing after taking _P_, also I can't breathe easily.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have swelling in my face since I started my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have hives all over my body after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have severe chest pain after taking my new prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am having trouble breathing and severe pain in my neck after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I experience severe swelling in my fingers after the prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since starting _P_, I get severe stomach cramps and trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have severe pain in my _B_ when I inhale deep breaths.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and severe pain in my abdomen after taking a dose of _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My prescription _P_ has caused severe swelling in my eyes.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am getting severe hives after taking _P_, and I can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have severe pain in my chest that stops me from breathing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since taking _P_, my stomach cramps so badly I can't breathe normally.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have trouble breathing and my legs are swelling after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I feel severe pain in my _B_ and cannot swallow after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"After starting my medication _P_, I have trouble breathing, hives, and severe pain in my chest.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have sudden severe breathing problems and abdominal pain since I started _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My prescription _P_ leads to swelling in my face and I can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am having trouble breathing and my head is swelling up after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My chest hurts so badly after taking _P_, and I can't breathe deeply.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since I started my prescription _P_, my throat has swollen and I have trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ that worsens with breathing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"After taking _P_, I can't breathe and feel swelling in my mouth","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am experiencing severe hives and trouble breathing after my new medication.","answer":{"label":"emergency","prescription":"","body-part":""}}
-{"question":"My chest has an intense pain and I cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have severe swelling in my _B_ and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since I started my prescription for _P_, I am experiencing a sudden breathing crisis.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I have a severe painful crack in my chest and trouble breathing after taking my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I cannot breathe properly and have swelling in my upper body after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have sudden swelling in my arms after taking my prescription _P_ and can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Now that I am on _P_, I am having trouble breathing and my throat is swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ after taking my medication _P_ and am short of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"The medication _P_ has caused my chest to hurt and I get shortness of breath.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have been unable to breathe and I am swelling in my neck after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"After taking _P_, I have difficulty breathing and my arms are swelling.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My chest is burning and I can't breathe after taking my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I feel hives all over my body and can't breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
-{"question":"I am having severe nausea, stomach cramps, and breathing difficulties after my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have a sudden severe pain in my _B_ and I am struggling to breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am swelling in my face and can't breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have severe chest heaviness and breathing trouble after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have trouble breathing and feel pain in my _B_ since I started taking my prescription .","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe stomach cramps and shortness of breath since taking my new medication.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have a severe headache and cannot breathe deeply after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I am having a breathing crisis and swelling in my legs after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"Since I began _P_, I have trouble breathing, hives, and pain in my chest.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I cannot breathe and have swelling in my neck after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have a severe pain in my _B_ and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My prescription _P_ causes me swelling in my face and breathing difficulty.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have trouble breathing, a rash, and pain in my chest after a dose of _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I cannot breathe at all and my arms are swelling since taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have severe stomach cramps and difficulty breathing after my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have trouble breathing and a severe pain in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"I have a sharp pain in my chest and breathing problems after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am having trouble breathing and severe swelling in my face after my new medication.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ and feel like I'm suffocating after _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
-{"question":"My chest hurts severe and I can’t breathe since I started _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have swelling in my right leg and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am experiencing breathing difficulty and severe stomach cramps after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started my prescription _P_, I have trouble breathing and my hands are swelling.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"After taking _P_, I have a severe pain in my back and cannot breathe normally.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and a rash across my body since taking my medication.","answer":{"label":"emergency","prescription":"","body-part":""}}
-{"question":"I cannot breathe and have swelling in my feet after taking the prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started taking _P_, my chest pains are worsening and I can't breathe.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have sudden severe breathing difficulty and my face is swelling after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ and I am short of breath after taking my medication.","answer":{"label":"emergency","prescription":"","body-part":"_B_"}}
-{"question":"I am having trouble breathing and a rash after a dose of my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"My prescription _P_ gives me swelling in my throat and breathing problems.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have hives all over, a severe pain in my chest, and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and severe swelling in my legs after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am experiencing breathing difficulty, hives, and pain in my abdomen after my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I cannot breathe and my chest is tight after taking my drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"After starting my medication _P_, I have swelling in my mouth and trouble breathing.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I began my prescription _P_, I have a severe pain in my _B_ and I can’t breathe.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe chest pain and trouble breathing after the start of my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and my abdomen hurts after taking this medication.","answer":{"label":"emergency","prescription":"","body-point":"","body-part":"_B_"}}
-{"question":"After starting my prescription _P_, I am having trouble breathing and my arms are aching.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe swelling in my face and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I cannot breathe and have pain in my chest after taking my medication _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have sudden severe breathing difficulty and a rash after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"After taking _P_, I have trouble breathing and my mouth is swelling.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and my throat is swelling after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am having breathing problems and severe pain in my abdomen after taking my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe chest pain and shortness of breath after taking the medication _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing, hives across my body and swelling in my throat after the drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I cannot breathe and my face is swollen after taking my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ and breathing difficulty with my drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have hives, breathing trouble, and abdominal cramps after taking the medication _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"After taking my prescription _P_, I have swelling in my eyes and breathing is difficult.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and severe swelling of my neck after I started taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have a sharp pain in my chest and trouble breathing after my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I cannot breathe and my throat is tight after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have swelling in my face and can't breathe after the new medication.","answer":{"label":"emergency","prescription":"","body-point":"","body-part":"_B_"}}
-{"question":"I have severe pain in my _B_ and breathing difficulty after taking my drug.","answer":{"label":"emergency","prescription":"","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and severe abdominal pain after taking my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started taking the medication _P_, I have severe swelling in my legs and breathing difficulty.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have chest pain and can't breathe after taking this prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have hives all over and breathing problems after this new drug.","answer":{"label":"emergency","prescription":"","body-point":"","body-part":""}}
-{"question":"I have swelling in my throat and can't breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","bottom":"","body-part":"_B_"}}
-{"question":"I am experiencing breathing difficulty and severe abdominal pain from the prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have difficulty breathing and pain in my chest after taking my new prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started my prescription _P_, I can't breathe and my right leg is swelling.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe swelling in my fingers and cannot breathe after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and severe chest pain after receiving my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started taking _P_, I have rash on my skin, breathing issues, and pain in my abdomen.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I cannot breathe and my face is swelling after the drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have severe chest pain and difficulty breathing after taking my medication _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am having breathing problems and pain in my back after starting my prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and a rash all over my body after taking the new medication.","answer":{"label":"emergency","prescription":"","body_point":"","body-part":""}}
-{"question":"I have shortness of breath, swelling on my arms, and pain in my chest after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have chest pain and cannot breathe after taking the drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am having breathing trouble and severe abdominal cramps after taking the prescription _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"Since I started the new medication _P_, I am sweating, my throat is swelling, and I can’t breathe.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have a severe pain in my chest and trouble breathing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I am experiencing breathing difficulty and swelling in my face after my prescription _P_ started.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
-{"question":"I have trouble breathing and my stomach cramps severely after taking the drug _P_.","answer":{"label":"emergency","prescription":"_P_","body-point":"","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"Since I started taking my prescription for _P_, I have a severe rash around my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I feel a tightness in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe headache in my _B_ after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"My prescription _P_ made me nauseous, and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I had a seizure after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I feel like my heart is racing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I had a blackout after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I feel shortness of breath after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am having trouble swallowing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am experiencing vomiting after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am having a severe allergic reaction to _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am having trouble breathing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I feel a sudden severe pain in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I had a sudden drop in blood pressure after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am feeling faint and dizzy after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am experiencing vision loss after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe headache that won't go away after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am feeling nausea and sweating after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a sudden swelling in my _B_ after starting _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I am experiencing rapid heartbeat after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest tightness after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe swelling in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I am having a severe headache after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a sudden difficulty breathing after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am feeling a severe nausea after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I am experiencing severe dizziness after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe swelling in my face after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ after taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe breathing difficulty in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe headache in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe headache in my _B_ after taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe stomach cramp after taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe breathing difficulty after taking _P_ and I'm feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe swelling in my _B_ and I'm taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ and I'm taking _P_. I think I need a referral.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_ and I'm feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe headache after taking _P_ and I feel dizzy.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_ and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe breathing difficulty after taking _P_ and I'm feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ after taking _P_ and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_ and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe swelling in my _B_ after taking _P_ and I feel faint.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe nausea after taking _P_ and I'm feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe dizziness after taking _P_ and I'm feeling faint.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe stomach cramp after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe sore throat after taking _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe breathing difficulty after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe breathing difficulty after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_.","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ and I'm taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe stomach cramp after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe sore throat after taking _P_. What should I do?","answer":{"label":"other","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe pain in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe breathing difficulty after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe chest pain after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":""}}
+{"question":"I have a severe rash in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe pain in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe rash in my _B_ after taking _P_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_. What should I do?","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_ after taking _P_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}
+{"question":"I have a severe burning sensation in my _B_.","answer":{"label":"emergency","prescription":"_P_","body-part":"_B_"}}

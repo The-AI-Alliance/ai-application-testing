@@ -1,49 +1,37 @@
-{"question": "I need my P drug refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pharmacy says I don't have any refills for P. Can you ask them to refill it?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P prescription refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pain is getting worse. Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": "_B_"}} 
-{"question": "I'm out of P. Can I get a refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pharmacy says I don't have any refills for P. Can you ask them to refill it?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need more P.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me some P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My B hurts. Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": "_B_"}} 
-{"question": "I'm running out of P.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you refill my P prescription?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "I need to get more P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "My pharmacy says I'm out of P. Can you refill it?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me a stronger version of P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need to refill my P prescription.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My B is infected. Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": "_B_"}} 
-{"question": "I need to get a refill for my P prescription.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you refill my P?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "I need to get more of P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "My pharmacy says I don't have any refills for P. Can you ask them to refill it?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my B prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me a new version of P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need to refill my P prescription.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pharmacy says I'm out of P. Can you refill it?", "answer": {"label": "other", "prescription": "", "body-part": ""}} 
-{"question": "I need to get more of P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "Can you refill my P prescription?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "I need to get a refill for P.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my B prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me a new version of P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pharmacy says I don't have any refills for P. Can you ask them to refill it?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need to refill my P prescription.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me a stronger version of P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need to get more of P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "Can you refill my P?", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "I need to get a refill for P.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "My pharmacy says I'm out of P. Can you refill it?", "answer": {"label": "other", "prescription": "", "body-part": ""}} 
-{"question": "I need my B prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me a new version of P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need my P prescription to be refilled.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Can you prescribe me more P?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need to refill my P prescription.", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "I need my _P_ refilled", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you refill my _P_ prescription?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm out of _P_. Can I get a refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "My _P_ prescription is almost up. Can you help me with a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to refill my _P_. Can I get a new script?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with a prescription refill for _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm running low on my _P_. Can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you refill my _P_ prescription at the pharmacy?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _P_ medication is almost out. Can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to replace my _P_. Can you help me with a prescription refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Can I get a new _P_ prescription if mine is almost out?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need more _P_. Can you refill my prescription?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _P_ is expired. Can I get a new prescription and a refill?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with my _P_ refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm out of _P_. Can I get a prescription refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with my _P_ refill at the pharmacy?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _P_ prescription is up. Can I get a new one and a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with my _P_ medication refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need a prescription refill for _P_. Can I get a new script?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _B_ is hurting. Can you help me with a prescription refill for my _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": "B"}}
+{"question": "Can I get a new _P_ prescription if mine is almost out and I need it for my _B_?", "answer": {"label": "refill", "prescription": "", "body-part": "B"}}
+{"question": "I'm running low on my _P_. Can I get a refill for it?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with a prescription refill for my _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _P_ is almost out. Can I get a new one and a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with my _P_ medication refill at the pharmacy?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to replace my _P_. Can I get a new prescription and a refill?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with a prescription refill for my _P_ and _B_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": "B"}}
+{"question": "My _P_ is expired. Can I get a new prescription and a refill for it?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "Can you help me with my _P_ medication refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to refill my _P_. Can I get a new script?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _B_ is hurting. Can you help me with a prescription refill for _P_?", "answer": {"label": "refill", "prescription": "_P_", "body-part": "B"}}
+{"question": "Can I get a new _P_ prescription if mine is almost out and I need it for my _B_?", "answer": {"label": "refill", "prescription": "", "body-part": "B"}}
+{"question": "I'm running low on my _P_. Can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with my _P_ refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need more _P_. Can I get a prescription refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can you help me with my _P_ medication refill at the pharmacy?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My _P_ is almost out. Can I get a new one and a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}

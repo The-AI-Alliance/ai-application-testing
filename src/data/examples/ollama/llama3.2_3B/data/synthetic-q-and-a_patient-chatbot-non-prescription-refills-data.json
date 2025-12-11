@@ -1,1 +1,111 @@
-{"question": "I am having trouble sleeping at night. Could this be related to my prescription?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My medication for P seems to make me more anxious during the day.", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}; {"question": "Can you tell me when my next appointment is?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B after a fall.", "answer": {"label": "other", "prescription": "", "body-part": "_B_"}}; {"question": "How can I manage my blood pressure without taking P?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}; {"question": "I need to refill my prescription for B.", "answer": {"label": "refill", "prescription": "_B_", "body-part": ""}}; {"question": "Can I get a copy of my medical records online?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some issues.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "I am having trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}; {"question": "Can you recommend a new exercise routine for me?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B and it is not going away.", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}; {"question": "Can I get a transfer of care to a different doctor?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some nausea.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "Can I get a list of all my medications and dosages?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B that is getting worse.", "answer": {"label": "emergency", "prescription": "", "body-part": "_B_"}}; {"question": "Can you recommend a new doctor for me?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some fatigue.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "Can I get a copy of my insurance information?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B that is not hurting.", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}; {"question": "Can I get a list of all my upcoming appointments?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some dizziness.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "Can I get a transfer of care to a different clinic?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I need to schedule an appointment.", "answer": {"label": "refill", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some hair loss.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "Can I get a list of all my allergies?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B that is getting better.", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}; {"question": "Can I get a copy of my medical history?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some muscle weakness.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}; {"question": "Can I get a list of all my test results?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "I am having some pain in my B that is not causing me any problems.", "answer": {"label": "refill", "prescription": "", "body-part": "_B_"}}; {"question": "Can I get a transfer of care to a different specialist?", "answer": {"label": "other", "prescription": "", "body-part": ""}}; {"question": "My P seems to be causing me some anxiety.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}};
+{"question": "I am having trouble sleeping and I think it might be related to my medication", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+
+{"question": "How do I know if I'm taking too much of my _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my knee. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "knee"}}
+
+{"question": "Why does my _P_ make me feel so tired all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my elbow. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "elbow"}}
+
+{"question": "How long does it take for _P_ to start working?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble breathing. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so dizzy all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my back. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "back"}}
+
+{"question": "How can I reduce the side effects of _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my foot. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "foot"}}
+
+{"question": "Why does my _P_ make me feel so anxious all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my shoulder. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "shoulder"}}
+
+{"question": "How can I make sure I'm taking _P_ correctly?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble with my vision. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so weak all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my hand. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "hand"}}
+
+{"question": "How can I reduce the risk of side effects from _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my chest. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "chest"}}
+
+{"question": "Why does my _P_ make me feel so nauseous all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my ankle. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "ankle"}}
+
+{"question": "How can I get more information about _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble with my hearing. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so confused all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my face. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "face"}}
+
+{"question": "How can I talk to my doctor about _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my arm. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "arm"}}
+
+{"question": "Why does my _P_ make me feel so tired all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my neck. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "neck"}}
+
+{"question": "How can I take _P_ with food or without food?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble with my sense of taste. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so drowsy all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my jaw. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "jaw"}}
+
+{"question": "How can I avoid taking too much _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my ear. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "ear"}}
+
+{"question": "Why does my _P_ make me feel so anxious all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my toes. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "toes"}}
+
+{"question": "How can I get _P_ over-the-counter?", "answer": {"label": "refill", "prescription": "", "body-part": ""}}
+
+{"question": "I am having some trouble with my memory. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so irritable all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my fingers. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "fingers"}}
+
+{"question": "How can I talk to my insurance about _P_?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my mouth. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so paranoid all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my hip. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "hip"}}
+
+{"question": "How can I get _P_ from my pharmacy?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble with my sense of smell. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so depressed all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my thumb. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "thumb"}}
+
+{"question": "How can I avoid taking _P_ too frequently?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some swelling in my nose. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so hot all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having pain in my ankle. What should I do?", "answer": {"label": "other", "prescription": "", "body-part": "ankle"}}
+
+{"question": "How can I get a copy of my _P_ prescription?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+
+{"question": "I am having some trouble with my hearing. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}
+
+{"question": "Why does my _P_ make me feel so dizzy all the time?", "answer": {"label": "other", "prescription": "_P_", "body-part": ""}}

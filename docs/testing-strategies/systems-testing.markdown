@@ -20,7 +20,9 @@ has_children: false
 Quality assurance professionals have long dealt with the challenges of testing whole systems, where determinism and isolation are rare guaranteed, because real world scenarios usually include concurrent, distributed systems, failing hardware and software components, etc. What lessons can we learn from this expertise?
 
 {: .todo}
-> **TODO:** This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/26){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
+> **TODO:** 
+> 
+> This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/26){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 
 <a id="highlights"></a>
@@ -47,7 +49,9 @@ In a sense, we explored this lesson already; our healthcare ChatBot is designed 
 ## Experiments to Try
 
 {: .todo}
-> **TODO:** We will expand this section once more content is provided above.
+> **TODO:** 
+> 
+> We will expand this section once more content is provided above.
 
 ## What's Next?
 

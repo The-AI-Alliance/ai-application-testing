@@ -1,49 +1,82 @@
-{"question": "I have trouble breathing since I started taking my prescription for P.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am experiencing severe hives all over my skin after starting P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I have trouble breathing and think I need a refill on my prescription for P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am experiencing sharp pain in my chest.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}} 
-{"question": "Since I started taking P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am having severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "I have a sharp pain in my chest. What should I do?", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}} 
-{"question": "Since I started taking P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I think I need a refill on my prescription for P due to trouble breathing.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am experiencing severe pain in B.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I have trouble breathing. What should I do?", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am having severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "I need a refill on my prescription for P as I am experiencing trouble breathing.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "Since I started taking P, I have severe stomach cramps and trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I am having trouble breathing and need a refill on my prescription for P.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "I think I have an allergic reaction to P as I am experiencing hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "Since I started taking P, I have trouble breathing and severe stomach cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need urgent care as I am experiencing sharp pain in my chest.", "answer": {"label": "emergency", "prescription": "", "body-part": "chest"}} 
-{"question": "I have trouble breathing and think I need a specialist referral for B.", "answer": {"label": "refill", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I am experiencing severe swelling in my B.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "B"}} 
-{"question": "I think I need a refill on my prescription for P due to trouble breathing and hives.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "Since I started taking P, I have severe stomach cramps and I am experiencing trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need urgent care as I think I have a severe allergic reaction to P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "Since I started taking P, I am experiencing trouble breathing and having severe pain in my B.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "B"}} 
-{"question": "I need a refill on my prescription for P as I am experiencing severe swelling in my B.", "answer": {"label": "refill", "prescription": "_P_", "body-part": "B"}} 
-{"question": "Since I started taking P, I have trouble breathing and severe stomach cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need urgent care as I think I need a specialist referral for B due to sharp pain.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I am experiencing severe swelling in my chest and trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need a refill on my prescription for P as I think I have an allergic reaction to it.", "answer": {"label": "refill", "prescription": "", "body-part": ""}} 
-{"question": "Since I started taking P, I have trouble breathing and severe pain in my B.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "B"}} 
-{"question": "I need urgent care as I am experiencing hives all over my skin due to P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "Since I started taking P, I have severe stomach cramps and trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need a specialist referral for B due to sharp pain as I am experiencing trouble breathing.", "answer": {"label": "refill", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I think I have an allergic reaction and I am experiencing hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "I need urgent care as I am having trouble breathing and severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I have severe stomach cramps and I am experiencing trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need a refill on my prescription for P as I am having trouble breathing.", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}} 
-{"question": "Since I started taking P, I have severe swelling in my chest and I think I need urgent care.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "chest"}} 
-{"question": "I am experiencing sharp pain in my B as I am having trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I have severe stomach cramps and I think I need urgent care due to hives.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need a specialist referral for B due to sharp pain as I am experiencing trouble breathing.", "answer": {"label": "refill", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I think I have an allergic reaction and I am having severe swelling in my chest.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
-{"question": "I need urgent care as I am experiencing severe pain in B due to trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I have trouble breathing and severe swelling in my chest.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": "chest"}} 
-{"question": "I need a refill on my prescription for P as I am having severe pain in B.", "answer": {"label": "refill", "prescription": "_P_", "body-part": "B"}} 
-{"question": "Since I started taking P, I have trouble breathing and severe stomach cramps.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}} 
-{"question": "I need urgent care as I think I need a specialist referral for B due to sharp pain.", "answer": {"label": "emergency", "prescription": "", "body-part": "B"}} 
-{"question": "Since I started taking P, I have severe swelling in my chest and trouble breathing.", "answer": {"label": "emergency", "prescription": "_P_", "body-part": ""}}
+{"question": "I have trouble breathing since I started taking my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I have severe stomach cramps after taking my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I have a sharp pain in my chest that started when I was taking my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I took too much of my prescription for P and now I am experiencing severe vomiting.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B after taking my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I have a high fever and rash on my body since I started taking my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe abdominal pain and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing chest pain and shortness of breath since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe headache and confusion since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe chest pain and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe abdominal pain and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe stomach cramps.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty breathing since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have severe swelling in my B.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and difficulty walking since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have trouble breathing.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "I am experiencing severe pain in my B and nausea since I took my prescription for P.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}} 
+{"question": "Since I started taking my prescription for P, I have hives all over my skin.", "answer": {"label": "emergency", "prescription": "", "body-part": ""}}

@@ -20,7 +20,9 @@ has_children: false
 This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} techniques, including those use by foundation model builders who have broader goals than the incremental refinement tuning that interest us in this guide. Hence, not all the techniques and ideas discussed here will be important for our purposes.
 
 {: .warning}
-> **WARNING:** These are raw notes. They are not very well organized, but if you are interested in the state of the art for model tuning, these notes provide a good place to start, with plenty of links to more advanced materials. Eventually, these notes will be refined and incorporated into other chapters, especially [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
+> **WARNING:** 
+> 
+> These are raw notes. They are not very well organized, but if you are interested in the state of the art for model tuning, these notes provide a good place to start, with plenty of links to more advanced materials. Eventually, these notes will be refined and incorporated into other chapters, especially [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/). 
 
 <a id="highlights"></a>
 
@@ -39,7 +41,9 @@ Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1)
 Some of the modules, like for [instruction tuning](huggingface.co/learn/smol-course/unit1/1){:target="_blank"} are more relevant when tuning &ldquo;raw&rdquo; base models to be better at instruction following, aligned with social norms, etc. For domain-specific tuning, such as we discuss in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning), you would normally start with a model that is already instruction tuned and proceed from there.
 
 {: .tip}
-> **TIP:** This is the best place to start for practical training on tuning.
+> **TIP:** 
+> 
+> This is the best place to start for practical training on tuning.
 
 Also recommended is their more general [LLM Course](https://huggingface.co/learn/llm-course/chapter1/1){:target="_blank"}, which provides useful background information that is assumed by the smol course.
 
@@ -255,7 +259,7 @@ Back to [Nathan's NeurIPS 2024 presentation](https://docs.google.com/presentatio
 
 Here is a description of RFT adapted from the presentation:
 
-{: .highlight }
+{: .attention }
 > **What Is Reinforcement Fine Tuning?**
 >
 > Reinforcement fine tuning uses repeated passes over the data with reinforcement learning (RL) to encourage the model to figure out more robust behaviors in domains.
@@ -274,7 +278,7 @@ RFT has since been [launched as a product feature](https://platform.openai.com/d
 
 RFT is entirely focused on conventional model tuning, but it may fit our goals of finding general ways to assure desired behavior in an incremental fashion. In fact, this paper, [Reinforcement Fine-Tuning Naturally Mitigates Forgetting in Continual Post-Training](https://arxiv.org/abs/2507.05386){:target="_blank"}, compares SFT and RFT, finding the latter superior for avoiding _catastrophic forgetting_, especially in the context of continual fine tuning. Here is the abstract for that paper:
 
-{: .highlight}
+{: .attention}
 > Continual post-training (CPT) is a popular and effective technique for adapting foundation models like multimodal large language models to specific and ever-evolving downstream tasks. While existing research has primarily concentrated on methods like data replay, model expansion, or parameter regularization, the fundamental role of the learning paradigm within CPT remains largely unexplored. This paper presents a comparative analysis of two core post-training paradigms: supervised fine-tuning (SFT) and reinforcement fine-tuning (RFT), investigating their respective impacts on knowledge retention during CPT. Our experiments are conducted on a benchmark comprising seven diverse multimodal tasks, utilizing Qwen2.5-VL-7B-Instruct as the base model for continual post-training. The investigation yields two significant findings: (1) When continuously learning on downstream tasks, SFT leads to catastrophic forgetting of previously learned tasks. In contrast, RFT inherently preserves prior knowledge and achieve performance comparable to multi-task training. (2) RFT successfully protects and even enhances the model's general knowledge on standard benchmarks (e.g., MMMU and MMLU-Pro). Conversely, SFT degrades general model capabilities severely. Further analysis reveals that this stability is not primarily due to explicit mechanisms like KL penalty or chain-of-thought reasoning. Instead, we identify an implicit regularization mechanism inherent to RFT as a key contributing factor. Our theoretical analysis suggests that RFT's gradient updates are naturally scaled by the reward variance, acting as a data-dependent regularizer that inherently protects previously acquired knowledge. Finally, we propose a rollout-based instance filtering algorithm to enhance the stability and efficiency of RFT. Our comprehensive study demonstrates the superiority of RFT as a robust paradigm for continual post-training.
 
 

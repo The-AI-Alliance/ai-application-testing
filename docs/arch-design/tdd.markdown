@@ -69,7 +69,9 @@ First, what aspects of TDD _don't_ need to change? We should still strive for it
 Let's use a concrete example. Suppose we are building a [ChatBot]({{site.glossaryurl}}/#chatbot){:target="_glossary"} for patients to send messages to a healthcare provider. In some cases, an immediate reply can be generated automatically. In the rest of the cases, a &ldquo;canned&rdquo; response will be returned to the user that the provider will have to respond personally as soon as possible. (The complete ChatBot application is described in [A Working Example]({{site.baseurl}}/working-example).)
 
 {: .warning}
-> **DISCLAIMER:** We will use this healthcare ChatBot example throughout this guide, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
+> **DISCLAIMER:** 
+> 
+> We will use this healthcare ChatBot example throughout this guide, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk it could provide bad responses that lead to poor patient outcomes, if applied. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
 Let's suppose the next &ldquo;feature&rdquo; we will implement is to respond to a request for a prescription refill. (Let's assume any necessary refactoring is already done.)
 
@@ -111,7 +113,9 @@ Let's explore the first two questions:
 * Can we really expect an LLM to behave this way?
 * For those questions and desired answers that have a placeholder _P_ for the drug, how do we handle testing any conceivable drug?
 
-It turns out LLMs can handle both concerns easily, even relatively small models. Before LLMs, we would have to think about some sort of language _parser_ for the questions, which finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt){:target="_glossary"} that steers the LLM towards the desired behaviors. Let's see an example of how this works.
+It turns out LLMs can handle both concerns easily, even relatively small models. Before LLMs, we would have to think about some sort of language _parser_ for the questions, which finds key values and lets us use them when forming responses. With LLMs, all we will need to do is to specify a good [System Prompt]({{site.glossaryurl}}/#system-prompt){:target="_glossary"} that steers the LLM towards the desired behaviors. 
+
+Let's see an example of how this works. First, we will discuss our approach conceptually, the results we observed, and finally explore some insights. Then, we will show you how you can try our example yourself in the [Try This Yourself!](#try-this-yourself) section below.
 
 First, LLMs have been trained to recognize prompt strings that might contain a system prompt along with the user query. This system prompt is usually a static, application-specific string that provides fixed context to the model. For our experiments with this example, we used two, similar system prompts. Here is the first one:
 
@@ -151,7 +155,30 @@ If the request doesn't look like a refill request, reply with this message:
 - I have received your message, but I can't answer it right now. I will get back to you within the next business day.
 ```
 
-We tried both system prompts with the models [`gpt-oss:20b`](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} and [`llama3.2:3B`](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"}, served locally using [`ollama`](https://ollama.com/){:target="ollama"} with a number of prompts (more details below). First, a set of refill requests:
+{: .tip}
+> **TIP:** 
+> 
+> Providing a few examples is known as [Few-shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
+
+We tried both system prompts with a number of user prompts (details below) using the following models served locally using [Ollama](https://ollama.com/){:target="ollama"}. Links to both the corresponding Hugging Face pages (with _model cards_ and other information) and the corresponding Ollama pages are shown:
+
+| Model | Hugging Face | Ollama | Description |
+| :---- | :----------- | :----- | :---------- |
+| `gpt-oss:20b` | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. |
+| `llama3.2:3B` | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
+| `smollm2:1.7b-instruct-fp16` | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+| `granite4:latest` | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | A small, performant model tuned for instruction following and tool calling. |
+
+{: .tip}
+> **TIPs:** 
+> 
+> 1. These models are available in different sizes. We chose sizes that should work for most developer workstations, but consider smaller or larger versions depending on your hardware resources. Production deployments may require larger versions.
+> 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of each model instead.
+> 1. Sample results for all the examples in this site and for some of the models listed above can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
+
+With our system prompts and model choices, let's try some queries.
+
+First, let's try a set of refill requests:
 
 * `I need my _P_ refilled.`
 * `I need my _P_ drug refilled.`
@@ -159,26 +186,28 @@ We tried both system prompts with the models [`gpt-oss:20b`](https://huggingface
 * `I need more _P_.`
 * `My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?`
 
-We also tried other requests that aren't related to refills:
+Second, let's try other requests that aren't related to refills:
 
 * `My prescription for _P_ upsets my stomach.`
 * `I have trouble sleeping, ever since I started taking _P_.`
 * `When is my next appointment?`
 
-We ran separate queries for `_P_` replaced with `prozac` and `miracle drug`.
+For all these queries, we executed separate queries where `_P_` was replaced with `prozac` and `miracle drug`.
 
-For both models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would write `Prozac`, which is arguably more correct, rather than what the &ldquo;user&rdquo; entered, `prozac`. 
+For all the models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would use `Prozac`, which is arguably more correct, rather than `prozac` that was used in the &ldquo;user's&rdquo; prompts. 
 
 {: .tip}
-> **TIP:** Consider performing transformations of generated results to remove differences that don't affect the meaning of the result, but provide more uniformity for both verifying test results and using results downstream in production deployments. For example, make white space consistent and convert numbers, currencies, addresses, etc. to standard formats. For test comparisons when deterministic responses are expected, converting to lower case can eliminate trivial differences, but consider when correct case is important, like in proper names. 
+> **TIP:** 
+> 
+> To make handling responses more resilient, consider performing some transformations on the generated responses to remove differences that don't affect the meaning, but provide more uniformity both for verifying test results and for using results downstream in production deployments. For example, make white space consistent and convert numbers, currencies, addresses, etc. to standard formats. For test comparisons when deterministic responses are expected, converting to lower case can eliminate trivial differences.
+>
+> However, consider when correct case is important, such as proper names, like _Prozac_. For example, you could use a dictionary of terms common to your domain and make the substitutions before any further downstream processing (including tests).
 
-Similarly, for other prompts used that were not refill requests, the expected response was always returned: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
-
-If you want to try our code yourself, see [Try This Yourself!](#try-this-yourself) below.
+For the other prompts that were not refill requests, the expected response was always returned by the models used: `I have received your message, but I can't answer it right now. I will get back to you within the next business day.`
 
 To recap what we have learned so far, we effectively created more or less _deterministic_ outputs for a narrow range of particular inputs! This suggests a design idea we should explore next.
 
-## Idea: Handling frequently-asked questions
+## Insight: Handling Frequently-asked Questions
 
 In this app, asking for a prescription refill is a _frequently asked question_ (FAQ). We observed that even small models, with a good system prompt, were able to &ldquo;map&rdquo; a range of similar questions to the same answer and even do appropriate substitutions in the text, the prescription in this case.
 
@@ -243,7 +272,9 @@ Clone the project [repo]({{site.gh_edit_repository}}/){:target="_blank"} and see
 ### Running the TDD Tool
 
 {: .tip}
-> **TIP:** [A Working Example]({{site.baseurl}}/working-example) summarizes all the features implemented for the healthcare ChatBot example, and how to run the tools in standard development processes, like automated testing frameworks, etc.
+> **TIP:** 
+> 
+> [A Working Example]({{site.baseurl}}/working-example) summarizes all the features implemented for the healthcare ChatBot example, and how to run the tools in standard development processes, like automated testing frameworks, etc.
 
 After completing the setup steps described in the [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}, run this `make` command to execute the code used above:
 
@@ -275,11 +306,13 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
 | `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where **all the interesting output is captured!** |
 
 {: .tip}
 > **Tips:**
+> 
 > 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama/llama3.2:3B some_target`, instead of the default `ollama/gpt-oss:3.2:3B`.
+> 1. You will need to look at the log files to see how the details of the experimental results.
 > 1. If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have already saved example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B`. See also the `.out` files that capture "stdout".
 
 The script runs two experiments, each with these two templates files:
@@ -287,10 +320,12 @@ The script runs two experiments, each with these two templates files:
 * [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} 
 * [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}
 
-The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same.
+The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same. 
 
 {: .note}
-> **NOTE:** These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
+> **NOTE:** 
+> 
+> These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 
 This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
 

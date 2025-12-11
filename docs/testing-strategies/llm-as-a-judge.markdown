@@ -171,7 +171,9 @@ Total count: 475 (includes errors), total errors: 3
 Total count: 78 (includes errors), total errors: 1
 
 {: .note}
-> **NOTE:** Even though we used the _same_ model to both synthesize and validate Q&A pairs, the models did not always rate all the pairs they generated themselves very highly!
+> **NOTE:** 
+> 
+> Even though we used the _same_ model to both synthesize and validate Q&A pairs, the models did not always rate all the pairs they generated themselves very highly!
 
 The teacher model is asked to provide _reasoning_ for its ratings, too. It is instructive to look at the output `*-validation.json` files linked above, particularly the reasons given for the low ratings.
 

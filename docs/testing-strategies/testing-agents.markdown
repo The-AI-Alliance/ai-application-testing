@@ -20,7 +20,9 @@ has_children: false
 Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. This chapter explores the requirements and available approaches.
 
 {: .todo}
-> **TODO:** This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
+> **TODO:** 
+> 
+> This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 
 <a id="highlights"></a>
@@ -66,7 +68,9 @@ Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="ad
 ## Experiments to Try
 
 {: .todo}
-> **TODO:** We will expand this section once more content is provided above.
+> **TODO:** 
+> 
+> We will expand this section once more content is provided above.
 
 ## What's Next?
 

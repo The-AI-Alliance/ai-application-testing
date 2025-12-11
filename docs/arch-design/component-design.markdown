@@ -21,7 +21,9 @@ What makes a good [Unit]({{site.glossaryurl}}/#unit){:target="_glossary"}?
 What makes a good [Component]({{site.glossaryurl}}/#component){:target="_glossary"}, consisting of one or more units? How do good abstraction boundaries help us _divide and conquer_ our challenges?
 
 {: .note}
-> **NOTE:** Although technically this chapter is about designing [Units]({{site.glossaryurl}}/#unit){:target="_glossary"} and [Components]({{site.glossaryurl}}/#component){:target="_glossary"}, we'll just use _component_, which is the more conventional term used in the literature about software design principles. We'll use _unit_ more frequently in the next chapter, on [Test-Driven Development]({{site.baseurl}}/tdd/) (TDD), because _unit_ is more conventional the TDD literature. Sorry for any confusion...
+> **NOTE:** 
+> 
+> Although technically this chapter is about designing [Units]({{site.glossaryurl}}/#unit){:target="_glossary"} and [Components]({{site.glossaryurl}}/#component){:target="_glossary"}, we'll just use _component_, which is the more conventional term used in the literature about software design principles. We'll use _unit_ more frequently in the next chapter, on [Test-Driven Development]({{site.baseurl}}/tdd/) (TDD), because _unit_ is more conventional the TDD literature. Sorry for any confusion...
 
 <a id="highlights"></a>
 

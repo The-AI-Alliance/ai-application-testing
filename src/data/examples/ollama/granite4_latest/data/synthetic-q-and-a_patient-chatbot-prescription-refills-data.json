@@ -1,0 +1,38 @@
+{"question": "Can you please help me refill my Plavix?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}}
+{"question": "I'm out of my Plavix. When can I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My doctor said I need more Plavix. How do I get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I don't have any refills for my Plavix left. Can you help me with that?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I request a refill for my Lipitor today?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I need to fill the prescription for my Lisinopril. Can you help me with that?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My doctor prescribed some Metformin for me. Do I qualify for a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm out of my Prozac again. Can you help me get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I request a refill for the medication I got from my dermatologist?", "answer": {"label": "other", "prescription": "", "body-part": ""}}
+{"question": "I need more of the antibiotic I was prescribed for my sinus infection. Can you help me get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My doctor gave me some medication for high blood pressure. Do I have any refills left for that?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "I'm out of my antibiotics from the last ear infection. Can you help me with a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I get a refill for the pain medication I was prescribed after surgery?", "answer": {"label": "refill", "prescription": "_P_", "body-part": "_B_"}}
+{"question": "I need to fill my prescription for some allergy medicine. Do you have any refills available?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My doctor prescribed me with some medication for my diabetes. Can I get a refill?"}
+{"question": "I'm out of my antidepressants again. Can you help me get a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "Can I request a refill for the medication I was given after my chemotherapy treatment?"}
+{"question": "I need more of the blood pressure medicine I'm taking. Can you help me with a refill?", "answer": {"label": "refill", "prescription": "_P_", "body-part": ""}}
+{"question": "My doctor prescribed some medication for my acid reflux. Do I qualify for a refill?"}
+{"question": "I'm out of my prescription for the muscle relaxer I was given after my back surgery. Can you help me with that?", "answer": {"label": "refill", "prescription": "_P_", "body-part": "_B_"}}
+{"question": "Can I get a refill for the medication I was prescribed for my chronic pain?"}
+{"question": "I need to fill in for the missing refills of my blood thinner. Can you help me with that?"}
+{"question": "My doctor gave me some medication for my insomnia. Do I have any refills left?"}
+{"question": "Can I request a refill for the antibiotic I was prescribed after my knee replacement surgery?"}
+{"question": "I'm out of my medication for my chronic cough. Can you help me get a refill?"}
+{"question": "I need more of the medication my dermatologist gave me for eczema. Can you help with a refill?"}
+{"question": "My doctor prescribed some medication for my anxiety. Do I have any refills available?"}
+{"question": "I'm out of my prescription for the cholesterol-lowering drug she gave me. Can you help me with that?"}
+{"question": "Can I get a refill for the pain management medication I was given after my wrist fracture?"}
+{"question": "I need to fill in the refills for the allergy medicine prescribed by my ENT specialist."}
+{"question": "My doctor said I should keep taking my blood pressure medication. Do I still have any refills left?"}
+{"question": "Can I request a refill for the diabetes medication she recommended after my last check-up?"}
+{"question": "I'm out of my antibiotics from the sinus infection treatment. Can you help me with that?"}
+{"question": "Do I qualify to get a refill for the pain reliever my doctor prescribed?"}
+{"question": "My prescription for the antidepressant was running low. Can you assist in getting a refill?"}
+{"question": "I need more of the medication for high cholesterol she started prescribing after my blood test."}
+{"question": "Can I request to fill in the missing refills for the heartburn medicine she gave me?"
+}
