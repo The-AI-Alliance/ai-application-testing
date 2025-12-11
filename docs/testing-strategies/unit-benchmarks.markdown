@@ -54,7 +54,7 @@ We may have historical data we can adapt into test data, such as saved online ch
 
 Also, for some domains, we may have good data, but it may have tight restrictions on use, like patient healthcare data subject to privacy laws. Using such data for testing purposes may be disallowed.
 
-For completeness, another use for domain-specific historical data is to [Tune]({{site.glossaryurl}}/#tune){:target="_glossary"} a &ldquo;generic&rdquo; model to be better at our use cases. The tuned model is then used for testing and production inference. Tuning is not yet a widespread technique for building AI applications, but tuning tools and techniques are becoming easier to use by non experts, so we anticipate that tuning will become more routine over time.
+For completeness, another use for domain-specific historical data is to [Tune]({{site.glossaryurl}}/#tuning){:target="_glossary"} a &ldquo;generic&rdquo; model to be better at our use cases. The tuned model is then used for testing and production inference. Tuning is not yet a widespread technique for building AI applications, but tuning tools and techniques are becoming easier to use by non experts, so we anticipate that tuning will become more routine over time.
 
 Suppose we don't have enough historical test data for our needs, for whatever reasons. Generation of synthetic data is our tool of choice.
 

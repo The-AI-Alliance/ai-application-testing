@@ -24,7 +24,7 @@ In [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/te
 {: .tip}
 > **Highlights:**
 >
-> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component){:target="_glossary"}, like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#statistic){:target="_glossary"} processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark){:target="_glossary"}. We build our first example exploring this approach.
+> 1. When testing a generative AI [Component]({{site.glossaryurl}}/#component){:target="_glossary"}, like a model, you have to write a test using tools designed for evaluating [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"} processes, such as the tools used for [Benchmarks]({{site.glossaryurl}}/#benchmark){:target="_glossary"}. We build our first example exploring this approach.
 > 1. Experiment with the [System Prompt]({{site.glossaryurl}}/#system-prompt){:target="_glossary"} and the full [Prompt]({{site.glossaryurl}}/#prompt){:target="_glossary"} to find the minimally-sufficient content (for reduced overhead) that provides the best results. [Prompt]({{site.glossaryurl}}/#prompt){:target="_glossary"} design is still something of a _black art_.
 > 2. Map &ldquo;classes&rdquo; of similar user prompts to the same response, like answers to FAQs (frequently-asked questions). When it is feasible, this makes those scenarios _deterministic_ (or nearly so), and therefore much easier to design and test. Furthermore, to optimize costs, consider first passing prompts through a low-overhead classifier model. For some classifications, like FAQs, the application can return a pre-formatted response, while for other other classifications, the prompt can be routed to a more powerfully, but more expensive model for inference.
 > 3. Think about ways to further process responses to make them even more consistent (like normalizing letter case), while still preserving utility. For example, an application that generates street addresses could be passed through a transformer that converts them to a uniform, post-office approved format.
@@ -39,7 +39,7 @@ The pioneers of [Test-Driven Development]({{site.glossaryurl}}/#test-driven-deve
 
 We discussed the qualities that make good components in [Component Design]({{site.baseurl}}/arch-design/component-design/), such as [The Venerable Principles of Coupling and Cohesion]({{site.baseurl}}/arch-design/component-design/#coupling-cohesion). TDD promotes those qualities.
 
-The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactor){:target="_glossary"} the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
+The coupling to dependencies, in particular, led to the insight that you need to [Refactor]({{site.glossaryurl}}/#refactoring){:target="_glossary"} the current code, and maybe even some of the dependencies or their abstraction boundaries, in order to make the code base better able to accept the changes planned. This is a _horizontal_ change; all features remain _invariant_, with no additions or removals during this process. The existing test suite is the safety net that catches any regressions accidentally introduced by the refactoring.
 
 Hence, the application design also evolves incrementally and iteratively, and it is effectively maintained to be _optimal_ for the _current_ feature set, without premature over-engineering that doesn't support the current working system. However, refactoring enables the system to evolve as new design requirements emerge in subsequent work.
 
@@ -47,7 +47,7 @@ After refactoring, only then is a new test written for the planned feature chang
 
 That doesn't mean you proceed naively or completely ignore longer-term goals. During this process, the software design decisions you make reflect the perspective, intuition, and idioms you have built up through years of experience.
 
-This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#Determinism){:target="_glossary"} behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency){:target="_glossary"}. 
+This methodology also leans heavily on the expectation of [Deterministic]({{site.glossaryurl}}/#determinism){:target="_glossary"} behavior, to ensure repeatability, including the need to handle known sources of nondeterminism, like [Concurrency]({{site.glossaryurl}}/#concurrency){:target="_glossary"}. 
 
 ### Test Scope
 
@@ -158,7 +158,7 @@ If the request doesn't look like a refill request, reply with this message:
 {: .tip}
 > **TIP:** 
 > 
-> Providing a few examples is known as [Few-shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
+> Providing a few examples is known as [Few-Shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-Context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-Shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
 
 We tried both system prompts with a number of user prompts (details below) using the following models served locally using [Ollama](https://ollama.com/){:target="ollama"}. Links to both the corresponding Hugging Face pages (with _model cards_ and other information) and the corresponding Ollama pages are shown:
 

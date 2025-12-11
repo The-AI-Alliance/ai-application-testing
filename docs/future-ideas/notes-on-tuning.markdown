@@ -53,7 +53,7 @@ This section summarizes of [Nathan Lambert]({{site.baseurl}}/references/#nathan-
 * [OpenAI's Reinforcement Finetuning and RL for the masses](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"} (December 11, 2024) - A description of OpenAI's recently announced research program combining RL and fine tuning (our spelling here). There is a link in the post to an OpenAI web page for this, but it appears to be gone now.
 * [SimPO: A New Way to Teach AI Models to Follow Human Preferences](https://pli.princeton.edu/blog/2024/simpo-new-way-teach-ai-models-follow-human-preferences){:target="_blank"} (December 2, 2024) - Another replacement for RLHF that provides very efficient and effective fine tuning of instruction models.
 * [OpenAI’s Strawberry, LM self-talk, inference scaling laws, and spending more on inference](https://www.interconnects.ai/p/openai-strawberry-and-inference-scaling-laws){:target="_blank"} (September 6, 2024) - Details on _inference scaling laws_ and uses of it to improve inference.
-* [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"} (August 07, 2024), which discusses the general topic of state-of-the-art [Post-training]({{site.glossaryurl}}/#post-training){:target="_glossary"} a [Pre-trained]({{site.glossaryurl}}/#pre-training){:target="_glossary"} model.
+* [A recipe for frontier model post-training](https://www.interconnects.ai/p/frontier-model-post-training){:target="_blank"} (August 07, 2024), which discusses the general topic of state-of-the-art [Post-Training]({{site.glossaryurl}}/#post-training){:target="_glossary"} a [Pre-trained]({{site.glossaryurl}}/#pre-training){:target="_glossary"} model.
 * [Do we need RL for RLHF?](){:target="_blank"} (December 6, 2023) - &ldquo;Direct (DPO) vs. RL methods for preferences, more RLHF models, and hard truths in open RLHF work. We have more questions than answers.&rdquo;
 * [RLHF progress: Scaling DPO to 70B, DPO vs PPO update, Tülu 2, Zephyr-β, meaningful evaluation, data contamination](https://www.interconnects.ai/p/rlhf-progress-scaling-dpo-to-70b){:target="_blank"} (November 22nd, 2023)
 
@@ -69,7 +69,7 @@ As the presentation points out: _The raw pre-trained LMs are neither safe nor ro
 
 Where the terms are as follows
 
-* [Pre-training]({{site.glossaryurl}}/#pre-training){:target="_glossary"} creates the raw LLM.
+* [Pre-Training]({{site.glossaryurl}}/#pre-training){:target="_glossary"} creates the raw LLM.
 * [Adaptation]({{site.glossaryurl}}/#adaptation){:target="_glossary"} is the process for [Alignment]({{site.glossaryurl}}/#alignment){:target="_glossary"}, so that the resulting model is better in the following ways:
   * It follows natural language instructions better.
   * It is aware of harmful behaviors.
