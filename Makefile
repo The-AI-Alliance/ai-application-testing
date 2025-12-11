@@ -30,7 +30,7 @@ OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
-EXAMPLE_DATA          ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
+EXAMPLE_DATA_DIR      ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 TIME                  ?= time  # time execution of long processes
 
@@ -40,7 +40,7 @@ TIME                  ?= time  # time execution of long processes
 NOOP                  ?=
 
 # Definitions for the website.
-PAGES_URL             ?= https://the-ai-alliance.github.io/ai-application-testing/
+GITHUB_PAGES_URL      ?= https://the-ai-alliance.github.io/ai-application-testing/
 DOCS_DIR              ?= docs
 SITE_DIR              ?= ${DOCS_DIR}/_site
 CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
@@ -143,9 +143,8 @@ The "uv" CLI tool is required:
 make help-uv            # Prints specific information about "uv", including installation.
 
 make save-examples      # Copy run output and data files for MODEL=${MODEL} 
-                        # to ${EXAMPLE_DATA}.
-
-endef
+                        # to EXAMPLE_DATA_DIR=${EXAMPLE_DATA_DIR}
+                       endef
 
 define help_message_uv
 
@@ -228,33 +227,37 @@ help-docs help-code help-uv::
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "For the GitHub Pages website:"
-	@echo "  GitHub Pages URL:      '${PAGES_URL}'"
-	@echo "  current dir:           '${PWD}'"
-	@echo "  docs dir:              '${DOCS_DIR}'"
-	@echo "  site dir:              '${SITE_DIR}'"
-	@echo "  JEKYLL_PORT:           '${JEKYLL_PORT}'"
+	@echo "  GITHUB_PAGES_URL:      ${GITHUB_PAGES_URL}"
+	@echo "  PWD:                   ${PWD} ('print working directory')"
+	@echo "  DOCS_DIR:              ${DOCS_DIR}"
+	@echo "  SITE_DIR:              ${SITE_DIR}"
+	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
 	@echo
 
 print-info-code::
-	@echo "For the code examples:"
-	@echo "  model:                 '${MODEL}'"
-	@echo "  inference service:     '${INFERENCE_SERVICE}'"
-	@echo "  prompt templates dir:  '${PROMPTS_TEMPLATES_DIR}'"
-	@echo "  output dir:            '${OUTPUT_DIR}'"
-	@echo "  output data dir:       '${OUTPUT_DATA_DIR}'"
-	@echo "  example data dir:      '${EXAMPLE_DATA}'"
-	@echo "  src dir:               '${SRC_DIR}'"
+	@echo "For the example code and tools:"
+	@echo "  MODEL:                 ${MODEL} (the default)"
+	@echo "  MODELS:                ${MODELS}"
+	@echo "                         (all of them we use)"
+	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
+	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
+	@echo "  SRC_DIR:               ${SRC_DIR}"
+	@echo "  The following depend on the value of MODEL:"
+	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
+	@echo "  OUTPUT_DATA_DIR:       ${OUTPUT_DATA_DIR}"
+	@echo "  EXAMPLE_DATA_DIR:      ${EXAMPLE_DATA_DIR}"
 	@echo
 
 print-info-env::
 	@echo "The environment:"
-	@echo "  GIT_HASH:              '${GIT_HASH}'"
-	@echo "  TIMESTAMP:             '${TIMESTAMP}'"
-	@echo "  MAKEFLAGS:             '${MAKEFLAGS}'"
-	@echo "  MAKEFLAGS_RECURSIVE:   '${MAKEFLAGS_RECURSIVE}'"
-	@echo "  UNAME:                 '${UNAME}'"
-	@echo "  ARCHITECTURE:          '${ARCHITECTURE}'"
-	@echo "  GIT_HASH:              '${GIT_HASH}'"
+	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo "  TIMESTAMP:             ${TIMESTAMP}"
+	@echo "  MAKEFLAGS:             ${MAKEFLAGS}"
+	@echo "  MAKEFLAGS_RECURSIVE:   ${MAKEFLAGS_RECURSIVE}"
+	@echo "  UNAME:                 ${UNAME}"
+	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
+	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo
 
 # Docs Targets
 
@@ -267,8 +270,8 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@python -m webbrowser "${PAGES_URL}" || \
-		(echo "ERROR: I could not open the GitHub Pages URL, ${PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
+	@python -m webbrowser "${GITHUB_PAGES_URL}" || \
+		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
 		 exit 1 ): 
 view-local:: setup-jekyll run-jekyll
 
@@ -359,9 +362,9 @@ ${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
 
 save-examples::
 	@echo "Saving example output and data files for model ${MODEL}:"
-	rm -rf ${EXAMPLE_DATA}
-	mkdir -p $$(dirname ${EXAMPLE_DATA})
-	cp -r ${OUTPUT_DIR} ${EXAMPLE_DATA}
+	rm -rf "${EXAMPLE_DATA_DIR}"
+	mkdir -p $$(dirname "${EXAMPLE_DATA_DIR}")
+	cp -r "${OUTPUT_DIR}" "${EXAMPLE_DATA_DIR}"
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-llm-templates 
