@@ -16,29 +16,36 @@ Next, we discuss working with the example application for this project. For info
 
 We discuss how to setup and execute the tools, but you'll need to read the corresponding [website](https://the-ai-alliance.github.io/ai-application-testing/) user guide sections for details about what they are doing and how they work.
 
+> [!TIP]
+> The setup and execution details can also be found in the user guide at [The Working Example](https://the-ai-alliance.github.io/ai-application-testing/working-example/). 
+
 ### Setup
 
 > [!NOTE]
 > The `make` process assumes you are using a shell like `zsh` or `bash`, but the tools described below are written in Python, so the commands shown for running them should work on any operating system with minor adjustments (such as paths to files). [Let us know](https://github.com/The-AI-Alliance/ai-application-testing/discussions) about your experiences.
 
-Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run the following `make` command to do "one-time" setup steps, such as installing tools required. Assuming you are in the repo root directory, run this command:
+Clone the project [repo](https://github.com/The-AI-Alliance/ai-application-testing/) and run the following `make` command to do "one-time" setup steps, such as installing tools required or telling you how to install them. Assuming you are on MacOS or Linux and your current working directory is the repo root directory, run this command:
 
 ```shell
 make one-time-setup 
 ```
+
+If `make` won't work on your machine, do the following instead:
+
+* Install [`uv`](https://docs.astral.sh/uv/), a Python package manager. 
+* Run the setup command `uv env` to install dependencies.
+* Install [`ollama`](https://ollama.com) for local model inference (optional).
 
 > [!TIP]
 > 1. Try `make help` for details about the `make` process. There are also `--help` options for all the tools discussed below.
 > 2. The `make` process has only been tested on MacOS, but it is designed to work on Linux. The actual tools are written in Python for portability.
 > 3. There is an Appendix at the end of this file with suggestions for optional command-line tools that are very useful.
 
-The `one-time-setup` target provides instructions for how to install required tools including [`uv`](https://docs.astral.sh/uv/), the Python package management system. It also suggests you install [`ollama`](https://ollama.com), if you want to use for local model inference.
+One of the dependencies managed with `uv` is [`LiteLLM`](https://docs.litellm.ai/), the library we use for flexible invocation of different inference services. See the `LiteLLM` [usage documentation](https://docs.litellm.ai/#basic-usage) for how to set it up to use inference services other than local inference with `ollama`, if that is your preference.
 
-Python library dependencies are managed using `uv`. They are installed automatically, as needed, when running the tools described below. In particular, we use [LiteLLM](https://docs.litellm.ai/#basic-usage) for invoking inference services.
+If you install `ollama`, download your models of choice. By default, we use `gpt-oss:20b` as our inference model in the `Makefile`, but we have also executed our examples with `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest` (also a `3B` parameter model). 
 
-If you install `ollama`, download your models of choice. By default, we use `gpt-oss:20b` as our inference model in the `Makefile`, but we also executed our examples with `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest` (also a `3B` parameter model). (We provide example results for them in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). We found that `gpt-oss:20b` is too large for many developer machines (more details below), but acceptable results, especially for learning purposes, are provided when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and different model families. Which combinations work best for you?
-
-To install one or all of these models, use these commands:
+To install one or more of these models, use these commands:
 
 ```shell
 ollama pull gpt-oss:20b
@@ -49,7 +56,11 @@ ollama pull granite4:latest
 
 (Yes, some models use `B` and others use `b`, as shown...)
 
-> [!TIP]
+We provide example results for them in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). 
+
+We found that `gpt-oss:20b` is too large for many developer machines, but acceptable results, especially for learning purposes, are provided when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and with different model families. Which combinations work best for you?
+
+> [!NOTE]
 > Using `ollama` for local inference, we observed the following while testing. On Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b`, when a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest`. Having 64GB of memory allowed `gpt-oss:20b` to work well. We found you can use the even larger `llama3.3:70B` on a 64GB machine if you keep the background activity low and you don't mind waiting longer for results. Using a _quantized_ version of a model also helps. Pick a small enough model that you can run in your environment. Of course, the quality of the output will generally be better for larger models.
 
 If you don't want to use the default model setting, `gpt-oss:20b`, there are two ways to specify your preferred model:
@@ -63,19 +74,23 @@ If you want to try _all_ four models above with one command, use `make all-model
 make all-models-all-code
 ```
 
+You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile.`
+
 > [!NOTE]
 > See the [LiteLLM documentation](https://docs.litellm.ai/#basic-usage) for guidance on how to specify models for different inference services. If you use a service other than `ollama`, you will need to be sure the required environment variables are set in your environment, e.g., an API key, and you may need to change the arguments passed in our Python scripts to the LiteLLM `completion` function. We plan to make this more [automatic](https://github.com/The-AI-Alliance/ai-application-testing/issues/20).
 
-### Running the Examples with `make`
+### Running the Exercises with `make`
 
-Use `make` to run the examples. The actual commands are printed out, so you can run them subsequently without `make`, if you prefer. Hence, you can run the Python scripts directly or use `make`. 
+On MacOS or Linux, using `make` is the easiest way to run the exercises. The actual commands are printed out, so you can run them subsequently without `make`, if you prefer. Hence, you can run the Python scripts directly or use `make`. 
 
 > [!TIP]
-> You can run all the examples discussed below at once with the command `make all-code`. You can run all the examples for all four models discussed above using `make all-models-all-code`.
+> You can run all the exercises for the default `MODEL` with one command, `make all-code`. You can run all them for all the models discussed above using `make all-models-all-code`.
+>
+> Similarly, for all the individual exericse `make` commands discussed below, you can run each one for all the models by prefixing the name with `all-models-`, e.g., `all-models-run-tdd-example-refill-chatbot`.
 
 ### Run `tdd-example-refill-chatbot`
 
-This example is explained in user guide's section on [Test-Driven Development](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
+This exercise is explained in the section on [Test-Driven Development](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
 Run this `make` command:
 
@@ -90,7 +105,16 @@ make run-terc
 make terc
 ```
 
-This does some setup, then runs the following command (default arguments):
+This target first checks the following:
+
+* The `uv` command is installed and on your path.
+* Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
+	* `OUTPUT_LOG_DIR`, which is `temp/output/ollama/gpt-oss_20b/logs`, when `MODEL` is defined to be `ollama/gpt-oss:20b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama` that contains a `gpt-oss_20b` subdirectory.
+	* `OUTPUT_DATA_DIR`, which is `temp/output/ollama/gpt-oss_20b/data`, when `MODEL` is defined to be `ollama/gpt-oss:20b`. 
+
+If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the paths shown in the next command.
+
+After the setup, the `make` target runs the following command:
 
 ```shell
 time uv run src/scripts/tdd-example-refill-chatbot.py \
@@ -98,40 +122,39 @@ time uv run src/scripts/tdd-example-refill-chatbot.py \
 	--service-url http://localhost:11434 \
 	--template-dir src/prompts/templates \
 	--data-dir temp/output/ollama/gpt-oss_20b/data \
-	--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
+	--log-file temp/output/ollama/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
 
-Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+Where `TIMESTAMP` will be the current time when the `make` command started, of the form `YYYYMMDD-HHMMSS`.
 
 > [!TIP]
-> To see this command without running anything, pass the `-n` or `--dry-run` option when &ldquo;making&rdquo; any target.
+> To see this command printed without running anything, or the commands for any other `make` target, pass the `-n` or `--dry-run` option to `make`.
 
-> [!NOTE]
-> Notice how the model `gpt-oss:20b` is referenced with an `ollama/` prefix: `ollama/gpt-oss:20b`. The `ollama/` prefix is required whenever you explicitly specify a different model that is served by `ollama`.
+The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. You can omit it when running this command directly yourself or when using a system that doesn't support it. Note that `uv` is used to run `src/scripts/tdd-example-refill-chatbot.py`. 
 
-The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run this tool and all others we will discuss. The arguments are used as follows:
+The arguments are as follows:
 
 | Argument | Purpose |
 | :------- | :------ |
-| `--model ollama/gpt-oss:20b` | The model to use, as discussed above. |
-| `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
-| `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
+| `--model ollama/gpt-oss:20b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
+| `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
+| `--template-dir src/prompts/templates` | Where we keep prompt templates we use for all the exercises. They are compatible with the `llm` CLI tool, too. (See the Appendix below.) |
 | `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--log-file temp/output/ollama/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 > [!TIP]
-> If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have included example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B` in the repo (at the time of this writing; other models may be added later). See also the `.out` files that capture "stdout".
+> If you want to save the outputs of a `MODEL` run to `src/data/examples/`, run `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. To save the outputs for all the models defined by `MODELS`, use `make all-models-save-examples`. We have included example outputs for the four models discussed previously in the repo. The `.log` files that capture command output are also saved.
 
-The script runs two experiments, each with these two templates files `q-and-a_patient-chatbot-prescriptions.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and once with `q-and-a_patient-chatbot-prescriptions-with-examples.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same.
+The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
 > [!NOTE]
-> These template files are designed for use with the `llm` CLI (see the Appendix). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
+> These template files were originally designed for use with the `llm` CLI tool (see the Appendix below for details about `llm`). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
 
-This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
+The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
 
 ### Run `unit-benchmark-data-synthesis`
 
-Described in [Unit Benchmarks](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/unit-benchmarks/), this script uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the TDD example:
+Described in [Unit Benchmarks](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/unit-benchmarks/), this script uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
 
 ```shell
 make run-unit-benchmark-data-synthesis
@@ -144,7 +167,7 @@ make run-ubds
 make ubds
 ```
 
-After some setup, the following command is executed:
+After the same setup steps as before, the following command is executed:
 
 ```shell
 time uv run src/scripts/unit-benchmark-data-synthesis.py \
@@ -155,30 +178,33 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
 	--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
 
-Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+> [!NOTE]
+> If you run the previous exercise, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the exercise invocations.
 
-The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (`:` is an invalid character for MacOS file paths) will have these files of synthetic Q&A pairs:
+The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (recall that `:` is an invalid character for MacOS file paths, so we replace it with `_`) will have these files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`
+
+(Examples can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama) directory.)
 
 They cover three unit-benchmarks:
 * `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should stop using the ChatBot and call 911 (in the US) immediately.
 * `refill`: The patient is asking for a prescription refill.
 * `other`: (i.e., `non-prescription-refills`) All other patient questions.
 
-The actual "answer" is one of these labels and some additional information, rather than a generated text like, "It sounds like you are having an emergency. Please call 911..."
+The prompt used tells the model to return one of these _classification_ labels, along with some additional information, rather than an ad-hoc, generated text like, "It sounds like you are having an emergency. Please call 911..."
 
 Each of these data files are generated with a single inference invocation, with each invocation using these corresponding template files:
 
-* `synthetic-q-and-a_patient-chatbot-emergency.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
-* `synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
-* `synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
+* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
+* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
+* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
 
 ### Run `unit-benchmark-data-validation`
 
-Described in [LLM as a Judge](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/llm-as-a-judge/), this script uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous step:
+Described in [LLM as a Judge](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/llm-as-a-judge/), this script uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
 
 ```shell
 make run-unit-benchmark-data-validation
@@ -191,7 +217,7 @@ make run-ubdv
 make ubdv
 ```
 
-After some setup, the following command is executed:
+After the same setup steps, the following command is executed:
 
 ```shell
 time uv run src/scripts/unit-benchmark-data-validation.py \
@@ -208,8 +234,10 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.yaml`
 * `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.yaml`
 
+(See examples in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama).)
+
 These files &ldquo;rate&rdquo; each Q&A pair from 1 (bad) to 5 (great).
-Also, summary statistics are written to `stdout` and to the output file `temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. (For simplicity, we used the same `gpt-oss:20b` model as the _teacher_ that we used for generation). From one of our test runs a text version of the following table was written:
+Also, summary statistics are written to `stdout` and to the output file `temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. (For simplicity, we used the same `gpt-oss:20b` model as the _teacher_ that we used for generation.) From one of our test runs a text version of the following table was written:
 
 Files:                                                                            |    1  |    2  |    3  |    4  |    5  | Total |
 | :------                                                               | ----: | ----: | ----: | ----: | ----: | ----: |
@@ -227,11 +255,11 @@ Note that the emergency Q&A pairs had the greatest ambiguities, where the teache
 
 In fact, the program deliberately ignores the actual file where the Q&A pair appears. For example, we found that the _emergency_ file contains some _refill_ and _other_ questions. Only the actual label in the answer corresponding to a question was evaluated. 
 
-Is this okay? Each data file is supposed to be for a particular use case, yet in fact the Q&A pairs have some mixing across files. You could decide to resort by label to keep things separate or you could just concatenate all the Q&A pairs into one big set. We think the first choice is more in the spirit of how focused, automated tests are supposed to work, but it is up to you...
+Is this okay? Each data file is supposed to be for a particular use case, yet in fact the Q&A pairs have some mixing across files. You could decide to resort all the data by label to keep them separated by use case or you could just concatenate all the Q&A pairs into one big set. We think the first choice is more in the spirit of how focused, automated, use-case specific tests are supposed to work, but it is up to you...
 
-The same template file was used for evaluating the three data files:
+The following template file was used for evaluating the three data files:
 
-* `synthetic-q-and-a_patient-chatbot-data-validation.yaml`(https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml)
+* [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml)
 
 ## Getting Involved
 

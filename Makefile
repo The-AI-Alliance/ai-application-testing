@@ -34,6 +34,8 @@ EXAMPLE_DATA_DIR      ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 TIME                  ?= time  # time execution of long processes
 
+ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
+
 ## One way to prevent execution of scripts is to invoke make this way:
 ## NOOP=echo make foobar
 ## Another way is `make -n targets`.
@@ -239,6 +241,7 @@ print-info-code::
 	@echo "  MODEL:                 ${MODEL} (the default)"
 	@echo "  MODELS:                ${MODELS}"
 	@echo "                         (all of them we use)"
+	@echo "  ALL_EXERCISES:         ${ALL_EXERCISES}"
 	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
 	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:               ${SRC_DIR}"
@@ -319,7 +322,8 @@ foo::
 	@echo "MODEL = ${MODEL}"
 
 all-code:: clean-code run-code
-run-code:: run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
+run-code:: 
+	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_EXERCISES} 
 
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}   
@@ -343,7 +347,7 @@ ubdv run-ubdv:: run-unit-benchmark-data-validation
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
 # for our purposes. See the LiteLLM docs for logging configuration details.
-run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
+${ALL_EXERCISES}run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
 	$(info ${$@-message})
 	@export LITELLM_LOG="ERROR"; \
 	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
@@ -357,7 +361,7 @@ run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchm
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
-${TEMP_DIR} ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}::
+${TEMP_DIR} ${OUTPUT_LOGS_DIR} ${OUTPUT_DATA_DIR}::
 	mkdir -p $@
 
 save-examples::

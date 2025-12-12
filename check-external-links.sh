@@ -76,7 +76,7 @@ eg=$(which egrep)
 # Use a somewhat complicated script to find the URLs starting
 # with http, print only the matches and then filter out the 
 # URLs that contain "target". It won't work perfectly, but ...
-[[ -n "$VERBOSE" ]] && echo "Checking markdown files:"
+[[ -n "$VERBOSE" ]] && echo "Checking markdown files. Image URLs will be incorrectly flagged!"
 for path in "${paths[@]}"
 do
 	if [[ -n "$VERBOSE" ]]
@@ -86,11 +86,11 @@ do
 	fi
 	$eg -nHoR '\(https?[^)]+\)(\S*)' \
 		--include '*.markdown' --include '*.md' \
-		--exclude-dir '_site' --exclude-dir '_sass' \
+		--exclude-dir '_site' --exclude-dir '_sass' --exclude-dir 'temp' \
 		$path | $eg -v 'target='
 	$eg -nHoR '\(\{\{site.glossaryurl\}\}[^)]*\)(\S*)' \
 		--include '*.markdown' --include '*.md' \
-		--exclude-dir '_site' --exclude-dir '_sass' \
+		--exclude-dir '_site' --exclude-dir '_sass' --exclude-dir 'temp' \
 		$path | $eg -v 'target='
 done
 
@@ -104,6 +104,6 @@ do
 	fi
 	$eg -nHoR '<a\s*href="https?[^>]+>' \
 		--include '*.html' \
-		--exclude-dir '_site' --exclude-dir '_sass' \
+		--exclude-dir '_site' --exclude-dir '_sass' --exclude-dir 'temp' \
 		$path | $eg -v 'target='
 done
