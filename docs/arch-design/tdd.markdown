@@ -160,14 +160,18 @@ If the request doesn't look like a refill request, reply with this message:
 > 
 > Providing a few examples is known as [Few-Shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-Context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-Shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
 
-We tried both system prompts with a number of user prompts (details below) using the following models served locally using [Ollama](https://ollama.com/){:target="ollama"}. Links to both the corresponding Hugging Face pages (with _model cards_ and other information) and the corresponding Ollama pages are shown:
+We tried both system prompts with a number of user prompts (details below) using the following models served locally using [Ollama](https://ollama.com/){:target="ollama"}. Links to both the corresponding Hugging Face pages (with _model cards_ and other information) and the corresponding Ollama pages are shown in **Table 1**:
 
-| Model | Hugging Face | Ollama | Description |
-| :---- | :----------- | :----- | :---------- |
-| `gpt-oss:20b` | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. |
-| `llama3.2:3B` | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
-| `smollm2:1.7b-instruct-fp16` | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
-| `granite4:latest` | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | A small, performant model tuned for instruction following and tool calling. |
+<a id="table-1"></a>
+
+| Model | # Parameters | Hugging Face | Ollama | Description |
+| :---- | -----------: | :----------- | :----- | :---------- |
+| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. |
+| `llama3.2:3B` | 3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
+| `smollm2:1.7b-instruct-fp16` | 1.7B | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+| `granite4:latest` | 3B | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
+
+**Table 1:** The models we used for experimenting.
 
 {: .tip}
 > **TIPs:** 
@@ -219,7 +223,9 @@ So far in our example, we have the label `refill`, for the prescription refill F
 
 When a FAQ label is returned, the application can route the message to a low-cost model [Tuned]({{site.glossaryurl}}/#tuning){:target="_glossary"} specifically for known FAQs, or we perform other special handling that doesn't use generative AI. So far, we have observed that we don't even need to tune a special model for FAQ detection and handling.
 
-In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts. This design is illustrated in the Figure 1:
+In contrast, the &ldquo;other&rdquo; messages could be routed to a smarter (and less cost-effective) model that is better able to handle more diverse prompts. This design is illustrated in the **Figure 1**:
+
+<a id="figure-1"></a>
 
 ![Simple Design with Two Models]({{site.baseurl}}/assets/images/prompt-routing.png "Simple Design with Two Models")
 

@@ -43,9 +43,20 @@ If `make` won't work on your machine, do the following instead:
 
 One of the dependencies managed with `uv` is [`LiteLLM`](https://docs.litellm.ai/), the library we use for flexible invocation of different inference services. See the `LiteLLM` [usage documentation](https://docs.litellm.ai/#basic-usage) for how to set it up to use inference services other than local inference with `ollama`, if that is your preference.
 
-If you install `ollama`, download your models of choice. By default, we use `gpt-oss:20b` as our inference model in the `Makefile`, but we have also executed our examples with `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest` (also a `3B` parameter model). 
+#### Pick Your Models
 
-To install one or more of these models, use these commands:
+If you install `ollama`, download the models you want to use. In our experiments, we used the four models shown in **Table 1** (see also a similar table [here](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/#table-1)): 
+
+| Model | # Parameters | Notes |
+| :---- | -----------: | :---- |
+| `gpt-oss:20b` | 20B | Excellent performance, but requires a lot of memory (see below). |
+| `llama3.2:3B` | 3B | A small but effective model in the Llama family. Should work on most laptops. |
+| `smollm2:1.7b-instruct-fp16` | 1.7B | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+| `granite4:latest` | 3B | Another small model tuned for instruction following and tool calling. |
+
+**Table 1:** Models used for our experiments.
+
+To install one or more of these models, use these commands (for any operating system and shell environment):
 
 ```shell
 ollama pull gpt-oss:20b
@@ -56,25 +67,27 @@ ollama pull granite4:latest
 
 (Yes, some models use `B` and others use `b`, as shown...)
 
-We provide example results for them in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). 
+> We provide example results for them in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). 
 
-We found that `gpt-oss:20b` is too large for many developer machines, but acceptable results, especially for learning purposes, are provided when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and with different model families. Which combinations work best for you?
+By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama/gpt-oss:20b`. (Note the `ollama/` prefix.) All four models shown above are defined in the `MODELS` variable.
 
-> [!NOTE]
-> Using `ollama` for local inference, we observed the following while testing. On Apple computers with M1 Max chips, 32GB of memory was not enough for `gpt-oss:20b`, when a normal load of other applications was also running, but there was sufficient memory for `llama3.2:3B`, `smollm2:1.7b-instruct-fp16`, and `granite4:latest`. Having 64GB of memory allowed `gpt-oss:20b` to work well. We found you can use the even larger `llama3.3:70B` on a 64GB machine if you keep the background activity low and you don't mind waiting longer for results. Using a _quantized_ version of a model also helps. Pick a small enough model that you can run in your environment. Of course, the quality of the output will generally be better for larger models.
+However, we found that `gpt-oss:20b` is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory were not sufficient for using `gpt-oss:20b` without "bogging down" the machine, while having 64GB of memory was sufficient. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized](https://the-ai-alliance.github.io/glossary/glossary/#quantization) versions of models. Which choices work best for you?
 
-If you don't want to use the default model setting, `gpt-oss:20b`, there are two ways to specify your preferred model:
+#### Changing the Default Model Used
 
-1. Edit [`src/Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/Makefile) and change the definition of `MODEL` to be your choice, e.g., `ollama/llama3.2:3B`. This will make the change permanent for all examples. The `ollama/` prefix is required if you are using `ollama`. 
-1. Override the definition of `MODEL` when you run `make`, e.g., `make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot`. This is the easiest way to try different models.
+If you don't want to use the default model setting, `gpt-oss:20b`, or you want to use a different inference option than `ollama`, there are two ways to specify your preferred model:
 
-If you want to try _all_ four models above with one command, use `make all-models-...`, where `...` is one of the other other make targets, like `all-code`, which runs all the examples for each model, e.g.,
+1. Edit [`src/Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/Makefile) and change the definition of `MODEL` to be your preferred choice, e.g., `ollama/llama3.2:3B`. This will make the change permanent for all examples. (The `ollama/` prefix is required if you are using `ollama`.) See the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage) for information about specifying models for other inference services.
+
+1. Override the definition of `MODEL` on the command line when you run `make`, e.g., `make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot`. This is the easiest way to do "one-off" experiments with different models.
+
+If you want to try _all_ four models above with one command, use `make all-models-...`, where `...` is one of the other other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
 
 ```shell
 make all-models-all-code
 ```
 
-You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile.`
+You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile`.
 
 > [!NOTE]
 > See the [LiteLLM documentation](https://docs.litellm.ai/#basic-usage) for guidance on how to specify models for different inference services. If you use a service other than `ollama`, you will need to be sure the required environment variables are set in your environment, e.g., an API key, and you may need to change the arguments passed in our Python scripts to the LiteLLM `completion` function. We plan to make this more [automatic](https://github.com/The-AI-Alliance/ai-application-testing/issues/20).
@@ -143,7 +156,7 @@ The arguments are as follows:
 | `--log-file temp/output/ollama/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 > [!TIP]
-> If you want to save the outputs of a `MODEL` run to `src/data/examples/`, run `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. To save the outputs for all the models defined by `MODELS`, use `make all-models-save-examples`. We have included example outputs for the four models discussed previously in the repo. The `.log` files that capture command output are also saved.
+> If you want to save the outputs of the tool invocations for a particular `MODEL` value, run `make save-examples`. It will create a subdirectory of  run to `src/data/examples/` for the model used and copy the results there. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. To save the outputs for all the models defined by `MODELS`, use `make all-models-save-examples`. We have included example outputs for the four models discussed previously in the repo. The `.log` files that capture command output are also saved.
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
@@ -179,7 +192,7 @@ time uv run src/scripts/unit-benchmark-data-synthesis.py \
 ```
 
 > [!NOTE]
-> If you run the previous exercise, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the exercise invocations.
+> If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
 The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama/gpt-oss:20b`, `temp/output/data/ollama/gpt-oss_20b` (recall that `:` is an invalid character for MacOS file paths, so we replace it with `_`) will have these files of synthetic Q&A pairs:
 
