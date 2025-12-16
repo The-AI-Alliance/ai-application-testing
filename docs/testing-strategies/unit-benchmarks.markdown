@@ -308,15 +308,17 @@ See also [A Working Example]({{site.baseurl}}/working-example) for a discussion 
 
 ### Other Tools for Synthetic Data Generation
 
-If you use synthetic data generation a lot in your organization, it will become necessary to understand some of the potential complexities that you might encounter. [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are doing. 
-
-#### synthetic-data-kit
-
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models.
+If you use synthetic data generation a lot in your organization, it will become necessary to understand some of the potential complexities that you might encounter. 
 
 #### A Survey of Data Synthesis Techniques
 
-[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs.
+[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are doing. 
+
+#### Synthetic Data Kit
+
+Meta's Synthetic Data Kit ([`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"}) focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models. It supports text, video, and multimodal data.
+
+Synthetic Data Kit uses one or more documents you specify as sources of information for data generation. It can generate different kinds of data sets: Q&A pairs, Q&A pairs with _chain of thought_ (CoT) reasoning, and summaries. It also uses the [vLLM](https://docs.vllm.ai/){:target="vllm"} inference engine, which is a popular production-scale server and experimental support for Intel and Apple Silicon CPUs. 
 
 #### InstructLab
 
