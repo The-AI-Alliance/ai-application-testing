@@ -302,7 +302,7 @@ What other domains would you like to see here?
 
 We are using relatively-simple, custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are some additional tools to explore. 
 
-Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/#other-tools).
+Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/#other-tools).
 
 See also [A Working Example]({{site.baseurl}}/working-example) for a discussion of integrating new tools into existing frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}.
 
@@ -322,7 +322,7 @@ Synthetic Data Kit uses one or more documents you specify as sources of informat
 
 #### InstructLab
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.baseurl}}/references/) and [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.baseurl}}/references/) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
 
 #### Older Synthetic Data Tools
 

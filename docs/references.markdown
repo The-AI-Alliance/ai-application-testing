@@ -27,7 +27,7 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 ### Allen Institute of AI
 
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is discussed by [Nathan Lambert](#nathan-lambert) below. It tries to meet similar goals as [InstructLab](#redhat). See [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) for more details.
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is discussed by [Nathan Lambert](#nathan-lambert) below. It tries to meet similar goals as [InstructLab](#redhat). See [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
 
 ## Alignment Forum
 
@@ -134,7 +134,7 @@ The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benc
 
 ## Nathan Lambert
 
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. The same content can be found in [this Interconnects blog post](https://www.interconnects.ai/p/frontier-model-post-training){:target="nl"}. [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/) discusses these ideas. See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [Allen Institute of AI](#allen-institute-of-ai) entry above.
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. The same content can be found in [this Interconnects blog post](https://www.interconnects.ai/p/frontier-model-post-training){:target="nl"}. [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) discusses these ideas. See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [Allen Institute of AI](#allen-institute-of-ai) entry above.
 
 ## NIST Risk Management Framework
 
@@ -142,7 +142,7 @@ The U.S. National Institute of Science and Technology's ([NIST](https://www.nist
 
 ## OpenAI
 
-An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
+An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
 
 [Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
 
@@ -164,11 +164,11 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 ## RedHat
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/).
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
 
 ## RedMonk
 
-The analyst firm [RedMonk](https://redmonk.com/){:target="redmonk"} posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/).
+The analyst firm [RedMonk](https://redmonk.com/){:target="redmonk"} posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/).
 
 ## ServiceNow
 
@@ -180,7 +180,7 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 
 ## Specification-Driven Development
 
-SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references. See the discussion in the [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/) chapter, where we explore them.
+SDD is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references. See the discussion in the [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/) chapter, where we explore them.
 
 * [How I Apply Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"}
   * [`spec-driven-ai-coding` repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}

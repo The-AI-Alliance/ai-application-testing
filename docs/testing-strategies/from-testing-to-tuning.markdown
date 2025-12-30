@@ -1,4 +1,4 @@
 ---
 layout: redirect
-redirect_rel_url: ../future-ideas/from-testing-to-tuning/
+redirect_rel_url: ../advanced-techniques/from-testing-to-tuning/
 ---

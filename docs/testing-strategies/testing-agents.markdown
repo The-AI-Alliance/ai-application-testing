@@ -74,6 +74,6 @@ Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="ad
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [Future Ideas]({{site.baseurl}}/future-ideas/).
+Review the [highlights](#highlights) summarized above, then proceed to [Advanced Techniques]({{site.baseurl}}/advanced-techniques/).
 
 ---

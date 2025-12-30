@@ -76,9 +76,9 @@ With this background on architecture and design principles, we move to the main 
 
 The final section is more speculative. It considers ways that generative AI might change software development, and testing specifically, in more fundamental ways:
 
-* [Specification-Driven Development]({{site.baseurl}}/future-ideas/sdd/): Building on the idea of eliminating source code, can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
-* [Can We Eliminate Source Code?]({{site.baseurl}}/future-ideas/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
-* [From Testing to Tuning]({{site.baseurl}}/future-ideas/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior automatically?
+* [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/): Building on the idea of eliminating source code, can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
+* [Can We Eliminate Source Code?]({{site.baseurl}}/advanced-techniques/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
+* [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior automatically?
 
 Throughout this guide, we use a healthcare ChatBot example. [A Working Example]({{site.baseurl}}/working-example) summarizes all the features discussed for this example.
 
