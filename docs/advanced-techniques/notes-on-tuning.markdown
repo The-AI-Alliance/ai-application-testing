@@ -38,8 +38,6 @@ This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning){:t
 
 Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}. It is not yet complete, but projected to be done by the end of 2025. 
 
-Some of the modules, like for [instruction tuning](huggingface.co/learn/smol-course/unit1/1){:target="_blank"} are more relevant when tuning &ldquo;raw&rdquo; base models to be better at instruction following, aligned with social norms, etc. For domain-specific tuning, such as we discuss in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning), you would normally start with a model that is already instruction tuned and proceed from there.
-
 {: .tip}
 > **TIP:** 
 > 
@@ -47,7 +45,52 @@ Some of the modules, like for [instruction tuning](huggingface.co/learn/smol-cou
 
 Also recommended is their more general [LLM Course](https://huggingface.co/learn/llm-course/chapter1/1){:target="_blank"}, which provides useful background information that is assumed by the smol course.
 
+The smol course covers to the two main kinds of tuning used today:
+
+* [Instruction Tuning](huggingface.co/learn/smol-course/unit1/1){:target="_blank"} tunes a &ldquo;raw&rdquo; base model to be better at instruction following and other general-purpose behaviors, like alignment with social norms, as well as domain-specific behaviors. It uses [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"} to achieve this.
+* [Preference Alignment](https://huggingface.co/learn/smol-course/unit2/1){:target="_blank"} further trains a model to provide answers people actually &ldquo;prefer&rdquo;, which makes them more useful for real-world use. It uses a relatively new technique called [Direct Preference Optimization]({{site.glossaryurl}}/#direct-preference-optimization){:target="_glossary"} (DPO), which has largely replaced variants of [Reinforcement Learning]({{site.glossaryurl}}/#reinforcement-learning){:target="_glossary"}, which are more difficult to use, although they are still in widely used.
+
+### Instruction Tuning
+
+It is common to have several instruction tuning &ldquo;phases&rdquo; to go from a &ldquo;raw&rdquo; model to one that meets the goals for model performance in an application context. For our purposes, we start with models that are already tuned for instruction following, social norms, etc. , then perform further tuning to add the specific domain-specific behaviors required. In fact, model developers usually publish raw and instruction-tuned models.
+
+The heart of instruction tuning is [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"}. For domain-specific tuning, which is most relevant for our needs, as discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning), we start with a model that is already instruction tuned and use [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"} to improve it, as discussed in the [third smol course section](https://huggingface.co/learn/smol-course/unit1/3){:target="_blank"}.
+
+[What is Supervised Fine-Tuning?](https://huggingface.co/learn/smol-course/unit1/3#what-is-supervised-fine-tuning) describes SFT as &ldquo;...the process of continuing to train a [Pre-Trained]({{site.glossaryurl}}/#pre-Trained){:target="_glossary"} model on task-specific datasets with labeled examples.&rdquo; While pre-training teaches general language understanding and information, SFT teaches specific skills and behaviors, as opposed to new knowledge. For example, SFT hones how the knowledge is used toward specific applications, desired ways of responding to prompts, and use case-specific requirements.
+
+Fortunately, SFT requires far less resources than pre-training, which we will discuss below.
+
+However, the tutorial offers this advise:
+
+> Before starting SFT, consider whether using an existing instruction-tuned model with well-crafted prompts would suffice for your use case. SFT involves significant computational resources and engineering effort, so it should only be pursued when prompting existing models proves insufficient. Learn more about this decision process in the [Hugging Face LLM Course](https://huggingface.co/learn/llm-course/en/chapter11/3){:target="_blank"}.
+
+[When to Use Supervised Fine-Tuning](https://huggingface.co/learn/smol-course/unit1/3#when-to-use-supervised-fine-tuning) provides some guidance on when SFT is necessary, versus just relying on a model without additional tuning.
+They offer the following checklist to determine if SFT is appropriate, which we quote verbatim:
+
+> * Have you tried prompt engineering with existing instruction-tuned models?
+> * Do you need consistent output formats that prompting cannot achieve?
+> * Is your domain specialized enough that general models struggle?
+> * Do you have high-quality training data (at least 1,000 examples)?
+> * Do you have the computational resources for training and evaluation?
+
+If you answered “yes” to most of these, SFT is likely worth pursuing.
+
+In [The SFT Process](https://huggingface.co/learn/smol-course/unit1/3#the-sft-process){:target="_blank"}, they point out that you need a relatively small, but very high-quality dataset:
+
+> * Minimum: 1,000 high-quality examples for basic fine-tuning.
+> * Recommended: 10,000+ examples for robust performance.
+> * Quality over quantity: 1,000 well-curated examples often outperform 10,000 mediocre ones.
+
+This is _supervised_ data, so each example requires:
+
+> * Input prompt: The user’s instruction or question
+> * Expected response: The ideal assistant response
+> * Context (optional): Any additional information needed
+
+The section goes on to provide detailed suggestions for tuning parameters, like the learning rate, how to run their tuning tools, and how to interpret the results.
+
 ## &ldquo;How to approach post-training for AI applications&rdquo; - Nathan Lambert
+
 This section summarizes of [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert)'s NeurIPS 2024 talk, [How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} (December 10, 2024), along with the following supporting blog posts and other links that are referenced in the presentation and listed here in reverse chronological order. Some terms in this list will be defined later:
 
 * [OpenAI's Reinforcement Finetuning and RL for the masses](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"} (December 11, 2024) - A description of OpenAI's recently announced research program combining RL and fine tuning (our spelling here). There is a link in the post to an OpenAI web page for this, but it appears to be gone now.
