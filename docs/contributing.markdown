@@ -20,7 +20,7 @@ We welcome your contributions!
 	* [Issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}
 	* [Discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"} 
 	* [Pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="prs"}
-* Or give us your feedback through [email](mailto:contact@thealliance.ai,dwampler@thealliance.ai?subject=Feedback on Testing Generative AI Applications)
+* Or give us your feedback through [email](mailto:contact@thealliance.ai,dwampler@thealliance.ai?subject=Feedback on Testing Generative AI Agent Applications)
 
 Here are some areas where help is most needed:
 
@@ -40,7 +40,7 @@ Are you interested in joining this project's work group? While not required to c
 
 Use the [Working Group Application](https://share.hsforms.com/12dRIKDc5SSGUENOtAstjMgqmmqo){:target="join-collab"} form to let us know your interests. 
 
-Check any of these boxes on the form that look interesting. In particular, _Evaluations (performance, quality, trust, safety)_ applies to this project. Use the _Message_ box to mention this project specifically, **Testing Generative AI Applications**, and add anything else you would like us to know.
+Check any of these boxes on the form that look interesting. In particular, _Evaluations (performance, quality, trust, safety)_ applies to this project. Use the _Message_ box to mention this project specifically, **Testing Generative AI Agent Applications**, and add anything else you would like us to know.
 
 ## Notes on Improving this User Guide
 

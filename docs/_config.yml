@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Testing Generative AI Applications
+title: Testing Generative AI Agent Applications
 email: contact@thealliance.ai
 description: >- # this means to ignore newlines until "baseurl:"
   Giving developers the tools and techniques they need to confidently test their generative AI applications.
@@ -71,10 +71,10 @@ heading_anchors: true
 # Aux links for the upper right navigation
 aux_links:
   "The AI Alliance":
-    - "https://thealliance.ai"
+    - "https://aialliance.org"
 
 nav_external_links:
-  - title: The AI Alliance Repo for Testing Generative AI Applications"
+  - title: The AI Alliance Repo for Testing Generative AI Agent Applications"
     url: "https://github.com/The-AI-Alliance/ai-application-testing"
     hide_icon: false
 

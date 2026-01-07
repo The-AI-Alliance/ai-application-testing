@@ -7,7 +7,7 @@ has_children: false
 
 # Testing Problems Caused by Generative AI Nondeterminism 
 
-Let's first review why [Determinism]({{site.glossaryurl}}/#determinism){:target="_glossary"} is an important concept in software development, then discuss how the use of [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"} makes this difficult.
+Let's first review why [Determinism]({{site.glossaryurl}}/#determinism){:target="_glossary"} is an important concept in software development, then discuss how the use of [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"} makes this difficult. If you have a strong background in conventional software testing, you might skip the first section and go to [How Generative AI Changes This Picture](#how-generative-ai-changes-this-picture).
 
 <a id="highlights"></a>
 
@@ -53,6 +53,8 @@ Actually, some models support an adjustable parameter, called the _temperature_,
 Two other simple random probability distribution examples are useful to consider. Consider the behavior of flipping a _fair_ (unweighted) coin. For each flip, you have no way of knowing whether you will observe a head or a tail, each of which has a 50% probability of occurring. However, if you flip the coin 100 times, you will have observed approximately 50 heads and 50 tails. For 1000 flips, the split is even more likely to be 500 heads and 500 tails. A less simple example distribution is the values observed when rolling two, six-sided dice. Without going into details, it is much more probable to get two values that add up to 5, 6, or 7 on a roll, for example, than to get a total of 2 or 12.
 
 Furthermore, the nondeterminism introduced by generative AI isn't _peripheral_ to the application logic, like an implementation detail that is independent of the user experience. Rather, the nondeterminism is a core enabler of fundamentally new capabilities that were previously impossible. 
+
+The problems are compounded when we have applications built on [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}, each of which will have some stochastic behavior of its own, if it encapsulates a generative model.
 
 So, we can't avoid this nondeterminism. We have to learn how to write tests that are still repeatable and automatable, that are deterministic where feasible, but otherwise effectively evaluate the stochastic behavior that occurs. These tests are necessary to give us _confidence_ our application works as intended. This is the challenge this guide explores.
 

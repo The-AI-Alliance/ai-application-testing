@@ -5,16 +5,16 @@ nav_order: 10
 has_children: false
 ---
 
-# Testing Generative AI Applications
+# Testing Generative AI Agent Applications
 
-(Previous Title: _Achieving Confidence in Enterprise AI Applications_)
+(Previous Title: _Achieving Confidence in Enterprise AI Agent Applications_)
 
 {: .attention }
-> _**I am an enterprise developer; how do I test my AI applications??**_
+> _**I am an enterprise developer; how do I test my AI agent applications??**_
 >
-> _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
+> _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI agent applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
 
-Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Applications**. We are building the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
+Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Agent Applications**. We are building the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
 {: note}
 > **Note:**
@@ -25,7 +25,7 @@ Welcome to the **The AI Alliance** project to advance the state of the art for *
 
 We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable){:target="_glossary"} and [Automatable]({{site.glossaryurl}}/#automatable){:target="_glossary"} tests. In particular, we rely on [Determinism]({{site.glossaryurl}}/#determinism){:target="_glossary"} when we write tests to verify expected [Behavior]({{site.glossaryurl}}/#behavior){:target="_glossary"} and to ensure that no [Regressions]({{site.glossaryurl}}/#regression){:target="_glossary"} occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to _most_ [Functions]({{site.glossaryurl}}/#function){:target="_glossary"} (with some exceptions), we will get the same answer back consistently. This property enables our core testing techniques, which give us _**the essential confidence**_ that our applications meet our requirements, that they implement the [Use Cases]({{site.glossaryurl}}/#use-case){:target="_glossary"} our customers expect. We are accustomed to unambiguous _pass/fail_ answers!
 
-Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"}, where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"}, meaning the outputs are governed by a probability model, and hence _nondeterministic_. We can't write the same kinds of tests now, so what alternative approaches should we use instead?
+Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"}, where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"}, meaning the outputs are governed by a probability model, and hence _nondeterministic_. We can't write the same kinds of tests now, so what alternative approaches should we use instead? The problems are compounded when we have applications built on [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}, each of which will have some stochastic behavior of its own, if it encapsulates a generative model.
 
 In contrast, our AI-expert colleagues (researchers and data scientists) use the tools of [Probability and Statistics]({{site.glossaryurl}}/#probability-and-statistics){:target="_glossary"} to analyze stochastic model responses and to assess how well the models perform against particular objectives. For example, a model might score 85% on a [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} for high school-level mathematical knowledge. Is that good enough? It depends on the application in mind! Rarely are simple _pass/fail_ answers available.
 
@@ -58,7 +58,7 @@ The goals of this project are two fold:
 > 4. Many chapters end with an **Experiments to Try** section for further exploration.
 > 5. [This AI Alliance blog post](https://www.aialliance.org/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
 
-We start with a deeper dive into [The Problems of Testing Generative AI Applications]({{site.baseurl}}/testing-problems).
+We start with a deeper dive into [The Problems of Testing Generative AI Agent Applications]({{site.baseurl}}/testing-problems).
 
 Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts that are informed by the need for effective testing to ensure our AI applications are reliable and do what we expect of them. We explore how tried and true principles still apply, but updates are often needed:
 
@@ -97,13 +97,13 @@ See also [About Us]({{site.baseurl}}/about) for more details about this project 
 ## Additional Links
 
 * This project's [GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"} (see also [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and the [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"})
-* Companion projects: 
-	* <a href="https://the-ai-alliance.github.io/trust-safety-user-guide/" target="ers">The AI Trust and Safety User Guide</a>
-	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>
-	* <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>
+* Related projects: 
+	* <a href="https://the-ai-alliance.github.io/trust-safety-user-guide/" target="ers">The AI Trust and Safety User Guide</a>: General guidance for evaluating AI applications for safety and trustworthiness. 
+	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>: Understanding _evaluation_ tools for benchmarks, such as how they work and how to use them, etc. 
+	* <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>: An example stack of evaluation tools.
 * The AI Alliance: 
-	* [Website](https://aialliance.org){:target="ai-alliance"}
-	* [The Trust and Safety Work Group](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} 
+	* [Website](https://aialliance.org){:target="aia"}
+	* [GitHub Organization](https://the-ai-alliance.github.io/){:target="aia-gh"}
+		* [Community](https://github.com/The-AI-Alliance/community){:target="aia-community"} 
 
-| **Authors**     | The AI Alliance [Trust and Safety](https://thealliance.ai/focus-areas/trust-and-safety){:target="ai-alliance-tns"} and [Applications and Tools](https://thealliance.ai/focus-areas/applications-and-tools){:target="ai-alliance-apps"} work groups. (See the [Contributors]({{site.baseurl}}/contributing/#contributors)) |
 | **Last Update** | {{site.last_version}}, {{site.last_modified_timestamp}} |

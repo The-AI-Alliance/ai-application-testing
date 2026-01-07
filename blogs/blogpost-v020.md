@@ -2,7 +2,7 @@
 
 _[Dean Wampler, Ph.D.](mailto:dwampler@thealliance.ai) - IBM and The AI Alliance_
 
-When the AI Alliance started, I became co-leader of the [Trust and Safety Focus Area](https://thealliance.ai/focus-areas/trust-and-safety), because it was clear that without the ability to trust AI, it would not be widely adopted into enterprise and consumer applications. We have made a lot of progress since then, but another, related blocking issue became apparent to me about a year ago. 
+When the AI Alliance started, I became co-leader of the [Trust and Safety Work Group](https://www.aialliance.org/projects#safety), because it was clear that without the ability to trust AI, it would not be widely adopted into enterprise and consumer applications. We have made a lot of progress since then, but another, related blocking issue became apparent to me about a year ago. 
 
 I realized that most of my fellow enterprise software developers and I don't know how to test these applications, because the probabilistic nature of generative AI is new to us. We are accustomed to more deterministic behavior when we design, implement, and test our "pre-AI" code. 
 
@@ -10,7 +10,7 @@ I realized that most of my fellow enterprise software developers and I don't kno
 
 _**Figure 1:** The spectrum between deterministic and stochastic behavior, and the people accustomed to them!_
 
-So, I started a project we now call [Testing Generative AI Applications](https://the-ai-alliance.github.io/ai-application-testing/) to bridge this gap. It is a "living" guide designed to explore how we can adapt and adopt the evaluation technologies AI experts use for the fine-grained testing of use cases and requirements that we developers must do, in order to be _confident_ in our AI-empowered applications. It also explores the implications for how we design these applications.
+So, I started a project we now call [Testing Generative AI Agent Applications](https://the-ai-alliance.github.io/ai-application-testing/) to bridge this gap. It is a "living" guide designed to explore how we can adapt and adopt the evaluation technologies AI experts use for the fine-grained testing of use cases and requirements that we developers must do, in order to be _confident_ in our AI-empowered applications. It also explores the implications for how we design these applications.
 
 Today, I'm pleased to announce version `V0.2.0` of our living guide. While there is much we still need to do, we have added content you can use today to start testing your AI-empowered applications. 
 
