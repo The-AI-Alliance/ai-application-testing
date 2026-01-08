@@ -37,9 +37,36 @@ Agents are inherently more complex than application patterns that use &ldquo;con
 {: .todo}
 > **TODOs:**
 >
-> 1. Research the work of experts in this area. For example, DoomArena.
+> 1. Research the work of experts in this area. See the following list.
 > 1. Catalog the unique requirements for agent testing.
 > 1. Provide specific examples of how to use those concepts.
+
+A list of agent-related tools and techniques to investigate:
+
+* PyTorch OpenEnv:
+    * https://meta-pytorch.org/OpenEnv/
+    * https://huggingface.co/blog/openenv
+    * https://huggingface.co/openenv
+    * https://github.com/meta-pytorch/OpenEnv
+    * Agent Beats Competition:
+        * https://www.linkedin.com/posts/jspisak_agentic-ai-weekly-berkeley-rdi-january-activity-7414721490018906112-UbpX
+        * https://berkeleyrdi.substack.com/p/agentic-ai-weekly-berkeley-rdi-january
+* https://research.ibm.com/blog/cuga-agent-framework
+    * https://github.com/cuga-project/cuga-agent
+    * https://huggingface.co/blog/ibm-research/cuga-on-hugging-face
+* https://partnershiponai.org/resource/prioritizing-real-time-failure-detection-in-ai-agents/
+* www.anthropic.com/engineering/multi-agent-research-system
+* Mozilla's `any-agent`:
+    * https://www.mozilla.ai/open-tools/choice-first-stack/any-agent
+    * https://github.com/mozilla-ai/any-agent
+* https://agenttoolkit.github.io/agent-lifecycle-toolkit/
+* https://github.com/agentsmd/agents.md
+* https://glaforge.dev/talks/2025/12/02/ai-agentic-patterns-and-anti-patterns/
+* https://www.microsoft.com/en-us/research/blog/agent-lightning-adding-reinforcement-learning-to-ai-agents-without-code-rewrites/
+* https://www.patronus.ai/blog/introducing-generative-simulators
+* https://github.com/rustyoldrake/security_governance_compliance_ai_agentic
+* https://mellea.ai/
+* https://openagi.aiplanet.com/ - "OpenAGI"
 
 <a id="other-tools"/>
 

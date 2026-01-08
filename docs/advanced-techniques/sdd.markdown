@@ -33,11 +33,11 @@ has_children: false
 
 The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}, the more crucial it becomes to write prompts that produce the results we need. Generative models are &ldquo;literal minded&rdquo; (just like all computing systems). We have to use very precise instructions to get the results we want.
 
-Specification-driven development (SDD), also known as _spec-driven development_ and  _spec-driven coding_, attempts to impose more structure on prompts so models do a better job generating source code that we actually need. Similarly, it identifies different &ldquo;phases&rdquo; of software creation and customizes the prompts and tools used for each one. The ad hoc, free-form prompts we currently use for [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"} and [Vibe Engineering]({{site.glossaryurl}}/#vibe-engineering){:target="_glossary"} are not adequate for our needs.
+[Specification-Driven Development]({{site.glossaryurl}}/#specification-Driven-development){:target="_glossary"} (SDD), also known as _spec-driven development_ and  _spec-driven coding_, attempts to impose more structure on prompts so models do a better job generating source code that we actually need. Similarly, it identifies different &ldquo;phases&rdquo; of software creation and customizes the prompts and tools used for each one. The ad hoc, free-form prompts we currently use for [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"} and [Vibe Engineering]({{site.glossaryurl}}/#vibe-engineering){:target="_glossary"} are not adequate for our needs.
 
-For an industry analyst's perspective on SDD, see [this RedMonk piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"}.
+For an industry analyst's perspective on SDD, see [this RedMonk blog post](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"}.
 
-Several different people and groups are exploring this idea in related ways. 
+Several different people and groups are exploring this idea in related ways. See the [Specification-Driven Development references]({{site.baseurl}}/references/#specification-driven-development) for a list of sources, most of which are quoted below.
 
 ## Carl Annaberg's AI Coding Workflow
 
