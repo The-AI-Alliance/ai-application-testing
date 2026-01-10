@@ -21,6 +21,6 @@ There is currently also a chapter of [&ldquo;rough notes&rdquo;]({{site.baseurl}
 
 ## What's Next?
 
-Start with [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur. Refer to the [Glossary]({{site.glossaryurl}}/){:target="_glossary"} regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
+Start with [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/), which discusses one approach to making user prompts sufficiently detailed and precise enough that reliable application generation can occur. Refer to the [Glossary]({{site.glossaryurl}}/){:target="_glossary"} regularly for definitions of terms. See the [References]({{site.referencesurl}}/) for more information.
 
 ---

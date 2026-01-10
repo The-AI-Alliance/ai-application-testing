@@ -49,7 +49,7 @@ Good abstraction boundaries are key. The terms [Coupling]({{site.glossaryurl}}/#
 
 ### Abstractions Encapsulate Complexities
 
-[Michael Feathers]({{site.baseurl}}/references/#michael-feathers) gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024.  
+[Michael Feathers]({{site.referencesurl}}/#michael-feathers) gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024.  
 
 Near the end, he discussed how the software industry has a history of introducing new levels of abstractions when complexity becomes a problem. For example, high-level programming languages removed most of the challenges of writing low-level assembly code.
 

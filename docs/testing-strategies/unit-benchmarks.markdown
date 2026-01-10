@@ -322,7 +322,7 @@ Synthetic Data Kit uses one or more documents you specify as sources of informat
 
 #### InstructLab
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.baseurl}}/references/) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.referencesurl}}/) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
 
 #### Older Synthetic Data Tools
 
@@ -365,7 +365,7 @@ Be careful to check the licenses for any benchmarks or tools you use, as some of
 
 [Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
 
-While use of benchmarks with synthetic data generation of Q&A pairs is standard practice, see [this &ldquo;Beyond Benchmarks&rdquo; discussion]({{site.baseurl}}/references/#university-of-tübingen) about a possible alternative approach.
+While use of benchmarks with synthetic data generation of Q&A pairs is standard practice, see [this &ldquo;Beyond Benchmarks&rdquo; discussion]({{site.referencesurl}}/#university-of-tübingen) about a possible alternative approach.
 
 ## Experiments to Try
 

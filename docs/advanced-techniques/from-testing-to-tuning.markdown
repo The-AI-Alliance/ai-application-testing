@@ -55,7 +55,7 @@ Here are some ideas we are investigating. See also the [&ldquo;rough notes&rdquo
 
 ### Reinforcement Fine Tuning
 
-For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} by [Nathan Lambert]({{site.baseurl}}/references/#nathan-lambert), where he discusses a recent evolution of [Reinforcement Learning]({{site.glossaryurl}}/#reinforcement-learning){:target="_glossary"}, called _reinforcement fine tuning_[^2]:
+For some inspiration, consider slide 25 of [this NeurIPS 2024 presentation](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"} by [Nathan Lambert]({{site.referencesurl}}/#nathan-lambert), where he discusses a recent evolution of [Reinforcement Learning]({{site.glossaryurl}}/#reinforcement-learning){:target="_glossary"}, called _reinforcement fine tuning_[^2]:
 
 {: .attention }
 > **What Is Reinforcement Fine Tuning?**
@@ -140,7 +140,7 @@ Unsloth is an OSS tool suite for model training and tuning, with useful guides o
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above and optionally the [Appendix](#appendix-how-science-changes-its-mind) below, then see the [References]({{site.baseurl}}/references/) for more information. Refer to the separate [Glossary website]({{site.glossaryurl}}/){:target="_glossary"} for definitions.
+Review the [highlights](#highlights) summarized above and optionally the [Appendix](#appendix-how-science-changes-its-mind) below, then see the [References]({{site.referencesurl}}/) for more information. Refer to the separate [Glossary website]({{site.glossaryurl}}/){:target="_glossary"} for definitions.
 
 ## Appendix: How Science Changes Its Mind...
 

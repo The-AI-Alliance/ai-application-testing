@@ -33,6 +33,10 @@ The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organizati
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
 
+## Anthropic
+
+Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents.
+
 ## Babeş-Bolyai University
 
 [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are explore in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere.

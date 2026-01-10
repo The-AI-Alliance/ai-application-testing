@@ -82,7 +82,7 @@ The final section is more speculative. It considers ways that generative AI migh
 
 Throughout this guide, we use a healthcare ChatBot example. [A Working Example]({{site.baseurl}}/working-example) summarizes all the features discussed for this example.
 
-Finally, there is a [Glossary of Terms]({{site.glossaryurl}}){:target="_glossary"} and [References]({{site.baseurl}}/references) for additional information.
+Finally, there is a [Glossary of Terms]({{site.glossaryurl}}){:target="_glossary"} and [References]({{site.referencesurl}}/) for additional information.
 
 ## How to Use This Site
 

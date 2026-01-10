@@ -43,6 +43,8 @@ Agents are inherently more complex than application patterns that use &ldquo;con
 
 A list of agent-related tools and techniques to investigate:
 
+* Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents. See also [Anthropic]({{site.referencesurl}}//#anthropic){:target="_reference"}.
+
 * PyTorch OpenEnv:
     * https://meta-pytorch.org/OpenEnv/
     * https://huggingface.co/blog/openenv

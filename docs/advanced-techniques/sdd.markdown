@@ -37,7 +37,7 @@ The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agen
 
 For an industry analyst's perspective on SDD, see [this RedMonk blog post](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"}.
 
-Several different people and groups are exploring this idea in related ways. See the [Specification-Driven Development references]({{site.baseurl}}/references/#specification-driven-development) for a list of sources, most of which are quoted below.
+Several different people and groups are exploring this idea in related ways. See the [Specification-Driven Development references]({{site.referencesurl}}/#specification-driven-development) for a list of sources, most of which are quoted below.
 
 ## Carl Annaberg's AI Coding Workflow
 
@@ -182,7 +182,7 @@ While designed primarily for [Claude Code](https://www.anthropic.com/claude-code
 
 ## What's Next?
 
-A list of resources about SDD, most of which were discussed here, can be found in the [References]({{site.baseurl}}/references/#specification-driven-development). See also [this list of coding agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}.
+A list of resources about SDD, most of which were discussed here, can be found in the [References]({{site.referencesurl}}/#specification-driven-development). See also [this list of coding agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}.
 
 Review the [highlights](#highlights) summarized above, then proceed to [Can We Eliminate Source Code?]({{site.baseurl}}/advanced-techniques/eliminate-source-code/).
 

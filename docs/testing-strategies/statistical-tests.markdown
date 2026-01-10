@@ -41,7 +41,7 @@ In the [Unit Benchmark's Experiments to Try]({{site.baseurl}}/testing-strategies
 > 
 > Provide a _very concise_ overview of the basics the reader needs to understand. This can't be an exhaustive treatment. Emphasize the tools used for particular purposes. Show the formulas, but de-emphasizing understanding them in detail, because they can be coded as reusable libraries. An intuitive understanding is the goal here.
 
-This paper might be useful: [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} by [Evan Miller]({{site.baseurl}}/references/#evan-miller).
+This paper might be useful: [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} by [Evan Miller]({{site.referencesurl}}/#evan-miller).
 
 ## Other Examples of Using Statistics in AI Testing Situations
 

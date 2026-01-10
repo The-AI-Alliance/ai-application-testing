@@ -22,6 +22,6 @@ The end of each chapter has an **Experiments to Try** section for further explor
 
 ## What's Next?
 
-Start with [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/). Refer to the [Glossary]({{site.glossaryurl}}/){:target="_glossary"} regularly for definitions of terms. See the [References]({{site.baseurl}}/references/) for more information.
+Start with [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/). Refer to the [Glossary]({{site.glossaryurl}}/){:target="_glossary"} regularly for definitions of terms. See the [References]({{site.referencesurl}}/) for more information.
 
 ---
