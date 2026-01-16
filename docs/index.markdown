@@ -105,5 +105,3 @@ See also [About Us]({{site.baseurl}}/about) for more details about this project 
 	* [Website](https://aialliance.org){:target="aia"}
 	* [GitHub Organization](https://the-ai-alliance.github.io/){:target="aia-gh"}
 		* [Community](https://github.com/The-AI-Alliance/community){:target="aia-community"} 
-
-| **Last Update** | {{site.last_version}}, {{site.last_modified_timestamp}} |
