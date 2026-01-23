@@ -99,6 +99,10 @@ For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-str
 * [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance data set benchmark for natural language queries.
 * [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
 
+### Mellea
+
+The [Mellea](https://mellea.ai/) has similar concepts, such as emphasizing specifynig requirements through a Python API rather than arbitrary prompts.
+
 ## James Thomas
 
 [James Thomas](https://bsky.app/profile/hiccupps.bsky.social){:target="jt"} is a QA engineer who [posted](https://bsky.app/profile/hiccupps.bsky.social/post/3lgms2z6zuk25){:target="bsky-jt"} a link to a blog post [How do I Test AI?](https://qahiccupps.blogspot.com/2025/01/how-do-i-test-ai.html){:target="blog-jt"} that lists criteria to consider when testing AI-enabled systems. While the post doesn't provide a lot of details behind the list items, the list is excellent for stimulating further investigation.
@@ -199,6 +203,8 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
   * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
 * [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
 * [Spec-Driven Development: 10 things you need to know about specs](https://ainativedev.io/news/spec-driven-development-10-things-you-need-to-know-about-specs){:target="10-things"}
+
+See also [Mellea](#mellea).
 
 ## University of Tübingen
 

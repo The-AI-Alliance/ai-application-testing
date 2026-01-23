@@ -32,6 +32,7 @@ OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
 EXAMPLE_DATA_DIR      ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
+
 TIME                  ?= time  # time execution of long processes
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
@@ -87,22 +88,28 @@ define help_message_code
 Quick help for this make process for the tools described in this website.
 For the tools used to manage the website, see the parent directory Makefile.
 
+For the targets that run tools, there are variables defined in this Makefile
+that are used to pass arguments to the commands. Run 'make print-info-code' 
+to see the list of variables and their default definitions. Specific variables
+are mentioned for the corresponding targets:
+
 make all-models-*       # Extract "*" as one of the other targets (such as, "all-code"),
                         # that is everything to the right of "all-models-", and 
-                        # make it for ALL the models defined by variable "MODELS":
+                        # make that target for ALL the models defined by "MODELS":
                         #   ${MODELS}
                         # (Not useful for model-agnostic targets, like "setup"...)
-make all-code           # Clean and run all the tools.
-make run-code           # Run all the tools without cleaning first.
+                        # You can override the list of models as follows:
+                        #   make MODELS="..." all-models-...
+make all-code           # Clean and run all the tools using the model defined by "MODEL".
+make run-code           # Run all the tools without cleaning first. (Built by "all-code")
 
 make setup              # One-time setup tasks; e.g., builds target install-uv.
 make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
 
-make clean-code         # Remove build artifacts in ${OUTPUT_DIR}.
-make clean-all-code     # Remove ALL build artifacts for all models in ${TEMP_DIR}.
-make clean-temp         # Synonym for "clean-all-code".
+make clean-code         # Remove build artifacts in ${OUTPUT_DIR}. (Built by "all-code")
+make clean-temp         # Remove ALL build artifacts for all models in ${TEMP_DIR}.
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
@@ -111,7 +118,7 @@ For scripts run by the following targets, which invoke inference, the model
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
 you want to use a different model, invoke make as in this example:
 
-  MODEL=ollama/llama3.2:3B make run-tdd-example-refill-chatbot
+  make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot
 
 See also the description of "all-models-*" above.
 
@@ -240,11 +247,12 @@ print-info-code::
 	@echo "For the example code and tools:"
 	@echo "  MODEL:                 ${MODEL} (the default)"
 	@echo "  MODELS:                ${MODELS}"
-	@echo "                         (all of them we use)"
+	@echo "  MODELS: (all we use)   ${MODELS}"
 	@echo "  ALL_EXERCISES:         ${ALL_EXERCISES}"
 	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
 	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:               ${SRC_DIR}"
+	@echo "  APP_ARGS:              ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
 	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
 	@echo "  OUTPUT_DATA_DIR:       ${OUTPUT_DATA_DIR}"
@@ -294,7 +302,7 @@ setup-jekyll:: ruby-installed-check bundle-ruby-command-check
 
 # Code Targets
 
-.PHONY: all-code run-code clean-code clean-all-code clean-temp
+.PHONY: all-code run-code clean-code clean-temp
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
@@ -328,7 +336,7 @@ run-code::
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}   
 
-clean-all-code clean-temp::
+clean-temp::
 	rm -rf ${TEMP_DIR}
 
 define run-tdd-example-refill-chatbot-message
@@ -347,7 +355,10 @@ ubdv run-ubdv:: run-unit-benchmark-data-validation
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
 # for our purposes. See the LiteLLM docs for logging configuration details.
-${ALL_EXERCISES}run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation:: before-run
+# Define APP_ARGS on the command line to pass custom arguments, e.g., 
+#   make APP_ARGS='--help' run-tdd-example-refill-chatbot
+# just prints help.
+${ALL_EXERCISES}:: before-run
 	$(info ${$@-message})
 	@export LITELLM_LOG="ERROR"; \
 	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
@@ -355,7 +366,8 @@ ${ALL_EXERCISES}run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${OUTPUT_DATA_DIR} \
-		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log 
+		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
+		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
 before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
