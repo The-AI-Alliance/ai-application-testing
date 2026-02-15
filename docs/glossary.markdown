@@ -1,7 +1,7 @@
 ---
 sitemap: false
 permalink: /glossary/
-redirect_to: https://the-ai-alliance.github.io/glossary/glossary/
+redirect_to: https://the-ai-alliance.github.io/glossary/
 ---
 {% comment %}
 We don't use the template redirect.html, because it is written with the assumption
