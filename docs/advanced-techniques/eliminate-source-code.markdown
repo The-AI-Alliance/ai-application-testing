@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Can We Eliminate Source Code?
-nav_order: 420
+nav_order: 490
 parent: Advanced Techniques
 has_children: false
 ---
@@ -17,12 +17,14 @@ has_children: false
 {:toc}
 </details>
 
+This chapter speculates on the future of source code.
+
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> 1. Plain text source code dominates software development, because of its relative flexibility, human readability, and ease of use by tools.
+> 1. Plain text source code has dominated software development from the beginning, because of its relative flexibility, human readability, and ease of use by tools.
 > 1. Plain text source code requires learning and correctly using a programming language.
 > 1. Attempts to replace plain text source code have only succeeded in a few, special cases.
 > 1. Generative AI has the potential of replacing source code with a _richer_ representation that reduces or eliminates the disadvantages of source code.
@@ -39,17 +41,20 @@ Almost all software in existence was written using a structured form of plain te
 * To write an application, you need to learn the programming language and tools for building, testing, and deploying the application.
 * It is very easy to make mistakes, from small typos to logic errors, which may or may not be caught by our tools.
 * A compiler or interpreter is necessary to translate the text into a machine-executable form.
+* Traditionally, writing tools to aide the developer had to first cross the barrier of parsing and understanding the text, although today most tools can leverage _abstract syntax trees_ (ASTs) representing the text and provided by other tools for this purpose.
 * Besides the core logic of the application, there are static and runtime dependencies that are poorly captured in source code, and extracting this information for various tasks requires specialized tools that aren't always available.
 * Other tools are needed for application analysis and maintenance purposes.
 * and so forth...
 
-Other approaches, such as &ldquo;drag-and-drop&rdquo; graphical environments have been tried, but they usually have frustrating limitations and succeed in limited circumstances. (A notable example is [LabVIEW](https://www.ni.com/en/shop/labview.html){:target="_blank"}, which provides a graphical environment for connecting laboratory instrumentation, etc.)
+Other approaches, such as &ldquo;drag-and-drop&rdquo; graphical environments (e.g., _no code/low code_) have been tried over the years. They have the advantage of using an internal structured representation of the program that is more amenable to automated analysis and transformation, but they usually have frustrating limitations, so success has been limited to special circumstances. (A notable, successful example is [LabVIEW](https://www.ni.com/en/shop/labview.html){:target="_blank"}, which provides a graphical environment for connecting laboratory instrumentation, etc.)
 
 ### Writing Applications with Generative AI
 
-The generative AI community has rapidly improved the ability of models to automate many of the manual activities involving source code, especially code generation from prompts. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"}.
+The generative AI community has rapidly improved the ability of so-called [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"} to automate many of the manual activities involving source code, including code generation from prompts, automated code reviews, etc. This holds the promise that people with no programming abilities will be able to write applications just by asking for them with sufficiently detailed, plain English (or other native language), so called [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"}.
 
-However, current implementations still generate source code, sometimes imperfectly. For &ldquo;important&rdquo; applications, the resulting code still requires all the same engineering processes to validate it works correctly. The technology has already demonstrated significant productivity boosts, but it is still immature enough that being able to read, understand, and modify the generated source code is usually necessary to ensure the desired results.
+However, current coding agents still generate and work with source code, often imperfectly. Given the emphasis on text in LLMs, they are less-well positioned to work with ASTs. For &ldquo;important&rdquo; applications, the resulting code still requires all the same engineering processes to analyze the text and validate it works correctly. The technology has already demonstrated significant productivity boosts, but it is still immature enough that being able to read, understand, and modify the generated source code is usually necessary to ensure the desired results. (See also [Vibe Engineering]({{site.glossaryurl}}/#vibe-Engineering){:target="_glossary"} and [Agentic Engineering]({{site.glossaryurl}}/#agentic-Engineering){:target="_glossary"}.)
+
+However, working with AI coding agents changes your perspective on the role of source code. Wes McKinney's recent blog post, [From Human Ergonomics to Agent Ergonomics](https://wesmckinney.com/blog/agent-ergonomics/){:target="wesk"}, discusses how much of his recent software development has been in [Go](https://go.dev), a language he doesn't actually know, but he has been able to use through coding agents.
 
 ## What Would Be Required to Replace Source Code?
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Notes on Tuning
-nav_order: 440
+nav_order: 425
 parent: Advanced Techniques
 has_children: false
 ---

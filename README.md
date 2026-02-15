@@ -71,7 +71,7 @@ ollama pull granite4:latest
 
 By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama/gpt-oss:20b`. (Note the `ollama/` prefix.) All four models shown above are defined in the `MODELS` variable.
 
-However, we found that `gpt-oss:20b` is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory were not sufficient for using `gpt-oss:20b` without "bogging down" the machine, while having 64GB of memory was sufficient. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized](https://the-ai-alliance.github.io/glossary/glossary/#quantization) versions of models. Which choices work best for you?
+However, we found that `gpt-oss:20b` is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory were not sufficient for using `gpt-oss:20b` without "bogging down" the machine, while having 64GB of memory was sufficient. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models, which have 3B parameters or less. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization) versions of models. Which choices work best for you?
 
 #### Changing the Default Model Used
 
