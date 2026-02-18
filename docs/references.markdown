@@ -98,6 +98,8 @@ For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-str
 * [FailureSensorIQ](https://github.com/IBM/FailureSensorIQ){:target="faiq"} is a data set for multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets. 
 * [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} is a finance data set benchmark for natural language queries.
 * [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
+* Stanford ML's [MedAgentBench](https://stanfordmlgroup.github.io/projects/medagentbench/){:target="mab"} an virtual environment and benchmark suite for assessing the performance of LLMs in the context of _electronic health records_ (EHR).
+
 
 ### Mellea
 

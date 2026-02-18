@@ -267,6 +267,7 @@ Benchmarks for testing health-related use cases.
 
 * OpenAI [Healthbench](https://openai.com/index/healthbench/){:target="oai-hb"}
 * Stanford HELM for healthcare, [MedHELM](https://crfm.stanford.edu/helm/medhelm/latest/){:target="medhelm"}
+* Stanford ML's [MedAgentBench](https://stanfordmlgroup.github.io/projects/medagentbench/){:target="mab"} an virtual environment and benchmark suite for assessing the performance of LLMs in the context of _electronic health records_ (EHR).
 
 ### Industrial Systems
 
