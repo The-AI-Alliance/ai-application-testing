@@ -192,7 +192,7 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 
 [SDD]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"} is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references. See the discussion in the [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/) chapter, where we explore them, and the [RedMonk](#redmonk) section above.
 
-* [RedMonk blog post](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"},
+* RedMonk blog post [Vibe Coding vs. Spec-Driven Development](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"},
 * [How I Apply Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"}
   * [`spec-driven-ai-coding` repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}
   * Inspirations:
@@ -204,7 +204,7 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
   * [Spec Kit website](https://speckit.org/){:target="_blank"}
   * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
 * [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
-* [Spec-Driven Development: 10 things you need to know about specs](https://ainativedev.io/news/spec-driven-development-10-things-you-need-to-know-about-specs){:target="10-things"}
+* [Spec-Driven Development: 10 things you need to know about specs](https://tessl.io/blog/spec-driven-development-10-things-you-need-to-know-about-specs/){:target="10-things"}
 
 See also [Mellea](#mellea).
 
