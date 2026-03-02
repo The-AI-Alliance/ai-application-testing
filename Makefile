@@ -345,9 +345,6 @@ all-models-% ::
 		echo "  ${TEMP_DIR}/output/$$model/logs/$$timestamp"; \
 	done
 
-foo::
-	@echo "MODEL = ${MODEL}"
-
 all-code:: clean-code run-code
 run-code:: 
 	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_EXERCISES} 
