@@ -67,7 +67,7 @@ Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts
 
 With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
 
-* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} techniques, including _synthetic data generation_, for [Unit Testing]({{site.glossaryurl}}/#unit-test){:target="_glossary"} and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test){:target="_glossary"} and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test){:target="_glossary"}.
+* [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} techniques, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}, for [Unit Testing] and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test){:target="_glossary"} and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test){:target="_glossary"}.
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.

@@ -32,7 +32,7 @@ When testing AI applications with their [Stochastic]({{site.glossaryurl}}/#stoch
 > 1. When we don't have enough test data available already, we should synthesize the test data we need using generative tools. This is much faster than collecting data or writing examples manually, which is slow, expensive, and error prone, as humans are not good at finding and exploring corner cases, where bugs often occur.
 > 1. A [Teacher Model]({{site.glossaryurl}}/#teacher-model){:target="_glossary"} can be used as part of a process of generating synthetic Q&A pairs, and also validating their quality.
 > 1. We have to run experiments to generate good Q&A pairs and to determine the number of them we need for comprehensive and effective test coverage.
-> 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"} tools that can be used for synthetic data generation and benchmark creation and execution.
+> 1. There are many [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"} tools that can be used for [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"} and benchmark creation and execution.
 
 [^1]: Not all benchmarks use Q&A pair data sets like this. For example, some benchmarks use a specially-trained model to evaluate content, like detecting SPAM or hate speech. For simplicity, we will only consider benchmarks that work with Q&A pairs, but most of the principles we will study generalize to other benchmark techniques.
 
@@ -66,7 +66,7 @@ We will continue to follow this strategy:
 
 1. Identify a new _unit_ (behavior) to implement.
 1. Write one or more new unit benchmarks for it, including...
-  1. Generate a separate data set of Q&A pairs for the benchmark. 
+  1. [Generate Synthetic Data]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"} for a separate data set of Q&A pairs for the benchmark. 
 1. Write whatever application logic is required for the unit, including suitable prompts for the generative models involved.
 
 We will focus on the first two steps. The third step will be covered in [A Working Example]({{site.baseurl}}/working-example).

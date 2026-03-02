@@ -121,7 +121,7 @@ Unsloth is an OSS tool suite for model training and tuning, with useful guides o
 
 ### InstructLab
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab has similar goals compared to [Open Instruct](#open-instruct). It provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab provides an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab has similar goals compared to [Open Instruct](#open-instruct). It provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}. Hence, InstructLab provides an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks).
 
 ## Examples of Domain-specific Tuned Models
 

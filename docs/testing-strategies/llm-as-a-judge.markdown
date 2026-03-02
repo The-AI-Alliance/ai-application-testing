@@ -44,7 +44,7 @@ Like using an LLM to synthesize benchmark data, using an LLM to judge content ad
 
 The judge could issue a &ldquo;pass/fail&rdquo; ruling, but given the somewhat subjective nature of the task, a rating can be more informative. In our example below, we will ask the judge to rate the quality of a Q&A pair from one to five, from bad to excellent, and to also provide a _reason_ for the judgement. 
 
-So, when using LLM as a judge as part of the process of creating unit benchmark data sets, it is a good idea for _humans_ to review any ratings below four or five. Is the rating accurate? If a datum scored poorly, should it be discarded? If we have a lot of poorly-rated data, should we review and refine how it was created in the first place? Perhaps the prompts used for synthetic data generation could be more precise and descriptive about the expectations for the data? Do we need to use more capable models for data generation?
+So, when using LLM as a judge as part of the process of creating unit benchmark data sets, it is a good idea for _humans_ to review any ratings below four or five. Is the rating accurate? If a datum scored poorly, should it be discarded? If we have a lot of poorly-rated data, should we review and refine how it was created in the first place? Perhaps the prompts used for [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"} could be more precise and descriptive about the expectations for the data? Do we need to use more capable models for data generation?
 
 Alternatively, do low-scoring pairs indicate good corner cases, such as ambiguous input, that might be useful for developing new unit benchmarks and implementation logic for testing and handling such corner cases? 
 

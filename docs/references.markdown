@@ -46,7 +46,7 @@ Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/e
 [CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
 
 Among the useful tools in this repository are:
-* A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for synthetic data generation.
+* A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}.
 * Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
 
 ## Dean Wampler
@@ -174,7 +174,7 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 ## RedHat
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model tuning, including synthetic data generation. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
 
 ## RedMonk
 
