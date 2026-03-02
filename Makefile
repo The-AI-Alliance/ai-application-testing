@@ -35,7 +35,7 @@ CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
 TIME                  ?= time  # time execution of long processes
 
-ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation run-unit-benchmark-data-validation 
+ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
 ## One way to prevent execution of scripts is to invoke make this way:
 ## NOOP=echo make foobar
@@ -131,21 +131,35 @@ make run-tdd-example-refill-chatbot
                         # Run the code for the TDD example "unit benchmark".
                         # See the TDD chapter in the website for details.
 
-make ubds               # Shorthands for the run-unit-benchmark-data-synthesis target.
-make run-ubds           # Shorthands for the run-unit-benchmark-data-synthesis target.
+make ubds               # Shorthand for the run-unit-benchmark-data-synthesis target.
+make run-ubds           # Shorthand for the run-unit-benchmark-data-synthesis target.
 make run-unit-benchmark-data-synthesis
                         # Run the code for "unit benchmark" data synthesis.
                         # See the Unit Benchmark chapter in the website for details.
 
-make ubdv               # Shorthands for the run-unit-benchmark-data-validation target.
-make run-ubdv           # Shorthands for the run-unit-benchmark-data-validation target.
+make ubdv               # Shorthand for the run-unit-benchmark-data-validation target.
+make run-ubdv           # Shorthand for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
 
-Miscellaneous tasks for help, debugging, setup, etc.
+Tasks for help, debugging, setup, etc.
 
 make help-code          # Prints this output.
+make help-code-all      # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
+
+make help-terc          # Shorthand for the help-tdd-example-refill-chatbot target.
+make help-tdd-example-refill-chatbot   
+                        # Show help for the TDD example code by passing the "--help" flag.
+
+make help-ubds          # Shorthand for the help-unit-benchmark-data-synthesis target.
+make help-unit-benchmark-data-synthesis
+                        # Show help for the "unit benchmark" data synthesis code by passing the "--help" flag.
+
+make help-ubdv          # Shorthand for the help-unit-benchmark-data-validation target.
+make help-unit-benchmark-data-validation
+                        # Show help for the synthetic data validation code by passing the "--help" flag.
+                        # Run the code for validating the synthetic data for the unit benchmarks.
 
 The "uv" CLI tool is required:
 
@@ -219,7 +233,7 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-code help-uv
+.PHONY: help help-docs help-code help-code-all help-uv
 
 all:: help
 
@@ -230,6 +244,8 @@ help::
 help-docs help-code help-uv::
 	$(info ${help_message_${@:help-%=%}})
 	@echo
+
+help-code-all:: help-code help-terc help-ubds help-ubdv
 
 .PHONY: print-info print-info-docs print-info-code print-info-env
 
@@ -307,6 +323,9 @@ setup-jekyll:: ruby-installed-check bundle-ruby-command-check
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
 .PHONY: before-run save-examples post-all-models
+.PHONY: help-terc help-tdd-example-refill-chatbot 
+.PHONY: help-ubds help-unit-benchmark-data-synthesis 
+.PHONY: help-ubdv help-unit-benchmark-data-validation 
 
 # Extract the "%" as a target, then make it for all the MODELS.
 # Use the same timestamp for all of them.
@@ -352,6 +371,16 @@ endef
 terc run-terc:: run-tdd-example-refill-chatbot
 ubds run-ubds:: run-unit-benchmark-data-synthesis
 ubdv run-ubdv:: run-unit-benchmark-data-validation
+
+help-terc:: help-tdd-example-refill-chatbot
+help-ubds:: help-unit-benchmark-data-synthesis
+help-ubdv:: help-unit-benchmark-data-validation
+
+${ALL_EXERCISES:run-%=help-%}::
+	@echo "Help on ${@:help-%=%}.py:"
+	@echo
+	${NOOP} uv run ${SRC_DIR}/scripts/${@:help-%=%}.py --help
+	@echo
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
 # for our purposes. See the LiteLLM docs for logging configuration details.

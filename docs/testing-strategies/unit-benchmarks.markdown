@@ -307,6 +307,21 @@ Additional tools that have some data synthesis and evaluation capabilities are d
 
 See also [A Working Example]({{site.baseurl}}/working-example) for a discussion of integrating new tools into existing frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}.
 
+### Adding Additional Sources of Input for Synthetic Data
+
+So far, we have relied on the innate knowledge of the teacher model to generate data. For more sophisticated use cases, such as those highly specific to custom domains, this assumption won't work. In those cases, we need to supplement the model's innate knowledge with supplemental information. 
+
+If this information can be provided concisely as extra context in the prompt, that is a simple way to proceed. More likely, a solution like [Retrieval-Augmented Generation]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"} (RAG) will be necessary.
+
+If you are using an inference service with built-in RAG capabilities, like OpenAI, Anthropic, Bedrock, etc., then the `litellm` invocations we have been using can be modified to use RAG. See the documentation for [`/rag/ingest`](https://docs.litellm.ai/docs/rag_ingest){:target="litellm"} and [`/rag/query`](https://docs.litellm.ai/docs/rag_query){:target="litellm"}. 
+
+{: .warning}
+> **WARNING:** Be careful about uploading sensitive, non-public information to hosted services. Most organizations prohibit this activity.
+
+Some of the custom documents might be in formats that are not ideal for inference, like PDF or Word. (The more advanced models have some capabilities for working with such documents.) In this case, it might be desirable to parse the documents into text-only formats, like Markdown, and use those instead. 
+
+A number of tools exist for this purpose. For example, [Docling](https://docling-project.github.io/docling/){:target="docling"} is a powerful tool for parsing many different data formats, with special attention to extracting useful information from tables and diagrams, which are common in technical papers. Hence, your synthetic data pipeline that ingests proprietary data might first parse non-text files and use the outputs for RAG storage. 
+
 ### Other Tools for Synthetic Data Generation
 
 If you use synthetic data generation a lot in your organization, it will become necessary to understand some of the potential complexities that you might encounter. 
