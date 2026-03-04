@@ -5,7 +5,7 @@ import logging
 import Levenshtein
 from litellm import completion
 from openai import OpenAIError
-from utils import setup, common_defaults, load_yaml, make_full_prompt, extract_content, not_none
+from common.utils import setup, common_defaults, load_yaml, make_full_prompt, extract_content
 
 class TDDExampleRefillChatbot:
 
@@ -55,12 +55,18 @@ class TDDExampleRefillChatbot:
         self.logger.info("Comparisons ignore case, remove leading '-', and '*' around words (Markdown-style formatting).")
         self.logger.info(f"Levenshtein ratio used, with values above {self.lev_threshold} interpreted as 'equal'.")
 
-        not_none(self.queries_responses[label], f'No queries and expected responses are known for key {label}.')
+        if not self.queries_responses[label]:
+            self.logger.error(f'No queries and expected responses are known for key {label}.')
+            sys.exit(1)
 
         queries = self.queries_responses[label]['queries']
         expected_response = self.queries_responses[label]['expected_response']
-        not_none(queries, f'No queries are known for key {label}.')
-        not_none(expected_response, f'No expected responses are known for key {label}.')
+        if not queries:
+            self.logger.error(f'No queries are known for key {label}.')
+        if not expected_response:
+            self.logger.error(f'No expected responses are known for key {label}.')
+        if not queries or not expected_response:
+            sys.exit(1)
         
         for template_name in self.template_names:
             self.logger.info(f"  Using template {template_name} in {self.template_dir}:")

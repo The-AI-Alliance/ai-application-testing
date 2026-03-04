@@ -8,7 +8,7 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from utils import setup, load_yaml, ensure_dirs_exist, make_full_prompt, extract_content
+from common.utils import setup, load_yaml, ensure_dirs_exist, make_full_prompt, extract_content
 
 class BenchMarkDataValidator:
 
@@ -22,7 +22,7 @@ class BenchMarkDataValidator:
         self.data_dir     = data_dir
         self.logger       = logger
 
-        ensure_dirs_exist([self.template_dir, self.data_dir], self.logger)
+        ensure_dirs_exist(self.template_dir, self.data_dir)
 
         template_file = Path(template_dir, self.template_prefix+".yaml")
         self.logger.info(f"Using template file: {template_file}")

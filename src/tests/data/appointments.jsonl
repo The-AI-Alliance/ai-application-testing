@@ -1,0 +1,13 @@
+{"query":"When is my next appointment?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"I forgot when my next appointment is. Can you tell me?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"I need to schedule my next appointment.","label":"appointment","actions":"schedule","rating":5}
+{"query":"I need to schedule an appointment.","label":"appointment","actions":"schedule","rating":5}
+{"query":"Do I need a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up appointment for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up visit for my prescription for {prescriptions}?","label":"appointment","actions":"inquiry","rating":5}
+{"query":"I need to reschedule my next appointment.","label":"appointment","actions":"reschedule","rating":5}

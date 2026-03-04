@@ -319,7 +319,6 @@ The `time` command returns how much system, user, and "wall clock" times were us
 > 
 > 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama/llama3.2:3B some_target`, instead of the default `ollama/gpt-oss:3.2:3B`.
 > 1. You will need to look at the log files to see how the details of the experimental results.
-> 1. If you want to save the output of a run to `src/data/examples/`, run the target `make save-examples`. It will create a subdirectory for the model used. Hence, you have to specify the desired model, e.g., `make MODEL=ollama/llama3.2:3B save-examples`. We have already saved example outputs for `ollama/gpt-oss:20b` and `ollama/llama3.2:3B`. See also the `.out` files that capture "stdout".
 
 The script runs two experiments, each with these two templates files:
 

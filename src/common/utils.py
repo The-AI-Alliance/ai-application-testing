@@ -3,6 +3,7 @@ import sys
 import yaml
 import logging
 import argparse
+from pprint import pprint
 from typing import Callable
 from datetime import datetime
 from pathlib import Path
@@ -32,7 +33,6 @@ def setup(
     if add_arguments:
         add_arguments(parser)
     args = parser.parse_args()
-    
     logger = make_logger(args.log_file, name=script, level=args.log_level)
     log_args(logger, script, args, epilog=epilog)
     return args, logger
@@ -56,8 +56,10 @@ def parser_with_common_args(script: str, description: str, epilog: str = None) -
     default_log_level = get_default_log_level(script)
     parser.add_argument("-l", "--log-file", default=default_log_file, 
         help=f"Where logging is written. Default: {default_log_file}.")
-    parser.add_argument("--log-level", default=logging.INFO, 
+    parser.add_argument("--log-level", default=logging.INFO, type=int, 
         help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ({logging_level_to_string(default_log_level)}).")
+    parser.add_argument("-v", "--verbose", action='store_true',
+            help="Print some extra output. Useful for some testing and debugging scenarios.")
     return parser
 
 def add_info_str(label: str, value: str, separator: str = ':') -> str:
@@ -129,26 +131,20 @@ def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
         os.makedirs(dirs, exist_ok=exist_ok)
         return dirs
 
-def ensure_dirs_exist(dirs: list[str], logger: logging.Logger):
-    missing_dirs=()
+def ensure_dirs_exist(*dirs):
+    missing_dirs=[]
     for dir in dirs:
         if not os.path.isdir(dir):
             missing_dirs.append(dir) 
     if len(missing_dirs) > 0:
-        logger.error(f"These directories don't exit: {missing_dirs}")
-        sys.exit(1)
+        raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
 
-def not_none(value, message: str):
-    if value is None:
-        self.logger.error(message)
-        sys.exit(1)
-    
-def make_full_prompt(prompt: str, system_prompt: dict) -> str:
+def make_full_prompt(prompt: str, system_prompt: any) -> str:
     return f"""
 SYSTEM PROMPT: 
 {system_prompt}
 
-PROMPT: 
+USER PROMPT: 
 {prompt}
 """
 

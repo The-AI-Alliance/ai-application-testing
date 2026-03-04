@@ -54,7 +54,7 @@ The generative AI community has rapidly improved the ability of so-called [Codin
 
 However, current coding agents still generate and work with source code, often imperfectly. Given the emphasis on text in LLMs, they are less-well positioned to work with ASTs. For &ldquo;important&rdquo; applications, the resulting code still requires all the same engineering processes to analyze the text and validate it works correctly. The technology has already demonstrated significant productivity boosts, but it is still immature enough that being able to read, understand, and modify the generated source code is usually necessary to ensure the desired results. (See also [Vibe Engineering]({{site.glossaryurl}}/#vibe-Engineering){:target="_glossary"} and [Agentic Engineering]({{site.glossaryurl}}/#agentic-Engineering){:target="_glossary"}.)
 
-However, working with AI coding agents changes your perspective on the role of source code. Wes McKinney's recent blog post, [From Human Ergonomics to Agent Ergonomics](https://wesmckinney.com/blog/agent-ergonomics/){:target="wesk"}, discusses how much of his recent software development has been in [Go](https://go.dev), a language he doesn't actually know, but he has been able to use through coding agents.
+However, working with AI coding agents changes your perspective on the role of source code. Wes McKinney's recent blog post, [From Human Ergonomics to Agent Ergonomics](https://wesmckinney.com/blog/agent-ergonomics/){:target="wesk"}, discusses how much of his recent software development has been in [Go](https://go.dev){:target="go"}, a language he doesn't actually know, but he has been able to use through coding agents.
 
 ## What Would Be Required to Replace Source Code?
 

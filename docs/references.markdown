@@ -103,7 +103,7 @@ For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-str
 
 ### Mellea
 
-The [Mellea](https://mellea.ai/) has similar concepts, such as emphasizing specifynig requirements through a Python API rather than arbitrary prompts.
+The [Mellea](https://mellea.ai/){:target="mellea"} has similar concepts, such as emphasizing specifynig requirements through a Python API rather than arbitrary prompts.
 
 ## James Thomas
 
