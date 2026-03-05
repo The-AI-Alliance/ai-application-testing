@@ -314,6 +314,7 @@
 {"query":"How often should I take my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
 {"query":"How should I store my prescription for {prescriptions} at home?","label":"prescription","actions":"inquiry","rating":5}
 {"query":"I don't understand how I am supposed to take my prescription for {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I am feeling faint and dizzy after taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
 {"query":"I feel a slight dizziness after taking my prescription for {prescriptions}. Is this normal?","label":"prescription","actions":"inquiry","rating":5}
 {"query":"I noticed my prescription for {prescriptions} made my skin rash a bit worse. What to do?","label":"prescription","actions":"inquiry","rating":5}
 {"query":"Is it safe to combine my prescription for {prescriptions} with vitamin D supplements?","label":"prescription","actions":"inquiry","rating":5}

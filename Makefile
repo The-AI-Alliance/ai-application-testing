@@ -41,9 +41,12 @@ OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 DATA_DIR              ?= ${OUTPUT_DIR}/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
+# Sampling rates for different kinds of tests.
+UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
+INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
+
 # These directories will be relative to where the apps are executed.
 PROMPTS_TEMPLATES_DIR ?= prompts/templates
-
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
@@ -402,13 +405,17 @@ help-chatbot::
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: test tests
+.PHONY: test tests unit-tests integration-tests
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-llm-templates 
 .PHONY: install-uv uv-venv
 
-test tests:: silent-before-run
-	${NOOP} cd ${SRC_DIR} && uv run python -m unittest discover
+test tests unit-tests:: silent-before-run
+	${NOOP} cd ${SRC_DIR} && \
+		export DATA_SAMPLE_RATE=${UNIT_TEST_DATA_SAMPLE_RATE} && \
+		uv run python -m unittest discover
+integration-tests:: 
+	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} tests
 
 setup one-time-setup:: install-uv uv-venv
 

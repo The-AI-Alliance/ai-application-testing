@@ -24,7 +24,6 @@ class TestChatBot(TestBase):
         self.try_queries(
             self.benchmark_data_dir / "prescriptions.jsonl",
             {'prescriptions': prescription, 'body_parts': body_part}, 
-            sample_rate=0.25,
             rating_threshold=4, 
             confidence_threshold=0.6)
 
@@ -36,7 +35,6 @@ class TestChatBot(TestBase):
         self.try_queries(
             self.benchmark_data_dir / "emergencies.jsonl",
             {'prescriptions': prescription, 'body_parts': body_part}, 
-            sample_rate=0.25,
             rating_threshold=4, 
             confidence_threshold=0.6)
 
@@ -48,7 +46,6 @@ class TestChatBot(TestBase):
         self.try_queries(
             self.benchmark_data_dir / "appointments.jsonl",
             {'prescriptions': prescription, 'body_parts': body_part}, 
-            sample_rate=0.25,
             rating_threshold=4, 
             confidence_threshold=0.6)
 
@@ -60,7 +57,6 @@ class TestChatBot(TestBase):
         self.try_queries(
             self.benchmark_data_dir / "others.jsonl",
             {'prescriptions': prescription, 'body_parts': body_part}, 
-            sample_rate=0.25,
             rating_threshold=4, 
             confidence_threshold=0.6)
 

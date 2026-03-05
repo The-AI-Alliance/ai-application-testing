@@ -1,4 +1,4 @@
-{"query":"I am having pain in my {body_parts}. I think I need a referral to a specialist.","label":"other","actions":"","rating":5}
-{"query":"I am having pain in my {body_parts}. What should I do?","label":"other","actions":"","rating":5}
-{"query":"I am having some swelling in my {body_parts}. I think I need a referral to a specialist.","label":"other","actions":"","rating":5}
-{"query":"I am having some swelling in my {body_parts}. What should I do?","label":"other","actions":"","rating":5}
+{"query":"I am having pain in my {body_parts}. I think I need a referral to a specialist.","label":"other","actions":"inquiry","rating":5}
+{"query":"I am having pain in my {body_parts}. What should I do?","label":"other","actions":"inquiry","rating":5}
+{"query":"I am having some swelling in my {body_parts}. I think I need a referral to a specialist.","label":"other","actions":"inquiry","rating":5}
+{"query":"I am having some swelling in my {body_parts}. What should I do?","label":"other","actions":"inquiry","rating":5}
