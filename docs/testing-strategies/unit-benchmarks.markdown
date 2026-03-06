@@ -167,7 +167,7 @@ However, since acceptance tests are designed to confirm that a feature is workin
 
 Try running this tool yourself using `make`. If you haven't done so, follow the setup instructions in the [Try It Yourself!]({{site.baseurl}}/arch-design/tdd/#try-it-yourself) section in the [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) chapter. The instructions are also the project repository's [README]({{site.gh_edit_repository}}/){:target="_blank"}. 
 
-Once setup, here is the `make` command to run the data synthesis tool with the default model, `ollama/gpt-oss:20b`:
+Once setup, here is the `make` command to run the data synthesis tool with the default model, `ollama_chat/gpt-oss:20b`:
 
 ```shell
 make run-unit-benchmark-data-synthesis
@@ -176,25 +176,25 @@ make run-unit-benchmark-data-synthesis
 After some setup, the following command is executed:
 
 ```shell
-time uv run src/scripts/unit-benchmark-data-synthesis.py \
-  --model ollama/gpt-oss:20b \
+cd src && time uv run scripts/unit-benchmark-data-synthesis.py \
+  --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama/gpt-oss_20b/data \
-  --log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
+  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
+  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
 
-Recall that a different model can be specified, i.e., `make MODEL=ollama/llama3.2:3B`run-unit-benchmark-data-synthesis`. (See the project README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool).) 
+Recall that a different model can be specified, i.e., `make MODEL=ollama_chat/llama3.2:3B`run-unit-benchmark-data-synthesis`. (See the project README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool).) 
 
 Note the arguments for where log output is captured (`--log-file`) and the data Q&A pairs files are written (`--data-dir`). Specifically, the following data files are written, examples of which can be found [in the repository](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
 
 | Synthetic Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
-| `synthetic-q-and-a_patient-chatbot-emergency-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-emergency-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data.json){:target="_blank"} |
 
 They cover the three _unit-benchmarks_:
 * `emergency`: The patient prompt suggests he or she needs urgent or emergency care, so the patient should stop using the ChatBot and call 911 (in the US) immediately.

@@ -8,8 +8,9 @@ dependencies = [
     "gnureadline>=8.3.3",
     "hypothesis>=6.151.9",
     "levenshtein>=0.27.3",
-    "litellm>=1.76.2",
-    "openai>=1.106.1",
+    "litellm>=1.82.0",
+    "openai>=2.26.0",
+    "rich>=14.3.3",
 ]
 
 [tool.setuptools.packages.find]

@@ -59,6 +59,8 @@ Finally, well-designed tests, like units and components themselves, are very spe
 | **Integration tests** | The scope of several units and components | How does this combination of units and components behave together? |
 | **Acceptance tests** | The whole application | Does this [Scenario]({{site.glossaryurl}}/#scenario){:target="_glossary"} for a [Use Case]({{site.glossaryurl}}/#use-case){:target="_glossary"} work as specified from end to end? |
 
+{: .tip}
+> **TIP:** The [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies the ideas in this chapter to an example ChatBot application.
 
 ## TDD and Generative AI
 
@@ -292,11 +294,11 @@ This target runs the following command:
 
 ```shell
 time uv run src/scripts/tdd-example-refill-chatbot.py \
-  --model ollama/gpt-oss:20b \
+  --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama/gpt-oss_20b/data \
-  --log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
+  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
+  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
@@ -308,16 +310,16 @@ The `time` command returns how much system, user, and "wall clock" times were us
 
 | Argument | Purpose |
 | :------- | :------ |
-| `--model ollama/gpt-oss:20b` | The model to use. |
+| `--model ollama_chat/gpt-oss:20b` | The model to use. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
-| `--data-dir temp/output/ollama/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where **all the interesting output is captured!** |
+| `--data-dir temp/output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where **all the interesting output is captured!** |
 
 {: .tip}
 > **Tips:**
 > 
-> 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama/llama3.2:3B some_target`, instead of the default `ollama/gpt-oss:3.2:3B`.
+> 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama_chat/llama3.2:3B some_target`, instead of the default `ollama_chat/gpt-oss:3.2:3B`.
 > 1. You will need to look at the log files to see how the details of the experimental results.
 
 The script runs two experiments, each with these two templates files:
@@ -334,8 +336,8 @@ The only difference is the second file contains embedded examples in the prompt,
 
 This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
 
-* [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} 
-* [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} 
+* [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} 
+* [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} 
 
 (Yes, the `ollama` names for the models mix upper- and lower-case `b`.) 
 

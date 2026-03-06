@@ -17,8 +17,7 @@ APP_ARGS              ?=
 
 # Definitions for the example code.
 INFERENCE_SERVICE     ?= ollama
-#PORT                  ?= 11434
-PORT                  ?= 12000
+PORT                  ?= 11434
 INFERENCE_URL         ?= http://localhost:${PORT}
 
 # Different models we have used. See the "all-models-*" targets:
@@ -41,12 +40,22 @@ OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 DATA_DIR              ?= ${OUTPUT_DIR}/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
+# Some specific variables passed as env. vars. to the test suites.
+# TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors?
+# RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
+# CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
+TEST_ALL_EXAMPLES     ?= "False"
+RATING_THRESHOLD      ?= 4
+CONFIDENCE_THRESHOLD  ?= 0.9
+
 # Sampling rates for different kinds of tests.
 UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
 INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
+DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 
-# These directories will be relative to where the apps are executed.
+# These directories will be relative to where the tools and apps are executed.
 PROMPTS_TEMPLATES_DIR ?= prompts/templates
+CHATBOT_TEMPLATES_DIR ?= ${PROMPTS_TEMPLATES_DIR}
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
@@ -132,7 +141,7 @@ For scripts run by the following targets, which invoke inference, the model
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
 you want to use a different model, invoke make as in this example:
 
-  make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot
+  make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot
 
 See also the description of "all-models-*" above.
 
@@ -234,6 +243,10 @@ ERROR: Answer "y" (yes) to the prompts and ignore any warnings that you can't un
 
 endef
 
+define command_check_message
+Shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it, or run \"make help\", \"make help-$$cmd\", or see the project's README.md for more information.
+endef
+
 define missing_ruby_gem_or_command_error_message
 is needed by ${PWD}/Makefile. Try "gem install ..."
 endef
@@ -277,18 +290,19 @@ print-info-docs::
 print-info-code::
 	@echo "For the example code and tools:"
 	@echo "  MODEL:                 ${MODEL} (the default)"
-	@echo "  MODELS:                ${MODELS}"
 	@echo "  MODELS: (all we use)   ${MODELS}"
 	@echo "  ALL_EXERCISES:         ${ALL_EXERCISES}"
 	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
+	@echo "  INFERENCE_URL:         ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:               ${SRC_DIR}"
 	@echo "  APP_ARGS:              ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
 	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
+	@echo "  OUTPUT_LOGS_DIR:       ${OUTPUT_LOGS_DIR}"
 	@echo "  DATA_DIR:              ${DATA_DIR}"
+	@echo "  TEST_ALL_EXAMPLES:     ${TEST_ALL_EXAMPLES} (For tests, run all examples, then report errors...)"
 	@echo
-
 print-info-env::
 	@echo "The environment:"
 	@echo "  GIT_HASH:              ${GIT_HASH}"
@@ -305,7 +319,7 @@ print-info-env::
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
-.PHONY: before-run silent-before-run save-examples post-all-models
+.PHONY: before-run silent-before-run run-command-checks save-examples post-all-models
 .PHONY: help-terc help-tdd-example-refill-chatbot 
 .PHONY: help-ubds help-unit-benchmark-data-synthesis 
 .PHONY: help-ubdv help-unit-benchmark-data-validation 
@@ -379,7 +393,9 @@ ${ALL_EXERCISES}:: before-run
 
 before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
-silent-before-run:: uv-command-check provider-server-check ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
+
+silent-before-run:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
+run-command-checks:: uv-command-check provider-server-check
 
 provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
@@ -393,8 +409,8 @@ chatbot:: before-run
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
-		--template-dir ${PROMPTS_TEMPLATES_DIR} \
-		--data-dir ${DATA_DIR} \
+		--template-dir ${CHATBOT_TEMPLATES_DIR} \
+		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
@@ -410,12 +426,20 @@ ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}::
 .PHONY: clean-uv clean-llm-templates 
 .PHONY: install-uv uv-venv
 
-test tests unit-tests:: silent-before-run
+test tests unit-tests:: run-command-checks
 	${NOOP} cd ${SRC_DIR} && \
-		export DATA_SAMPLE_RATE=${UNIT_TEST_DATA_SAMPLE_RATE} && \
-		uv run python -m unittest discover
+	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
+	  export MODEL=${MODEL} && \
+	  export INFERENCE_URL=${INFERENCE_URL} && \
+	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export DATA_DIR=${DATA_DIR} && \
+	  export TEST_ALL_EXAMPLES=${TEST_ALL_EXAMPLES} && \
+	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
+	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export VERBOSE='True' && \
+	  uv run python -m unittest discover
 integration-tests:: 
-	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} tests
+	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
 
 setup one-time-setup:: install-uv uv-venv
 
@@ -555,7 +579,4 @@ ruby-installed-check:
 			exit 1 )
 
 %-command-check:
-	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || \
-		( echo "ERROR: shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it." && \
-		  echo "       or run \"make help\", \"make help-$$cmd\", and see the project's README.md for more information." && \
-			exit 1 )
+	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1

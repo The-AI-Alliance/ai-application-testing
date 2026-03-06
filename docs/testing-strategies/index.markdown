@@ -13,8 +13,9 @@ For educational purposes, we demonstrate techniques using relatively simple tool
 
 The end of each chapter has an **Experiments to Try** section for further exploration.
 
-{% comment %}
-{% endcomment %}
+{: .tip}
+> **TIP:** The [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies the ideas in these chapters to an example ChatBot application.
+
 {: .note }
 > **NOTE:** 
 > 

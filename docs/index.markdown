@@ -41,6 +41,7 @@ The goals of this project are two fold:
 
 1. Develop and document strategies and techniques for testing generative AI applications that eliminate nondeterminism, where feasible, and where not feasible, still allow us to write effective, repeatable and automatable tests. This work also impacts architecture and design decisions.
 2. Publish detailed, reusable examples and guidance for developers and AI experts on these strategies and techniques.
+3. Develop a complete sample application that demonstrates practical ways to incorporate new AI-centric techniques into established software development practices.
 
 {: .attention}
 > **TODO:** 
@@ -57,6 +58,7 @@ The goals of this project are two fold:
 > 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
 > 4. Many chapters end with an **Experiments to Try** section for further exploration.
 > 5. [This AI Alliance blog post](https://www.aialliance.org/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
+> 6. Want to just try the tools or example application? First [set up the dependencies]({{site.baseurl}}/working-example/#setup), then [run the tools]({{site.baseurl}}/working-example/#running-with-make) or run the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application).
 
 We start with a deeper dive into [The Problems of Testing Generative AI Agent Applications]({{site.baseurl}}/testing-problems).
 
