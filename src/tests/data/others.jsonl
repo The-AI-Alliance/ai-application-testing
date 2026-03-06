@@ -1,0 +1,7 @@
+{"query":"I am having pain in my {body_parts}. What should I do?","label":"other","actions":"inquiry","rating":5}
+{"query":"I am having some swelling in my {body_parts}. What should I do?","label":"other","actions":"inquiry","rating":5}
+{"query":"What are your office hours?","label":"other","actions":"inquiry","rating":5}
+{"query":"Can I come by the office to pay my bill?","label":"other","actions":"inquiry","rating":5}
+{"query":"Can I come to the office to pay my bill?","label":"other","actions":"inquiry","rating":5}
+{"query":"What is the due date for paying my current bill?","label":"other","actions":"inquiry","rating":5}
+{"query":"I think there is a mistake in my bill. Can you help me resolve it?","label":"other","actions":"inquiry","rating":5}

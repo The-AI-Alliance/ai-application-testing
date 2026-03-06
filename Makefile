@@ -9,31 +9,53 @@ TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
 ## Used for version tagging release artifacts.
 GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 
+# Time execution
+TIME                  ?= time  # time execution of long processes
+
+# A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
+APP_ARGS              ?=
+
 # Definitions for the example code.
 INFERENCE_SERVICE     ?= ollama
-INFERENCE_URL         ?= http://localhost:11434
+PORT                  ?= 11434
+INFERENCE_URL         ?= http://localhost:${PORT}
 
 # Different models we have used. See the "all-models-*" targets:
-MODEL_GPT_OSS         ?= ollama/gpt-oss:20b
-MODEL_LLAMA32         ?= ollama/llama3.2:3B
-MODEL_SMOLLM2         ?= ollama/smollm2:1.7b-instruct-fp16
-MODEL_GRANITE4        ?= ollama/granite4:latest
-MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+ollama_prefix          = ollama_chat
+MODEL_GPT_OSS         ?= ${ollama_prefix}/gpt-oss:20b
+MODEL_LLAMA32         ?= ${ollama_prefix}/llama3.2:3B
+MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:27b
+MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
+MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
+MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_LLAMA32} ${MODEL_QWEN35} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
 MODEL                 ?= ${MODEL_GPT_OSS}
 
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
-PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/prompts/templates
-TEMP_DIR              ?= temp
-OUTPUT_DIR            ?= ${TEMP_DIR}/output/${MODEL_FILE_NAME}
+OUTPUT_DIR            ?= ${PWD}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
-OUTPUT_DATA_DIR       ?= ${OUTPUT_DIR}/data
-EXAMPLE_DATA_DIR      ?= ${SRC_DIR}/data/examples/${MODEL_FILE_NAME}
+# The same data directory can be used for input and output
+DATA_DIR              ?= ${OUTPUT_DIR}/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
-TIME                  ?= time  # time execution of long processes
+# Some specific variables passed as env. vars. to the test suites.
+# TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors?
+# RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
+# CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
+TEST_ALL_EXAMPLES     ?= "False"
+RATING_THRESHOLD      ?= 4
+CONFIDENCE_THRESHOLD  ?= 0.9
+
+# Sampling rates for different kinds of tests.
+UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
+INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
+DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
+
+# These directories will be relative to where the tools and apps are executed.
+PROMPTS_TEMPLATES_DIR ?= prompts/templates
+CHATBOT_TEMPLATES_DIR ?= ${PROMPTS_TEMPLATES_DIR}
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
@@ -100,7 +122,7 @@ make all-models-*       # Extract "*" as one of the other targets (such as, "all
                         # (Not useful for model-agnostic targets, like "setup"...)
                         # You can override the list of models as follows:
                         #   make MODELS="..." all-models-...
-make all-code           # Clean and run all the tools using the model defined by "MODEL".
+make all-code           # Clean outputs and run all the tools using the model defined by "MODEL".
 make run-code           # Run all the tools without cleaning first. (Built by "all-code")
 
 make setup              # One-time setup tasks; e.g., builds target install-uv.
@@ -108,8 +130,9 @@ make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
 
+make tests              # Run the unit tests.
+
 make clean-code         # Remove build artifacts in ${OUTPUT_DIR}. (Built by "all-code")
-make clean-temp         # Remove ALL build artifacts for all models in ${TEMP_DIR}.
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
 make clean-uv           # Explain how to uninstall "uv".
@@ -118,7 +141,7 @@ For scripts run by the following targets, which invoke inference, the model
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
 you want to use a different model, invoke make as in this example:
 
-  make MODEL=ollama/llama3.2:3B run-tdd-example-refill-chatbot
+  make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot
 
 See also the description of "all-models-*" above.
 
@@ -143,6 +166,8 @@ make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
 
+make chatbot            # Run the interactive ChatBot application.
+
 Tasks for help, debugging, setup, etc.
 
 make help-code          # Prints this output.
@@ -161,13 +186,12 @@ make help-unit-benchmark-data-validation
                         # Show help for the synthetic data validation code by passing the "--help" flag.
                         # Run the code for validating the synthetic data for the unit benchmarks.
 
+make help-chatbot       # Show help for the interactive ChatBot application.
+
 The "uv" CLI tool is required:
 
 make help-uv            # Prints specific information about "uv", including installation.
-
-make save-examples      # Copy run output and data files for MODEL=${MODEL} 
-                        # to EXAMPLE_DATA_DIR=${EXAMPLE_DATA_DIR}
-                       endef
+endef
 
 define help_message_uv
 
@@ -219,6 +243,10 @@ ERROR: Answer "y" (yes) to the prompts and ignore any warnings that you can't un
 
 endef
 
+define command_check_message
+Shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it, or run \"make help\", \"make help-$$cmd\", or see the project's README.md for more information.
+endef
+
 define missing_ruby_gem_or_command_error_message
 is needed by ${PWD}/Makefile. Try "gem install ..."
 endef
@@ -262,19 +290,19 @@ print-info-docs::
 print-info-code::
 	@echo "For the example code and tools:"
 	@echo "  MODEL:                 ${MODEL} (the default)"
-	@echo "  MODELS:                ${MODELS}"
 	@echo "  MODELS: (all we use)   ${MODELS}"
 	@echo "  ALL_EXERCISES:         ${ALL_EXERCISES}"
 	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
+	@echo "  INFERENCE_URL:         ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:               ${SRC_DIR}"
 	@echo "  APP_ARGS:              ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
 	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
-	@echo "  OUTPUT_DATA_DIR:       ${OUTPUT_DATA_DIR}"
-	@echo "  EXAMPLE_DATA_DIR:      ${EXAMPLE_DATA_DIR}"
+	@echo "  OUTPUT_LOGS_DIR:       ${OUTPUT_LOGS_DIR}"
+	@echo "  DATA_DIR:              ${DATA_DIR}"
+	@echo "  TEST_ALL_EXAMPLES:     ${TEST_ALL_EXAMPLES} (For tests, run all examples, then report errors...)"
 	@echo
-
 print-info-env::
 	@echo "The environment:"
 	@echo "  GIT_HASH:              ${GIT_HASH}"
@@ -285,44 +313,13 @@ print-info-env::
 	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
 	@echo "  GIT_HASH:              ${GIT_HASH}"
 	@echo
-
-# Docs Targets
-
-.PHONY: all-docs clean-docs
-.PHONY: view-pages view-local setup-jekyll run-jekyll
-
-all-docs:: clean-docs view-local
-
-clean-docs::
-	rm -rf ${CLEAN_DOCS_DIRS}   
-
-view-pages::
-	@python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
-		 exit 1 ): 
-view-local:: setup-jekyll run-jekyll
-
-# Passing --baseurl '' allows us to use `localhost:4000` rather than require
-# `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
-run-jekyll: clean-docs
-	@echo
-	@echo "Once you see the http://127.0.0.1:${JEKYLL_PORT}/ URL printed, open it with command+click..."
-	@echo
-	cd ${DOCS_DIR} && bundle exec jekyll serve --port ${JEKYLL_PORT} --baseurl '' --incremental || ( echo "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'." && exit 1 )
-
-setup-jekyll:: ruby-installed-check bundle-ruby-command-check
-	@echo "Updating Ruby gems required for local viewing of the docs, including jekyll."
-	gem install jekyll bundler jemoji || ${MAKE} gem-error
-	bundle install || ${MAKE} bundle-error
-	bundle update html-pipeline || ${MAKE} bundle-error
-
 # Code Targets
 
 .PHONY: all-code run-code clean-code clean-temp
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
-.PHONY: before-run save-examples post-all-models
+.PHONY: before-run silent-before-run run-command-checks save-examples post-all-models
 .PHONY: help-terc help-tdd-example-refill-chatbot 
 .PHONY: help-ubds help-unit-benchmark-data-synthesis 
 .PHONY: help-ubdv help-unit-benchmark-data-validation 
@@ -336,17 +333,14 @@ all-models-% ::
 	for model in ${MODELS}; \
 	do \
 		echo "\nModel = $$model"; \
-		echo ${MAKE} ${MAKEFLAGS} TIMESTAMP=$$timestamp MODEL="$$model" $$target; \
+		echo ${MAKE} ${MAKEFLAGS} TIMESTAMP=${TIMESTAMP} MODEL="$$model" $$target; \
 		${NOOP} ${MAKE} MODEL="$$model" $$target; \
 	done; \
 	echo "Output log files (if any) can be found under:"; \
 	for model in ${MODELS}; \
 	do \
-		echo "  ${TEMP_DIR}/output/$$model/logs/$$timestamp"; \
+		echo "  output/$$model/logs/${TIMESTAMP}"; \
 	done
-
-foo::
-	@echo "MODEL = ${MODEL}"
 
 all-code:: clean-code run-code
 run-code:: 
@@ -355,8 +349,6 @@ run-code::
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}   
 
-clean-temp::
-	rm -rf ${TEMP_DIR}
 
 define run-tdd-example-refill-chatbot-message
 *** Running the TDD example.
@@ -379,7 +371,7 @@ help-ubdv:: help-unit-benchmark-data-validation
 ${ALL_EXERCISES:run-%=help-%}::
 	@echo "Help on ${@:help-%=%}.py:"
 	@echo
-	${NOOP} uv run ${SRC_DIR}/scripts/${@:help-%=%}.py --help
+	${NOOP} cd ${SRC_DIR} && uv run scripts/${@:help-%=%}.py --help
 	@echo
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
@@ -390,30 +382,64 @@ ${ALL_EXERCISES:run-%=help-%}::
 ${ALL_EXERCISES}:: before-run
 	$(info ${$@-message})
 	@export LITELLM_LOG="ERROR"; \
-	${NOOP} ${TIME} uv run ${SRC_DIR}/scripts/${@:run-%=%}.py \
+	${NOOP} cd ${SRC_DIR} && ${TIME} uv run scripts/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
-		--data-dir ${OUTPUT_DATA_DIR} \
+		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
-before-run:: uv-command-check ${OUTPUT_DIR} ${OUTPUT_DATA_DIR}  
+before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
-${TEMP_DIR} ${OUTPUT_LOGS_DIR} ${OUTPUT_DATA_DIR}::
+silent-before-run:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
+run-command-checks:: uv-command-check provider-server-check
+
+provider-server-check::
+	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
+
+
+.PHONY: chatbot run-chatbot help-chatbot
+
+run-chatbot:: chatbot
+chatbot:: before-run
+	@export LITELLM_LOG="ERROR"; \
+	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
+		--model ${MODEL} \
+		--service-url ${INFERENCE_URL} \
+		--template-dir ${CHATBOT_TEMPLATES_DIR} \
+		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+
+help-chatbot::
+	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
+
+${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}::
 	mkdir -p $@
 
-save-examples::
-	@echo "Saving example output and data files for model ${MODEL}:"
-	rm -rf "${EXAMPLE_DATA_DIR}"
-	mkdir -p $$(dirname "${EXAMPLE_DATA_DIR}")
-	cp -r "${OUTPUT_DIR}" "${EXAMPLE_DATA_DIR}"
-
+.PHONY: test tests unit-tests integration-tests
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: clean-uv clean-llm-templates 
 .PHONY: install-uv uv-venv
+
+test tests unit-tests:: run-command-checks
+	${NOOP} cd ${SRC_DIR} && \
+	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
+	  export MODEL=${MODEL} && \
+	  export INFERENCE_URL=${INFERENCE_URL} && \
+	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export DATA_DIR=${DATA_DIR} && \
+	  export TEST_ALL_EXAMPLES=${TEST_ALL_EXAMPLES} && \
+	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
+	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export VERBOSE='True' && \
+	  uv run python -m unittest discover
+integration-tests:: 
+	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
 
 setup one-time-setup:: install-uv uv-venv
 
@@ -433,23 +459,6 @@ uv-venv:: uv-command-check
 
 %-error:
 	$(error ${${@}-message})
-
-ruby-installed-check:
-	@command -v ruby > /dev/null || \
-		( echo "ERROR: ${ruby_and_gem_required_message}" && exit 1 )
-	@command -v gem  > /dev/null || \
-		( echo "ERROR: ${gem_required_message}" && exit 1 )
-
-%-ruby-command-check:
-	@command -v ${@:%-ruby-command-check=%} > /dev/null || \
-		( echo "ERROR: Ruby command/gem ${@:%-ruby-command-check=%} ${missing_ruby_gem_or_command_error_message}" && \
-			exit 1 )
-
-%-command-check:
-	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || \
-		( echo "ERROR: shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it." && \
-		  echo "       or run \"make help\", \"make help-$$cmd\", and see the project's README.md for more information." && \
-			exit 1 )
 
 # The rest of this Makefile includes some convenience targets for working 
 # with the "llm" CLI tool. See the Appendix in the README.md for details.
@@ -526,3 +535,48 @@ install-llm-templates:: llm-command-check
 	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
+
+# Docs Targets
+
+.PHONY: all-docs clean-docs
+.PHONY: view-pages view-local setup-jekyll run-jekyll
+
+all-docs:: clean-docs view-local
+
+clean-docs::
+	rm -rf ${CLEAN_DOCS_DIRS}   
+
+view-pages::
+	@python -m webbrowser "${GITHUB_PAGES_URL}" || \
+		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
+		 exit 1 ): 
+view-local:: setup-jekyll run-jekyll
+
+# Passing --baseurl '' allows us to use `localhost:4000` rather than require
+# `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
+run-jekyll: clean-docs
+	@echo
+	@echo "Once you see the http://127.0.0.1:${JEKYLL_PORT}/ URL printed, open it with command+click..."
+	@echo
+	cd ${DOCS_DIR} && bundle exec jekyll serve --port ${JEKYLL_PORT} --baseurl '' --incremental || ( echo "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'." && exit 1 )
+
+setup-jekyll:: ruby-installed-check bundle-ruby-command-check
+	@echo "Updating Ruby gems required for local viewing of the docs, including jekyll."
+	gem install jekyll bundler jemoji || ${MAKE} gem-error
+	bundle install || ${MAKE} bundle-error
+	bundle update html-pipeline || ${MAKE} bundle-error
+
+
+ruby-installed-check:
+	@command -v ruby > /dev/null || \
+		( echo "ERROR: ${ruby_and_gem_required_message}" && exit 1 )
+	@command -v gem  > /dev/null || \
+		( echo "ERROR: ${gem_required_message}" && exit 1 )
+
+%-ruby-command-check:
+	@command -v ${@:%-ruby-command-check=%} > /dev/null || \
+		( echo "ERROR: Ruby command/gem ${@:%-ruby-command-check=%} ${missing_ruby_gem_or_command_error_message}" && \
+			exit 1 )
+
+%-command-check:
+	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1

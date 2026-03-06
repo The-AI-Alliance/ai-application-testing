@@ -1,0 +1,65 @@
+{"query":"I am experiencing rapid heartbeat after taking {prescriptions}.","label":"emergency","actions":"","rating":1}
+{"query":"I am experiencing severe dizziness after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I am experiencing vision loss after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I am experiencing vomiting after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I am feeling a severe nausea after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I am feeling nausea and sweating after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I am having a severe allergic reaction to {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I am having a severe headache after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I am having trouble breathing after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I am having trouble swallowing after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I feel a sudden severe pain in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I feel a tightness in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":3}
+{"query":"I feel like my heart is racing after taking {prescriptions}.","label":"emergency","actions":"","rating":3}
+{"query":"I feel shortness of breath after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I had a blackout after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I had a seizure after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I had a sudden drop in blood pressure after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe breathing difficulty after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe breathing difficulty after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have severe breathing difficulty after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe breathing difficulty in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe burning sensation in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe burning sensation in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe burning sensation in my {body_parts}.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe chest pain after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe chest pain after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe chest pain after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have severe chest pain after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe chest tightness after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe dizziness after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe headache after taking {prescriptions} and I feel dizzy.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe headache in my {body_parts} after starting {prescriptions}.","label":"emergency","actions":"","rating":2}
+{"query":"I have a severe headache in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe headache in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe headache that won't go away after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe nausea after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe pain in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":2}
+{"query":"I have severe pain in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have severe pain in my {body_parts}.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe rash in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe rash in my {body_parts} and I'm taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe rash in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe rash in my {body_parts}.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe stomach cramp after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe stomach cramp after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe stomach cramp after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe stomach cramp after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
+{"query":"I have a severe swelling in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe swelling in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe swelling in my {body_parts} and I'm taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
+{"query":"I have a severe swelling in my face after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have a sudden difficulty breathing after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have a sudden swelling in my {body_parts} after starting {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"I have severe chest pain after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
+{"query":"My prescription {prescriptions} made me nauseous, and I feel faint.","label":"emergency","actions":"","rating":3}
+{"query":"Since I started taking my prescription for {prescriptions}, I have a severe rash around my {body_parts}.","label":"emergency","actions":"","rating":4}

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from utils import setup, load_yaml, ensure_dirs_exist, use_cases, extract_content
+from common.utils import setup, load_yaml, ensure_dirs_exist, use_cases, extract_content
 
 class BenchMarkDataSynthesizer:
 
@@ -20,7 +20,7 @@ class BenchMarkDataSynthesizer:
         self.logger          = logger
         # Create the data directory
         os.makedirs(self.data_dir, exist_ok=True)
-        ensure_dirs_exist([self.template_dir, self.data_dir], self.logger)
+        ensure_dirs_exist(self.template_dir, self.data_dir)
 
     def template_name(self, which_one: str) -> str:
         return f"{self.template_prefix}-{which_one}"

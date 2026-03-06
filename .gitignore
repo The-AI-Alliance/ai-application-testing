@@ -2,8 +2,9 @@
 # entries we added plus Python and Ruby .gitignore files
 # generated at https://www.toptal.com/developers/gitignore/
 
-# A "temporary" place to put stuff...
-tmp/
+# A "temporary" place to put stuff and the output directory...
+temp/
+output/
 
 # Releases
 releases/*.temp
@@ -281,4 +282,3 @@ node_modules
 
 # LSF license
 pac.entitlement
-temp/

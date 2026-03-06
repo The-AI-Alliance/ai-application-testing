@@ -1,0 +1,431 @@
+{"query":"I need my {prescriptions} refilled.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the 'refill' label."}
+{"query":"Can I get a refill on my {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an excellent match."}
+{"query":"I'm out of {prescriptions}. Please send a refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question is a straightforward request for a prescription refill, matching the label exactly."}
+{"query":"I need more {prescriptions} for my medication.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription medication, so labeling it as a refill is a perfect match."}
+{"query":"Can you arrange a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The label 'refill' accurately reflects the question, which is a direct request for a prescription refill. No ambiguity or misclassification is present."}
+{"query":"I require another dose of {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly asks for another dose of a prescription medication, which is precisely a refill request. The label \"refill\" is an excellent match."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the 'refill' label."}
+{"query":"My medication {prescriptions} is running out. Can I refill?","label":"prescription","actions":"refill","rating":5,"reason":"The label 'refill' accurately captures the patient’s intent to request a prescription refill, matching the content of the question."}
+{"query":"Could you send me a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question directly requests a refill for prescription {prescriptions}, which matches the label 'refill' perfectly. There is no ambiguity or additional context that would suggest a different classification."}
+{"query":"I need my {prescriptions} refilled ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The patient is directly asking about a refill status and the label accurately reflects a refill request."}
+{"query":"I'm low on {prescriptions}. Request a refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an accurate and perfect match."}
+{"query":"I need a refill for my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an accurate and perfect match."}
+{"query":"Do you have any refills left for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about the remaining refills for a prescription, which directly corresponds to the 'refill' category. There is no ambiguity or emergency context, making the label an excellent match."}
+{"query":"Can you send me another supply of {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for another supply of a prescription, which is a clear prescription refill request, making the 'refill' label an excellent match."}
+{"query":"I am out of {prescriptions}. Please provide a refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which directly aligns with the 'refill' label."}
+{"query":"My prescription {prescriptions} needs a refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, making the 'refill' label a perfect match."}
+{"query":"I require a refill for my {prescriptions} medication.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription, matching the 'refill' label perfectly."}
+{"query":"Can I get a refill on {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for prescription {prescriptions}, making the 'refill' label a perfect match."}
+{"query":"I'm running low on {prescriptions}. Request refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the label exactly."}
+{"query":"Please refill my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, matching the 'refill' label perfectly; there is no indication of an emergency or other type of inquiry."}
+{"query":"Could you refill my {prescriptions} prescription?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an accurate and appropriate classification."}
+{"query":"I need a new supply of {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a new supply of a prescription medication, which directly matches the refill category."}
+{"query":"My pharmacy indicates no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly indicates the patient wants a refill for prescription {prescriptions}, matching the 'refill' label."}
+{"query":"I am out of my {prescriptions} medication. Need refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the label perfectly."}
+{"query":"Can you send me a refill for my {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label exactly."}
+{"query":"My prescription for {prescriptions} is almost finished. Refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill and matches the 'refill' label."}
+{"query":"I need more {prescriptions} to keep taking it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of the prescription, indicating a refill request. The label 'refill' is a perfect match for the content."}
+{"query":"Do I have any refills left for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about remaining refills for a prescription, which is a direct request for a refill. The label 'refill' accurately reflects this intent."}
+{"query":"Could you arrange a refill for my {prescriptions} prescription?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill, matching the 'refill' label."}
+{"query":"I'm out of {prescriptions}. Please refill my prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, so the label 'refill' is an excellent match."}
+{"query":"I need a refill for my {prescriptions} medication.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Please send me a refill for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the 'refill' label."}
+{"query":"My pharmacy says I can't refill {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly asks about a prescription refill issue, so the 'refill' label is a perfect match."}
+{"query":"I'm low on my {prescriptions} prescription. Need refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states that the patient is low on a prescription and requests a refill, which perfectly matches the 'refill' label."}
+{"query":"Can you refill my {prescriptions} before the next visit?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, so the label 'refill' is a perfect match."}
+{"query":"I need a refill for my {prescriptions} because it's running out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an accurate match."}
+{"query":"Please refill my prescription for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the 'refill' label, making it an excellent match."}
+{"query":"Do I have any refills left on {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about remaining refills for a prescription, which directly matches the 'refill' label. It is a clear and unambiguous request for refill status, so the label is an excellent match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is an excellent match."}
+{"query":"I am out of {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the refill label."}
+{"query":"Could you please refill my {prescriptions} prescription?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' perfectly matches the intent of the question."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription, making the 'refill' label an accurate and appropriate classification."}
+{"query":"My pharmacy says I have no refills for {prescriptions}. Can you help?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for assistance with a prescription refill, and the label \"refill\" accurately reflects this intent, making the match excellent."}
+{"query":"Please refill my {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label."}
+{"query":"I need a refill on my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is a perfect match."}
+{"query":"Can you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question is a clear request for a prescription refill, which matches the 'refill' label perfectly, making it an excellent match."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Could you send me a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question is a straightforward request for a prescription refill, so the label 'refill' perfectly matches the content of the question. No ambiguity or alternative interpretation is present."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states the patient needs more of the medication to continue daily usage, which is a typical prescription refill request. The label 'refill' perfectly matches the intent, warranting the highest rating."}
+{"query":"Do I have any refills left for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about the number of refills remaining for a prescription, which directly matches the 'refill' category. The label accurately reflects the intent of the query, warranting a perfect score."}
+{"query":"Please send me a refill for my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an exact match."}
+{"query":"I need to refill my {prescriptions} because I'm running low.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly requests a refill of a prescription, which matches the 'refill' label perfectly."}
+{"query":"Can you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a medication, which directly matches the 'refill' label. This is a perfect match."}
+{"query":"I am out of my {prescriptions} prescription. Please refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states the user is out of a prescription and requests a refill, which perfectly matches the 'refill' label. No ambiguity or other context is present."}
+{"query":"Could you please refill my {prescriptions} before I run out?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill."}
+{"query":"I need more {prescriptions} for my treatment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription for treatment, which matches the refill label perfectly."}
+{"query":"My pharmacy says no refills left for {prescriptions}. Can you help?","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests help with a prescription that has no refills left, which matches the 'refill' label. No emergency or other issue is indicated."}
+{"query":"Please refill my {prescriptions} prescription as soon as possible.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Can I get a refill on my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question directly asks for a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the label 'refill' perfectly."}
+{"query":"Could you send me a refill for my {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I am low on my {prescriptions}. Need refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill."}
+{"query":"My pharmacy says I can't refill {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly states that the patient cannot refill a prescription, indicating a refill request. This matches the 'refill' label perfectly, warranting a maximum rating."}
+{"query":"I need more {prescriptions} to keep my treatment going.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the \"refill\" label perfectly."}
+{"query":"Could you arrange a refill for my {prescriptions} prescription?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, directly matching the 'refill' label. No ambiguity or alternative interpretation is present."}
+{"query":"Please send me a refill for my {prescriptions} medication.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"I need to refill my {prescriptions} because it's almost finished.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label matches perfectly."}
+{"query":"Can you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label \"refill\" perfectly matches the content. No ambiguity or additional context needed."}
+{"query":"I am out of {prescriptions}. Please refill my prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a refill of a prescription, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills left for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly indicates that the patient is asking for a refill because the pharmacy reports no refills left, matching the 'refill' label perfectly."}
+{"query":"I need more {prescriptions} to continue treatment.","label":"prescription","actions":"refill","rating":5,"reason":"The user explicitly requests more of a prescription to continue treatment, which is a classic refill scenario."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, and the label 'refill' correctly identifies the intent. The placeholder {prescriptions} represents the prescription name, and there is no mention of a body part or emergency situation, so the label is a perfect match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill for a medication, which directly matches the 'refill' label. No ambiguity or emergency indicators are present."}
+{"query":"I am out of my {prescriptions}. Can I refill it?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which perfectly matches the 'refill' label."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label a perfect match."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, which matches the 'refill' label perfectly. No ambiguity or alternative interpretation is present. This is an ideal match for the 'refill' category."}
+{"query":"My pharmacy says no refills for {prescriptions}. Please help.","label":"prescription","actions":"refill","rating":5,"reason":"The user is explicitly requesting assistance regarding a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states the patient is low on a prescription and requests a refill, which perfectly matches the 'refill' label. No ambiguity or alternative interpretation exists, making this an excellent match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly. No ambiguity or alternative interpretation exists."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states a need for additional medication, indicating a prescription refill request, which aligns perfectly with the 'refill' label."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the label \"refill\" perfectly."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label is a perfect match."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about refills for a prescription, which directly matches the 'refill' label. The phrasing indicates a refill request or inquiry, so the label is a perfect match."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The patient is explicitly requesting additional medication, indicating a refill request. The label 'refill' accurately matches the content, making it an excellent match."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label 'refill' perfectly."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"Accurately identifies a prescription refill request."}
+{"query":"I need a refill on my {prescriptions} before the next visit.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the 'refill' label. No ambiguity or additional context is needed."}
+{"query":"My pharmacy says no refills for {prescriptions}. Can you assist?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for help with a prescription refill, matching the label \"refill\" perfectly."}
+{"query":"I am low on my {prescriptions}. Request refill.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the refill label."}
+{"query":"Could you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I need more {prescriptions} to continue treatment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests additional medication, matching the 'refill' label."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a refill of a prescription, which perfectly matches the 'refill' label. No ambiguity or other intent is present."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill and the label correctly identifies this."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The patient explicitly states that their pharmacy indicates no refills are available for the prescription, which is a clear indication that they are dealing with a prescription refill issue. The label 'refill' matches the content perfectly."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question is a direct request for a prescription refill, so the label 'refill' perfectly matches the content of the question."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about a lack of refills for a prescription, matching the refill category."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The user is explicitly requesting a prescription refill; the label is an excellent match for the question."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the refill label is an excellent match."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The user explicitly requests more of a prescription medication to continue use, which matches the refill label perfectly. No signs of emergency or other concerns are present. The label is an excellent match for the question. "}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question is a clear request for a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label perfectly."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill for medication {prescriptions}, which aligns perfectly with the 'refill' label."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, which perfectly matches the 'refill' label."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The user explicitly asks to refill a prescription, matching the 'refill' label perfectly."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly mentions a prescription that cannot be refilled, indicating a refill request, so the label matches perfectly."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an excellent match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription medication, which is a classic prescription refill request, making the 'refill' label an excellent match."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a medication refill, which directly matches the 'refill' label."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The patient explicitly requests a refill of their prescription, making the 'refill' label an exact match."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states the pharmacy denies refills for a prescription, which is a typical refill request scenario. The label 'refill' perfectly matches the intent of the question."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription to continue daily use, which directly aligns with a refill request. The label \"refill\" is an accurate and appropriate classification."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription, matching the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The label correctly identifies that the patient is requesting a prescription refill, matching the content of the question."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about prescription refills, which directly corresponds to the 'refill' label."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is a perfect match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more medication to continue regular use, which directly matches the refill label. No other category applies."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label exactly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the refill label."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is a perfect match. The intent is unambiguous and directly aligns with the label."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill and the label correctly identifies this intent. The placeholder {prescriptions} appropriately represents the prescription name. The pair is a good example of a refill scenario."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states the patient is unable to get a refill for the prescription, matching the refill label perfectly."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label 'refill'."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, which aligns perfectly with the 'refill' label."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests additional medication to continue treatment, which directly corresponds to a prescription refill request."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the provided label 'refill' perfectly."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label \"refill\" is a perfect match."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly asks about a prescription refill, matching the label."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests additional medication to continue daily usage, which is a clear prescription refill request. The label matches the intent perfectly, warranting a top rating."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label \"refill\" is an excellent match."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states that the user has no refills left for a prescription, indicating a request for a refill. The label 'refill' perfectly matches the intent of the question."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the label 'refill' an excellent match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of medication, aligning perfectly with the 'refill' label."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more medication to continue regular use, which is a clear prescription refill request. The label matches the intent perfectly."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question is a straightforward request for a prescription refill, so the label matches perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is an excellent match."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription medication, which matches the 'refill' label perfectly."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the 'refill' label perfectly matches the intent of the question."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question directly asks about a prescription refill situation, making the 'refill' label an excellent match."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill and the label matches exactly."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of a prescription to continue medication, which is a typical prescription refill request, making the 'refill' label an excellent match."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is a perfect match for the intent."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is an exact and appropriate match."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of a prescription, matching the 'refill' label perfectly."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly concerns a prescription refill issue, so the label 'refill' is an accurate and perfect match."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for more of a prescription to continue daily usage, which is a classic refill request; the label matches perfectly."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label precisely."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription, which directly matches the 'refill' label. This is a clear, unambiguous match."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, making the label a perfect match."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is a perfect match."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label. The wording and context indicate a non-emergency refill request, so the label is an excellent match."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, so the 'refill' label perfectly matches the intent."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question is a clear prescription refill request."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the label 'refill'."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, matching the 'refill' label."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which perfectly matches the \"refill\" label."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly indicates the user is dealing with a pharmacy that is denying refills for a prescription, which is a classic case of requesting a prescription refill. The label \"refill\" perfectly matches the intent of the question."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The patient explicitly requests a prescription refill, which perfectly matches the 'refill' label."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more of the medication, indicating a refill request, which matches the label perfectly."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is an excellent match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription, which directly matches the 'refill' label. The context is straightforward and there is no ambiguity or indication of emergency or other type. Thus the label is an excellent match for the question."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which directly matches the 'refill' label. The wording is clear, leaving no ambiguity about the intent."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about a refill issue for a prescription, matching the 'refill' label perfectly."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states a need for more medication to continue daily use, which is a clear prescription refill request."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, which perfectly matches the 'refill' label. No ambiguity or emergency indication is present."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill for the placeholder {prescriptions}, which matches the 'refill' label exactly. No other intent or ambiguity is present."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, and the label 'refill' matches this intent perfectly, making it an excellent match."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly indicates the patient is checking refills for a prescription, which directly aligns with the 'refill' label."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, matching the label 'refill' perfectly."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which aligns perfectly with the 'refill' label."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests additional medication to continue usage, which directly matches the 'refill' category."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label \"refill\" is an excellent match."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill for a prescription, matching the label."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, so the 'refill' label is a perfect match."}
+{"query":"I am out of {prescriptions}. Can I get a refill?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks for a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Please help me refill my {prescriptions} prescription.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"I need a refill on my {prescriptions} before my next appointment.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly states a lack of refills for a prescription, which directly matches the 'refill' label."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label perfectly."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, so the label 'refill' is an excellent match."}
+{"query":"I need more {prescriptions} to keep my medication going.","label":"prescription","actions":"refill","rating":5,"reason":"The user explicitly requests more medication to continue treatment, indicating a prescription refill. The label \"refill\" perfectly matches the intent, earning a perfect score."}
+{"query":"Please send me a refill for my {prescriptions} prescription before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, which matches the refill label perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, and the label correctly identifies it as a 'refill'. No ambiguity or missing information; this is an excellent match."}
+{"query":"Could you arrange a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"I am out of my {prescriptions}. Please refill it.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, making the 'refill' label an exact match."}
+{"query":"My pharmacy says no refills for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly concerns a prescription refill request; the label 'refill' matches the content."}
+{"query":"I need more {prescriptions} to keep taking it daily.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly indicates a need for additional medication to continue daily use, which aligns with a prescription refill request."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a refill of the prescription; label matches perfectly."}
+{"query":"I need a refill for my {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the label perfectly."}
+{"query":"Could you help me get a refill for {prescriptions}?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label."}
+{"query":"My pharmacy says I have no refills left for {prescriptions}.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly asks about a prescription refill, which matches the 'refill' label perfectly."}
+{"query":"I am low on {prescriptions}. Request refill ASAP.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, matching the 'refill' label perfectly."}
+{"query":"Can you send me a refill for my {prescriptions} medication?","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests a prescription refill, and the label 'refill' directly matches this intent. The placeholder {prescriptions} indicates a medication name, which is typical in refill requests. No ambiguity or other intent is present. This is an excellent match."}
+{"query":"I need more {prescriptions} to keep taking it regularly.","label":"prescription","actions":"refill","rating":5,"reason":"The question explicitly requests more medication, which is a prescription refill request. The label \"refill\" perfectly matches the content of the question."}
+{"query":"Please refill my prescription for {prescriptions} before I run out.","label":"prescription","actions":"refill","rating":5,"reason":"The question clearly requests a prescription refill, making the 'refill' label a perfect match."}
+{"query":"Can I combine my prescription for {prescriptions} with a gluten-free diet?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I combine my prescription for {prescriptions} with a low-carb diet?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I continue my prescription for {prescriptions} while breastfeeding?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I drive after taking my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I get a second opinion on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I share my prescription for {prescriptions} with a family member?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} after a meal?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} during a workout?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I am traveling?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of allergies?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of anemia?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of asthma attacks?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of asthma?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of blood clotting disorders?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of blood disorders?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of chronic headaches?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of chronic pain?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of depression?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of gastrointestinal issues?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of heart disease?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of heart palpitations?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of high cholesterol?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of kidney disease?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of kidney stones?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of liver disease?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of low blood sugar?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of migraines?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of seizures?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of thyroid disorders?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of thyroid issues?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of thyroid problems?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a history of ulcers?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a low iron level?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a migraine?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a recent diagnosis of diabetes?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a recent fracture?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a recent infection?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a recent injury?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have a recent surgery?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} if I have asthma?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} with a protein shake?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} with caffeine?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} with food?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I take my prescription for {prescriptions} with other medications?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I use my prescription for {prescriptions} for a skin rash?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I use my prescription for {prescriptions} for an injury?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I use my prescription for {prescriptions} if I have a heart condition?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Can I use my prescription for {prescriptions} if I have kidney issues?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a lab test for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a medication review before starting my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a medication review before taking my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a medication review for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a physical exam before continuing my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to adjust the dosage of my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to change my diet while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to get a lab test before taking my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} at a specific temperature?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} away from children?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} away from heat?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} away from strong odors?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} away from sunlight?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a cool location?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a cool place?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a cool, dry place?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a dry area?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a dry place?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a lockbox?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a secure place?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a special container?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a special location?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} in a specific place?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} out of reach of children?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to keep my prescription for {prescriptions} out of reach of pets?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to monitor my blood pressure while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to monitor my blood sugar while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to monitor my heart rate on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a check-up for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up visit for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a medication review for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to stop eating late at night while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How can I avoid the side effects of my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How do I handle nausea from my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How do I know if my prescription for {prescriptions} is too strong?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How do I know if my prescription for {prescriptions} is working?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How do I take my prescription for {prescriptions} if I have a stomach upset?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How long does my prescription for {prescriptions} take to show results?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How often should I take my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"How should I store my prescription for {prescriptions} at home?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I don't understand how I am supposed to take my prescription for {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I am feeling faint and dizzy after taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I feel a slight dizziness after taking my prescription for {prescriptions}. Is this normal?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I noticed my prescription for {prescriptions} made my skin rash a bit worse. What to do?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to combine my prescription for {prescriptions} with vitamin D supplements?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} at home?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} at room temperature?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} in a bag?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} in a car?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} in a pocket?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} in my backpack?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} in my pocket?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to keep my prescription for {prescriptions} on my nightstand?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to take my prescription for {prescriptions} during winter?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to travel while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} if I have a history of kidney disease?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} if I have a history of kidney problems?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} if I have a history of liver issues?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} if I have a history of low blood sugar?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} if I have a history of migraines?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is it safe to use my prescription for {prescriptions} while breastfeeding?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe during flu season?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe during pregnancy?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to keep at home?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to take before a long flight?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to use if I have a history of high blood pressure?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to use if I have a history of migraines?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to use if I have a history of thyroid problems?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to use with a ketogenic diet?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} safe to use with a low-carb diet?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for elderly patients?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of chronic pain?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of depression?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of diabetes?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of high blood pressure?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of hypertension?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with a history of migraines?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with anxiety?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with high blood pressure?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with hypertension?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is my prescription for {prescriptions} suitable for people with migraines?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there a reason to change my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there a risk of addiction with my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there a risk of dizziness when I start my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there a risk of drowsiness with my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there a special schedule for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Is there an alternative to my prescription for {prescriptions} that has fewer side effects?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"My prescription for {prescriptions} upsets my stomach.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Should I avoid alcohol while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Should I avoid grapefruit while taking my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Should I avoid spicy food while on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Should I be concerned about my prescription for {prescriptions} and my cholesterol?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Should I change my dosage if I feel too tired on my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What are the common side effects of my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What are the contraindications for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What do I do if I accidentally double dose my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":2}
+{"query":"What is the best time of day to take my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What is the best way to dispose of my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What is the maximum daily dose for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What should I do if I miss a dose of my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What should I do if my prescription for {prescriptions} causes constipation?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What should I do if my prescription for {prescriptions} makes my mouth dry?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What should I do if my prescription for {prescriptions} starts to taste metallic?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"What to do if my prescription for {prescriptions} makes me feel light-headed?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my ability to drive long distances?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my ability to drive safely?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my ability to drive?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my ability to swim?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my blood pressure reading?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my blood pressure?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my blood sugar levels?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my bone density?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my breathing?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my cholesterol levels?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my hearing after prolonged use?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my hearing?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my hormone levels?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my immune system?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my lung capacity?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my memory?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my muscle strength?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my urinary tract?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my vision after long use?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my vision after prolonged use?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my vision after use?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my vision during the night?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my vision?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} affect my weight?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any changes in my gait?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any changes in my hearing?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any changes in my vision?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any dizziness after exercise?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any dizziness after meals?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any dizziness during exercise?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any dizziness during the day?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any dizziness during the night?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any muscle aches?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any swelling in my face?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any swelling in my hands?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any swelling in my limbs?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause any weight gain?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause changes in my appetite?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause changes in my menstrual cycle?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause my blood sugar to rise?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause my hair to fall out?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} cause swelling in my hands?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} change my heart rate?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} impact my liver enzymes?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} impact my sleep patterns?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} interact with my current supplements?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Will my prescription for {prescriptions} interfere with my vision tests?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I have a severe sore throat after taking {prescriptions}. What should I do?","label":"prescription","actions":"inquiry","rating":4}
+{"query":"I have a severe sore throat after taking {prescriptions}. What should I do?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I have a severe sore throat after taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"I have a severe stomach cramp after taking {prescriptions}. What should I do?","label":"prescription","actions":"inquiry","rating":4}
+{"query":"I have trouble sleeping, ever since I started taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}

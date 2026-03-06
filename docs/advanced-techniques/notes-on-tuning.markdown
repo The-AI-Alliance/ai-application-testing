@@ -56,7 +56,7 @@ It is common to have several instruction tuning &ldquo;phases&rdquo; to go from 
 
 The heart of instruction tuning is [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"}. For domain-specific tuning, which is most relevant for our needs, as discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning), we start with a model that is already instruction tuned and use [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"} to improve it, as discussed in the [third smol course section](https://huggingface.co/learn/smol-course/unit1/3){:target="_blank"}.
 
-[What is Supervised Fine-Tuning?](https://huggingface.co/learn/smol-course/unit1/3#what-is-supervised-fine-tuning) describes SFT as &ldquo;...the process of continuing to train a [Pre-Trained]({{site.glossaryurl}}/#pre-Trained){:target="_glossary"} model on task-specific datasets with labeled examples.&rdquo; While pre-training teaches general language understanding and information, SFT teaches specific skills and behaviors, as opposed to new knowledge. For example, SFT hones how the knowledge is used toward specific applications, desired ways of responding to prompts, and use case-specific requirements.
+[What is Supervised Fine-Tuning?](https://huggingface.co/learn/smol-course/unit1/3#what-is-supervised-fine-tuning){:target="wsft"} describes SFT as &ldquo;...the process of continuing to train a [Pre-Trained]({{site.glossaryurl}}/#pre-Trained){:target="_glossary"} model on task-specific datasets with labeled examples.&rdquo; While pre-training teaches general language understanding and information, SFT teaches specific skills and behaviors, as opposed to new knowledge. For example, SFT hones how the knowledge is used toward specific applications, desired ways of responding to prompts, and use case-specific requirements.
 
 Fortunately, SFT requires far less resources than pre-training, which we will discuss below.
 
@@ -64,7 +64,7 @@ However, the tutorial offers this advise:
 
 > Before starting SFT, consider whether using an existing instruction-tuned model with well-crafted prompts would suffice for your use case. SFT involves significant computational resources and engineering effort, so it should only be pursued when prompting existing models proves insufficient. Learn more about this decision process in the [Hugging Face LLM Course](https://huggingface.co/learn/llm-course/en/chapter11/3){:target="_blank"}.
 
-[When to Use Supervised Fine-Tuning](https://huggingface.co/learn/smol-course/unit1/3#when-to-use-supervised-fine-tuning) provides some guidance on when SFT is necessary, versus just relying on a model without additional tuning.
+[When to Use Supervised Fine-Tuning](https://huggingface.co/learn/smol-course/unit1/3#when-to-use-supervised-fine-tuning){:target="wsft"} provides some guidance on when SFT is necessary, versus just relying on a model without additional tuning.
 They offer the following checklist to determine if SFT is appropriate, which we quote verbatim:
 
 > * Have you tried prompt engineering with existing instruction-tuned models?

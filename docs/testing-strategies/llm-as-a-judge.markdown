@@ -128,11 +128,11 @@ After some setup, the following command is executed, which uses the same argumen
 
 ```shell
 time uv run src/scripts/unit-benchmark-data-validation.py \
-  --model ollama/gpt-oss:20b \
+  --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama/gpt-oss_20b/data \
-  --log-file temp/output/ollama/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
+  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
+  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
@@ -141,12 +141,12 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 
 | Validation Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
-| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} |
 
 These files rate each Q&A pair from 1 (bad) to 5 (great) and provide reasoning for each rating.
-Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
+Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
 
 **`gpt-oss:20b`**
 
@@ -194,7 +194,7 @@ Nevertheless, as our data synthesis grows more sophisticated for more benchmarks
 
 So, our validation tool only considers the second question, whether or not the label shown in the answer the best label for the question, independent of which data file the Q&A pair appears.
 
-Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"}:
+Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"}:
 
 ```json
 {
