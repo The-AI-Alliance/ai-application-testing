@@ -318,7 +318,9 @@ The application can be invoked in one of several ways:
 
 ```shell
 make chatbot
-make run-chatbot  # "synonym"
+make run-chatbot     # Synonym for "chatbot"
+make mcp-server      # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server  # Synonym for "mcp-server"
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -328,20 +330,22 @@ cd src && time uv run python -m apps.chatbot.main \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir prompts/templates \
+  --data-dir data \
   --confidence-threshold 0.9 \
   --log-file .../logs/20260306-165606/chatbot.log \
 ```
 
 The arguments are similar to the previously-discussed arguments, with a new argument `--confidence-threshold`, which we will explain below.
 
-The source code, etc. are located in these locations:
+The source code, etc. for this application and the automated tests are located in these locations:
 
-| Content | Location |
-| :------ | :------- |
-| Source code      | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/){:target="chatbot"} |
-| Prompt Templates | [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/){:target="prompts"} |
-| Tests            | [`src/tests/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/apps/chatbot/){:target="tests"} |
-| Test Data        | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} |
+| Content | Location | Notes |
+| :------ | :------- | :---- |
+| Source code      | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
+| Prompt Templates | [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/){:target="prompts"} | The prompts used. |
+| Data             | [`src/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/){:target="data"} | Application data location, but not currently used! |
+| Tests            | [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} (unit tests) and [`src/tests/integration/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/apps/chatbot/){:target="utests"} (integration tests) | |
+| Test Data        | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} | Test prompts and expected results. |
 
 Now we have automated tests in the `src/tests` directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}, but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ For example, the test data covers a few new use cases, refines some handling of expected responses, excludes some synthetic data was validated as poor, and makes other changes. This is how we would expect your development projects to proceed, where you use the tools we described above to generate and validate test data, for example, then refine the data for use as unit-benchmark data.
 
