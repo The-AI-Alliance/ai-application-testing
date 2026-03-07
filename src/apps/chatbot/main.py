@@ -10,14 +10,24 @@ from common.utils import setup
 from apps.chatbot import ChatBot, ChatBotShell, ResponseHandler
 
 def main():
+    """
+    Main entry point for the interactive Patient ChatBot shell.
+    
+    For MCP server mode, use: python -m apps.chatbot.mcp_server.server
+    See src/apps/chatbot/mcp_server/README.md for details.
+    """
 
     script = os.path.basename(__file__)
     description = "Demonstration Patient ChatBot."
-    args, logger = setup(script, description, omit={'data-dir'},
-        add_arguments = lambda p: p.add_argument("-c", "--confidence-level", 
-            type=float, 
-            default=0.9, 
-            help="What confidence level, reported as part of the inference result, do you consider acceptable for the reply? Default: 0.8 (between 0.0-1.0)"))
+    args, logger = setup(
+        script,
+        description,
+        epilog="The data directory is used to store the ChatBot GUI session information.",
+        add_arguments=lambda p: p.add_argument(
+            "-c", "--confidence-level",
+            type=float,
+            default=0.9,
+            help="What confidence level, reported as part of the inference result, do you consider acceptable for the reply? Default: 0.9 (between 0.0-1.0)"))
 
     if args.verbose:
         print(f"{description}")
@@ -29,6 +39,7 @@ def main():
         model = args.model,
         service_url = args.service_url,
         template_dir = args.template_dir,
+        data_dir = args.data_dir,
         confidence_level_threshold = args.confidence_level,
         logger = logger)
     shell = ChatBotShell(chatbot, verbose = args.verbose)

@@ -11,7 +11,7 @@ from pathlib import Path
 from io import StringIO
 
 from apps.chatbot import ChatBot, ChatBotShell
-from tests.apps.chatbot.test_base import TestBase
+from tests.common.apps.chatbot.testbase import TestBase
 
 class TestChatBot(TestBase):
     """

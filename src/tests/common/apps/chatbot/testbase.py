@@ -67,7 +67,9 @@ class TestBase(unittest.TestCase):
         self.chatbot = ChatBot(
             model = self.model,
             service_url = self.service_url,
-            template_dir = self.template_dir)
+            template_dir = self.template_dir,
+            data_dir = self.data_dir,
+            confidence_level_threshold = self.confidence_threshold)
         self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
 
     def setUp(self):
@@ -81,6 +83,7 @@ class TestBase(unittest.TestCase):
         self.model                        = os.environ.get('MODEL', 'ollama_chat/gpt-oss:20b')
         self.service_url                  = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
         self.template_dir                 = os.environ.get('PROMPTS_TEMPLATES_DIR', 'prompts/templates')
+        self.data_dir                     = os.environ.get('DATA_DIR', 'data')
         self.sample_rate: float           = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
         self.test_all_examples: bool      = bool(os.environ.get('TEST_ALL_EXAMPLES', False))
         self.rating_threshold: int        = int(os.environ.get('RATING_THRESHOLD', self.default_rating_threshold))
@@ -92,6 +95,7 @@ class TestBase(unittest.TestCase):
             rprint(f"model:                {self.model}")
             rprint(f"service_url:          {self.service_url}")
             rprint(f"template_dir:         {self.template_dir}")
+            rprint(f"data_dir:             {self.data_dir}")
             rprint(f"sample_rate:          {self.sample_rate}")
             rprint(f"test_all_examples:    {self.test_all_examples}")
             rprint(f"rating_threshold:     {self.rating_threshold}")

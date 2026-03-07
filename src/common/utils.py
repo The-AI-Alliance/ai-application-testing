@@ -16,7 +16,7 @@ common_defaults = {
     "model":                        "ollama_chat/gpt-oss:20b",
     "service_url":                  "http://localhost:11434",
     "template_dir":                 "src/prompts/templates",
-    "data_dir":                     "data",
+    "data_dir":                     "src/data",
     "levenshtein-ratio-threshold":  0.95,
 }
 
@@ -61,7 +61,7 @@ def parser_with_common_args(script: str, description: str, epilog: str = None, o
             help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template_dir']}")
     if not 'data-dir' in omit:
         parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
-            help=f"Directory where data files are written. Default: {common_defaults['data_dir']}")
+            help=f"Directory where data files are read or written. Default: {common_defaults['data_dir']}")
     if not 'log-file' in omit:
         default_log_file = get_default_log_file(script)
         default_log_level = get_default_log_level(script)

@@ -24,7 +24,7 @@ class ResponseHandler():
     Understands the specific format of responses and 
     does appropriate deconstruction and handling.
     """
-    def __init__(self, confidence_level_threshold: float, logger: logging.Logger = None):
+    def __init__(self, confidence_level_threshold: float, logger: logging.Logger | None = None):
         self.logger = logger
         self.responses = []
         self.confidence_level_threshold = confidence_level_threshold
@@ -111,7 +111,7 @@ This could be the next business day. If you are having an emergency, please call
         "other": team_member_reply,
     }
     
-    def __init__(self, confidence_level_threshold: float, logger: logging.Logger = None):
+    def __init__(self, confidence_level_threshold: float, logger: logging.Logger | None = None):
         super().__init__(confidence_level_threshold=confidence_level_threshold, logger=logger)
 
     def _handle(self, processed_response: dict[str,any]) -> dict[str,any] | str:
@@ -155,19 +155,21 @@ class ChatBot:
     default_confidence_threshold: float = 0.9
     default_template_file = "patient-chatbot.yaml"
 
-    def __init__(self, 
-        model: str, 
-        service_url: str, 
-        template_dir: str, 
-        confidence_level_threshold: float = default_confidence_threshold, 
-        response_handler: ResponseHandler = None, 
-        logger: logging.Logger = None):
+    def __init__(self,
+        model: str,
+        service_url: str,
+        template_dir: str,
+        data_dir: str,
+        confidence_level_threshold: float = default_confidence_threshold,
+        response_handler: ResponseHandler | None = None,
+        logger: logging.Logger | None = None):
         """
         If the `response_handler` is `None`, a `ChatBotResponseHandler` will be used.
         """
         self.model             = model
         self.service_url       = service_url
         self.template_dir      = template_dir
+        self.data_dir          = data_dir
         self.logger            = logger
         if confidence_level_threshold < 0.0:
             confidence_level_threshold = 0.0
@@ -182,13 +184,15 @@ class ChatBot:
             errors.append('service_url')
         if not self.template_dir:
             errors.append('template_dir')
+        if not self.data_dir:
+            errors.append('data_dir')
         if errors:
             error_msg = f"These values can't be None or empty: {', '.join(errors)}"
             if self.logger:
                 self.logger.error(error_msg)
             raise ValueError(error_msg)
 
-        ensure_dirs_exist(self.template_dir)
+        ensure_dirs_exist(self.template_dir, self.data_dir)
 
         if response_handler:
             self.response_handler = response_handler
@@ -274,7 +278,7 @@ class ChatBotShell(cmd.Cmd):
     intro = 'Welcome to the patient ChatBot. Type help or ? to list commands.\n'
     prompt = 'input> '
 
-    def __init__(self, chatbot: ChatBot, logger: logging.Logger = None, verbose: bool = False, stdin = sys.stdin, stdout = sys.stdout):
+    def __init__(self, chatbot: ChatBot, logger: logging.Logger | None = None, verbose: bool = False, stdin = sys.stdin, stdout = sys.stdout):
         super().__init__(stdin=stdin, stdout=stdout)
         self.chatbot = chatbot
         self.verbose = verbose
