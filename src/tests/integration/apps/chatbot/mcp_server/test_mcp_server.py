@@ -13,7 +13,8 @@ from pathlib import Path
 #sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent.parent))
 
 from apps.chatbot import ChatBot
-from apps.chatbot.mcp_server import create_mcp_server, register_chatbot_tools
+from apps.chatbot.mcp_server import register_chatbot_tools
+from apps.chatbot.mcp_server.server import create_mcp_server
 from tests.common.apps.chatbot.testbase import TestBase
 
 class TestMCPServer(TestBase):

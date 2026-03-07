@@ -361,6 +361,8 @@ A second threshold used in the application is for the inference process's own co
 
 Finally, the AI-related unit tests (benchmarks), as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage.
 
+For details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](src/apps/chatbot/mcp_server/README.md).
+
 ## Getting Involved
 
 We welcome contributions as PRs, either to our code examples or our user guide. Please see our [Alliance community repo](https://github.com/The-AI-Alliance/community/) for general information about contributing to any of our projects. This section provides some specific details you need to know.

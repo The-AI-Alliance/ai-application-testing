@@ -24,10 +24,10 @@ def main():
         description,
         epilog="The data directory is used to store the ChatBot GUI session information.",
         add_arguments=lambda p: p.add_argument(
-            "-c", "--confidence-level",
+            "-c", "--confidence-threshold",
             type=float,
             default=0.9,
-            help="What confidence level, reported as part of the inference result, do you consider acceptable for the reply? Default: 0.9 (between 0.0-1.0)"))
+            help="What confidence threshold level, reported as part of the inference result, do you consider acceptable for the reply? Default: 0.9 (between 0.0-1.0)"))
 
     if args.verbose:
         print(f"{description}")
@@ -40,7 +40,7 @@ def main():
         service_url = args.service_url,
         template_dir = args.template_dir,
         data_dir = args.data_dir,
-        confidence_level_threshold = args.confidence_level,
+        confidence_level_threshold = args.confidence_threshold,
         logger = logger)
     shell = ChatBotShell(chatbot, verbose = args.verbose)
     shell.cmdloop()

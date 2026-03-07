@@ -4,9 +4,11 @@ MCP Server implementation for the Patient ChatBot.
 This module creates and configures the MCP server that exposes
 chatbot functionality through the Model Context Protocol.
 """
-
 import asyncio
 import logging
+import os
+import sys
+from pathlib import Path
 from typing import Any
 
 try:
@@ -19,7 +21,9 @@ except ImportError:
     stdio_server = None
 
 from apps.chatbot import ChatBot
+from common.utils import setup
 from .tools import register_chatbot_tools
+
 
 def create_mcp_server(
     model: str,
@@ -116,16 +120,10 @@ async def run_mcp_server(
             server.create_initialization_options()
         )
 
-
 def main():
     """
     Main entry point for running the MCP server standalone.
     """
-    import os
-    import sys
-    from pathlib import Path
-    from common.utils import setup
-    
     script = os.path.basename(__file__)
     description = "MCP Server for Patient ChatBot"
     
@@ -134,10 +132,10 @@ def main():
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
         add_arguments=lambda p: p.add_argument(
-            "-c", "--confidence-level",
+            "-c", "--confidence-threshold",
             type=float,
             default=0.9,
-            help="Confidence level threshold (0.0-1.0). Default: 0.9"
+            help="Confidence threshold level threshold (0.0-1.0). Default: 0.9"
         )
     )
     
@@ -153,7 +151,7 @@ def main():
             service_url=args.service_url,
             template_dir=args.template_dir,
             data_dir=args.data_dir,
-            confidence_level_threshold=args.confidence_level,
+            confidence_level_threshold=args.confidence_threshold,
             logger=logger
         ))
     except KeyboardInterrupt:

@@ -15,7 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from apps.chatbot import ChatBot
-from apps.chatbot.mcp_server import create_mcp_server
+from apps.chatbot.mcp_server.server import create_mcp_server
 
 def test_imports():
     """Test that all modules can be imported."""

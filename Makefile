@@ -413,11 +413,11 @@ provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
 
 
-.PHONY: chatbot run-chatbot help-chatbot mcp-server run-mcp-server help-mcp-server check-mcp-server
+.PHONY: chatbot run-chatbot help-chatbot before-chatbot mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
-run-chatbot chatbot:: before-run
+run-chatbot chatbot:: before-chatbot
+	@echo "Running the ChatBot..."
 	@export LITELLM_LOG="ERROR"; \
-	echo "Running the ChatBot..."; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
@@ -431,10 +431,10 @@ run-chatbot chatbot:: before-run
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
-run-mcp-server mcp-server:: before-run
+run-mcp-server mcp-server:: before-chatbot
+	@echo "Running the ChatBot MCP Server..."
 	@export LITELLM_LOG="ERROR"; \
-	echo "Running the ChatBot MCP Server..."; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.mcp_server.server \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
@@ -444,16 +444,21 @@ run-mcp-server mcp-server:: before-run
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
+inspect-mcp-server::
+	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
+	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
+
 help-mcp-server::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
+
+before-chatbot::  run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 
 check-mcp-server::
 	@echo "'Sanity check' that the MCP server works:"
 	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/check_mcp_server.py
 
-run-mcp-server mcp-server:: before-run
 
-${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}::
+${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests test tests unit-tests 

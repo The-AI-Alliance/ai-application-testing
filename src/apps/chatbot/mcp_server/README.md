@@ -32,7 +32,7 @@ uv run python -m apps.chatbot.mcp_server.server \
   --service-url "http://localhost:11434" \
   --template-dir "prompts/templates" \
   --data-dir "data" \
-  --confidence-level 0.9
+  --confidence-threshold 0.9
 ```
 
 > [!TIP]
@@ -54,7 +54,7 @@ To use this MCP server with MCP clients, add it to your MCP configuration file (
         "--service-url", "http://localhost:11434",
         "--template-dir", "src/prompts/templates",
         "--data-dir", "data",
-        "--confidence-level", "0.9"
+        "--confidence-threshold", "0.9"
       ],
       "cwd": "/path/to/ai-application-testing/src",
       "env": {
@@ -132,7 +132,7 @@ All command-line options from the main ChatBot application are supported:
 - `--service-url` / `-s`: Inference service URL (default: "http://localhost:11434")
 - `--template-dir` / `-t`: Prompt template directory (default: "src/prompts/templates")
 - `--data-dir` / `-d`: Directory with some data (default: "src/data")
-- `--confidence-level` / `-c`: Confidence threshold (default: 0.9)
+- `--confidence-threshold` / `-c`: Confidence threshold level (default: 0.9)
 - `--log-file` / `-l`: Log file path
 - `--log-level`: Logging level (default: INFO)
 - `--verbose` / `-v`: Enable verbose output
