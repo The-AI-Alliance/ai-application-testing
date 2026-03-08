@@ -5,6 +5,7 @@ import os
 import sys
 import yaml
 from datetime import datetime
+from importlib import metadata
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from pprint import pprint
@@ -15,8 +16,8 @@ from litellm.types.utils import ModelResponse
 common_defaults = {
     "model":                        "ollama_chat/gpt-oss:20b",
     "service_url":                  "http://localhost:11434",
-    "template_dir":                 "src/prompts/templates",
-    "data_dir":                     "src/data",
+    "template_dir":                 "prompts/templates",
+    "data_dir":                     "data",
     "levenshtein-ratio-threshold":  0.95,
 }
 
@@ -94,6 +95,23 @@ def log_args(logger: logging.Logger, script: str, args: argparse.Namespace, epil
     if epilog:
         logging.info('')  
         logging.info(' '+epilog)  
+
+def get_package_version(logger: logging.Logger) -> str | None:
+    """
+    Return the version string in the project's pyproject.toml. Note that we have to keep
+    the name used below in sync with the name in that file: `ai-application-testing`.
+    If the version information can't be determined, None is returned. This usually means that
+    the project was not pip installed, i.e., `uv pip install -e .` We log this possibility.
+    """
+    try:
+        version = metadata.version('ai-application-testing')
+        if not version:
+            logger.error(f"The version string returned is empty. Make sure it is defined in pyproject.toml, then run 'uv pip install -e .'")
+            version = None
+    except metadata.PackageNotFoundError as pnfe:
+        logger.error(f"Could not determine the package version {pnfe}. Try running 'uv pip install -e .'")
+        version = None
+    return version
 
 def now() -> datetime:
     return datetime.now()

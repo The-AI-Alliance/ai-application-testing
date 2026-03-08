@@ -179,6 +179,17 @@ async def new_tool(param: str) -> str:
     return "result"
 ```
 
+## Testing
+
+Run the integration tests:
+
+```bash
+make integration-tests # run all the integration tests
+# or
+cd src && uv run python -m pytest tests/integration/apps/chatbot/mcp_server/test_mcp_server.py -v
+```
+
+
 ## Troubleshooting
 
 ### FastMCP Not Found

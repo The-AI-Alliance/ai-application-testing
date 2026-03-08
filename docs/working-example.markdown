@@ -331,11 +331,23 @@ The application can be invoked in one of several ways:
 
 
 ```shell
-make chatbot
-make run-chatbot         # Synonym for "chatbot"
-make mcp-server          # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-mcp-server      # Synonym for "mcp-server"
-make inspect-mcp-server  # Run the server with the `npx @modelcontextprotocol/inspector` tool.
+make chatbot               # Run the interactive ChatBot.
+make run-chatbot           # Synonym for "chatbot".
+make help-chatbot          # Show help for the ChatBot.
+
+make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server        # Synonym for "mcp-server".
+make inspect-mcp-server    # Run the server with the `npx @modelcontextprotocol/inspector` tool.
+make help-mcp-server       # Show help for the MCP server.
+make check-mcp-server      # Runs a 'sanity check' that the MCP server works.
+
+make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-api-server        # Synonym for "api-server".
+make help-api-server       # Show help for the API server.
+make check-api-server      # Runs a 'sanity check' that the API server works.
+
+make view-api-server-docs  # Open a browser showing the API server "docs".
+make view-api-server-redoc # Open a browser showing the API server "redoc".
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -368,6 +380,8 @@ Running the MCP server is very similar. Since it runs the ChatBot for you, it ta
 > **Tip:**
 > Use the `make inspect-mcp-server` command to run the MCP server and inspect it with the `npx @modelcontextprotocol/inspector` tool. Node.js is required to run the inspector.
 
+Similarly, running the OpenAI-compatible API server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python model invoked: `uv run python -m apps.chatbot.api_server.server`.
+
 Now we have automated tests in the `src/tests` directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}, but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ For example, the test data covers a few new use cases, refines some handling of expected responses, excludes some synthetic data was validated as poor, and makes other changes. This is how we would expect your development projects to proceed, where you use the tools we described above to generate and validate test data, for example, then refine the data for use as unit-benchmark data.
 
 The AI-specific tests support a few features not normally found in conventional test suites, reflecting some unique challenges when writing automated tests for AI applications. 
@@ -383,3 +397,5 @@ A second threshold used in the application is for the inference process's own co
 Finally, the AI-related unit benchmarks, as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage. There are additional integration tests, too.
 
 For details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/mcp_server/README.md){:target="mcp-readme"}.
+
+For details on running the OpenAI-compatible API server, see the [`src/apps/chatbot/api_server/README.md`](src/apps/chatbot/api_server/README.md).
