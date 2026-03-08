@@ -56,9 +56,12 @@ INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
 DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-PROMPTS_TEMPLATES_DIR ?= prompts/templates
-CHATBOT_TEMPLATES_DIR ?= ${PROMPTS_TEMPLATES_DIR}
-CHATBOT_DATA_DIR      ?= ${DATA_DIR}/chatbot
+PROMPTS_TEMPLATES_DIR   ?= prompts/templates
+CHATBOT_TEMPLATES_DIR   ?= ${PROMPTS_TEMPLATES_DIR}
+CHATBOT_DATA_DIR        ?= ${DATA_DIR}/chatbot
+CHATBOT_API_SERVER_HOST ?= localhost
+CHATBOT_API_SERVER_PORT ?= 8000
+CHATBOT_API_SERVER      ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
@@ -177,6 +180,8 @@ make chatbot            # Run the interactive ChatBot application.
 make run-chatbot        # Synonym for "chatbot".
 make mcp-server         # Run the ChatBot's MCP server.
 make run-mcp-server     # Synonym for "mcp-server".
+make api-server         # Run the ChatBot's OpenAI-compatible API server.
+make run-api-server     # Synonym for "api-server".
 
 Tasks for help, debugging, setup, etc.
 
@@ -198,6 +203,10 @@ make help-unit-benchmark-data-validation
 
 make help-chatbot       # Show help for the interactive ChatBot application.
 make help-mcp-server    # Show help for the ChatBot's MCP server.
+make help-api-server    # Show help for the ChatBot's OpenAI-compatible API server.
+
+make view-api-server-docs  # Open a browser showing the API server "docs".
+make view-api-server-redoc # Open a browser showing the API server "redoc".
 
 The "uv" CLI tool is required:
 
@@ -420,11 +429,11 @@ provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
 
 
-.PHONY: chatbot run-chatbot help-chatbot before-chatbot mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
+.PHONY: chatbot run-chatbot help-chatbot before-chatbot 
 
 run-chatbot chatbot:: before-chatbot
 	@echo "Running the ChatBot..."
-	@export LITELLM_LOG="ERROR"; \
+	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
@@ -438,11 +447,15 @@ run-chatbot chatbot:: before-chatbot
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
+before-chatbot::  run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+
+.PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
+
 # See inspect-mcp-server for information about ${INSPECTOR}, which is otherwise
 # blank.
 run-mcp-server mcp-server:: before-chatbot
 	@echo "Running the ChatBot MCP Server..."
-	@export LITELLM_LOG="ERROR"; \
+	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
@@ -460,12 +473,47 @@ inspect-mcp-server:: node-command-check
 help-mcp-server::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
 
-before-chatbot::  run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+.PHONY: api-server run-api-server help-api-server check-api-server view-api-server-docs view-api-server-redoc
 
-check-mcp-server::
-	@echo "'Sanity check' that the MCP server works:"
-	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/check_mcp_server.py
+run-api-server api-server:: before-chatbot
+	@echo "Running the OpenAI-compatible API Server..."
+	export LITELLM_LOG="ERROR"; \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.api_server.server \
+		--host ${CHATBOT_API_SERVER_HOST} \
+		--port ${CHATBOT_API_SERVER_PORT} \
+		--model ${MODEL} \
+		--service-url ${INFERENCE_URL} \
+		--template-dir ${CHATBOT_TEMPLATES_DIR} \
+		--data-dir ${CHATBOT_DATA_DIR} \
+		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
+help-api-server::
+	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
+
+check-api-server::
+	@echo "'Sanity check' that the OpenAI-compatible API server works:"
+	@echo "  Running the server in the background..."
+	${MAKE} api-server & 
+	@echo
+	@echo "  Hit the 'return' key!"
+	@echo
+	@echo "  Running 'apps/chatbot//api_server/example_client.py'..."
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python apps/chatbot/api_server/example_client.py
+	@echo "  Hack: Find the process id for the server and kill it..." 
+	kill %1
+foo:
+	@ps | grep 'make api-server' | grep -v grep | cut -f1 -d' ' | while read id; \
+		do echo "Process id: <$$id>"; [[ -n $$id ]] && kill $$id; done
+
+view-api-server-docs view-api-server-redoc::
+	@echo "Opening http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
+	@echo "If the URL isn't found, make sure the server is running! For example,"
+	@echo "run 'make api-server' in another terminal window, then rerun this target or" 
+	@echo "try ⌘-click or ^-click on the URL just printed."
+	@uv run python -m webbrowser "http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
 
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
@@ -623,8 +671,8 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL instead:" && \
+	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
+		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL." && \
 		 exit 1 ): 
 view-local:: setup-jekyll run-jekyll
 

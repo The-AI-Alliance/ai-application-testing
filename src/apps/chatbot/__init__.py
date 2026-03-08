@@ -15,6 +15,7 @@ from openai import OpenAIError
 from common.utils import (
     ensure_dirs_exist,
     extract_content,
+    get_package_version,
     load_yaml,
     parse_json,
 )
@@ -81,6 +82,10 @@ class ResponseHandler():
         If an error occurs, return an error message instead.
         """
         return processed_response
+
+    def __repr__(self):
+        # Return the name of the actual class.
+        return f"{type(self).__name__}(confidence_level_threshold = {self.confidence_level_threshold}, #responses = {len(self.responses)})"
 
 class ChatBotResponseHandler(ResponseHandler):
     """
@@ -176,6 +181,9 @@ class ChatBot:
         if confidence_level_threshold > 1.0:
             confidence_level_threshold = 1.0 # would reject almost all!!
         self.confidence_level_threshold  = confidence_level_threshold
+        self.version = get_package_version(self.logger)
+        if not self.version:
+            self.version = '0.1.0'  # An error occurred that was logged by get_package_version()
 
         errors = []
         if not self.model:
@@ -211,6 +219,16 @@ class ChatBot:
             if self.logger:
                 self.logger.error(error_msg)
             raise ValueError(error_msg)
+
+        if self.logger:
+            self.logger.info("ChatBot Settings:")
+            self.logger.info(f"  version:                    {self.version}")
+            self.logger.info(f"  model:                      {self.model}")
+            self.logger.info(f"  service_url:                {self.service_url}")
+            self.logger.info(f"  template_dir:               {self.template_dir}")
+            self.logger.info(f"  data_dir:                   {self.data_dir}")
+            self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
+            self.logger.info(f"  response_handler:           {self.response_handler}")
 
     def query(self, query: str) -> dict[str,any] | str:
         """

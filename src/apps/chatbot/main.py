@@ -15,6 +15,9 @@ def main():
     
     For MCP server mode, use: python -m apps.chatbot.mcp_server.server
     See src/apps/chatbot/mcp_server/README.md for details.
+    
+    For OpenAI-compatible API server mode, use: python -m apps.chatbot.api_server.server
+    See src/apps/chatbot/api_server/README.md for details.
     """
 
     script = os.path.basename(__file__)
