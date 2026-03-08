@@ -10,14 +10,23 @@ The MCP server is built using **FastMCP**, which provides a simplified and more 
 2. **get_chatbot_session_history** - Retrieve the conversation history
 3. **get_chatbot_info** - Get information about the ChatBot configuration
 
+### FastMCP Benefits
+
+FastMCP simplifies MCP server development by:
+
+- **Simplified API**: Use Python decorators (`@mcp.tool()`) to define tools
+- **Type Safety**: Leverage Python type hints for automatic parameter validation
+- **Less Boilerplate**: No need for separate tool registration functions
+- **Better Integration**: Tools are defined inline with the server creation
+- **Automatic Documentation**: Tool docstrings become tool descriptions
+
 ## Installation
 
 ### Prerequisites
 
 1. Install FastMCP:
 ```bash
-uv add fastmcp  
-# or with pip: pip install fastmcp
+uv add fastmcp  # or use uv pip install fastmcp
 ```
 
 ## Running the MCP Server
@@ -39,9 +48,9 @@ uv run python -m apps.chatbot.mcp_server.server \
 > [!TIP]
 > Use the `--help` flag to see all the options.
 
-### As an MCP Server
+### As an MCP Server Configured for MCP Clients
 
-To use this MCP server with MCP clients, add it to your MCP configuration file (e.g., `~/.bob/settings/mcp_settings.json` or `~/Library/Application Support/Claude/claude_desktop_config.json`):
+To use this MCP server with MCP clients, add it to the appropriate MCP configuration file, e.g., `~/.bob/settings/mcp_settings.json` or `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -70,12 +79,12 @@ To use this MCP server with MCP clients, add it to your MCP configuration file (
 
 ## Architecture
 
-The MCP server is organized into modular components:
+The MCP server is organized into several components:
 
 - **`__init__.py`** - Package initialization and exports
 - **`server.py`** - Main server implementation with FastMCP and tool definitions
 
-### Module Structure
+Here is the directory structure:
 
 ```
 mcp_server/
@@ -83,16 +92,6 @@ mcp_server/
 ├── server.py            # Server creation, tool definitions, and main entry point
 └── README.md            # This file
 ```
-
-## FastMCP Benefits
-
-FastMCP simplifies MCP server development by:
-
-- **Simplified API**: Use Python decorators (`@mcp.tool()`) to define tools
-- **Type Safety**: Leverage Python type hints for automatic parameter validation
-- **Less Boilerplate**: No need for separate tool registration functions
-- **Better Integration**: Tools are defined inline with the server creation
-- **Automatic Documentation**: Tool docstrings become tool descriptions
 
 ## Tools
 
@@ -129,9 +128,9 @@ Get information about the ChatBot's current configuration.
 **Returns:**
 - Configuration details including model, service URL, confidence threshold, and session length
 
-## Integration with Main Application
+## Integration with the ChatBot Application
 
-The MCP server uses the same `ChatBot` class from the main application (`apps.chatbot`), ensuring consistency between the interactive shell and MCP server modes. The ChatBot maintains session state across multiple tool calls within the same server instance.
+The MCP server uses the same `ChatBot` class from the main application (`apps.chatbot`), ensuring consistency between the interactive shell and MCP server modes.
 
 ## Configuration Options
 
@@ -150,9 +149,9 @@ All command-line options from the main ChatBot application are supported:
 
 The MCP server includes comprehensive error handling:
 
-- Invalid queries return error messages
-- Chatbot errors are caught and returned as tool responses
-- All errors are logged when a logger is configured
+- Invalid queries return error messages.
+- Chatbot errors are caught and returned as tool responses.
+- All errors are logged when a logger is configured.
 
 ## Development
 
@@ -186,7 +185,7 @@ async def new_tool(param: str) -> str:
 
 If you get an error that `fastmcp` can't be imported, install it:
 ```bash
-uv add fastmcp  # or with pip: pip install fastmcp
+uv add fastmcp  # or with uv pip install fastmcp
 ```
 
 ### Import Errors

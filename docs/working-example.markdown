@@ -335,6 +335,7 @@ make chatbot
 make run-chatbot     # Synonym for "chatbot"
 make mcp-server      # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
 make run-mcp-server  # Synonym for "mcp-server"
+make inspect-mcp-server  # Run the server with the `npx @modelcontextprotocol/inspector` tool.
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -361,6 +362,11 @@ The source code, etc. for this application and the automated tests are located i
 | Tests            | [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} (unit tests) and [`src/tests/integration/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/apps/chatbot/){:target="utests"} (integration tests) | |
 | Test Data        | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} | Test prompts and expected results. |
 
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python model invoked: `uv run python -m apps.chatbot.mcp_server.server`.
+
+> [!TIP]
+> Use the `make inspect-mcp-server` command to run the MCP server and inspect it with the `npx @modelcontextprotocol/inspector` tool.
+
 Now we have automated tests in the `src/tests` directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}, but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ For example, the test data covers a few new use cases, refines some handling of expected responses, excludes some synthetic data was validated as poor, and makes other changes. This is how we would expect your development projects to proceed, where you use the tools we described above to generate and validate test data, for example, then refine the data for use as unit-benchmark data.
 
 The AI-specific tests support a few features not normally found in conventional test suites, reflecting some unique challenges when writing automated tests for AI applications. 
@@ -373,6 +379,6 @@ Third, a feature called &ldquo;low-confidence results&rdquo; is supported. Durin
 
 A second threshold used in the application is for the inference process's own confidence in its work. If it returns a confidence level below a configurable threshold, the default &ldquo;safe&rdquo; response is returned to the user. These two thresholds are also handled as `Makefile` variables, `RATING_THRESHOLD`, defined as `4` on a scale of `1` to `5`, and `CONFIDENCE_THRESHOLD`, defined as `0.9` on a scale of `0.0` to `1.0`, corresponding to a range of 0% to 100%.
 
-Finally, the AI-related unit tests (benchmarks), as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage.
+Finally, the AI-related unit benchmarks, as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage. There are additional integration tests, too.
 
 For details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/mcp_server/README.md){:target="mcp-readme"}.

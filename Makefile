@@ -202,6 +202,7 @@ make help-mcp-server    # Show help for the ChatBot's MCP server.
 The "uv" CLI tool is required:
 
 make help-uv            # Prints specific information about "uv", including installation.
+make help-node          # Prints specific information about "node", including installation.
 endef
 
 define help_message_uv
@@ -214,6 +215,12 @@ use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.
 
+endef
+
+define help_message_node
+The JavaScript runtime "node" is required if you want to use the MCP server
+inspector `@modelcontextprotocol/inspector`. Otherwise, node is not used in
+this project. See https://nodejs.org/en/download/ for installation instructions.
 endef
 
 ifndef DOCS_DIR
@@ -431,6 +438,8 @@ run-chatbot chatbot:: before-chatbot
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
+# See inspect-mcp-server for information about ${INSPECTOR}, which is otherwise
+# blank.
 run-mcp-server mcp-server:: before-chatbot
 	@echo "Running the ChatBot MCP Server..."
 	@export LITELLM_LOG="ERROR"; \
@@ -444,7 +453,7 @@ run-mcp-server mcp-server:: before-chatbot
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
-inspect-mcp-server::
+inspect-mcp-server:: node-command-check
 	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
