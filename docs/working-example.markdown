@@ -332,9 +332,9 @@ The application can be invoked in one of several ways:
 
 ```shell
 make chatbot
-make run-chatbot     # Synonym for "chatbot"
-make mcp-server      # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-mcp-server  # Synonym for "mcp-server"
+make run-chatbot         # Synonym for "chatbot"
+make mcp-server          # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server      # Synonym for "mcp-server"
 make inspect-mcp-server  # Run the server with the `npx @modelcontextprotocol/inspector` tool.
 ```
 
