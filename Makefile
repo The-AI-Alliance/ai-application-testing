@@ -40,13 +40,15 @@ OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 DATA_DIR              ?= ${OUTPUT_DIR}/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
+# Some specific variables passed as env. vars. to the ChatBot.
+# CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
+CONFIDENCE_THRESHOLD  ?= 0.9
+
 # Some specific variables passed as env. vars. to the test suites.
 # TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors?
 # RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
-# CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
 TEST_ALL_EXAMPLES     ?= "False"
 RATING_THRESHOLD      ?= 4
-CONFIDENCE_THRESHOLD  ?= 0.9
 
 # Sampling rates for different kinds of tests.
 UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
@@ -56,6 +58,7 @@ DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 # These directories will be relative to where the tools and apps are executed.
 PROMPTS_TEMPLATES_DIR ?= prompts/templates
 CHATBOT_TEMPLATES_DIR ?= ${PROMPTS_TEMPLATES_DIR}
+CHATBOT_DATA_DIR      ?= ${DATA_DIR}/chatbot
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
@@ -83,7 +86,7 @@ make help-docs          # Help on the website targets.
 make help-code          # Help on the example code targets.
 
 make print-info         # Print the current values of some make and env. variables.
-
+make clean              # Makes clean-docs and clean-code, but not clean-setup, uninstall-uv
 endef
 
 define help_message_docs
@@ -110,7 +113,7 @@ define help_message_code
 Quick help for this make process for the tools described in this website.
 For the tools used to manage the website, see the parent directory Makefile.
 
-For the targets that run tools, there are variables defined in this Makefile
+For the following targets that run tools, there are variables defined in this Makefile
 that are used to pass arguments to the commands. Run 'make print-info-code' 
 to see the list of variables and their default definitions. Specific variables
 are mentioned for the corresponding targets:
@@ -123,19 +126,23 @@ make all-models-*       # Extract "*" as one of the other targets (such as, "all
                         # You can override the list of models as follows:
                         #   make MODELS="..." all-models-...
 make all-code           # Clean outputs and run all the tools using the model defined by "MODEL".
-make run-code           # Run all the tools without cleaning first. (Built by "all-code")
+make run-code           # Run all the tools (but not the ChatBot app) without cleaning first. 
+                        # Built by "all-code".
 
 make setup              # One-time setup tasks; e.g., builds target install-uv.
 make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
 
-make tests              # Run the unit tests.
+make tests              # Following convention, this target runs the unit tests only.
+make unit-tests         # Synonym for "tests".
+make integration-tests  # Run the integration tests.
+make all-tests          # Run the unit and integration tests.
 
-make clean-code         # Remove build artifacts in ${OUTPUT_DIR}. (Built by "all-code")
+make clean-code         # Remove build artifacts in ${OUTPUT_DIR}.
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
-make clean-uv           # Explain how to uninstall "uv".
+make uninstall-uv       # Explain how to uninstall "uv".
 
 For scripts run by the following targets, which invoke inference, the model 
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
@@ -167,6 +174,9 @@ make run-unit-benchmark-data-validation
                         # See the Unit Benchmark chapter in the website for details.
 
 make chatbot            # Run the interactive ChatBot application.
+make run-chatbot        # Synonym for "chatbot".
+make mcp-server         # Run the ChatBot's MCP server.
+make run-mcp-server     # Synonym for "mcp-server".
 
 Tasks for help, debugging, setup, etc.
 
@@ -187,10 +197,12 @@ make help-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
 
 make help-chatbot       # Show help for the interactive ChatBot application.
+make help-mcp-server    # Show help for the ChatBot's MCP server.
 
 The "uv" CLI tool is required:
 
 make help-uv            # Prints specific information about "uv", including installation.
+make help-node          # Prints specific information about "node", including installation.
 endef
 
 define help_message_uv
@@ -203,6 +215,12 @@ use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.
 
+endef
+
+define help_message_node
+The JavaScript runtime "node" is required if you want to use the MCP server
+inspector `@modelcontextprotocol/inspector`. Otherwise, node is not used in
+this project. See https://nodejs.org/en/download/ for installation instructions.
 endef
 
 ifndef DOCS_DIR
@@ -261,7 +279,7 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-code help-code-all help-uv
+.PHONY: help help-docs help-code help-code-all help-uv clean
 
 all:: help
 
@@ -274,6 +292,8 @@ help-docs help-code help-uv::
 	@echo
 
 help-code-all:: help-code help-terc help-ubds help-ubdv
+
+clean:: clean-docs clean-code clean-jekyll
 
 .PHONY: print-info print-info-docs print-info-code print-info-env
 
@@ -315,7 +335,7 @@ print-info-env::
 	@echo
 # Code Targets
 
-.PHONY: all-code run-code clean-code clean-temp
+.PHONY: all-code run-code clean-code
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
@@ -342,13 +362,12 @@ all-models-% ::
 		echo "  output/$$model/logs/${TIMESTAMP}"; \
 	done
 
-all-code:: clean-code run-code
+all-code:: run-code
 run-code:: 
 	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_EXERCISES} 
 
-clean-code::
+clean-code:: 
 	rm -rf ${CLEAN_CODE_DIRS}   
-
 
 define run-tdd-example-refill-chatbot-message
 *** Running the TDD example.
@@ -371,7 +390,7 @@ help-ubdv:: help-unit-benchmark-data-validation
 ${ALL_EXERCISES:run-%=help-%}::
 	@echo "Help on ${@:help-%=%}.py:"
 	@echo
-	${NOOP} cd ${SRC_DIR} && uv run scripts/${@:help-%=%}.py --help
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run scripts/${@:help-%=%}.py --help
 	@echo
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
@@ -382,7 +401,7 @@ ${ALL_EXERCISES:run-%=help-%}::
 ${ALL_EXERCISES}:: before-run
 	$(info ${$@-message})
 	@export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${TIME} uv run scripts/${@:run-%=%}.py \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run scripts/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
@@ -401,15 +420,16 @@ provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
 
 
-.PHONY: chatbot run-chatbot help-chatbot
+.PHONY: chatbot run-chatbot help-chatbot before-chatbot mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
-run-chatbot:: chatbot
-chatbot:: before-run
+run-chatbot chatbot:: before-chatbot
+	@echo "Running the ChatBot..."
 	@export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
+		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
 		${APP_ARGS}
@@ -418,15 +438,45 @@ chatbot:: before-run
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
-${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}::
+# See inspect-mcp-server for information about ${INSPECTOR}, which is otherwise
+# blank.
+run-mcp-server mcp-server:: before-chatbot
+	@echo "Running the ChatBot MCP Server..."
+	@export LITELLM_LOG="ERROR"; \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
+		--model ${MODEL} \
+		--service-url ${INFERENCE_URL} \
+		--template-dir ${CHATBOT_TEMPLATES_DIR} \
+		--data-dir ${CHATBOT_DATA_DIR} \
+		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+
+inspect-mcp-server:: node-command-check
+	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
+	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
+
+help-mcp-server::
+	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
+
+before-chatbot::  run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+
+check-mcp-server::
+	@echo "'Sanity check' that the MCP server works:"
+	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/check_mcp_server.py
+
+
+${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: test tests unit-tests integration-tests
-.PHONY: one-time-setup setup clean-setup 
-.PHONY: clean-uv clean-llm-templates 
-.PHONY: install-uv uv-venv
+.PHONY: all-tests test tests unit-tests 
+.PHONY: integ-tests integration-tests unit-tests-as-integration-tests dedicated-integration-tests
+
+all-tests: unit-tests integration-tests
 
 test tests unit-tests:: run-command-checks
+	@echo "Running the unit tests..."
 	${NOOP} cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -437,15 +487,41 @@ test tests unit-tests:: run-command-checks
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
-	  uv run python -m unittest discover
-integration-tests:: 
+	  ${NOOP} uv run python -m unittest discover \
+	  	--start-directory tests/unit \
+	  	--top-level-directory .
+
+integ-tests integration-tests:: unit-tests-as-integration-tests ded-integ-tests dedicated-integration-tests
+
+unit-tests-as-integration-tests:: run-command-checks
+	@echo "Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
 	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
+
+ded-integ-tests dedicated-integration-tests:: run-command-checks
+	@echo "Running the dedicated integration tests..."
+	${NOOP} cd ${SRC_DIR} && \
+	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
+	  export MODEL=${MODEL} && \
+	  export INFERENCE_URL=${INFERENCE_URL} && \
+	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export DATA_DIR=${DATA_DIR} && \
+	  export TEST_ALL_EXAMPLES=${TEST_ALL_EXAMPLES} && \
+	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
+	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export VERBOSE='True' && \
+	  ${NOOP} uv run python -m unittest discover \
+	  	--start-directory tests/integration \
+	  	--top-level-directory .
+
+.PHONY: one-time-setup setup clean-setup 
+.PHONY: uninstall-uv clean-llm-templates 
+.PHONY: install-uv uv-venv
 
 setup one-time-setup:: install-uv uv-venv
 
-clean-setup:: clean-uv
+clean-setup:: uninstall-uv
 
-clean-uv:: 
+uninstall-uv:: 
 	@echo "You have to uninstall ${@:clean-%=%} manually:"
 	@echo
 	$(info ${help_message_${@:clean-%=%}})
