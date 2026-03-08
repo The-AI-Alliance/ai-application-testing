@@ -1,0 +1,87 @@
+{
+  "version": 0,
+  "ui": {
+    "enable_signup": false,
+    "default_user_role": "pending",
+    "default_group_id": "",
+    "enable_community_sharing": true,
+    "enable_message_rating": true,
+    "enable_user_webhooks": true,
+    "pending_user_overlay_title": "",
+    "pending_user_overlay_content": "",
+    "watermark": "",
+    "banners": []
+  },
+  "openai": {
+    "enable": true,
+    "api_base_urls": [
+      "https://api.openai.com/v1",
+      "http://localhost:8000/v1"
+    ],
+    "api_configs": {
+      "0": {
+        "enable": false
+      },
+      "1": {
+        "enable": true,
+        "tags": [],
+        "prefix_id": "",
+        "model_ids": [],
+        "connection_type": "local",
+        "auth_type": "none"
+      }
+    }
+  },
+  "ollama": {
+    "enable": false,
+    "base_urls": [
+      "http://localhost:11434"
+    ],
+    "api_configs": {
+      "0": {
+        "enable": false
+      }
+    }
+  },
+  "direct": {
+    "enable": true
+  },
+  "models": {
+    "base_models_cache": false
+  },
+  "webhook_url": "",
+  "auth": {
+    "admin": {
+      "show": true,
+      "email": null
+    },
+    "enable_api_keys": false,
+    "api_key": {
+      "endpoint_restrictions": false,
+      "allowed_endpoints": ""
+    },
+    "jwt_expiry": "4w"
+  },
+  "webui": {
+    "url": ""
+  },
+  "folders": {
+    "enable": true,
+    "max_file_count": ""
+  },
+  "channels": {
+    "enable": false
+  },
+  "memories": {
+    "enable": true
+  },
+  "notes": {
+    "enable": true
+  },
+  "users": {
+    "enable_status": true
+  },
+  "ldap": {
+    "enable": false
+  }
+}

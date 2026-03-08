@@ -316,21 +316,9 @@ This purpose of this application is to represent something closer to what you wo
 The application can be invoked in one of several ways:
 
 ```shell
-make chatbot               # Run the interactive ChatBot.
+make chatbot               # Run the interactive ChatBot with a simple, command-line "UX".
 make run-chatbot           # Synonym for "chatbot".
 make help-chatbot          # Show help for the ChatBot.
-
-make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-mcp-server        # Synonym for "mcp-server".
-make inspect-mcp-server    # Run the server with the `npx @modelcontextprotocol/inspector` tool.
-make help-mcp-server       # Show help for the MCP server.
-
-make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-api-server        # Synonym for "api-server".
-make help-api-server       # Show help for the API server.
-
-make view-api-server-docs  # Open a browser showing the API server "docs".
-make view-api-server-redoc # Open a browser showing the API server "redoc".
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -342,8 +330,10 @@ cd src && time uv run python -m apps.chatbot.main \
   --template-dir prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
-  --log-file .../logs/20260306-165606/chatbot.log \
+  --log-file .../logs/.../chatbot.log
 ```
+
+A simple prompt is presented where you can enter "patient prompts" and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
 
 The arguments are similar to the previously-discussed arguments, with a new argument `--confidence-threshold`, which we will explain below.
 
@@ -357,12 +347,92 @@ The source code, etc. for this application and the automated tests are located i
 | Tests            | [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/) (unit tests) and [`src/tests/integration/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/apps/chatbot/) (integration tests) | |
 | Test Data        | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/) | Test prompts and expected results. |
 
-Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python model invoked: `uv run python -m apps.chatbot.mcp_server.server`.
+### An MCP Server for the ChatBot
+
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. 
+
+
+```shell
+make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server        # Synonym for "mcp-server".
+make help-mcp-server       # Show help for the MCP server.
+make inspect-mcp-server    # Run the server with the `npx @modelcontextprotocol/inspector` tool.
+make check-mcp-server      # Runs a 'sanity check' that the MCP server works.
+```
+
+For more details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/mcp_server/README.md).
 
 > [!TIP]
 > Use the `make inspect-mcp-server` command to run the MCP server and inspect it with the `npx @modelcontextprotocol/inspector` tool. Node.js is required to run the inspector.
 
-Similarly, running the OpenAI-compatible API server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python model invoked: `uv run python -m apps.chatbot.api_server.server`.
+### An OpenAI-compatible API Server for the ChatBot
+
+Similarly, running the OpenAI-compatible API server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. 
+
+```shell
+make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-api-server        # Synonym for "api-server".
+make help-api-server       # Show help for the API server.
+make check-api-server      # Runs a 'sanity check' that the API server works.
+
+make view-api-server-docs  # Open a browser showing the API server "docs".
+make view-api-server-redoc # Open a browser showing the API server "redoc".
+```
+
+the other two options are `--host HOST` and `--port PORT` for the API's own web server, not to be confused with `--service-url SERVICE_URL` for the Ollama server. The host _cannot_ have the `http://` prefix in the value. Just use `localhost`, `0.0.0.0`, `192.168.0.1`, etc. The default values for these two options are `localhost` and `8000`, respectively.
+
+For more details on running the OpenAI-compatible API server, see the [`src/apps/chatbot/api_server/README.md`](src/apps/chatbot/api_server/README.md).
+
+### Using the ChatBot with Open WebUI
+
+Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com).
+
+Begin by running the API server, e.g., `make api-server`. Then in a separate terminal window, run one of these commands:
+
+```shell
+make open-webui            # Run Open WebUI configured to provide a GUI for the ChatBot.
+make run-open-webui        # Synonym for "open-webui".
+```
+
+In a browser, open the URL [http://localhost:8080](http://localhost:8080).
+
+You will be prompted to create an admin user account. Pick whatever name, email, and password you want.
+
+For completeness, there are two other useful commands:
+
+```shell
+make help-open-webui       # Show help for the API server.
+make remove-open-webui     # Cleans up some temporary "uv" and other files created for this app.
+```
+
+Next, a little setup is required; we have to tell Open WebUI about the ChatBot server at `http://localhost:8000`. To do this, open the link administration settings link, [http://localhost:8080/admin/settings/db](http://localhost:8080/admin/settings/db).
+
+![Open WebUI Database Settings]({{site.baseurl}}/assets/images/open-webui-database-settings.jpg "Open WebUI Database Settings")
+
+Click _Import_ link on the right hand side under **Config** (shown in the red oval highlight). Then browse to `src/apps/chatbot/open-webui/open-webui.config.json` in the project repository or download that file from [here](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/open-webui/open-webui.config.json). Submit the dialog to load the settings.
+
+Next, check that they were successfully applied. Go to the Administration connection settings, [http://localhost:8080/admin/settings/connections](http://localhost:8080/admin/settings/connections). You should see the following:
+
+![Open WebUI Connections Settings]({{site.baseurl}}/assets/images/open-webui-connections-settings.jpg "Open WebUI Connections Settings")
+
+The changes we made are highlighted:
+
+1. Disabled OpenAI connections. 
+1. Added a custom OpenAI-compatible connection to our API server at `http://localhost:8000`.
+1. Disabled Ollama connections. 
+
+The first and third change were just to simplify the experience and prevent unintentionally talking directly to OpenAI and Ollama. If you prefer, you can turn these back on by clicking the grey slider on the right for each one (it will turn green). Click the &ldquo;gear&rdquo; icons to edit the connections.
+
+Finally, if you go to the chat page, [http://localhost:8080](http://localhost:8080/){:target="open-webui-home"}, you should see the model selected `ollama_chat/gpt-oss:20b`, which will be served through our API server. If you see another model name shown, click the down arrow (&ldquo;chevron&rdquo;) and select this model. With the OpenAI and Ollama direct connections disabled, there should only be this option and possibly one other added by Open WebUI.
+
+![Open WebUI Chat]({{site.baseurl}}/assets/images/open-webui-chat.jpg "Open WebUI Chat")
+
+Try it!
+
+> [!NOTE]
+> It is also possible to configure Open WebUI to use the ChatBot MCP server. See the Open WebUI [documentation](https://docs.openwebui.com) for details on configuring MCP servers.
+
+### Practical Testing Enhancements 
 
 Now we have automated tests in the `src/tests` directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/), but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ For example, the test data covers a few new use cases, refines some handling of expected responses, excludes some synthetic data was validated as poor, and makes other changes. This is how we would expect your development projects to proceed, where you use the tools we described above to generate and validate test data, for example, then refine the data for use as unit-benchmark data.
 
@@ -377,10 +447,6 @@ Third, a feature called &ldquo;low-confidence results&rdquo; is supported. Durin
 A second threshold used in the application is for the inference process's own confidence in its work. If it returns a confidence level below a configurable threshold, the default &ldquo;safe&rdquo; response is returned to the user. These two thresholds are also handled as `Makefile` variables, `RATING_THRESHOLD`, defined as `4` on a scale of `1` to `5`, and `CONFIDENCE_THRESHOLD`, defined as `0.9` on a scale of `0.0` to `1.0`, corresponding to a range of 0% to 100%.
 
 Finally, the AI-related unit tests (benchmarks), as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage.
-
-For details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](src/apps/chatbot/mcp_server/README.md).
-
-For details on running the OpenAI-compatible API server, see the [`src/apps/chatbot/api_server/README.md`](src/apps/chatbot/api_server/README.md).
 
 ## Getting Involved
 

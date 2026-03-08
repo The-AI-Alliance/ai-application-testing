@@ -515,6 +515,20 @@ view-api-server-docs view-api-server-redoc::
 	@echo "try ⌘-click or ^-click on the URL just printed."
 	@uv run python -m webbrowser "http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
 
+.PHONY: run-open-webui open-webui help-open-webui remove-open-webui
+
+run-open-webui open-webui:: 
+	@echo "Running Open WebUI (https://docs.openwebui.com/getting-started/)."
+	@echo "Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!"
+	${NOOP} DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve
+
+help-open-webui:: 
+	${NOOP} DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve --help
+
+remove-open-webui::
+	uv tool uninstall open-webui
+	rm -rf $HOME/.open-webui
+
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
