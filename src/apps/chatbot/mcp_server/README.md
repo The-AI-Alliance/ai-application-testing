@@ -4,7 +4,7 @@ This directory contains the MCP (Model Context Protocol) server implementation f
 
 ## Overview
 
-The MCP server provides three main tools:
+The MCP server is built using **FastMCP**, which provides a simplified and more Pythonic way to create MCP servers. It provides three main tools:
 
 1. **query_chatbot** - Send queries to the patient ChatBot
 2. **get_chatbot_session_history** - Retrieve the conversation history
@@ -14,9 +14,10 @@ The MCP server provides three main tools:
 
 ### Prerequisites
 
-1. Install the MCP SDK:
+1. Install FastMCP:
 ```bash
-uv add mcp  
+uv add fastmcp  
+# or with pip: pip install fastmcp
 ```
 
 ## Running the MCP Server
@@ -46,13 +47,15 @@ To use this MCP server with MCP clients, add it to your MCP configuration file (
 {
   "mcpServers": {
     "patient-chatbot": {
-      "command": "python",
+      "command": "uv",
       "args": [
+        "run",
+        "python",
         "-m",
         "apps.chatbot.mcp_server.server",
         "--model", "ollama_chat/gpt-oss:20b",
         "--service-url", "http://localhost:11434",
-        "--template-dir", "src/prompts/templates",
+        "--template-dir", "prompts/templates",
         "--data-dir", "data",
         "--confidence-threshold", "0.9"
       ],
@@ -70,18 +73,26 @@ To use this MCP server with MCP clients, add it to your MCP configuration file (
 The MCP server is organized into modular components:
 
 - **`__init__.py`** - Package initialization and exports
-- **`server.py`** - Main server implementation and entry point
-- **`tools.py`** - Tool definitions and implementations
+- **`server.py`** - Main server implementation with FastMCP and tool definitions
 
 ### Module Structure
 
 ```
 mcp_server/
 ├── __init__.py          # Package exports
-├── server.py            # Server creation and main entry point
-├── tools.py             # Tool implementations
+├── server.py            # Server creation, tool definitions, and main entry point
 └── README.md            # This file
 ```
+
+## FastMCP Benefits
+
+FastMCP simplifies MCP server development by:
+
+- **Simplified API**: Use Python decorators (`@mcp.tool()`) to define tools
+- **Type Safety**: Leverage Python type hints for automatic parameter validation
+- **Less Boilerplate**: No need for separate tool registration functions
+- **Better Integration**: Tools are defined inline with the server creation
+- **Automatic Documentation**: Tool docstrings become tool descriptions
 
 ## Tools
 
@@ -96,10 +107,8 @@ Send a query to the patient ChatBot and receive a response.
 - A formatted response containing the ChatBot's reply and metadata (label, confidence)
 
 **Example:**
-```json
-{
-  "query": "I need a refill for my blood pressure medication"
-}
+```python
+await query_chatbot("I need a refill for my blood pressure medication")
 ```
 
 ### get_chatbot_session_history
@@ -141,7 +150,6 @@ All command-line options from the main ChatBot application are supported:
 
 The MCP server includes comprehensive error handling:
 
-- Missing MCP SDK installation is detected and reported
 - Invalid queries return error messages
 - Chatbot errors are caught and returned as tool responses
 - All errors are logged when a logger is configured
@@ -150,17 +158,35 @@ The MCP server includes comprehensive error handling:
 
 To modify or extend the MCP server:
 
-1. **Adding new tools**: Add tool definitions to `tools.py` using the `@server.call_tool()` decorator
+1. **Adding new tools**: Add tool definitions to `server.py` using the `@mcp.tool()` decorator within the `create_mcp_server()` function
 2. **Modifying server behavior**: Update `server.py` to change initialization or runtime behavior
 3. **Testing**: Run the server standalone and use MCP client tools to test functionality
 
+### Example: Adding a New Tool
+
+```python
+@mcp.tool()
+async def new_tool(param: str) -> str:
+    """
+    Description of what this tool does.
+    
+    Args:
+        param: Description of the parameter
+        
+    Returns:
+        Description of the return value
+    """
+    # Implementation here
+    return "result"
+```
+
 ## Troubleshooting
 
-### MCP SDK Not Found
+### FastMCP Not Found
 
-If you see "MCP SDK not available", install it:
+If you get an error that `fastmcp` can't be imported, install it:
 ```bash
-uv add mcp # or with pip: pip install mcp
+uv add fastmcp  # or with pip: pip install fastmcp
 ```
 
 ### Import Errors

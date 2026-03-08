@@ -2,7 +2,7 @@
 Simple test script to verify MCP server functionality.
 
 This script tests that the MCP server can be imported and initialized
-without requiring the actual MCP SDK to be installed.
+with FastMCP.
 """
 
 import sys
@@ -13,7 +13,6 @@ from pathlib import Path
 #sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent.parent))
 
 from apps.chatbot import ChatBot
-from apps.chatbot.mcp_server import register_chatbot_tools
 from apps.chatbot.mcp_server.server import create_mcp_server
 from tests.common.apps.chatbot.testbase import TestBase
 
@@ -32,7 +31,7 @@ class TestMCPServer(TestBase):
         print(f"  - Confidence threshold: {self.chatbot.confidence_level_threshold}")
 
     def test_mcp_server_creation(self):
-        """Test that MCP server can be created (if MCP SDK is available)."""
+        """Test that MCP server can be created with FastMCP."""
         logger = logging.getLogger("test")
         logger.setLevel(logging.INFO)
         
@@ -46,11 +45,11 @@ class TestMCPServer(TestBase):
         )
         
         self.assertIsNotNone(result, """
-            ⚠ MCP SDK not available (this is expected if not installed)
-            Install with: pip install mcp""")
+            ⚠ FastMCP not available (this is expected if not installed)
+            Install with: pip install fastmcp""")
         
-        server, chatbot = result
-        print("✓ Successfully created MCP server")
-        print(f"  - Server type: {type(server).__name__}")
+        mcp, chatbot = result
+        print("✓ Successfully created FastMCP server")
+        print(f"  - Server type: {type(mcp).__name__}")
         print(f"  - ChatBot model: {chatbot.model}")
 
