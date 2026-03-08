@@ -331,20 +331,23 @@ The application can be invoked in one of several ways:
 
 
 ```shell
-make chatbot             # Run the interactive ChatBot.
-make run-chatbot         # Synonym for "chatbot".
-make help-chatbot        # Show help for the ChatBot.
+make chatbot               # Run the interactive ChatBot.
+make run-chatbot           # Synonym for "chatbot".
+make help-chatbot          # Show help for the ChatBot.
 
-make mcp-server          # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-mcp-server      # Synonym for "mcp-server".
-make inspect-mcp-server  # Run the server with the `npx @modelcontextprotocol/inspector` tool.
-make help-mcp-server     # Show help for the MCP server.
-make check-mcp-server    # Runs a 'sanity check' that the MCP server works.
+make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server        # Synonym for "mcp-server".
+make inspect-mcp-server    # Run the server with the `npx @modelcontextprotocol/inspector` tool.
+make help-mcp-server       # Show help for the MCP server.
+make check-mcp-server      # Runs a 'sanity check' that the MCP server works.
 
-make api-server          # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-api-server      # Synonym for "api-server".
-make help-api-server     # Show help for the API server.
-make check-api-server    # Runs a 'sanity check' that the API server works.
+make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-api-server        # Synonym for "api-server".
+make help-api-server       # Show help for the API server.
+make check-api-server      # Runs a 'sanity check' that the API server works.
+
+make view-api-server-docs  # Open a browser showing the API server "docs".
+make view-api-server-redoc # Open a browser showing the API server "redoc".
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:

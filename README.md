@@ -316,18 +316,21 @@ This purpose of this application is to represent something closer to what you wo
 The application can be invoked in one of several ways:
 
 ```shell
-make chatbot             # Run the interactive ChatBot.
-make run-chatbot         # Synonym for "chatbot".
-make help-chatbot        # Show help for the ChatBot.
+make chatbot               # Run the interactive ChatBot.
+make run-chatbot           # Synonym for "chatbot".
+make help-chatbot          # Show help for the ChatBot.
 
-make mcp-server          # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-mcp-server      # Synonym for "mcp-server".
-make inspect-mcp-server  # Run the server with the `npx @modelcontextprotocol/inspector` tool.
-make help-mcp-server     # Show help for the MCP server.
+make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-mcp-server        # Synonym for "mcp-server".
+make inspect-mcp-server    # Run the server with the `npx @modelcontextprotocol/inspector` tool.
+make help-mcp-server       # Show help for the MCP server.
 
-make api-server          # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
-make run-api-server      # Synonym for "api-server".
-make help-api-server     # Show help for the API server.
+make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
+make run-api-server        # Synonym for "api-server".
+make help-api-server       # Show help for the API server.
+
+make view-api-server-docs  # Open a browser showing the API server "docs".
+make view-api-server-redoc # Open a browser showing the API server "redoc".
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -376,6 +379,8 @@ A second threshold used in the application is for the inference process's own co
 Finally, the AI-related unit tests (benchmarks), as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage.
 
 For details on running the MCP server, see the [`src/apps/chatbot/mcp_server/README.md`](src/apps/chatbot/mcp_server/README.md).
+
+For details on running the OpenAI-compatible API server, see the [`src/apps/chatbot/api_server/README.md`](src/apps/chatbot/api_server/README.md).
 
 ## Getting Involved
 
