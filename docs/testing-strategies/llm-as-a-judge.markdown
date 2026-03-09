@@ -79,7 +79,7 @@ In [A Variation of LLM as a Judge?]({{site.baseurl}}/testing-strategies/external
 
 In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/), we generated synthetic data, but left the question open how we can validate its quality, other than relying solely on manual inspection (which is still very useful when feasible!). _LLM as a judge_ is one of the best automation tools for this purpose.
 
-The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/scripts/unit-benchmark-data-validation.py`]({{site.gh_edit_repository}}/blob/main/src/scripts/unit-benchmark-data-validation.py/){:target="_blank"} that uses an LLM to rate each synthetic Q&A pair for the three unit benchmarks we generated previously, which are listed in a table in [Running the Data Synthesis Tool]({{site.baseurl}}/testing-strategies/unit-benchmarks/#running-the-data-synthesis-tool).
+The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/tools/unit-benchmark-data-validation.py`]({{site.gh_edit_repository}}/blob/main/src/tools/unit-benchmark-data-validation.py/){:target="_blank"} that uses an LLM to rate each synthetic Q&A pair for the three unit benchmarks we generated previously, which are listed in a table in [Running the Data Synthesis Tool]({{site.baseurl}}/testing-strategies/unit-benchmarks/#running-the-data-synthesis-tool).
 
 In this case, we don't use a separate prompt for each unit benchmark. Instead, one prompt works for all cases, as it doesn't mention the benchmark details; it just asks the LLM to judge if the answer is suitable for the question in the Q&A pair. It returns a rating, 1-5, as discussed above, and its reasoning for the rating.
 
@@ -127,7 +127,7 @@ make run-unit-benchmark-data-validation
 After some setup, the following command is executed, which uses the same arguments we used for data synthesis:
 
 ```shell
-time uv run src/scripts/unit-benchmark-data-validation.py \
+time uv run src/tools/unit-benchmark-data-validation.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \

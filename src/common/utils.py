@@ -199,7 +199,7 @@ def parse_json(text: any) -> dict[str,any] | str:
         return error_msg
 
 # TODO: This is duplicated now in the HandleResponse class, which is used by
-# the ChatBot app, but not by the "scripts".
+# the ChatBot app, but not by the "tools".
 def extract_content(litellm_reponse: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""
     response_dict = litellm_reponse.to_dict()

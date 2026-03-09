@@ -65,7 +65,7 @@ CHATBOT_API_SERVER      ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
 ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
 
-## One way to prevent execution of scripts is to invoke make this way:
+## One way to prevent execution of tools is to invoke make this way:
 ## NOOP=echo make foobar
 ## Another way is `make -n targets`.
 NOOP                  ?=
@@ -147,7 +147,7 @@ make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
 make uninstall-uv       # Explain how to uninstall "uv".
 
-For scripts run by the following targets, which invoke inference, the model 
+For tools run by the following targets, which invoke inference, the model 
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
 you want to use a different model, invoke make as in this example:
 
@@ -399,7 +399,7 @@ help-ubdv:: help-unit-benchmark-data-validation
 ${ALL_EXERCISES:run-%=help-%}::
 	@echo "Help on ${@:help-%=%}.py:"
 	@echo
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run scripts/${@:help-%=%}.py --help
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run tools/${@:help-%=%}.py --help
 	@echo
 
 # LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
@@ -410,7 +410,7 @@ ${ALL_EXERCISES:run-%=help-%}::
 ${ALL_EXERCISES}:: before-run
 	$(info ${$@-message})
 	@export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run scripts/${@:run-%=%}.py \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \

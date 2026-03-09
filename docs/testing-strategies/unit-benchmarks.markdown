@@ -77,7 +77,7 @@ In addition to synthesizing Q&A pairs for the two behaviors we already have, we 
 
 ### Generating the Synthetic Data
 
-The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/scripts/unit-benchmark-data-synthesis.py`]({{site.gh_edit_repository}}/blob/main/src/scripts/unit-benchmark-data-synthesis.py/){:target="_blank"} that uses an LLM to generate Q&A pairs for the three unit benchmarks, each corresponding to the `prompt` from the following template files[^3]:
+The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/tools/unit-benchmark-data-synthesis.py`]({{site.gh_edit_repository}}/blob/main/src/tools/unit-benchmark-data-synthesis.py/){:target="_blank"} that uses an LLM to generate Q&A pairs for the three unit benchmarks, each corresponding to the `prompt` from the following template files[^3]:
 
 [^3]: Recall we said previously that these templates files are designed to be compatible with the `llm` CLI tool.
 
@@ -176,7 +176,7 @@ make run-unit-benchmark-data-synthesis
 After some setup, the following command is executed:
 
 ```shell
-cd src && time uv run scripts/unit-benchmark-data-synthesis.py \
+cd src && time uv run tools/unit-benchmark-data-synthesis.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \

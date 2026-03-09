@@ -25,7 +25,7 @@ it won't be checked for the target!
 It doesn't exit with an error if such links are found, because in some
 cases, this might be intentional.
 
-Usage: $script [-h|--help] [-n|--noop] [path1 ...]
+Usage: $script [-h|--help] [-n|--noop] [-v|--verbose] [path1 ...]
 
 Where the arguments are the following:
 -h | --help            Print this message and exit
@@ -89,12 +89,12 @@ do
 		dir=$([[ -d "$path" ]] && echo "(directory)")
 		echo "$path $dir"
 	fi
-	$eg -nHoR '\(https?[^)]+\)(\S*)' \
+	$NOOP $eg -nHoR '\(https?[^)]+\)(\S*)' \
 		--include '*.markdown' --include '*.md' \
  		--exclude-dir 'temp' --exclude-dir 'tmp' \
 		--exclude-dir '_site' --exclude-dir '_sass' \
 		$path | $eg -v 'target=' | $eg -v '\.(jpg|jpeg|png|svg|mp3|mp4)'
-	$eg -nHoR '\(\{\{site.glossaryurl\}\}[^)]*\)(\S*)' \
+	$NOOP $eg -nHoR '\(\{\{site.glossaryurl\}\}[^)]*\)(\S*)' \
 		--include '*.markdown' --include '*.md' \
  		--exclude-dir 'temp' --exclude-dir 'tmp' \
 		--exclude-dir '_site' --exclude-dir '_sass' \
@@ -109,7 +109,7 @@ do
 		dir=$([[ -d "$path" ]] && echo "(directory)")
 		echo "$path $dir"
 	fi
-	$eg -nHoR '<a\s*href="https?[^>]+>' \
+	$NOOP $eg -nHoR '<a\s*href="https?[^>]+>' \
 		--include '*.html' \
  		--exclude-dir 'temp' --exclude-dir 'tmp' \
 		--exclude-dir '_site' --exclude-dir '_sass' \

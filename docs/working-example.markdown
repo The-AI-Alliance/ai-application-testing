@@ -142,7 +142,7 @@ You can also change the list of models you regularly want to use by changing the
 
 Now you are set up and you can use `make` to run the tools discussed and also the complete example ChatBot application. We will discuss the tools first, then the application.
 
-On MacOS and Linux, using `make` is the easiest way to run the exercises. The actual commands are printed out and we repeat them below for those of you on other platforms. Hence, you can also run the Python scripts directly without using `make`. 
+On MacOS and Linux, using `make` is the easiest way to run the exercises. The actual commands are printed out and we repeat them below for those of you on other platforms. Hence, you can also run the Python tools directly without using `make`. 
 
 {: .tip}
 > **TIPS:**
@@ -179,7 +179,7 @@ If you don't use the `make` command, make sure you have `uv` installed and eithe
 After the setup, the `make` target runs the following command:
 
 ```shell
-cd src && time uv run scripts/tdd-example-refill-chatbot.py \
+cd src && time uv run tools/tdd-example-refill-chatbot.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \
@@ -191,7 +191,7 @@ cd src && time uv run scripts/tdd-example-refill-chatbot.py \
 
 The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself.
 
-The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. You can omit it when running this command directly yourself or when using a system that doesn't support it. Note that `uv` is used to run `src/scripts/tdd-example-refill-chatbot.py`. 
+The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. You can omit it when running this command directly yourself or when using a system that doesn't support it. Note that `uv` is used to run `src/tools/tdd-example-refill-chatbot.py`. 
 
 The arguments are as follows:
 
@@ -208,7 +208,7 @@ The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the temp
 {: .note}
 > **NOTE:**
 >
-> These template files were originally designed for use with the `llm` CLI tool (see the Appendix in the repo's [`README`]({{site.gh_edit_repository}}/){:target="readme"} for details about `llm`). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
+> These template files were originally designed for use with the `llm` CLI tool (see the Appendix in the repo's [`README`]({{site.gh_edit_repository}}/){:target="readme"} for details about `llm`). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
 
 The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter]({{site.baseurl}}/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
 
@@ -230,7 +230,7 @@ make ubds
 After the same setup steps as before, the following command is executed:
 
 ```shell
-cd src && time uv run scripts/unit-benchmark-data-synthesis.py \
+cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \
@@ -282,7 +282,7 @@ make ubdv
 After the same setup steps, the following command is executed:
 
 ```shell
-cd src && time uv run scripts/unit-benchmark-data-validation.py \
+cd src && time uv run tools/unit-benchmark-data-validation.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \

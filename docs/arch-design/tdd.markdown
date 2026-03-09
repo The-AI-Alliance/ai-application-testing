@@ -293,7 +293,7 @@ make run-tdd-example-refill-chatbot
 This target runs the following command:
 
 ```shell
-time uv run src/scripts/tdd-example-refill-chatbot.py \
+time uv run src/tools/tdd-example-refill-chatbot.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
   --template-dir src/prompts/templates \
@@ -332,7 +332,7 @@ The only difference is the second file contains embedded examples in the prompt,
 {: .note}
 > **NOTE:** 
 > 
-> These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python scripts, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
+> These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 
 This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
 
