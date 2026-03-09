@@ -358,7 +358,7 @@ def main():
     """
     Main entry point for running the API server standalone.
     """
-    script = os.path.basename(__file__)
+    tool = os.path.basename(__file__)
     description = "OpenAI-compatible API Server for Patient ChatBot"
     
     def add_args(parser):
@@ -382,7 +382,7 @@ def main():
         )
     
     args, logger = setup(
-        script,
+        tool,
         description,
         epilog="Run the chatbot as an OpenAI-compatible API server.",
         add_arguments=add_args

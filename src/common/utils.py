@@ -26,25 +26,25 @@ timestamp_file_fmt = '%Y-%m-%d_%H-%M-%S'
 
 
 def setup(
-        script: str, 
+        tool: str, 
         description: str, 
         epilog: str = '', 
         add_arguments: Callable[[argparse.ArgumentParser], None] = None,
         omit: {str} = {}
     ) -> (argparse.Namespace, logging.Logger):
     parser = parser_with_common_args(
-        script, 
+        tool, 
         description,
         epilog=epilog,
         omit=omit)
     if add_arguments:
         add_arguments(parser)
     args = parser.parse_args()
-    logger = make_logger(args.log_file, name=script, level=args.log_level)
-    log_args(logger, script, args, epilog=epilog)
+    logger = make_logger(args.log_file, name=tool, level=args.log_level)
+    log_args(logger, tool, args, epilog=epilog)
     return args, logger
 
-def parser_with_common_args(script: str, description: str, epilog: str = None, omit: {str} = {}) -> argparse.ArgumentParser:
+def parser_with_common_args(tool: str, description: str, epilog: str = None, omit: {str} = {}) -> argparse.ArgumentParser:
     """
     Returns an `ArgumentParser` with the default arguments and a format string 
     that can be used by the calling program to print the actual values specified
@@ -64,8 +64,8 @@ def parser_with_common_args(script: str, description: str, epilog: str = None, o
         parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
             help=f"Directory where data files are read or written. Default: {common_defaults['data_dir']}")
     if not 'log-file' in omit:
-        default_log_file = get_default_log_file(script)
-        default_log_level = get_default_log_level(script)
+        default_log_file = get_default_log_file(tool)
+        default_log_level = get_default_log_level(tool)
         parser.add_argument("-l", "--log-file", default=default_log_file, 
             help=f"Where logging is written. Default: {default_log_file}.")
         parser.add_argument("--log-level", default=logging.INFO, type=int, 
@@ -84,9 +84,9 @@ def logging_level_to_string(level: int = -1):
         level = logger.getEffectiveLevel()
     return logging.getLevelName(level)
 
-def log_args(logger: logging.Logger, script: str, args: argparse.Namespace, epilog: str = None):
+def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = None):
     ns = now_str(fmt = timestamp_str_fmt)
-    logging.info(f" ({ns}) Running {script} with these argument values:")
+    logging.info(f" ({ns}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
         if k == 'log_level':
             v = f"{v} (== logging.{logging_level_to_string(v)})"
@@ -135,9 +135,9 @@ def use_cases() -> dict:
         "emergency": "emergency",
     }
 
-def get_default_log_file(script_name: str) -> str:
+def get_default_log_file(tool_name: str) -> str:
     log_dir = f'logs/{now_str(fmt = timestamp_file_fmt)}'
-    return f'{log_dir}/{script_name}.log'
+    return f'{log_dir}/{tool_name}.log'
 
 def get_default_log_level(ignored: str) -> int:
     return logging.INFO

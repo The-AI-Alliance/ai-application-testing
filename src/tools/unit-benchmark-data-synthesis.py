@@ -115,9 +115,9 @@ class BenchMarkDataSynthesizer:
 
 def main():
 
-    script = os.path.basename(__file__)
+    tool = os.path.basename(__file__)
     description = "Synthesize Q&A pairs for the healthcare ChatBot."
-    args, logger = setup(script, description)
+    args, logger = setup(tool, description)
     
     synthesizer = BenchMarkDataSynthesizer(
         args.model, args.service_url, args.template_dir, args.data_dir, logger)

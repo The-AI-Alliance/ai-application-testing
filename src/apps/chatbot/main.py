@@ -20,10 +20,10 @@ def main():
     See src/apps/chatbot/api_server/README.md for details.
     """
 
-    script = os.path.basename(__file__)
+    tool = os.path.basename(__file__)
     description = "Demonstration Patient ChatBot."
     args, logger = setup(
-        script,
+        tool,
         description,
         epilog="The data directory is used to store the ChatBot GUI session information.",
         add_arguments=lambda p: p.add_argument(

@@ -214,7 +214,7 @@ The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts
 
 ## Run `unit-benchmark-data-synthesis`
 
-Described in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/){:target="ub"}, this script uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
+Described in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/){:target="ub"}, this tool uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
 
 ```shell
 make run-unit-benchmark-data-synthesis
@@ -243,7 +243,7 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 >
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this script with `ollama_chat/gpt-oss:20b`, `temp/output/data/ollama_chat/gpt-oss_20b` (recall that `:` is an invalid character for MacOS file paths, so we replace it with `_`) will have these files of synthetic Q&A pairs:
+The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gpt-oss:20b`, `temp/output/data/ollama_chat/gpt-oss_20b` (recall that `:` is an invalid character for MacOS file paths, so we replace it with `_`) will have these files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
@@ -266,7 +266,7 @@ Each of these data files are generated with a single inference invocation, with 
 
 ## Run `unit-benchmark-data-validation`
 
-Described in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/){:target="laaj"}, this script uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
+Described in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/){:target="laaj"}, this tool uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
 
 ```shell
 make run-unit-benchmark-data-validation

@@ -203,7 +203,7 @@ def main():
     """
     Main entry point for running the MCP server standalone.
     """
-    script = os.path.basename(__file__)
+    tool = os.path.basename(__file__)
     description = "FastMCP Server for Patient ChatBot"
     
     def add_args(parser):
@@ -215,7 +215,7 @@ def main():
         )
     
     args, logger = setup(
-        script,
+        tool,
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
         add_arguments=add_args

@@ -153,9 +153,9 @@ class BenchMarkDataValidator:
 
 def main():
 
-    script = os.path.basename(__file__)
+    tool = os.path.basename(__file__)
     description = "Validate synthesized Q&A pairs for the healthcare ChatBot."
-    args, logger = setup(script, description, 
+    args, logger = setup(tool, description, 
         add_arguments = lambda p: p.add_argument("-j", "--just-stats", 
             action='store_true', 
             default=False, 
