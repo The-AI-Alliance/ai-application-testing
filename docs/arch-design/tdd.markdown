@@ -293,15 +293,15 @@ make run-tdd-example-refill-chatbot
 This target runs the following command:
 
 ```shell
-time uv run src/tools/tdd-example-refill-chatbot.py \
+cd src && time uv run tools/tdd-example-refill-chatbot.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
+  --template-dir prompts/templates \
+  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
+  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
 
-Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
 
 {: .tip}
 > **Tip:** To see this command without actually running it, pass the `-n` or `--dry-run` option to make.
@@ -312,9 +312,9 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | :------- | :------ |
 | `--model ollama_chat/gpt-oss:20b` | The model to use. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
-| `--template-dir src/prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
-| `--data-dir temp/output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where **all the interesting output is captured!** |
+| `--template-dir prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
+| `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where detailed log entries are captured. |
 
 {: .tip}
 > **Tips:**

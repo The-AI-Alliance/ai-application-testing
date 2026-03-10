@@ -183,15 +183,13 @@ cd src && time uv run tools/tdd-example-refill-chatbot.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \
-	--data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-	--log-file temp/output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
+	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
+	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
 
-`TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`.
+`TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are absolute paths. The other paths shown are relative to the `src` directory.
 
-The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself.
-
-The `time` command returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. You can omit it when running this command directly yourself or when using a system that doesn't support it. Note that `uv` is used to run `src/tools/tdd-example-refill-chatbot.py`. 
+The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself or on a system without this command. It returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run `tools/tdd-example-refill-chatbot.py`. 
 
 The arguments are as follows:
 
@@ -200,8 +198,8 @@ The arguments are as follows:
 | `--model ollama_chat/gpt-oss:20b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
 | `--template-dir prompts/templates` | Where we keep prompt templates we use for all the examples. |
-| `--data-dir temp/output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file temp/output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
 
@@ -234,8 +232,8 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \
-	--data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-	--log-file temp/output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
+	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
+	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
 ```
 
 {: .note}
@@ -243,7 +241,7 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 >
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, but in this case, the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gpt-oss:20b`, `temp/output/data/ollama_chat/gpt-oss_20b` (recall that `:` is an invalid character for MacOS file paths, so we replace it with `_`) will have these files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gpt-oss:20b`, the output will be in `.../output/data/ollama_chat/gpt-oss_20b`. We replace `:` with `_`, because `:` is an invalid character for MacOS file paths. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
@@ -286,8 +284,8 @@ cd src && time uv run tools/unit-benchmark-data-validation.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
 	--template-dir prompts/templates \
-	--data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-	--log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
+	--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:

@@ -127,15 +127,16 @@ make run-unit-benchmark-data-validation
 After some setup, the following command is executed, which uses the same arguments we used for data synthesis:
 
 ```shell
-time uv run src/tools/unit-benchmark-data-validation.py \
+cd src && time uv run tools/unit-benchmark-data-validation.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
+  --template-dir prompts/templates \
+  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
+  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
 
-Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
+
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"} directory:
 

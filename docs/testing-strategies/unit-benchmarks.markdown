@@ -179,12 +179,12 @@ After some setup, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir src/prompts/templates \
-  --data-dir temp/output/ollama_chat/gpt-oss_20b/data \
-  --log-file temp/output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
+  --template-dir prompts/templates \
+  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
+  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
 
-Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS`.
+Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
 
 Recall that a different model can be specified, i.e., `make MODEL=ollama_chat/llama3.2:3B`run-unit-benchmark-data-synthesis`. (See the project README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool).) 
 
