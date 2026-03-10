@@ -444,7 +444,8 @@ provider-server-check::
 
 .PHONY: chatbot run-chatbot help-chatbot before-chatbot 
 
-run-chatbot chatbot:: before-chatbot
+run-chatbot:: chatbot
+chatbot:: before-chatbot
 	@echo "Running the ChatBot..."
 	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.main \
@@ -453,9 +454,9 @@ run-chatbot chatbot:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/chatbot.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
@@ -466,7 +467,8 @@ before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_D
 
 # See inspect-mcp-server for information about ${INSPECTOR}, which is otherwise
 # blank.
-run-mcp-server mcp-server:: before-chatbot
+run-mcp-server:: mcp-server
+mcp-server:: before-chatbot
 	@echo "Running the ChatBot MCP Server..."
 	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
@@ -475,9 +477,9 @@ run-mcp-server mcp-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--log-file ${OUTPUT_LOGS_DIR}/mcp-server.log \
+		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/mcp-server.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 inspect-mcp-server:: node-command-check
 	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
@@ -488,7 +490,8 @@ help-mcp-server::
 
 .PHONY: api-server run-api-server help-api-server check-api-server view-api-server-docs view-api-server-redoc
 
-run-api-server api-server:: before-chatbot
+run-api-server:: api-server
+api-server:: before-chatbot
 	@echo "Running the ChatBot OpenAI-compatible API Server..."
 	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.api_server.server \
@@ -499,9 +502,9 @@ run-api-server api-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--log-file ${OUTPUT_LOGS_DIR}/api-server.log \
+		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/api-server.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 help-api-server::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
