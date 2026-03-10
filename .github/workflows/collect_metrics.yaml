@@ -47,7 +47,7 @@ jobs:
         env:  
           GITHUB_TOKEN: ${{ secrets.SPECIAL_GH_TOKEN }} # Use the default action token  
           # GITHUB_REPOSITORY is automatically set by the runner  
-        run: python .github/tools/collect_metrics.py # Assuming your script is named this  
+        run: python .github/scripts/collect_metrics.py # Assuming your script is named this  
   
       # --- Upload Parquet File to S3 ---  
       - name: Upload Parquet to S3  
