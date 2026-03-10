@@ -86,7 +86,8 @@ Quick help for this make process.
 Try these more specific help targets:
 
 make help-docs          # Help on the website targets.
-make help-code          # Help on the example code targets.
+make help-tools         # Help on the tools and example ChatBot targets.
+make help-code          # Synonym for "help-tools".
 
 make print-info         # Print the current values of some make and env. variables.
 make clean              # Makes clean-docs and clean-code, but not clean-setup, uninstall-uv
@@ -113,24 +114,26 @@ endef
 
 define help_message_code
 
-Quick help for this make process for the tools described in this website.
-For the tools used to manage the website, see the parent directory Makefile.
+Quick help for this make process for the tools and ChatBot example app.
+For the tools used to manage the website, run "make help-docs".
 
 For the following targets that run tools, there are variables defined in this Makefile
-that are used to pass arguments to the commands. Run 'make print-info-code' 
-to see the list of variables and their default definitions. Specific variables
-are mentioned for the corresponding targets:
+that are used to pass arguments to the commands. Run 'make print-info-code' to see the
+list of variables and their default definitions. Specific variables are mentioned for
+the corresponding targets:
 
-make all-models-*       # Extract "*" as one of the other targets (such as, "all-code"),
+make all-models-*       # Extract "*" as one of the other targets (such as, "all-tools"),
                         # that is everything to the right of "all-models-", and 
                         # make that target for ALL the models defined by "MODELS":
                         #   ${MODELS}
                         # (Not useful for model-agnostic targets, like "setup"...)
                         # You can override the list of models as follows:
                         #   make MODELS="..." all-models-...
-make all-code           # Clean outputs and run all the tools using the model defined by "MODEL".
-make run-code           # Run all the tools (but not the ChatBot app) without cleaning first. 
-                        # Built by "all-code".
+make all-tools          # Clean outputs and run all the tools using the model defined by "MODEL".
+make all-code           # Synonym for "all-tools".
+make run-tools          # Run all the tools (but not the ChatBot app) without cleaning first. 
+                        # Built by "all-tools".
+make run-code           # Synonym for "run-tools".
 
 make setup              # One-time setup tasks; e.g., builds target install-uv.
 make one-time-setup     # Synonym for "setup".
@@ -142,21 +145,22 @@ make unit-tests         # Synonym for "tests".
 make integration-tests  # Run the integration tests.
 make all-tests          # Run the unit and integration tests.
 
-make clean-code         # Remove build artifacts in ${OUTPUT_DIR}.
+make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
+make clean-code         # Synonym for "clean-tools".
 make clean-setup        # Undoes everything done by the setup target or provides
                         # instructions for what you must do manually in some cases.
 make uninstall-uv       # Explain how to uninstall "uv".
 
 For tools run by the following targets, which invoke inference, the model 
-${MODEL} is served by ollama. The make variable MODEL specifies the model, so if
-you want to use a different model, invoke make as in this example:
+${MODEL} is served by ollama. The make variable MODEL specifies the model, 
+so if you want to use a different model, invoke make as in this example:
 
   make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot
 
 See also the description of "all-models-*" above.
 
 All the following" targets may run setup dependencies that are redundant most of the time,
-but easy to forgot when important!
+but easy to forgot when important! See also the "help-*" targets below.
 
 make terc               # Shorthand for the run-tdd-example-refill-chatbot target.
 make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
@@ -176,6 +180,8 @@ make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
 
+The following targets are for the example ChatBot application. See also the "help-*" targets next.
+
 make chatbot            # Run the interactive ChatBot application.
 make run-chatbot        # Synonym for "chatbot".
 make mcp-server         # Run the ChatBot's MCP server.
@@ -185,8 +191,10 @@ make run-api-server     # Synonym for "api-server".
 
 Tasks for help, debugging, setup, etc.
 
-make help-code          # Prints this output.
-make help-code-all      # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
+make help-tools         # Prints this output.
+make help-code          # Synonym for "help-tools".
+make help-tools-all     # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
+make help-code-all      # Synonym for "help-tools-all".
 
 make help-terc          # Shorthand for the help-tdd-example-refill-chatbot target.
 make help-tdd-example-refill-chatbot   
@@ -288,7 +296,7 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-code help-code-all help-uv clean
+.PHONY: help help-docs help-tools help-code help-tools-all help-code-all help-uv 
 
 all:: help
 
@@ -296,15 +304,19 @@ help::
 	$(info ${help_message})
 	@echo
 
+help-tools:: help-code
 help-docs help-code help-uv::
 	$(info ${help_message_${@:help-%=%}})
 	@echo
 
-help-code-all:: help-code help-terc help-ubds help-ubdv
+help-tools-all help-code-all:: help-code help-terc help-ubds help-ubdv
 
-clean:: clean-docs clean-code clean-jekyll
+.PHONY: clean clean-docs clean-tools clean-code clean-jekyll
 
-.PHONY: print-info print-info-docs print-info-code print-info-env
+clean:: clean-docs clean-tools clean-jekyll
+clean-code:: clean-tools
+
+.PHONY: print-info print-info-docs print-info-tools print-info-code print-info-env
 
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
@@ -316,6 +328,7 @@ print-info-docs::
 	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
 	@echo
 
+print-info-tools:: print-info-code
 print-info-code::
 	@echo "For the example code and tools:"
 	@echo "  MODEL:                 ${MODEL} (the default)"
@@ -344,7 +357,7 @@ print-info-env::
 	@echo
 # Code Targets
 
-.PHONY: all-code run-code clean-code
+.PHONY: all-tools all-code run-tools run-code
 .PHONY: run-terc run-tdd-example-refill-chatbot 
 .PHONY: run-ubds run-unit-benchmark-data-synthesis 
 .PHONY: run-ubdv run-unit-benchmark-data-validation 
@@ -371,11 +384,11 @@ all-models-% ::
 		echo "  output/$$model/logs/${TIMESTAMP}"; \
 	done
 
-all-code:: run-code
-run-code:: 
+all-tools all-code:: run-tools
+run-tools run-code:: 
 	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_EXERCISES} 
 
-clean-code:: 
+clean-tools clean-code:: 
 	rm -rf ${CLEAN_CODE_DIRS}   
 
 define run-tdd-example-refill-chatbot-message
@@ -442,12 +455,12 @@ run-chatbot chatbot:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/chatbot.log"
 
 help-chatbot::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
-before-chatbot::  run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 
 .PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
@@ -462,9 +475,9 @@ run-mcp-server mcp-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		--log-file ${OUTPUT_LOGS_DIR}/mcp-server.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/mcp-server.log"
 
 inspect-mcp-server:: node-command-check
 	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
@@ -476,7 +489,7 @@ help-mcp-server::
 .PHONY: api-server run-api-server help-api-server check-api-server view-api-server-docs view-api-server-redoc
 
 run-api-server api-server:: before-chatbot
-	@echo "Running the OpenAI-compatible API Server..."
+	@echo "Running the ChatBot OpenAI-compatible API Server..."
 	export LITELLM_LOG="ERROR"; \
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.api_server.server \
 		--host ${CHATBOT_API_SERVER_HOST} \
@@ -486,9 +499,9 @@ run-api-server api-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--log-file ${OUTPUT_LOGS_DIR}/chatbot.log \
+		--log-file ${OUTPUT_LOGS_DIR}/api-server.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/api-server.log"
 
 help-api-server::
 	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
@@ -504,12 +517,11 @@ check-api-server::
 	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python apps/chatbot/api_server/example_client.py
 	@echo "  Hack: Find the process id for the server and kill it..." 
 	kill %1
-foo:
-	@ps | grep 'make api-server' | grep -v grep | cut -f1 -d' ' | while read id; \
-		do echo "Process id: <$$id>"; [[ -n $$id ]] && kill $$id; done
 
 view-api-server-docs view-api-server-redoc::
+	@echo
 	@echo "Opening http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
+	@echo
 	@echo "If the URL isn't found, make sure the server is running! For example,"
 	@echo "run 'make api-server' in another terminal window, then rerun this target or" 
 	@echo "try ⌘-click or ^-click on the URL just printed."
@@ -532,10 +544,16 @@ remove-open-webui::
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: all-tests test tests unit-tests 
+.PHONY: all-tests note-all-tests test tests unit-tests 
 .PHONY: integ-tests integration-tests unit-tests-as-integration-tests dedicated-integration-tests
 
-all-tests: unit-tests integration-tests
+all-tests:: note-all-tests integration-tests
+note-all-tests::
+	@echo "NOTE:"
+	@echo "The 'all-tests' target does NOT run the unit tests, because the integration tests"
+	@echo "are a strict superset of the unit tests. They run the same suite, but with all Q&A"
+	@echo "examples sampled, etc., plus some other integration tests."
+	@echo
 
 test tests unit-tests:: run-command-checks
 	@echo "Running the unit tests..."
@@ -559,7 +577,7 @@ unit-tests-as-integration-tests:: run-command-checks
 	@echo "Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
 	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
 
-ded-integ-tests dedicated-integration-tests:: run-command-checks
+dedicated-integration-tests:: run-command-checks
 	@echo "Running the dedicated integration tests..."
 	${NOOP} cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
@@ -598,8 +616,14 @@ uv-venv:: uv-command-check
 %-error:
 	$(error ${${@}-message})
 
-# The rest of this Makefile includes some convenience targets for working 
-# with the "llm" CLI tool. See the Appendix in the README.md for details.
+# Check if a command is on the path.
+%-command-check:
+	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1
+
+
+# The next section of this Makefile includes some convenience targets for working 
+# with the "llm" CLI tool. It is NOT required to install and use this tool.
+# See the Appendix in the README.md for details.
 
 define help_message_llm
 
@@ -674,7 +698,9 @@ install-llm-templates:: llm-command-check
 	ls -l "$$llmdir"
 
 
-# Docs Targets
+# Docs Targets - for the website.
+# These targets are only needed when you want to preview edits locally, by running
+# Jekyll. The exception is "view-pages", which opens the published site in a browser.
 
 .PHONY: all-docs clean-docs
 .PHONY: view-pages view-local setup-jekyll run-jekyll
@@ -685,9 +711,11 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
+	@echo "Opening ${GITHUB_PAGES_URL} ..."
 	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on this URL." && \
-		 exit 1 ): 
+		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on the URL." && \
+		 exit 1 )
+
 view-local:: setup-jekyll run-jekyll
 
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
@@ -715,6 +743,3 @@ ruby-installed-check:
 	@command -v ${@:%-ruby-command-check=%} > /dev/null || \
 		( echo "ERROR: Ruby command/gem ${@:%-ruby-command-check=%} ${missing_ruby_gem_or_command_error_message}" && \
 			exit 1 )
-
-%-command-check:
-	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1
