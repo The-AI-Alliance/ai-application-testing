@@ -142,8 +142,14 @@ make install-uv         # Explain how to install "uv".
 
 make tests              # Following convention, this target runs the unit tests only.
 make unit-tests         # Synonym for "tests".
-make integration-tests  # Run the integration tests.
+make unit-tests-langflow
+                        # Run unit tests for the Langflow components.
+make integration-tests  # Run the integration tests, including "dedicated" integration tests
+                        # and the unit tests suite with more "exhaustive" flags.
+make dedicated-integration-tests
+                        # The "dedicated" integration tests, omitting the unit tests.
 make all-tests          # Run the unit and integration tests.
+make all-tests-langflow # Run all the tests for the Langflow integration.
 
 make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
 make clean-code         # Synonym for "clean-tools".
@@ -162,23 +168,32 @@ See also the description of "all-models-*" above.
 All the following" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important! See also the "help-*" targets below.
 
-make terc               # Shorthand for the run-tdd-example-refill-chatbot target.
-make run-terc           # Shorthand for the run-tdd-example-refill-chatbot target.
 make run-tdd-example-refill-chatbot   
                         # Run the code for the TDD example "unit benchmark".
                         # See the TDD chapter in the website for details.
+make run-terc           # Synonym for "run-tdd-example-refill-chatbot".
+make terc               # Synonym for "run-tdd-example-refill-chatbot".
 
-make ubds               # Shorthand for the run-unit-benchmark-data-synthesis target.
-make run-ubds           # Shorthand for the run-unit-benchmark-data-synthesis target.
 make run-unit-benchmark-data-synthesis
                         # Run the code for "unit benchmark" data synthesis.
                         # See the Unit Benchmark chapter in the website for details.
+make run-ubds           # Synonym for "run-unit-benchmark-data-synthesis".
+make ubds               # Synonym for "run-unit-benchmark-data-synthesis".
 
-make ubdv               # Shorthand for the run-unit-benchmark-data-validation target.
-make run-ubdv           # Shorthand for the run-unit-benchmark-data-validation target.
 make run-unit-benchmark-data-validation
                         # Run the code for validating the synthetic data for the unit benchmarks.
                         # See the Unit Benchmark chapter in the website for details.
+make run-ubdv           # Synonym for "run-unit-benchmark-data-validation".
+make ubdv               # Synonym for "run-unit-benchmark-data-validation".
+
+make run-langflow-pipeline
+                        # Run the Langflow benchmark pipeline (synthesis + validation).
+                        # This orchestrates both synthesis and validation in a single flow.
+make langflow-pipeline  # Synonym for "run-langflow-pipeline".
+
+make export-langflow-json
+                        # Export a Langflow-compatible JSON flow definition.
+                        # The JSON file can be imported into Langflow's visual editor.
 
 The following targets are for the example ChatBot application. See also the "help-*" targets next.
 
@@ -189,6 +204,9 @@ make run-mcp-server     # Synonym for "mcp-server".
 make api-server         # Run the ChatBot's OpenAI-compatible API server.
 make run-api-server     # Synonym for "api-server".
 
+Tasks for testing.
+
+make test
 Tasks for help, debugging, setup, etc.
 
 make help-tools         # Prints this output.
@@ -196,18 +214,22 @@ make help-code          # Synonym for "help-tools".
 make help-tools-all     # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
 make help-code-all      # Synonym for "help-tools-all".
 
-make help-terc          # Shorthand for the help-tdd-example-refill-chatbot target.
+make help-terc          # Synonym for "help-tdd-example-refill-chatbot".
 make help-tdd-example-refill-chatbot   
                         # Show help for the TDD example code by passing the "--help" flag.
 
-make help-ubds          # Shorthand for the help-unit-benchmark-data-synthesis target.
+make help-ubds          # Synonym for "help-unit-benchmark-data-synthesis".
 make help-unit-benchmark-data-synthesis
                         # Show help for the "unit benchmark" data synthesis code by passing the "--help" flag.
 
-make help-ubdv          # Shorthand for the help-unit-benchmark-data-validation target.
+make help-ubdv          # Synonym for "help-unit-benchmark-data-validation".
 make help-unit-benchmark-data-validation
                         # Show help for the synthetic data validation code by passing the "--help" flag.
                         # Run the code for validating the synthetic data for the unit benchmarks.
+
+make help-langflow-pipeline
+                        # Show help for the Langflow pipeline by passing the "--help" flag.
+make help-langflow      # Synonym for "help-langflow-pipeline".
 
 make help-chatbot       # Show help for the interactive ChatBot application.
 make help-mcp-server    # Show help for the ChatBot's MCP server.
@@ -400,7 +422,10 @@ endef
 define run-unit-benchmark-data-validation-message
 *** Running the unit benchmark synthetic data validation example.
 endef
-	
+define run-langflow-pipeline-message
+*** Running the Langflow unit benchmark pipeline (synthesis + validation).
+endef
+
 terc run-terc:: run-tdd-example-refill-chatbot
 ubds run-ubds:: run-unit-benchmark-data-synthesis
 ubdv run-ubdv:: run-unit-benchmark-data-validation
@@ -428,9 +453,9 @@ ${ALL_EXERCISES}:: before-run
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
-		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
+		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.py.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.py.log"
 
 before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
@@ -441,6 +466,49 @@ run-command-checks:: uv-command-check provider-server-check
 provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
 
+# Langflow targets
+.PHONY: run-langflow-pipeline langflow-pipeline help-langflow-pipeline export-langflow-json 
+.PHONY: unit-tests-langflow all-tests-langflow
+
+run-langflow-pipeline:: langflow-pipeline
+langflow-pipeline:: before-run
+	$(info ${run-langflow-pipeline-message})
+	@export LITELLM_LOG="ERROR"; \
+	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run python -m langflow.unit_benchmark_flow \
+	  --model ${MODEL} \
+	  --service-url ${INFERENCE_URL} \
+	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
+	  --data-dir ${DATA_DIR} \
+	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
+	  ${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+
+help-langflow help-langflow-pipeline::
+	@echo "Help on the Langflow unit benchmark pipeline:"
+	@echo
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m langflow.unit_benchmark_flow --help
+	@echo
+
+export-langflow-json:: before-run
+	@echo "Exporting Langflow JSON definition..."
+	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m langflow.unit_benchmark_flow \
+	  --model ${MODEL} \
+	  --service-url ${INFERENCE_URL} \
+	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
+	  --data-dir ${DATA_DIR} \
+	  --export-json ${OUTPUT_DIR}/unit-benchmark-pipeline.json
+	@echo "\nLangflow JSON exported to: ${OUTPUT_DIR}/unit-benchmark-pipeline.json"
+
+all-tests-langflow unit-tests-langflow:: run-command-checks
+	@echo "Running langflow unit tests..."
+	${NOOP} cd ${SRC_DIR} && \
+	  export MODEL=${MODEL} && \
+	  export INFERENCE_URL=${INFERENCE_URL} && \
+	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export DATA_DIR=${DATA_DIR} && \
+	  ${NOOP} uv run python -m unittest discover \
+	    --start-directory tests/unit/langflow \
+	    --top-level-directory .
 
 .PHONY: chatbot run-chatbot help-chatbot before-chatbot 
 
