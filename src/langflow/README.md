@@ -1,6 +1,6 @@
 # Langflow Integration for Benchmark Data Pipeline
 
-This directory contains Langflow-compatible components and orchestration code for running the benchmark data synthesis and validation pipeline.
+This directory contains components and orchestration code for running the benchmark data synthesis and validation pipeline in [Langflow](https://www.langflow.org/).
 
 ## Overview
 
@@ -39,7 +39,7 @@ Add `--help` to see all the command-line arguments, which are the following:
 * `-s, --service-url` - Inference service URL (default: `http://localhost:11434`).
 * `-t, --template-dir` - Template directory (default: `prompts/templates`).
 * `-d, --data-dir` - Data directory (default: `data`).
-* `-u, --use-case` - Specific use case to generate (default: all the use cases).
+* `-u, --use-case` - Specific use case to generate, one of `prescription-refills`, `non-prescription-refills`, or `emergency` (default: all the use cases).
 * `-j, --just-stats` - Only compute validation statistics.
 * `--export-json` - Export Langflow JSON definition to the specified file.
 * `-l, --log-file` - Log file path (default: logs/benchmark-flow.log).

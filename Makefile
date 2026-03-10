@@ -15,10 +15,14 @@ TIME                  ?= time  # time execution of long processes
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
 APP_ARGS              ?=
 
-# Definitions for the example code.
+# Definitions for the tools and applications.
+# Setting the USE_CASES to '' results in all of them being processed.
+# Invoke "make JUST_STATS=--just-stats ..." to have stats generated, not validation, too.
 INFERENCE_SERVICE     ?= ollama
 PORT                  ?= 11434
 INFERENCE_URL         ?= http://localhost:${PORT}
+USE_CASES             ?= 
+JUST_STATS            ?=
 
 # Different models we have used. See the "all-models-*" targets:
 ollama_prefix          = ollama_chat
@@ -63,12 +67,7 @@ CHATBOT_API_SERVER_HOST ?= localhost
 CHATBOT_API_SERVER_PORT ?= 8000
 CHATBOT_API_SERVER      ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
-ALL_EXERCISES         ?= run-tdd-example-refill-chatbot run-unit-benchmark-data-synthesis run-unit-benchmark-data-validation
-
-## One way to prevent execution of tools is to invoke make this way:
-## NOOP=echo make foobar
-## Another way is `make -n targets`.
-NOOP                  ?=
+ALL_TOOLS               ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
 
 # Definitions for the website.
 GITHUB_PAGES_URL      ?= https://the-ai-alliance.github.io/ai-application-testing/
@@ -355,7 +354,7 @@ print-info-code::
 	@echo "For the example code and tools:"
 	@echo "  MODEL:                 ${MODEL} (the default)"
 	@echo "  MODELS: (all we use)   ${MODELS}"
-	@echo "  ALL_EXERCISES:         ${ALL_EXERCISES}"
+	@echo "  ALL_TOOLS:             ${ALL_TOOLS}"
 	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
 	@echo "  INFERENCE_URL:         ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
@@ -398,7 +397,7 @@ all-models-% ::
 	do \
 		echo "\nModel = $$model"; \
 		echo ${MAKE} ${MAKEFLAGS} TIMESTAMP=${TIMESTAMP} MODEL="$$model" $$target; \
-		${NOOP} ${MAKE} MODEL="$$model" $$target; \
+		${MAKE} MODEL="$$model" $$target; \
 	done; \
 	echo "Output log files (if any) can be found under:"; \
 	for model in ${MODELS}; \
@@ -408,7 +407,7 @@ all-models-% ::
 
 all-tools all-code:: run-tools
 run-tools run-code:: 
-	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_EXERCISES} 
+	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_TOOLS:%=run-%} 
 
 clean-tools clean-code:: 
 	rm -rf ${CLEAN_CODE_DIRS}   
@@ -434,28 +433,55 @@ help-terc:: help-tdd-example-refill-chatbot
 help-ubds:: help-unit-benchmark-data-synthesis
 help-ubdv:: help-unit-benchmark-data-validation
 
-${ALL_EXERCISES:run-%=help-%}::
+${ALL_TOOLS:%=help-%}::
 	@echo "Help on ${@:help-%=%}.py:"
 	@echo
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run tools/${@:help-%=%}.py --help
+	cd ${SRC_DIR} && uv run tools/${@:help-%=%}.py --help
 	@echo
 
-# LITELLM_LOG="ERROR" turns off some annoying INFO messages, sufficient
+# LITELLM_LOG=ERROR turns off some annoying INFO messages, sufficient
 # for our purposes. See the LiteLLM docs for logging configuration details.
 # Define APP_ARGS on the command line to pass custom arguments, e.g., 
 #   make APP_ARGS='--help' run-tdd-example-refill-chatbot
 # just prints help.
-${ALL_EXERCISES}:: before-run
+
+run-tdd-example-refill-chatbot:: before-run
 	$(info ${$@-message})
-	@export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run tools/${@:run-%=%}.py \
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
-		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.py.log \
+		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.py.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+
+run-unit-benchmark-data-synthesis:: before-run
+	$(info ${$@-message})
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
+		--model ${MODEL} \
+		--service-url ${INFERENCE_URL} \
+		--template-dir ${PROMPTS_TEMPLATES_DIR} \
+		--data-dir ${DATA_DIR} \
+		--use-cases ${USE_CASES} \
+		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
+		${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+
+run-unit-benchmark-data-validation:: before-run
+	$(info ${$@-message})
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
+	  --model ${MODEL} \
+	  --service-url ${INFERENCE_URL} \
+	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
+	  --data-dir ${DATA_DIR} \
+	  --use-cases ${USE_CASES} \
+	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
+	  ${JUST_STATS} ${APP_ARGS}
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
 
 before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
@@ -473,40 +499,45 @@ provider-server-check::
 run-langflow-pipeline:: langflow-pipeline
 langflow-pipeline:: before-run
 	$(info ${run-langflow-pipeline-message})
-	@export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} ${TIME} uv run python -m langflow.unit_benchmark_flow \
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && ${TIME} uv run python -m langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
 	  --data-dir ${DATA_DIR} \
+	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
-	  ${APP_ARGS}
+	  ${JUST_STATS} ${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+
+help-lf::
+	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow --help
 
 help-langflow help-langflow-pipeline::
 	@echo "Help on the Langflow unit benchmark pipeline:"
 	@echo
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m langflow.unit_benchmark_flow --help
+	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow --help
 	@echo
 
 export-langflow-json:: before-run
 	@echo "Exporting Langflow JSON definition..."
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m langflow.unit_benchmark_flow \
+	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
 	  --data-dir ${DATA_DIR} \
+	  --use-case ${USE_CASES} \
 	  --export-json ${OUTPUT_DIR}/unit-benchmark-pipeline.json
 	@echo "\nLangflow JSON exported to: ${OUTPUT_DIR}/unit-benchmark-pipeline.json"
 
 all-tests-langflow unit-tests-langflow:: run-command-checks
 	@echo "Running langflow unit tests..."
-	${NOOP} cd ${SRC_DIR} && \
+	cd ${SRC_DIR} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
-	  ${NOOP} uv run python -m unittest discover \
+	  uv run python -m unittest discover \
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
@@ -515,8 +546,8 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 run-chatbot:: chatbot
 chatbot:: before-chatbot
 	@echo "Running the ChatBot..."
-	export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.main \
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
@@ -527,7 +558,7 @@ chatbot:: before-chatbot
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 help-chatbot::
-	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
+	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 
@@ -538,8 +569,8 @@ before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_D
 run-mcp-server:: mcp-server
 mcp-server:: before-chatbot
 	@echo "Running the ChatBot MCP Server..."
-	export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
@@ -554,15 +585,15 @@ inspect-mcp-server:: node-command-check
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
 help-mcp-server::
-	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
+	cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
 
 .PHONY: api-server run-api-server help-api-server check-api-server view-api-server-docs view-api-server-redoc
 
 run-api-server:: api-server
 api-server:: before-chatbot
 	@echo "Running the ChatBot OpenAI-compatible API Server..."
-	export LITELLM_LOG="ERROR"; \
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python -m apps.chatbot.api_server.server \
+	export LITELLM_LOG=ERROR; \
+	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server \
 		--host ${CHATBOT_API_SERVER_HOST} \
 		--port ${CHATBOT_API_SERVER_PORT} \
 		--model ${MODEL} \
@@ -575,7 +606,7 @@ api-server:: before-chatbot
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 help-api-server::
-	${NOOP} cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
+	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
 
 check-api-server::
 	@echo "'Sanity check' that the OpenAI-compatible API server works:"
@@ -585,7 +616,7 @@ check-api-server::
 	@echo "  Hit the 'return' key!"
 	@echo
 	@echo "  Running 'apps/chatbot//api_server/example_client.py'..."
-	${NOOP} cd ${SRC_DIR} && ${NOOP} uv run python apps/chatbot/api_server/example_client.py
+	cd ${SRC_DIR} && uv run python apps/chatbot/api_server/example_client.py
 	@echo "  Hack: Find the process id for the server and kill it..." 
 	kill %1
 
@@ -603,10 +634,10 @@ view-api-server-docs view-api-server-redoc::
 run-open-webui open-webui:: 
 	@echo "Running Open WebUI (https://docs.openwebui.com/getting-started/)."
 	@echo "Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!"
-	${NOOP} DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve
+	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve
 
 help-open-webui:: 
-	${NOOP} DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve --help
+	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve --help
 
 remove-open-webui::
 	uv tool uninstall open-webui
@@ -628,7 +659,7 @@ note-all-tests::
 
 test tests unit-tests:: run-command-checks
 	@echo "Running the unit tests..."
-	${NOOP} cd ${SRC_DIR} && \
+	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
@@ -638,7 +669,7 @@ test tests unit-tests:: run-command-checks
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
-	  ${NOOP} uv run python -m unittest discover \
+	  uv run python -m unittest discover \
 	  	--start-directory tests/unit \
 	  	--top-level-directory .
 
@@ -650,7 +681,7 @@ unit-tests-as-integration-tests:: run-command-checks
 
 dedicated-integration-tests:: run-command-checks
 	@echo "Running the dedicated integration tests..."
-	${NOOP} cd ${SRC_DIR} && \
+	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
@@ -660,12 +691,12 @@ dedicated-integration-tests:: run-command-checks
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
-	  ${NOOP} uv run python -m unittest discover \
+	  uv run python -m unittest discover \
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
 .PHONY: one-time-setup setup clean-setup 
-.PHONY: uninstall-uv clean-llm-templates 
+.PHONY: uninstall-uv 
 .PHONY: install-uv uv-venv
 
 setup one-time-setup:: install-uv uv-venv

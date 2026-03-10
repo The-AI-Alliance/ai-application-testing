@@ -1,4 +1,7 @@
+import glob
 import io
+from litellm.types.utils import ModelResponse
+from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
 import os
 import sys
 import json
@@ -7,21 +10,61 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from common.utils import load_yaml, ensure_dirs_exist, use_cases, extract_content
+from common.utils import ensure_dirs_exist, extract_content, load_yaml, make_full_prompt, all_use_cases
 
-class UnitBenchmarkDataSynthesizer:
+class UnitBenchmarkDataParent:
 
     template_prefix = 'synthetic-q-and-a_patient-chatbot'
 
-    def __init__(self, model_name: str, service_url: str, template_dir: str, data_dir: str, logger: logging.Logger):
+    def __init__(self, 
+        model_name: str, 
+        service_url: str, 
+        template_dir: str, 
+        data_dir: str, 
+        use_cases: [str], 
+        logger: logging.Logger):
         self.model_name      = model_name
         self.service_url     = service_url
         self.template_dir    = template_dir
         self.data_dir        = data_dir
         self.logger          = logger
+
+        all_ucs = all_use_cases()
+        self.use_cases = {}
+        if not use_cases:
+            self.use_cases = all_ucs
+        else:
+            errors = []
+            for uc in use_cases:
+                if not uc in all_ucs:
+                    errors.append(uc)
+                else:
+                    self.use_cases[uc] = all_ucs[uc]
+            if errors:
+                raise ValueError(f"One or more specified use cases [{', '.join(errors)}] not in known list: {list(all_ucs.keys())}")
+
+        ensure_dirs_exist(self.template_dir)
+
+
+class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
+
+    def __init__(self, 
+        model_name: str, 
+        service_url: str, 
+        template_dir: str, 
+        data_dir: str, 
+        use_cases: [str], 
+        logger: logging.Logger):
+        super().__init__(
+            model_name,
+            service_url,
+            template_dir,
+            data_dir,
+            use_cases,
+            logger)
+
         # Create the data directory
         os.makedirs(self.data_dir, exist_ok=True)
-        ensure_dirs_exist(self.template_dir, self.data_dir)
 
     def template_name(self, which_one: str) -> str:
         return f"{self.template_prefix}-{which_one}"
@@ -94,11 +137,11 @@ class UnitBenchmarkDataSynthesizer:
             self.logger.error(f"OpenAIError thrown: {e}")
             sys.exit(1)
 
-    def generate(self, which_one: str, expected_label: str) -> int:
-        """Generate data with the given template and expected label."""
+    def generate_data_for_use_case(self, which_one: str, expected_label: str) -> int:
+        """Generate data for the given use case with its expected label."""
         template_n  = self.template_name(which_one)
         template = load_yaml(Path(self.template_dir, template_n+".yaml"))
-        data_file = os.path.join(self.data_dir, f"{template_n}-data.json")
+        data_file = os.path.join(self.data_dir, f"{template_n}-data.jsonl")
         
         self.logger.info(f"  For expected label: {expected_label}:")
         self.logger.info(f"    Template:    {template_n}")
@@ -109,25 +152,33 @@ class UnitBenchmarkDataSynthesizer:
             self.logger.warning(f"Run for {template_n} had {num_unexpected_lines} with the wrong labels or other errors. See data file {data_file}")
         return num_unexpected_lines
 
-    def generate_all(self):
-        for name, label in use_cases().items():
-            substr = name.replace(' ', '-')
-            self.generate(substr, label)
+    def generate_data(self) -> int:
+        """Generate data for all use cases with the expected labels."""
+        count = 0
+        for name, label in self.use_cases.items():
+            count += self.generate_data_for_use_case(name, label)
+        return count
 
-
-class UnitBenchmarkDataValidator:
+class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
 
     template_prefix = "synthetic-q-and-a_patient-chatbot-data-validation"
 
-    def __init__(self, just_stats: bool, model_name: str, service_url: str, template_dir: str, data_dir: str, logger: logging.Logger):
-        self.just_stats   = just_stats
-        self.model_name   = model_name
-        self.service_url  = service_url
-        self.template_dir = template_dir
-        self.data_dir     = data_dir
-        self.logger       = logger
-
-        ensure_dirs_exist(self.template_dir, self.data_dir)
+    def __init__(self, model_name: str, 
+        service_url: str, 
+        template_dir: str, 
+        data_dir: str, 
+        use_cases: [str], 
+        just_stats: bool, 
+        logger: logging.Logger):
+        super().__init__(
+            model_name,
+            service_url,
+            template_dir,
+            data_dir,
+            use_cases,
+            logger)
+        self.just_stats = just_stats
+        ensure_dirs_exist(self.data_dir)
 
         template_file = Path(template_dir, self.template_prefix+".yaml")
         self.logger.info(f"Using template file: {template_file}")
@@ -172,7 +223,7 @@ class UnitBenchmarkDataValidator:
     def validate_line(self, line: str, system_prompt: str, validation_file: io.TextIOWrapper):
         """Validate a single generated datum; does the question match the label?"""    
         try:
-            response = completion(
+            response: ModelResponse | CustomStreamWrapper = completion(
                 model = self.model_name, 
                 messages = [{ 
                     "content": make_full_prompt(line, system_prompt),
@@ -184,7 +235,7 @@ class UnitBenchmarkDataValidator:
                 # format = "json",
             )
             actual = extract_content(response)
-            validation_file.write(actual+"\n")
+            validation_file.write(f"{actual}\n")
 
         except OpenAIError as e:
             self.logger.error(f"OpenAIError thrown: {e}")
@@ -194,13 +245,21 @@ class UnitBenchmarkDataValidator:
         """Validate the generated data labeling."""    
         system_prompt = self.template['system']
         if len(system_prompt) == 0:
-            self.logger.error(f"The template['system'] is empty: template:\n{template}")
+            self.logger.error(f"The template['system'] is empty: template:\n{self.template}")
             sys.exit(1)
 
         total_stats = {}
-        for data_file_name in glob.iglob('*-data.json', root_dir=self.data_dir, recursive=False, include_hidden=False):
+
+        globs = [f"*-{name}-data.jsonl" for name in self.use_cases]
+        data_file_names = []
+        for gl in globs:
+            for files in glob.iglob(gl, root_dir=self.data_dir, recursive=False, include_hidden=False):
+                data_file_names.append(files)
+        self.logger.info(f"Validating data files: {data_file_names}")
+        print(f"Validating data files: {data_file_names}")
+        for data_file_name in data_file_names:
             data_file = os.path.join(self.data_dir, data_file_name)
-            validation_file = os.path.splitext(data_file)[0]+'-validation.json' 
+            validation_file = os.path.splitext(data_file)[0]+'-validation.jsonl' 
             if not self.just_stats:
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:

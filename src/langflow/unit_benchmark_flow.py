@@ -13,7 +13,7 @@ import importlib.util
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-from common.utils import setup
+from common.utils import setup, all_use_cases
 from tools.unit_benchmark import UnitBenchmarkDataSynthesizer, UnitBenchmarkDataValidator
 
 class UnitBenchmarkFlowOrchestrator:
@@ -25,6 +25,8 @@ class UnitBenchmarkFlowOrchestrator:
         service_url: str,
         template_dir: str,
         data_dir: str,
+        use_case: Optional[str],
+        just_stats: bool,
         logger: Optional[logging.Logger] = None
     ):
         """
@@ -35,18 +37,20 @@ class UnitBenchmarkFlowOrchestrator:
             service_url: The inference service URL
             template_dir: Directory containing prompt templates
             data_dir: Directory for data files
+            use_case: Name of a use case to focus on or None for all of them
+            just_stats: In the validation stage, skip validation and only print the stats
             logger: Optional logger instance
         """
         self.model_name = model_name
         self.service_url = service_url
         self.template_dir = template_dir
         self.data_dir = data_dir
+        self.just_stats = just_stats
+        all_ucs = all_use_cases()
+        self.use_cases = [use_case] if use_case else list(all_ucs.keys())
         self.logger = logger or logging.getLogger(__name__)
         
-        self.synthesis_results = None
-        self.validation_results = None
-    
-    def run_synthesis(self, use_case: Optional[str] = None) -> Dict[str, Any]:
+    def run_synthesis(self) -> Dict[str, Any]:
         """
         Run the data synthesis step.
         
@@ -58,49 +62,50 @@ class UnitBenchmarkFlowOrchestrator:
         """
         self.logger.info("Starting benchmark data synthesis...")
         
+        # Create synthesizer instance.
         synthesizer = UnitBenchmarkDataSynthesizer(
             model_name=self.model_name,
             service_url=self.service_url,
             template_dir=self.template_dir,
             data_dir=self.data_dir,
+            use_cases=self.use_cases,
             logger=self.logger
         )
         
-        if use_case:
-            from common.utils import use_cases
-            cases = use_cases()
-            if use_case in cases:
-                label = cases[use_case]
-                substr = use_case.replace(' ', '-')
-                num_unexpected = synthesizer.generate(substr, label)
-                self.synthesis_results = {
+        synthesis_results = {}
+        if len(self.use_cases) == 1:
+            # User specified the one use case to run.
+            all_ucs = all_use_cases()
+            use_case = self.use_cases[0]
+            if use_case in all_ucs:
+                label = all_ucs[use_case]
+                num_unexpected = synthesizer.generate_data_for_use_case(use_case, label)
+                synthesis_results = {
                     "status": "success",
                     "use_case": use_case,
-                    "unexpected_labels": num_unexpected,
+                    "number_unexpected_labels": num_unexpected,
                     "data_dir": self.data_dir
                 }
             else:
-                self.synthesis_results = {
+                synthesis_results = {
                     "status": "error",
                     "message": f"Unknown use case: {use_case}"
                 }
         else:
-            synthesizer.generate_all()
-            self.synthesis_results = {
+            num_unexpected = synthesizer.generate_data()
+            synthesis_results = {
                 "status": "success",
-                "use_case": "all",
+                "use_case": f"all: {', '.join(self.use_cases)}",
+                "number_unexpected_labels": num_unexpected,
                 "data_dir": self.data_dir
             }
         
-        self.logger.info(f"Synthesis completed: {self.synthesis_results}")
-        return self.synthesis_results
+        self.logger.info(f"Synthesis completed: {synthesis_results}")
+        return synthesis_results
     
-    def run_validation(self, just_stats: bool = False) -> Dict[str, Any]:
+    def run_validation(self) -> Dict[str, Any]:
         """
         Run the data validation step.
-        
-        Args:
-            just_stats: If True, only compute statistics without re-validating
             
         Returns:
             Dictionary with validation results
@@ -108,55 +113,55 @@ class UnitBenchmarkFlowOrchestrator:
         self.logger.info("Starting benchmark data validation...")
         
         validator = UnitBenchmarkDataValidator(
-            just_stats=just_stats,
+            just_stats=self.just_stats,
             model_name=self.model_name,
             service_url=self.service_url,
             template_dir=self.template_dir,
             data_dir=self.data_dir,
+            use_cases=self.use_cases,
             logger=self.logger
         )
         
         total_stats = validator.validate()
         validator.print_stats(total_stats)
         
-        self.validation_results = {
+        validation_results = {
             "status": "success",
             "stats": total_stats,
             "data_dir": self.data_dir
         }
         
         self.logger.info("Validation completed")
-        return self.validation_results
+        return validation_results
     
-    def run_full_pipeline(
-        self,
-        use_case: Optional[str] = None,
-        just_stats: bool = False
-    ) -> Dict[str, Any]:
+    def run_full_pipeline(self) -> Dict[str, Any]:
         """
         Run the complete pipeline: synthesis followed by validation.
-        
-        Args:
-            use_case: Optional specific use case to generate
-            just_stats: If True, only compute validation statistics
             
         Returns:
             Dictionary with complete pipeline results
         """
+        synthesis_results = {}
         self.logger.info("Starting full benchmark pipeline...")
-        
-        # Step 1: Synthesis
-        synthesis_results = self.run_synthesis(use_case)
-        
-        if synthesis_results.get("status") != "success":
-            return {
-                "status": "error",
-                "message": "Synthesis failed",
-                "synthesis_results": synthesis_results
+        if self.just_stats:
+            self.logger.info("Just calculating statistics; skipping data synthesis...")
+            synthesis_results = {
+                "status": "success",
+                "message": "Synthesis skipped; just calculating statistics",
             }
+        else:
+            # Step 1: Synthesis
+            synthesis_results = self.run_synthesis()
+            
+            if synthesis_results.get("status") != "success":
+                return {
+                    "status": "error",
+                    "message": "Synthesis failed",
+                    "synthesis_results": synthesis_results
+                }
         
-        # Step 2: Validation
-        validation_results = self.run_validation(just_stats)
+        # Step 2: Validation (will handle the self.just_stats flag internally...)
+        validation_results = self.run_validation()
         
         return {
             "status": "success",
@@ -283,7 +288,7 @@ def main():
         help="Data directory"
     )
     parser.add_argument(
-        "-u", "--use-case",
+        "-u", "--use-case", nargs="*",
         default=None,
         help="Specific use case to generate (default: all)"
     )
@@ -320,6 +325,8 @@ def main():
         service_url=args.service_url,
         template_dir=args.template_dir,
         data_dir=args.data_dir,
+        use_case=args.use_case,
+        just_stats=args.just_stats,
         logger=logger
     )
     
@@ -330,10 +337,7 @@ def main():
         return
     
     # Run the pipeline
-    results = orchestrator.run_full_pipeline(
-        use_case=args.use_case,
-        just_stats=args.just_stats
-    )
+    results = orchestrator.run_full_pipeline()
     
     logger.info(f"Pipeline completed with status: {results['status']}")
     

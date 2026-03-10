@@ -15,9 +15,9 @@ from litellm.types.utils import ModelResponse
 
 common_defaults = {
     "model":                        "ollama_chat/gpt-oss:20b",
-    "service_url":                  "http://localhost:11434",
-    "template_dir":                 "prompts/templates",
-    "data_dir":                     "data",
+    "service-url":                  "http://localhost:11434",
+    "template-dir":                 "prompts/templates",
+    "data-dir":                     "data",
     "levenshtein-ratio-threshold":  0.95,
 }
 
@@ -30,13 +30,13 @@ def setup(
         description: str, 
         epilog: str = '', 
         add_arguments: Callable[[argparse.ArgumentParser], None] = None,
-        omit: {str} = {}
+        omit_arguments: {str} = {}
     ) -> (argparse.Namespace, logging.Logger):
     parser = parser_with_common_args(
         tool, 
         description,
         epilog=epilog,
-        omit=omit)
+        omit_arguments=omit_arguments)
     if add_arguments:
         add_arguments(parser)
     args = parser.parse_args()
@@ -44,33 +44,37 @@ def setup(
     log_args(logger, tool, args, epilog=epilog)
     return args, logger
 
-def parser_with_common_args(tool: str, description: str, epilog: str = None, omit: {str} = {}) -> argparse.ArgumentParser:
+def parser_with_common_args(tool: str, description: str, epilog: str = None, omit_arguments: {str} = {}) -> argparse.ArgumentParser:
     """
     Returns an `ArgumentParser` with the default arguments and a format string 
     that can be used by the calling program to print the actual values specified
     by the user.
     """
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
-    if not 'model' in omit:
+    if not 'model' in omit_arguments:
         parser.add_argument("-m", "--model", default=common_defaults['model'], 
             help=f"Use MODEL. Default {common_defaults['model']}")
-    if not 'service-url' in omit:
-        parser.add_argument("-s", "--service-url", default=common_defaults['service_url'],
-            help=f"Use SERVICE_URL as the inference hosting service URL. Default: {common_defaults['service_url']}")
-    if not 'template-dir' in omit:
-        parser.add_argument("-t", "--template-dir", default=common_defaults['template_dir'],
-            help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template_dir']}")
-    if not 'data-dir' in omit:
-        parser.add_argument("-d", "--data-dir", default=common_defaults['data_dir'], 
-            help=f"Directory where data files are read or written. Default: {common_defaults['data_dir']}")
-    if not 'log-file' in omit:
+    if not 'service-url' in omit_arguments:
+        parser.add_argument("-s", "--service-url", default=common_defaults['service-url'],
+            help=f"Use SERVICE_URL as the inference hosting service URL. Default: {common_defaults['service-url']}")
+    if not 'template-dir' in omit_arguments:
+        parser.add_argument("-t", "--template-dir", default=common_defaults['template-dir'],
+            help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template-dir']}")
+    if not 'data-dir' in omit_arguments:
+        parser.add_argument("-d", "--data-dir", default=common_defaults['data-dir'], 
+            help=f"Directory where data files are read or written. Default: {common_defaults['data-dir']}")
+    if not 'use-cases' in omit_arguments:
+        all_ucs = ', '.join([f"'{key}'" for key in all_use_cases().keys()])
+        parser.add_argument("-u", "--use-cases", nargs="*",
+            help=f"One or more uses cases to process. Quote them when the names have spaces. to specify more than one. Default: {all_ucs}")
+    if not 'log-file' in omit_arguments:
         default_log_file = get_default_log_file(tool)
         default_log_level = get_default_log_level(tool)
         parser.add_argument("-l", "--log-file", default=default_log_file, 
             help=f"Where logging is written. Default: {default_log_file}.")
         parser.add_argument("--log-level", default=logging.INFO, type=int, 
             help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ({logging_level_to_string(default_log_level)}).")
-    if not 'verbose' in omit:
+    if not 'verbose' in omit_arguments:
         parser.add_argument("-v", "--verbose", action='store_true',
                 help="Print some extra output. Useful for some testing and debugging scenarios.")
     return parser
@@ -126,12 +130,15 @@ def model_dir_name(model: str) -> str:
     """Replace colon with underscore in the model name."""
     return model.replace(":", "_")
 
-def use_cases() -> dict:
-    """Return a dictionary with the use case names as keys 
-    and the corresponding labels as values."""
+def all_use_cases() -> dict:
+    """
+    Return a dictionary with the use case names as keys 
+    and the corresponding expected labels as values.
+    NOTE: This list must be kept consistent with the available prompt templates, etc.!
+    """
     return {
-        "prescription refills": "refill",
-        "non prescription refills": "other",
+        "prescription-refills": "refill",
+        "non-prescription-refills": "other",
         "emergency": "emergency",
     }
 
@@ -205,6 +212,6 @@ def extract_content(litellm_reponse: ModelResponse) -> str:
     response_dict = litellm_reponse.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
     content = response_dict['choices'][0]['message']['content']
-    print(f"content (type = {type(content)}: {content})")
+    # print(f"content (type = {type(content)}: {content})")
     return content
 

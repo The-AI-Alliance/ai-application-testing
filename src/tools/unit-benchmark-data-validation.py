@@ -14,7 +14,7 @@ def main():
             help="Just report the final statistics for existing validation data. Default: False"))
 
     validator = UnitBenchmarkDataValidator(
-        args.just_stats, args.model, args.service_url, args.template_dir, args.data_dir, logger)
+        args.model, args.service_url, args.template_dir, args.data_dir, args.use_cases, args.just_stats, logger)
      
     total_stats = validator.validate()
     validator.print_stats(total_stats)

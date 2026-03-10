@@ -18,7 +18,7 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
     """Langflow component wrapper for UnitBenchmarkDataSynthesizer."""
     
     display_name = "Benchmark Data Synthesizer"
-    description = "Synthesizes Q&A benchmark data for healthcare chatbot testing"
+    description = "Synthesizes Q&A benchmark data for healthcare ChatBot testing"
     icon = "database"
     
     inputs = [
@@ -64,31 +64,37 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
         
-        # Create synthesizer instance
+        # Create synthesizer instance. We construct it with the list of use cases,
+        # either one user-supplied name or all of them, but we don't use 
+        # synthesizer.generate_data(), rather we call generate_data_for_use_case
+        # to allow our desired response formatting.
+
+        all_ucs = all_use_cases()
+        use_cases = [use_case] if use_case else list(all_ucs.keys())
         synthesizer = UnitBenchmarkDataSynthesizer(
             model_name=self.model_name,
             service_url=self.service_url,
             template_dir=self.template_dir,
             data_dir=self.data_dir,
+            use_cases=use_cases,
             logger=logger
         )
         
         # Generate data
         if self.use_case:
             # Generate for specific use case
-            from common.utils import use_cases
-            cases = use_cases()
+            from common.utils import all_use_cases
+            cases = all_use_cases()
             if self.use_case in cases:
                 label = cases[self.use_case]
-                substr = self.use_case.replace(' ', '-')
-                num_unexpected = synthesizer.generate(substr, label)
+                num_unexpected = synthesizer.generate_data_for_use_case(substr, label)
                 result_msg = f"Generated data for '{self.use_case}' with {num_unexpected} unexpected labels"
             else:
                 result_msg = f"Unknown use case: {self.use_case}"
         else:
             # Generate all
-            synthesizer.generate_all()
-            result_msg = "Generated data for all use cases"
+            num_unexpected = synthesizer.generate_data()
+            result_msg = f"Generated data for all use cases with {num_unexpected} unexpected labels"
         
         self.status = result_msg
         

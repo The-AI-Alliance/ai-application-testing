@@ -18,7 +18,7 @@ prompt: >
     insert _B_ as a placeholder for the body part's name. Keep generating Q&A pairs until you have 
     output at least 100 of them.
 
-    Write the Q&A pairs using this JSONL output:
+    Write the Q&A pairs using this JSONL output, one per line:
 
     - \"{"question": question, "answer": {"label": "_l_", "prescription": "_p_", "body-part": "_b_"}}\" 
 

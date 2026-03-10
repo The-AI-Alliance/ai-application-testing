@@ -120,7 +120,11 @@ def main():
     tool = os.path.basename(__file__)
     description = "TDD Example 'refill' use case for the healthcare ChatBot."
     epilog = "NOTE: the --data-dir argument is currently ignored!"
-    args, logger = setup(tool, description, epilog = epilog,
+    args, logger = setup(
+        tool, 
+        description, 
+        epilog = epilog,
+        omit_arguments={'use-cases'},
         add_arguments = lambda p: p.add_argument("--lev-threshold", 
             default=common_defaults['levenshtein-ratio-threshold'], 
             help=f"The threshold between 0.0 and 1.0, inclusive, above which we consider two strings identical based on the 'Levenshtein distance'. Default: {common_defaults['levenshtein-ratio-threshold']}"))

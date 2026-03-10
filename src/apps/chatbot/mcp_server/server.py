@@ -218,6 +218,7 @@ def main():
         tool,
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
+        omit_arguments={'use-cases'},
         add_arguments=add_args
     )
     

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
 
+# TODO: Move this to an integration test and replace the mocks with real calls to Langflow.
 
 class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
     """Test cases for UnitBenchmarkFlowOrchestrator."""
@@ -73,7 +74,7 @@ class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
             data_dir=self.data_dir,
             logger=self.logger
         )
-        mock_synthesizer.generate_all.assert_called_once()
+        mock_synthesizer.generate_data.assert_called_once()
         
         self.assertEqual(result['status'], 'success')
         self.assertEqual(result['use_case'], 'all')
@@ -84,7 +85,7 @@ class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
         """Test running synthesis for a specific use case."""
         # Setup mock
         mock_synthesizer = Mock()
-        mock_synthesizer.generate.return_value = 0
+        mock_synthesizer.generate_data_for_use_case.return_value = 0
         mock_synthesizer_class.return_value = mock_synthesizer
         
         # Run synthesis for specific case
@@ -92,7 +93,7 @@ class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
         result = self.orchestrator.run_synthesis(use_case=use_case)
         
         # Verify
-        mock_synthesizer.generate.assert_called_once()
+        mock_synthesizer.generate_data_for_use_case.assert_called_once()
         self.assertEqual(result['status'], 'success')
         self.assertEqual(result['use_case'], use_case)
         self.assertEqual(result['unexpected_labels'], 0)

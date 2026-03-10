@@ -9,8 +9,12 @@ def main():
     args, logger = setup(tool, description)
     
     synthesizer = UnitBenchmarkDataSynthesizer(
-        args.model, args.service_url, args.template_dir, args.data_dir, logger)
-    synthesizer.generate_all()
+        args.model, args.service_url, args.template_dir, args.data_dir, args.use_cases, logger)
+    num_unexpected = synthesizer.generate_data()
+
+    msg = f"Data synthesis finished. {num_unexpected} records generated with unexpected labels."
+    print(msg)
+    logger.info(msg)
 
 if __name__ == "__main__":
     main()
