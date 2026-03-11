@@ -319,7 +319,7 @@ This tool also supports the optional argument `--use-cases use-case1 use-case2` 
 
 ### Run the Langflow Pipeline for the Tools
 
-The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/) pipeline. See [`src/langflow/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/langflow/README.md) for details.
+Preliminary support is also provided for running the unit benchmark data synthesis and validation tools as a [Langflow](https://www.langflow.org/) pipeline. See [`src/tools/langflow/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/langflow/README.md) for details.
 
 ## Run the ChatBot Example Application
 

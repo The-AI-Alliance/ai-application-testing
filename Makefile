@@ -497,10 +497,10 @@ provider-server-check::
 .PHONY: unit-tests-langflow all-tests-langflow
 
 run-langflow-pipeline:: langflow-pipeline
-langflow-pipeline:: before-run
+langflow-pipeline:: 
 	$(info ${run-langflow-pipeline-message})
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${TIME} uv run python -m langflow.unit_benchmark_flow \
+	cd ${SRC_DIR} && ${TIME} uv run python -m tools.langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
@@ -511,17 +511,17 @@ langflow-pipeline:: before-run
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 help-lf::
-	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow --help
+	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 
 help-langflow help-langflow-pipeline::
 	@echo "Help on the Langflow unit benchmark pipeline:"
 	@echo
-	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow --help
+	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 	@echo
 
 export-langflow-json:: before-run
 	@echo "Exporting Langflow JSON definition..."
-	cd ${SRC_DIR} && uv run python -m langflow.unit_benchmark_flow \
+	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
@@ -799,6 +799,16 @@ install-llm-templates:: llm-command-check
 	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
+
+.PHONY: build
+
+build::
+	@echo "Building a distribution..."
+	rm -rf dist
+	uv pip install -q build
+	uv run python -m build
+	@echo "Contents of 'dist':"
+	@ls -l dist
 
 # Docs Targets - for the website.
 # These targets are only needed when you want to preview edits locally, by running

@@ -26,6 +26,8 @@ class UnitBenchmarkFlowOrchestrator:
         template_dir: str,
         data_dir: str,
         use_case: Optional[str],
+        just_synthesis: bool,
+        just_validation: bool,
         just_stats: bool,
         logger: Optional[logging.Logger] = None
     ):
@@ -45,10 +47,15 @@ class UnitBenchmarkFlowOrchestrator:
         self.service_url = service_url
         self.template_dir = template_dir
         self.data_dir = data_dir
+        self.just_synthesis = just_synthesis
+        self.just_validation = just_validation
         self.just_stats = just_stats
         all_ucs = all_use_cases()
         self.use_cases = [use_case] if use_case else list(all_ucs.keys())
         self.logger = logger or logging.getLogger(__name__)
+        
+        self.synthesis_results  = None
+        self.validation_results = None
         
     def run_synthesis(self) -> Dict[str, Any]:
         """
@@ -72,7 +79,7 @@ class UnitBenchmarkFlowOrchestrator:
             logger=self.logger
         )
         
-        synthesis_results = {}
+        self.synthesis_results = {}
         if len(self.use_cases) == 1:
             # User specified the one use case to run.
             all_ucs = all_use_cases()
@@ -80,28 +87,28 @@ class UnitBenchmarkFlowOrchestrator:
             if use_case in all_ucs:
                 label = all_ucs[use_case]
                 num_unexpected = synthesizer.generate_data_for_use_case(use_case, label)
-                synthesis_results = {
+                self.synthesis_results = {
                     "status": "success",
                     "use_case": use_case,
                     "number_unexpected_labels": num_unexpected,
                     "data_dir": self.data_dir
                 }
             else:
-                synthesis_results = {
+                self.synthesis_results = {
                     "status": "error",
                     "message": f"Unknown use case: {use_case}"
                 }
         else:
             num_unexpected = synthesizer.generate_data()
-            synthesis_results = {
+            self.synthesis_results = {
                 "status": "success",
                 "use_case": f"all: {', '.join(self.use_cases)}",
                 "number_unexpected_labels": num_unexpected,
                 "data_dir": self.data_dir
             }
         
-        self.logger.info(f"Synthesis completed: {synthesis_results}")
-        return synthesis_results
+        self.logger.info(f"Synthesis completed: {self.synthesis_results}")
+        return self.synthesis_results
     
     def run_validation(self) -> Dict[str, Any]:
         """
@@ -125,14 +132,14 @@ class UnitBenchmarkFlowOrchestrator:
         total_stats = validator.validate()
         validator.print_stats(total_stats)
         
-        validation_results = {
+        self.validation_results = {
             "status": "success",
             "stats": total_stats,
             "data_dir": self.data_dir
         }
         
         self.logger.info("Validation completed")
-        return validation_results
+        return self.validation_results
     
     def run_full_pipeline(self) -> Dict[str, Any]:
         """
@@ -141,124 +148,49 @@ class UnitBenchmarkFlowOrchestrator:
         Returns:
             Dictionary with complete pipeline results
         """
-        synthesis_results = {}
-        self.logger.info("Starting full benchmark pipeline...")
+        self.synthesis_results = {}
+        self.logger.info("Starting unit benchmark data pipeline...")
         if self.just_stats:
             self.logger.info("Just calculating statistics; skipping data synthesis...")
-            synthesis_results = {
+            self.synthesis_results = {
                 "status": "success",
-                "message": "Synthesis skipped; just calculating statistics",
+                "message": "Synthesis skipped; just calculating statistics.",
+            }
+        elif self.just_validation:
+            self.logger.info("Just running validation; skipping data synthesis... (assumes data files already exist!)")
+            self.synthesis_results = {
+                "status": "success",
+                "message": "Synthesis skipped; just running validation.",
             }
         else:
             # Step 1: Synthesis
-            synthesis_results = self.run_synthesis()
+            self.synthesis_results = self.run_synthesis()
             
-            if synthesis_results.get("status") != "success":
+            if self.synthesis_results.get("status") != "success":
                 return {
                     "status": "error",
                     "message": "Synthesis failed",
-                    "synthesis_results": synthesis_results
+                    "synthesis_results": self.synthesis_results
                 }
         
         # Step 2: Validation (will handle the self.just_stats flag internally...)
-        validation_results = self.run_validation()
+        self.validation_results = {}
+        if self.just_synthesis:
+            self.validation_results = {
+                "status": "success",
+                "message": "Just synthesis performed; validation skipped",
+            }
+        else:
+            self.validation_results = self.run_validation()
         
+        syn_msg = self.synthesis_results.get('message', 'No synthesis message available!')
+        val_msg = self.validation_results.get('message', 'No validation message available!')
         return {
             "status": "success",
-            "synthesis_results": synthesis_results,
-            "validation_results": validation_results
+            "message": f"Synthesis: {syn_msg} Validation:{val_msg}",
+            "synthesis_results": self.synthesis_results,
+            "validation_results": self.validation_results
         }
-    
-    def export_langflow_json(self, output_file: str) -> None:
-        """
-        Export a Langflow-compatible JSON flow definition.
-        
-        Args:
-            output_file: Path to write the JSON flow definition
-        """
-        flow_definition = {
-            "name": "Benchmark Data Pipeline",
-            "description": "Synthesizes and validates benchmark Q&A data for healthcare chatbot",
-            "nodes": [
-                {
-                    "id": "synthesizer",
-                    "type": "CustomComponent",
-                    "data": {
-                        "type": "UnitBenchmarkDataSynthesizer",
-                        "node": {
-                            "template": {
-                                "model_name": {
-                                    "value": self.model_name,
-                                    "type": "str"
-                                },
-                                "service_url": {
-                                    "value": self.service_url,
-                                    "type": "str"
-                                },
-                                "template_dir": {
-                                    "value": self.template_dir,
-                                    "type": "str"
-                                },
-                                "data_dir": {
-                                    "value": self.data_dir,
-                                    "type": "str"
-                                }
-                            },
-                            "description": "Synthesizes Q&A benchmark data"
-                        }
-                    },
-                    "position": {"x": 100, "y": 100}
-                },
-                {
-                    "id": "validator",
-                    "type": "CustomComponent",
-                    "data": {
-                        "type": "UnitBenchmarkDataValidator",
-                        "node": {
-                            "template": {
-                                "model_name": {
-                                    "value": self.model_name,
-                                    "type": "str"
-                                },
-                                "service_url": {
-                                    "value": self.service_url,
-                                    "type": "str"
-                                },
-                                "template_dir": {
-                                    "value": self.template_dir,
-                                    "type": "str"
-                                },
-                                "data_dir": {
-                                    "value": self.data_dir,
-                                    "type": "str"
-                                },
-                                "just_stats": {
-                                    "value": False,
-                                    "type": "bool"
-                                }
-                            },
-                            "description": "Validates synthesized benchmark data"
-                        }
-                    },
-                    "position": {"x": 400, "y": 100}
-                }
-            ],
-            "edges": [
-                {
-                    "id": "synthesizer-validator",
-                    "source": "synthesizer",
-                    "target": "validator",
-                    "sourceHandle": "output",
-                    "targetHandle": "input"
-                }
-            ]
-        }
-        
-        with open(output_file, 'w') as f:
-            json.dump(flow_definition, f, indent=2)
-        
-        self.logger.info(f"Langflow JSON definition exported to {output_file}")
-
 
 def main():
     """Main entry point for running the benchmark flow."""
@@ -292,14 +224,21 @@ def main():
         default=None,
         help="Specific use case to generate (default: all)"
     )
+
     parser.add_argument(
-        "-j", "--just-stats",
+        "--just-synthesis",
         action="store_true",
-        help="Only compute validation statistics"
+        help="Only run the synthesis step."
     )
     parser.add_argument(
-        "--export-json",
-        help="Export Langflow JSON definition to specified file"
+        "--just-validation",
+        action="store_true",
+        help="Only run the validation step. Assumes the synthesized data already exists."
+    )
+    parser.add_argument(
+        "--just-stats",
+        action="store_true",
+        help="Only compute validation statistics"
     )
     parser.add_argument(
         "-l", "--log-file",
@@ -326,15 +265,11 @@ def main():
         template_dir=args.template_dir,
         data_dir=args.data_dir,
         use_case=args.use_case,
+        just_synthesis=args.just_synthesis,
+        just_validation=args.just_validation,
         just_stats=args.just_stats,
         logger=logger
     )
-    
-    # Export JSON if requested
-    if args.export_json:
-        orchestrator.export_langflow_json(args.export_json)
-        logger.info(f"Langflow JSON exported to {args.export_json}")
-        return
     
     # Run the pipeline
     results = orchestrator.run_full_pipeline()
@@ -347,8 +282,6 @@ def main():
         logger.error(f"Pipeline failed: {results.get('message', 'Unknown error')}")
         sys.exit(1)
 
-
 if __name__ == "__main__":
     main()
 
-# Made with Bob

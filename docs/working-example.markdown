@@ -323,7 +323,7 @@ The same template file was used for evaluating the three data files:
 
 ### Run the Langflow Pipeline for the Tools
 
-The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/) pipeline. See [`src/langflow/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/langflow/README.md) for details.
+The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/) pipeline. See [`src/tools/langflow/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/langflow/README.md) for details.
 
 ## Run the ChatBot Example Application
 
