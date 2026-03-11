@@ -9,4 +9,3 @@ The server is built using FastMCP for simplified MCP server creation.
 
 __all__ = ['create_mcp_server']
 
-# Made with Bob

@@ -26,6 +26,7 @@ def main():
         tool,
         description,
         epilog="The data directory is used to store the ChatBot GUI session information.",
+        omit_arguments={'use-cases'},
         add_arguments=lambda p: p.add_argument(
             "-c", "--confidence-threshold",
             type=float,

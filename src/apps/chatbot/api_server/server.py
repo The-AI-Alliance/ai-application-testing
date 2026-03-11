@@ -385,6 +385,7 @@ def main():
         tool,
         description,
         epilog="Run the chatbot as an OpenAI-compatible API server.",
+        omit_arguments={'use-cases'},
         add_arguments=add_args
     )
     
@@ -423,4 +424,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Made with Bob

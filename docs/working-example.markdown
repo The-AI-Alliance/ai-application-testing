@@ -150,9 +150,9 @@ On MacOS and Linux, using `make` is the easiest way to run the exercises. The ac
 > 1. For all of the tool-invocation `make` commands discussed from now on, you can run each one for _all_ the models by prefixing the target name with `all-models-`, e.g., `all-models-run-tdd-example-refill-chatbot`. This target doesn't make sense for for the ChatBot application, which is interactive, but you can use it for the `tests` and `integration-tests` targets.
 > 1. For a given model (as defined by the `Makefile` variable `MODEL`), you can run all of the tools with one command, `make all-code`. Hence, you can run all the examples for all the models discussed above using `make all-models-all-code`.
 
-## Run `tdd-example-refill-chatbot`
+### Run `tdd-example-refill-chatbot`
 
-This example is explained in the section on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/).
+This tool is explained in the section on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/). It introduces some concepts, but isn't intended to be a tool you use long term, in contrast to the next two `unit-benchmark-data-*` tools discussed below.
 
 Run this `make` command:
 
@@ -210,7 +210,7 @@ The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the temp
 
 The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter]({{site.baseurl}}/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
 
-## Run `unit-benchmark-data-synthesis`
+### Run `unit-benchmark-data-synthesis`
 
 Described in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/){:target="ub"}, this tool uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
 
@@ -243,9 +243,9 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 
 The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gpt-oss:20b`, the output will be in `.../output/data/ollama_chat/gpt-oss_20b`. We replace `:` with `_`, because `:` is an invalid character for MacOS file paths. This directory will have the following files of synthetic Q&A pairs:
 
-* `synthetic-q-and-a_patient-chatbot-emergency-data.yaml`
-* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`
-* `synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`
+* `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
+* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
+* `synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl`
 
 (Examples can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"} directory.)
 
@@ -262,7 +262,7 @@ Each of these data files are generated with a single inference invocation, with 
 * [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml){:target="yaml2"}
 * [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml){:target="yaml3"}
 
-## Run `unit-benchmark-data-validation`
+### Run `unit-benchmark-data-validation`
 
 Described in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/){:target="laaj"}, this tool uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
 
@@ -290,9 +290,9 @@ cd src && time uv run tools/unit-benchmark-data-validation.py \
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
 
-* `synthetic-q-and-a_patient-chatbot-emergency-data-validation.yaml`
-* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.yaml`
-* `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.yaml`
+* `synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl`
+* `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl`
+* `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl`
 
 (See examples in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"}.)
 
@@ -301,15 +301,15 @@ Also, summary statistics are written to `stdout` and to the output file `temp/ou
 
 Files:                                                                            |    1  |    2  |    3  |    4  |    5  | Total |
 | :------                                                               | ----: | ----: | ----: | ----: | ----: | ----: |
-synthetic-q-and-a_patient-chatbot-emergency-data.json                             |    0  |    4  |    7  |   12  |  168  |  191  |
-synthetic-q-and-a_patient-chatbot-prescription-refills-data.json                  |    0  |    0  |    0  |    0  |  108  |  108  |
-synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json              |    2  |    2  |    0  |    1  |  168  |  173  |
+synthetic-q-and-a_patient-chatbot-emergency-data.jsonl                            |    0  |    4  |    7  |   12  |  168  |  191  |
+synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl                 |    0  |    0  |    0  |    0  |  108  |  108  |
+synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl             |    2  |    2  |    0  |    1  |  168  |  173  |
 | | | | | | | |
 Totals:                                                                           |    2  |    6  |    7  |   13  |  444  |  472  |
 
 Total count: 475 (includes errors), total errors: 3
 
-The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.yaml` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}.
+The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.jsonl` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}.
 
 Note that the emergency Q&A pairs had the greatest ambiguities, where the teacher model didn't think that many of the Q&A pairs represented real emergencies (lowest scores) or the situation was "ambiguous" (middle scores). 
 
@@ -320,6 +320,10 @@ Is this okay? Each data file is supposed to be for a particular use case, yet in
 The same template file was used for evaluating the three data files:
 
 * [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="yaml"}
+
+### Run the Langflow Pipeline for the Tools
+
+The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/) pipeline. See [`src/tools/langflow/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/langflow/README.md) for details.
 
 ## Run the ChatBot Example Application
 

@@ -142,9 +142,9 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 
 | Validation Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
-| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.json){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.json){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} |
 
 These files rate each Q&A pair from 1 (bad) to 5 (great) and provide reasoning for each rating.
 Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
@@ -153,9 +153,9 @@ Also, summary statistics are written by the tool to `stdout` and to the output f
 
 | Synthetic Q&A Pairs File                                                |    1   |    2   |    3   |    4   |    5    | Total   |
 | :------                                                                 | -----: | -----: | -----: | -----: | ------: | ------: |
-| `synthetic-q-and-a_patient-chatbot-emergency-data.json`                 |    0   |    4   |    7   |   12   |   168   |   191   |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.json`      |    0   |    0   |    0   |    0   |   108   |   108   |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json`  |    2   |    2   |    0   |    1   |   168   |   173   |
+| `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`                |    0   |    4   |    7   |   12   |   168   |   191   |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl`     |    0   |    0   |    0   |    0   |   108   |   108   |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl` |    2   |    2   |    0   |    1   |   168   |   173   |
 | **Totals:**                                                             |  **2** |  **6** |  **7** | **13** | **444** | **472** |
 
 Total count: 475 (includes errors), total errors: 3
@@ -164,9 +164,9 @@ Total count: 475 (includes errors), total errors: 3
 
 | Synthetic Q&A Pairs File                                                |    1   |    2   |    3   |    4   |    5    | Total   |
 | :------                                                                 | -----: | -----: | -----: | -----: | ------: | ------: |
-| `synthetic-q-and-a_patient-chatbot-emergency-data.json`                 |    8   |    0   |    1   |    1   |    26   |    36   |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.json`      |    0   |    1   |    1   |    0   |    12   |    14   |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.json`  |    4   |    1   |    2   |    2   |    18   |    27   |
+| `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`                |    8   |    0   |    1   |    1   |    26   |    36   |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl`     |    0   |    1   |    1   |    0   |    12   |    14   |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl` |    4   |    1   |    2   |    2   |    18   |    27   |
 | **Totals:**                                                             | **12** |  **2** |  **4** |  **3** |  **56** |  **77** |
 
 Total count: 78 (includes errors), total errors: 1
@@ -176,7 +176,7 @@ Total count: 78 (includes errors), total errors: 1
 > 
 > Even though we used the _same_ model to both synthesize and validate Q&A pairs, the models did not always rate all the pairs they generated themselves very highly!
 
-The teacher model is asked to provide _reasoning_ for its ratings, too. It is instructive to look at the output `*-validation.json` files linked above, particularly the reasons given for the low ratings.
+The teacher model is asked to provide _reasoning_ for its ratings, too. It is instructive to look at the output `*-validation.jsonl` files linked above, particularly the reasons given for the low ratings.
 
 Note that the emergency Q&A pairs had the greatest ambiguities, where the teacher model didn't think that many of the Q&A pairs represented real emergencies (lowest scores) or the situation was "ambiguous" (middle scores). Exploring each of the poorly-rated Q&A pairs often reveals corner cases that justify more careful handling.
 
@@ -195,7 +195,7 @@ Nevertheless, as our data synthesis grows more sophisticated for more benchmarks
 
 So, our validation tool only considers the second question, whether or not the label shown in the answer the best label for the question, independent of which data file the Q&A pair appears.
 
-Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.json){:target="_blank"}:
+Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"}:
 
 ```json
 {
