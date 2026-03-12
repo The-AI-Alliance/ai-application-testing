@@ -138,6 +138,8 @@ make setup              # One-time setup tasks; e.g., builds target install-uv.
 make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
                         # Run "make help-uv" for more information.
+make build              # Build a distribution
+make install            # Install the code locally in development mode
 
 make tests              # Following convention, this target runs the unit tests only.
 make unit-tests         # Synonym for "tests".
@@ -785,15 +787,18 @@ install-llm-templates:: llm-command-check
 	ls -l "$$llmdir"
 
 
-.PHONY: build
+.PHONY: build install
 
 build::
 	@echo "Building a distribution..."
 	rm -rf dist
-	uv pip install -q build
-	uv run python -m build
+	uv build
 	@echo "Contents of 'dist':"
 	@ls -l dist
+
+install::
+	@echo "Installing the code locally in development mode..."
+	uv sync
 
 # Docs Targets - for the website.
 # These targets are only needed when you want to preview edits locally, by running
