@@ -190,10 +190,6 @@ make run-langflow-pipeline
                         # This orchestrates both synthesis and validation in a single flow.
 make langflow-pipeline  # Synonym for "run-langflow-pipeline".
 
-make export-langflow-json
-                        # Export a Langflow-compatible JSON flow definition.
-                        # The JSON file can be imported into Langflow's visual editor.
-
 The following targets are for the example ChatBot application. See also the "help-*" targets next.
 
 make chatbot            # Run the interactive ChatBot application.
@@ -493,7 +489,7 @@ provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
 
 # Langflow targets
-.PHONY: run-langflow-pipeline langflow-pipeline help-langflow-pipeline export-langflow-json 
+.PHONY: run-langflow-pipeline langflow-pipeline help-langflow-pipeline  
 .PHONY: unit-tests-langflow all-tests-langflow
 
 run-langflow-pipeline:: langflow-pipeline
@@ -518,17 +514,6 @@ help-langflow help-langflow-pipeline::
 	@echo
 	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 	@echo
-
-export-langflow-json:: before-run
-	@echo "Exporting Langflow JSON definition..."
-	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow \
-	  --model ${MODEL} \
-	  --service-url ${INFERENCE_URL} \
-	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
-	  --data-dir ${DATA_DIR} \
-	  --use-case ${USE_CASES} \
-	  --export-json ${OUTPUT_DIR}/unit-benchmark-pipeline.json
-	@echo "\nLangflow JSON exported to: ${OUTPUT_DIR}/unit-benchmark-pipeline.json"
 
 all-tests-langflow unit-tests-langflow:: run-command-checks
 	@echo "Running langflow unit tests..."
