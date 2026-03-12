@@ -14,7 +14,7 @@ from pathlib import Path
 
 from apps.chatbot import ChatBot
 from apps.chatbot.mcp_server.server import create_mcp_server
-from tests.common.apps.chatbot.testbase import TestBase
+from tests.utils.apps.chatbot.testbase import TestBase
 
 class TestMCPServer(TestBase):
     """

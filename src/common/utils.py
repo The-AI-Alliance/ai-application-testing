@@ -2,6 +2,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import sys
 import yaml
 from datetime import datetime
@@ -161,8 +162,10 @@ def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO
 
 def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
     path = Path(file)
-    if file == path.name:  # no path prefix
-        return Path('.')
+    dot = Path('.')
+    # If there is no parent prefix or possibly '.', return Path('.')
+    if dot == path.parent:
+        return dot
     else:
         dirs = path.parent
         os.makedirs(dirs, exist_ok=exist_ok)
@@ -193,17 +196,46 @@ USER PROMPT:
 {'\n'.join(ss)}
 """
 
-def parse_json(text: any) -> dict[str,any] | str:
-    """Parse a JSON string, returning either a dictionary or an error string if parsing fails."""
-    error_msg = ''
+def parse_json(text: any) -> dict[str,any]:
+    """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
     try:
         obj = json.loads(text)
         return obj
     except (JSONDecodeError, TypeError) as err:
-        error_msg = f"ERROR {err}: text not JSON? <{text}> (type: {type(text)})"
-        if self.logger:
-            self.logger.error(error_msg)
-        return error_msg
+        raise ValueError(f"JSONDecodeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
+
+
+def extract_jsonl(text: str) -> [str]:
+    """
+    Sometimes the JSONL we ask for comes back without line feeds between the JSONL docs!
+    Try to detect and fix this while splitting the string into JSONL lines. 
+    If this attempt fails for some lines, just return those lines as is.
+    """
+    jsonl_re = re.compile(r'}\s*{')
+    jsonls = []
+    if not text.strip():
+        return []
+    for s in text.split('\n'):
+        try:
+            jsonl = parse_json(s)
+            # It parsed! Use s
+            jsonls.append(s)
+        except ValueError as err:
+            strs = jsonl_re.split(s)
+            len_strs = len(strs)
+            for i in range(len_strs):
+                s2 = strs[i]
+                # Hacks: add the '}' and '{' back. The first and last array elements are special cases.
+                s2a = s2  if i == 0 else '{'+s2
+                s2b = s2a if i == len_strs-1 else s2a+'}'
+                try:
+                    jsonl2 = parse_json(s2b)
+                    # It parsed! Use s2b
+                    jsonls.append(s2b)
+                except ValueError as err2:
+                    # just use s2 as is
+                    jsonls.append(s2)
+    return jsonls
 
 # TODO: This is duplicated now in the HandleResponse class, which is used by
 # the ChatBot app, but not by the "tools".

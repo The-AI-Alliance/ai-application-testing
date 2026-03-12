@@ -3,6 +3,7 @@ import io
 from litellm.types.utils import ModelResponse
 from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
 import os
+import re
 import sys
 import json
 import logging
@@ -10,7 +11,14 @@ from pathlib import Path
 
 from litellm import completion
 from openai import OpenAIError
-from common.utils import ensure_dirs_exist, extract_content, load_yaml, make_full_prompt, all_use_cases
+from common.utils import (
+    all_use_cases,
+    ensure_dirs_exist, 
+    extract_content, 
+    extract_jsonl
+    load_yaml, 
+    make_full_prompt, 
+)
 
 class UnitBenchmarkDataParent:
 
@@ -44,7 +52,6 @@ class UnitBenchmarkDataParent:
                 raise ValueError(f"One or more specified use cases [{', '.join(errors)}] not in known list: {list(all_ucs.keys())}")
 
         ensure_dirs_exist(self.template_dir)
-
 
 class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
 
@@ -122,9 +129,10 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
                 verbose = False,
                 # format = "json",
             )
-            actual = extract_content(response)
+            jsonls = extract_jsonl(extract_content(response))
             with open(data_file, 'w') as f:
-                f.write(actual)
+                for line in jsonls:
+                    f.write(line)
             with open(data_file, 'r') as f:
                 num_qa_pairs=sum(1 for line in f.readlines() if '"question":' in line)
                 self.logger.info(f"Approximately {num_qa_pairs} Q&A pairs generated.")
@@ -234,8 +242,8 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 verbose = False,
                 # format = "json",
             )
-            actual = extract_content(response)
-            validation_file.write(f"{actual}\n")
+            for line in extract_jsonl(extract_content(response)):
+                validation_file.write(f"{line}\n")
 
         except OpenAIError as e:
             self.logger.error(f"OpenAIError thrown: {e}")
@@ -263,7 +271,8 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             if not self.just_stats:
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:
-                        for line in synthetic_data_file.readlines():
+                        synth_data = synthetic_data_file.readlines()
+                        for line in extract_jsonl(synth_data):
                             line2 = line.strip()
                             if len(line2) == 0:
                                 continue

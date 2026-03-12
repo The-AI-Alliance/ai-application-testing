@@ -128,13 +128,16 @@ class TestBase(unittest.TestCase):
         prompts = []
         with path.open('r') as file:
             for line in file:
-                obj     = parse_json(line)
-                query   = obj.get('query')
-                label   = obj.get('label')
-                actions = obj.get('actions')
-                rating  = obj.get('rating')
-                tp = TestPrompt(query, label, actions, rating)
-                prompts.append(tp)
+                try:
+                    obj     = parse_json(line)
+                    query   = obj.get('query')
+                    label   = obj.get('label')
+                    actions = obj.get('actions')
+                    rating  = obj.get('rating')
+                    tp = TestPrompt(query, label, actions, rating)
+                    prompts.append(tp)
+                except ValueError as err:
+                    raise ValueError(f"From file {file}, error parsing line: {line}") from err
         if not len(prompts):
             raise ValueError(f"No prompts were loaded from {file}!")
         return prompts

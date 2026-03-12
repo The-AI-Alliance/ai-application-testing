@@ -48,10 +48,8 @@ class ResponseHandler():
         """
         # This is what we care about, assuming nothing fails and we don't need the rest for debugging...
         content = self.__extract_content(response)
-        parsed = parse_json(content)
-        if isinstance(parsed, str):
-            return parsed
-        else:
+        try:
+            parsed = parse_json(content)
             full = {
                 "query": parsed.get('query'),
                 "content": parsed,
@@ -65,6 +63,8 @@ class ResponseHandler():
                 if self.logger:
                     self.logger.info(handled)
                 return handled
+        except ValueError as err:
+            return parsed
 
     def __extract_content(self, litellm_reponse: ModelResponse) -> str:
         """Returns the JSON-formatted string content we care about."""
