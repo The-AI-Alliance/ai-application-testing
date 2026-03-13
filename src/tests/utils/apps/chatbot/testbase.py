@@ -41,14 +41,15 @@ class LowConfidenceResult():
     answer has confidence below `confidence_threshold`, or both, in which case we can't trust that the returned answer
     should be exactly as expected.
     """        
-    def __init__(self, reply: dict[str,any], test_prompt: TestPrompt, rating_threshold: int, confidence_threshold: float):
+    def __init__(self, query: str, reply: dict[str,any], test_prompt: TestPrompt, rating_threshold: int, confidence_threshold: float):
+        self.query = query
         self.reply = reply
         self.test_prompt = test_prompt
         self.rating_threshold = rating_threshold
         self.confidence_threshold = confidence_threshold
     
     def __repr__(self) -> str:
-        return f"""LowConfidenceResult(reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
+        return f"""LowConfidenceResult(query='{self.query}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
 class TestBase(unittest.TestCase):
     """
@@ -172,6 +173,7 @@ class TestBase(unittest.TestCase):
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         actual_text          = actual_reply.get('text', '')
+        actual_rtu           = actual_reply.get('reply-to-user', None)
 
         err_msg = str(answer)
         self.assertEqual(prompt, actual_query1, err_msg)
@@ -181,8 +183,8 @@ class TestBase(unittest.TestCase):
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned text, since we always return with the same reply for these labels!
-                exp_text = ChatBotResponseHandler.replies[exp_label]
-                self.assertEqual(exp_text, actual_text, err_msg)
+                exp_rtu = ChatBotResponseHandler.replies[exp_label]
+                self.assertEqual(exp_rtu, actual_rtu, err_msg)
             else:
                 # Do the actions match for the other label cases?
                 self.assertEqual(exp_actions, actual_actions, err_msg)
@@ -198,7 +200,8 @@ class TestBase(unittest.TestCase):
                 actual   = actual_reply.get(key).lower()
                 self.assertTrue(actual.find(expected) >= 0, f"for key = {key}: expected = {expected}, actual = {actual}, {err_msg}")
         else:
-            self.low_confidence_results.append(LowConfidenceResult(actual_reply, test_prompt, rating_threshold, confidence_threshold))
+            self.low_confidence_results.append(LowConfidenceResult(
+                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
     
 
     def try_query_accumulate(self, 
@@ -233,6 +236,7 @@ class TestBase(unittest.TestCase):
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         actual_text          = actual_reply.get('text', '')
+        actual_rtu           = actual_reply.get('reply-to-user', None)
 
         errors = {}
         if prompt != actual_query1:
@@ -243,20 +247,21 @@ class TestBase(unittest.TestCase):
             if 'other' != actual_label:
                 errors['label'] = f"label: other != {actual_label}"
             else:
-                exp_text = ChatBotResponseHandler.replies[exp_label]
-                if exp_text != actual_text:
-                    errors['text'] = f"text: {exp_text} != {actual_text}"
+                exp_rtu = ChatBotResponseHandler.replies['other']
+                if exp_rtu != actual_rtu:
+                    errors['response-to-user'] = f"response-to-user: {exp_rtu} != {actual_rtu}"
         elif exp_rating < rating_threshold:
-            self.low_confidence_results.append(LowConfidenceResult(actual_reply, test_prompt, rating_threshold, confidence_threshold))
+            self.low_confidence_results.append(LowConfidenceResult(
+                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             if exp_label != actual_label:
                 errors['label'] = f"label: {exp_label} != {actual_label}"
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned text, since we always return with the same reply for these labels!
-                exp_text = ChatBotResponseHandler.replies[exp_label]
-                if exp_text != actual_text:
-                    errors['text'] = f"text: {exp_text} != {actual_text}"
+                exp_rtu = ChatBotResponseHandler.replies[exp_label]
+                if exp_rtu != actual_rtu:
+                    errors['response-to-user'] = f"response-to-user: {exp_rtu} != {actual_rtu}"
             else:
                 # Do the actions match for the other label cases?
                 if exp_actions != actual_actions:
