@@ -15,7 +15,7 @@ from common.utils import (
     all_use_cases,
     ensure_dirs_exist, 
     extract_content, 
-    extract_jsonl
+    extract_jsonl,
     load_yaml, 
     make_full_prompt, 
 )
@@ -271,12 +271,12 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             if not self.just_stats:
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:
-                        synth_data = synthetic_data_file.readlines()
-                        for line in extract_jsonl(synth_data):
-                            line2 = line.strip()
-                            if len(line2) == 0:
-                                continue
-                            self.validate_line(line2, system_prompt, vfile)
+                        for line in synthetic_data_file.readlines():
+                            for line2 in extract_jsonl(line):
+                                line3 = line2.strip()
+                                if len(line3) == 0:
+                                    continue
+                                self.validate_line(line3, system_prompt, vfile)
 
             stats = self.return_stats(data_file, validation_file)
             total_stats.update({data_file: stats})
