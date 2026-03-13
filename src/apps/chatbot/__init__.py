@@ -138,7 +138,8 @@ This could be the next business day. If you are having an emergency, please call
             other  = self.replies.get('other')
             answer = None
             if confidence < self.confidence_level_threshold:
-                self.logger.info(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (content = {content})")
+                if self.logger:
+                    self.logger.info(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (content = {content})")
                 answer = other
             else:
                 match label:

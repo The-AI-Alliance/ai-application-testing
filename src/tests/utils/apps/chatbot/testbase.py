@@ -3,7 +3,7 @@
 
 from hypothesis import given, strategies as st
 
-import json, os, random, re, sys, unittest
+import json, logging, os, random, re, sys, unittest
 from io import StringIO
 from pathlib import Path
 from rich import print as rprint
@@ -65,12 +65,15 @@ class TestBase(unittest.TestCase):
     }
 
     def make_chatbot(self):
+        logger = logging.getLogger(self.__class__.__name__)
+        logger.setLevel(logging.INFO)
         self.chatbot = ChatBot(
             model = self.model,
             service_url = self.service_url,
             template_dir = self.template_dir,
             data_dir = self.data_dir,
-            confidence_level_threshold = self.confidence_threshold)
+            confidence_level_threshold = self.confidence_threshold,
+            logger = logger)
         self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
 
     def setUp(self):
