@@ -49,9 +49,9 @@ CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 CONFIDENCE_THRESHOLD  ?= 0.9
 
 # Some specific variables passed as env. vars. to the test suites.
-# TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors?
+# TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
 # RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
-TEST_ALL_EXAMPLES     ?= "False"
+TEST_ALL_EXAMPLES     ?= 
 RATING_THRESHOLD      ?= 4
 
 # Sampling rates for different kinds of tests.
@@ -362,7 +362,7 @@ print-info-code::
 	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
 	@echo "  OUTPUT_LOGS_DIR:       ${OUTPUT_LOGS_DIR}"
 	@echo "  DATA_DIR:              ${DATA_DIR}"
-	@echo "  TEST_ALL_EXAMPLES:     ${TEST_ALL_EXAMPLES} (For tests, run all examples, then report errors...)"
+	@echo "  TEST_ALL_EXAMPLES:     ${TEST_ALL_EXAMPLES} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
 	@echo "The environment:"
@@ -669,7 +669,7 @@ unit-tests-as-integration-tests:: run-command-checks
 dedicated-integration-tests:: run-command-checks
 	@echo "Running the dedicated integration tests..."
 	cd ${SRC_DIR} && \
-	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
+	  export DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
