@@ -250,7 +250,7 @@ class TestBase(unittest.TestCase):
         answer = self.chatbot.query(prompt)
         if isinstance(answer, str):
             errors['query_failure'] = f"Error message returned: {answer}"
-            errors.extend(base_errors_dict)
+            errors.udate(base_errors_dict)
             return errors
         else:
             base_errors_dict['answer'] = answer
