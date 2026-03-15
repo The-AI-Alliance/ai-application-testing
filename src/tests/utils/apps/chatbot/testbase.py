@@ -35,6 +35,15 @@ class TestPrompt():
     def __repr__(self) -> str:
         return f"""TestPrompt(query='{self.query}',label='{self.label}',actions='{self.actions}',rating={self.rating})"""
 
+    def json(self) -> str:
+        return json.dumps({
+            'name':    'TestPrompt',
+            'query':   self.query,
+            'label':   self.label,
+            'actions': self.actions,
+            'rating':  self.rating,
+        })
+
 class LowConfidenceResult():
     """
     Hold a _low confidence result_, i.e., when the prompt has been rated below `rating_threshold`, or the returned
@@ -50,6 +59,16 @@ class LowConfidenceResult():
     
     def __repr__(self) -> str:
         return f"""LowConfidenceResult(query='{self.query}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
+
+    def json(self) -> str:
+        return json.dumps({
+            'name':                  'LowConfidenceResult',
+            'query':                 self.query,
+            'reply':                 json.dumps(self.reply),
+            'test_prompt':           self.test_prompt.json(),
+            'rating_threshold':      self.rating_threshold,
+            'confidence_threshold':  self.confidence_threshold,
+        })
 
 class TestBase(unittest.TestCase):
     """
@@ -96,38 +115,42 @@ class TestBase(unittest.TestCase):
         if self.test_all_examples:
             self.sample_rate = 1.0
         
-        if self.verbose:
-            rprint()
-            rprint(f"model:                        {self.model}")
-            rprint(f"service_url:                  {self.service_url}")
-            rprint(f"template_dir:                 {self.template_dir}")
-            rprint(f"data_dir:                     {self.data_dir}")
-            if self.test_all_examples:
-                rprint(f"test_all_examples:            {self.test_all_examples}")
-            else:
-                rprint(f"default sample_rate:          {self.sample_rate}")
-            rprint(f"default rating_threshold:     {self.rating_threshold}")
-            rprint(f"default confidence_threshold: {self.confidence_threshold}")
-
         self.low_confidence_results = []
         self.errors = {}
         self.samples_count: int = 0
+
         self.make_chatbot()
 
+        if self.verbose:
+            d = {
+                'step' :                        'setUp',
+                'model':                        self.model,
+                'service_url':                  self.service_url,
+                'template_dir':                 self.template_dir,
+                'data_dir':                     self.data_dir,
+                'test_all_examples':            self.test_all_examples,
+                'default sample_rate':          self.sample_rate,
+                'default rating_threshold':     self.rating_threshold,
+                'default confidence_threshold': self.confidence_threshold,
+            }
+            rprint(json.dumps(d))
+
     def tearDown(self):
-        if self.low_confidence_results:
-            rprint()
-            ratio = f"{len(self.low_confidence_results)}/{self.samples_count}"
-            rprint(f"{__file__}: Minimal checking was done on the following {ratio} 'low-confidence results':")
-            for lcr in self.low_confidence_results:
-                rprint(lcr)
-            rprint()
-        if self.errors:
-            rprint("Accumulated errors!")
-            for prompt, error in self.errors.items():
-                rprint(f"prompt = {prompt}:")
-                rprint(f"error(s) = {error}\n")
-            self.fail(f"{len(self.errors)} found!")
+        if self.verbose:
+            lcrs = [lcr.json for lcr in self.low_confidence_results]
+            d = {
+                'step':              'tearDown',
+                'samples_count':     self.samples_count,
+                'low_confidence_results': {
+                    'count':         len(self.low_confidence_results),
+                    'results':       lcrs,
+                },
+                'errors': {
+                    'count':         len(self.errors),
+                    'errors':        self.errors,
+                },
+            }
+            rprint(json.dumps(d))
 
     def load_test_data(self, path: Path) -> [TestPrompt]:
         if not path.exists():
@@ -236,7 +259,7 @@ class TestBase(unittest.TestCase):
             exp_place_holders[key] = value if exp_query.find('{'+key+'}') >= 0 else ''
         prompt = exp_query.format_map(exp_place_holders)
         
-        base_errors_dict = {
+        errors_metadata = {
             'prompt': prompt,
             'test_prompt': test_prompt,
             'place_holders': place_holders,
@@ -249,11 +272,12 @@ class TestBase(unittest.TestCase):
 
         answer = self.chatbot.query(prompt)
         if isinstance(answer, str):
-            errors['query_failure'] = f"Error message returned: {answer}"
-            errors.udate(base_errors_dict)
-            return errors
+            return {
+                'query_failure': f"Error message returned: {answer}",
+                'metadata':      errors_metadata,
+            }
         else:
-            base_errors_dict['answer'] = answer
+            errors_metadata['answer'] = answer
 
         actual_query1        = answer.get('query')
         actual_content       = answer.get('content')
@@ -268,52 +292,55 @@ class TestBase(unittest.TestCase):
         actual_rtu           = actual_reply.get('reply-to-user', None)
 
         if prompt != actual_query1:
-            errors['answer.query'] = f"query: {prompt} != {actual_query1}"
+            errors['answer.query'] = f"{prompt} != {actual_query1}"
         if prompt != actual_query2:
-            errors['content.query'] = f"query: {prompt} != {actual_query2}"
+            errors['content.query'] = f"{prompt} != {actual_query2}"
         
         if actual_confidence < confidence_threshold:
             if 'other' != actual_label:
-                errors['label'] = f"label: other != {actual_label}"
+                errors['label'] = f"other != {actual_label}"
             else:
                 exp_rtu = ChatBotResponseHandler.replies['other']
                 if exp_rtu != actual_rtu:
-                    errors['response-to-user'] = f"response-to-user: {exp_rtu} != {actual_rtu}"
+                    errors['response-to-user'] = f"{exp_rtu} != {actual_rtu}"
         elif exp_rating < rating_threshold:
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             if exp_label != actual_label:
-                errors['label'] = f"label: {exp_label} != {actual_label}"
+                errors['label'] = f"{exp_label} != {actual_label}"
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
                 if exp_rtu != actual_rtu:
-                    errors['response-to-user'] = f"response-to-user: {exp_rtu} != {actual_rtu}"
+                    errors['response-to-user'] = f"{exp_rtu} != {actual_rtu}"
             else:
                 # Do the actions match for the other label cases?
                 if exp_actions != actual_actions:
-                    errors['actions'] = f"actions: {exp_actions} != {actual_actions}"
+                    errors['actions'] = f"{exp_actions} != {actual_actions}"
             # For the "place holders", ignore case, since sometimes proper names,
             # like for pharmaceuticals, can occur with different cases. Also, we
             # check that _expected_ values, if any are present, but also allow for
             # additional actual values. This is because some of the test queries
             # hard-code body parts and pharmaceuticals and don't always use the "{foo}"
             # convention for such things.
+            missing_phs = {}
             for key in exp_place_holders:
                 expected = exp_place_holders.get(key).lower()
                 actual   = actual_reply.get(key).lower()
                 if not actual.find(expected) >= 0:
-                    errors[key] = f"key = {key}: {expected} vs. {actual}"
+                    missing_phs['key'] = f"{expected} vs. {actual}"
+            if missing_phs:
+                errors['place_holder'] = missing_phs
 
         if errors:
-            errors.update(base_errors_dict)
+            errors['metadata'] = errors_metadata
         return errors
 
     def try_queries(self, 
-        file_name: str, 
+        file_name: Path | str, 
         place_holders: dict[str,str], 
         sample_rate: float = None, 
         rating_threshold: int = default_rating_threshold,
@@ -325,14 +352,16 @@ class TestBase(unittest.TestCase):
             sample_rate = self.sample_rate
         
         if self.verbose:
-            rprint()
-            rprint("try_queries():")
-            rprint(f"file_name:                    {file_name}")
-            rprint(f"sample_rate:                  {sample_rate}")
-            rprint(f"rating_threshold:             {rating_threshold}")
-            rprint(f"confidence_threshold:         {confidence_threshold}")
-            rprint(f"place_holders:                {place_holders}")
-        
+            d = {
+                'step':                  'try_queries',
+                'file_name':             str(file_name),
+                'sample_rate':           sample_rate,
+                'rating_threshold':      rating_threshold,
+                'confidence_threshold':  confidence_threshold,
+                'place_holders':         place_holders,
+            }
+            rprint(json.dumps(d))
+
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
         self.samples_count += len(samples)
