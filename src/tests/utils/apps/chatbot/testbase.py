@@ -88,22 +88,26 @@ class TestBase(unittest.TestCase):
         self.service_url                  = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
         self.template_dir                 = os.environ.get('PROMPTS_TEMPLATES_DIR', 'prompts/templates')
         self.data_dir                     = os.environ.get('DATA_DIR', 'data')
-        self.sample_rate: float           = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
         self.test_all_examples: bool      = bool(os.environ.get('TEST_ALL_EXAMPLES', False))
+        self.sample_rate: float           = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
         self.rating_threshold: int        = int(os.environ.get('RATING_THRESHOLD', self.default_rating_threshold))
         self.confidence_threshold: float  = float(os.environ.get('CONFIDENCE_THRESHOLD', self.default_confidence_threshold))
-
-        self.verbose: bool            = bool(os.environ.get('VERBOSE', False))
+        self.verbose: bool                = bool(os.environ.get('VERBOSE', False))
+        if self.test_all_examples:
+            self.sample_rate = 1.0
+        
         if self.verbose:
             rprint()
-            rprint(f"model:                {self.model}")
-            rprint(f"service_url:          {self.service_url}")
-            rprint(f"template_dir:         {self.template_dir}")
-            rprint(f"data_dir:             {self.data_dir}")
-            rprint(f"sample_rate:          {self.sample_rate}")
-            rprint(f"test_all_examples:    {self.test_all_examples}")
-            rprint(f"rating_threshold:     {self.rating_threshold}")
-            rprint(f"confidence_threshold: {self.confidence_threshold}")
+            rprint(f"model:                        {self.model}")
+            rprint(f"service_url:                  {self.service_url}")
+            rprint(f"template_dir:                 {self.template_dir}")
+            rprint(f"data_dir:                     {self.data_dir}")
+            if self.test_all_examples:
+                rprint(f"test_all_examples:            {self.test_all_examples}")
+            else:
+                rprint(f"default sample_rate:          {self.sample_rate}")
+            rprint(f"default rating_threshold:     {self.rating_threshold}")
+            rprint(f"default confidence_threshold: {self.confidence_threshold}")
 
         self.low_confidence_results = []
         self.errors = {}
@@ -154,6 +158,10 @@ class TestBase(unittest.TestCase):
         """
         See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
         Compare to `try_query_accumulate()`.
+        We don't check the text returned. For a few labels, we don't use that text,
+        but for other labels, we would show the text to the user. We could enhance
+        these tests to use an LLM as a judge to decide on the quality of the returned
+        texts, at the expense of additional overhead for the inference required.
         """
         exp_query   = test_prompt.query
         exp_label   = test_prompt.label
@@ -175,7 +183,7 @@ class TestBase(unittest.TestCase):
         actual_body_parts    = actual_reply.get('body_parts', '')
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
-        actual_text          = actual_reply.get('text', '')
+        # actual_text          = actual_reply.get('text', '')
         actual_rtu           = actual_reply.get('reply-to-user', None)
 
         err_msg = str(answer)
@@ -185,7 +193,8 @@ class TestBase(unittest.TestCase):
             self.assertEqual(exp_label,   actual_label,   err_msg)
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
-                # the returned text, since we always return with the same reply for these labels!
+                # the returned user response, since we always return with the same reply for 
+                # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
                 self.assertEqual(exp_rtu, actual_rtu, err_msg)
             else:
@@ -227,8 +236,25 @@ class TestBase(unittest.TestCase):
             exp_place_holders[key] = value if exp_query.find('{'+key+'}') >= 0 else ''
         prompt = exp_query.format_map(exp_place_holders)
         
+        base_errors_dict = {
+            'prompt': prompt,
+            'test_prompt': test_prompt,
+            'place_holders': place_holders,
+            'rating_threshold': rating_threshold,
+            'confidence_threshold': confidence_threshold,
+        }
+        # On success this will be returned as empty. If problems are found,
+        # we put those kvs first, so they are printed first...
+        errors = {}
+
         answer = self.chatbot.query(prompt)
-        self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
+        if isinstance(answer, str):
+            errors['query_failure'] = f"Error message returned: {answer}"
+            errors.extend(base_errors_dict)
+            return errors
+        else:
+            base_errors_dict['answer'] = answer
+
         actual_query1        = answer.get('query')
         actual_content       = answer.get('content')
         actual_query2        = actual_content.get('query')
@@ -238,14 +264,14 @@ class TestBase(unittest.TestCase):
         actual_body_parts    = actual_reply.get('body_parts', '')
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
-        actual_text          = actual_reply.get('text', '')
+        # actual_text          = actual_reply.get('text', '')
         actual_rtu           = actual_reply.get('reply-to-user', None)
 
-        errors = {}
         if prompt != actual_query1:
             errors['answer.query'] = f"query: {prompt} != {actual_query1}"
         if prompt != actual_query2:
             errors['content.query'] = f"query: {prompt} != {actual_query2}"
+        
         if actual_confidence < confidence_threshold:
             if 'other' != actual_label:
                 errors['label'] = f"label: other != {actual_label}"
@@ -261,7 +287,8 @@ class TestBase(unittest.TestCase):
                 errors['label'] = f"label: {exp_label} != {actual_label}"
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
-                # the returned text, since we always return with the same reply for these labels!
+                # the returned user response, since we always return with the same reply for 
+                # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
                 if exp_rtu != actual_rtu:
                     errors['response-to-user'] = f"response-to-user: {exp_rtu} != {actual_rtu}"
@@ -282,8 +309,42 @@ class TestBase(unittest.TestCase):
                     errors[key] = f"key = {key}: {expected} vs. {actual}"
 
         if errors:
-            errors['answer'] = answer
+            errors.update(base_errors_dict)
         return errors
+
+    def try_queries(self, 
+        file_name: str, 
+        place_holders: dict[str,str], 
+        sample_rate: float = None, 
+        rating_threshold: int = default_rating_threshold,
+        confidence_threshold: float = default_confidence_threshold,
+        accumulate_errors: bool = True):
+        if self.test_all_examples:   # Override based on env. var.?
+            sample_rate = 1.0
+        elif not sample_rate:
+            sample_rate = self.sample_rate
+        
+        if self.verbose:
+            rprint()
+            rprint("try_queries():")
+            rprint(f"file_name:                    {file_name}")
+            rprint(f"sample_rate:                  {sample_rate}")
+            rprint(f"rating_threshold:             {rating_threshold}")
+            rprint(f"confidence_threshold:         {confidence_threshold}")
+            rprint(f"place_holders:                {place_holders}")
+        
+        test_prompts = self.load_test_data(Path(file_name))
+        samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
+        self.samples_count += len(samples)
+        for test_prompt in samples:
+            if accumulate_errors:
+                errs = self.try_query_accumulate(test_prompt, place_holders, 
+                    rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
+                if errs:
+                    self.errors[test_prompt] = errs
+            else:
+                self.try_query(test_prompt, place_holders, 
+                    rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
@@ -293,8 +354,6 @@ class TestBase(unittest.TestCase):
         prompts, for more exhaustive coverage. However, if the total number of test prompts is less than 5 (arbitrary),
         we run all of them, for any sample_rate > 0.
         """
-        if not sample_rate:
-            sample_rate = self.sample_rate        
         minimum_n = 5
         n = len(collection)
         samples = collection
@@ -306,45 +365,3 @@ class TestBase(unittest.TestCase):
             k = int(sample_rate * n) if n > minimum_n else minimum_n
             samples = random.sample(collection, k=k)
         return samples
-
-    def try_queries(self, 
-        file_name: str, 
-        place_holders: dict[str,str], 
-        sample_rate: float = None, 
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
-        if self.test_all_examples:
-            self.__try_all_queries(file_name, place_holders, 
-                sample_rate=sample_rate, rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
-        else:
-            self.__try_queries(file_name, place_holders, 
-                sample_rate=sample_rate, rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
-
-    def __try_queries(self,
-        file_name: str, 
-        place_holders: dict[str,str], 
-        sample_rate: float = None, 
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
-        test_prompts = self.load_test_data(Path(file_name))
-        samples = self._sample(test_prompts, sample_rate)
-        self.samples_count = len(samples)
-        for test_prompt in samples:
-            self.try_query(test_prompt, place_holders, 
-                rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
-
-    def __try_all_queries(self,
-        file_name: str, 
-        place_holders: dict[str,str], 
-        sample_rate: float = None, 
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
-        test_prompts = self.load_test_data(Path(file_name))
-        samples = self._sample(test_prompts, sample_rate)
-        self.samples_count = len(samples)
-        for test_prompt in samples:
-            errs = self.try_query_accumulate(test_prompt, place_holders, 
-                rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
-            if errs:
-                self.errors[test_prompt] = errs
-

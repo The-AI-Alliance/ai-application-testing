@@ -64,7 +64,7 @@ class ResponseHandler():
                     self.logger.info(handled)
                 return handled
         except ValueError as err:
-            return parsed
+            return f"""ValueError raised: "{err}" for content = "{content}"."""
 
     def __extract_content(self, litellm_reponse: ModelResponse) -> str:
         """Returns the JSON-formatted string content we care about."""

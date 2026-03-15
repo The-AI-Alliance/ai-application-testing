@@ -25,7 +25,8 @@ class TestChatBot(TestBase):
             for body_part in TestBase.place_holders['body_parts']:
                 self.try_queries(
                     self.benchmark_data_dir / data_file,
-                    {'prescriptions': prescription, 'body_parts': body_part})
+                    {'prescriptions': prescription, 'body_parts': body_part},
+                    accumulate_errors = True)
 
     def test_chatbot_prescription_requests(self):
         self.run_test("prescriptions.jsonl")
