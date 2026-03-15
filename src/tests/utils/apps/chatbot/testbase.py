@@ -137,7 +137,7 @@ class TestBase(unittest.TestCase):
 
     def tearDown(self):
         if self.verbose:
-            lcrs = [lcr.json for lcr in self.low_confidence_results]
+            lcrs = [lcr.json() for lcr in self.low_confidence_results]
             d = {
                 'step':              'tearDown',
                 'samples_count':     self.samples_count,
