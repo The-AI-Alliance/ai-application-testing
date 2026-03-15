@@ -98,21 +98,22 @@ Like for planning, sometimes a model can generate candidate ideas faster than ru
 
 Tools that perform a conventional web search about a topic provide the same utility as they do when used by people. However, tool-based web searches have the same drawbacks, too. Care is required to validate the veracity of the results or at least the trustworthiness of the sources found. 
 
-## Using External Tools to Generate Healthcare ChatBot Synthetic Data
+## Using External Agents to Generate and Validate Healthcare ChatBot Synthetic Data
 
 {: .todo}
 > **TODO:** 
 > 
-> Provide an implementation of external tool use for creating data sets. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"}.
+> We intend to provide a complete example of external tool use for creating and validating data sets for the ChatBot application. See issues [#30](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"} and [#24](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. Here we sketch a possible approach.
 
-TODO: Look at an offline medical reference that can be "scraped" and used to generate and validate data.
+If you try some of the [generated example queries](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="examples"}, you will see that often the replies generated are quite good, suitable for sharing with a patient. Unfortunately, not all of them are satisfactory and there is potentially-high risk if a poor response is given to a patient. 
 
-## Using External Tools to Validate Healthcare ChatBot Synthetic Data
+The AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="draa"} (DRAA) provides three example applications, one of which is a medical tool that accepts a user query about a medical condition or pharmaceutical, then queries reputable sources for up-to-date information. 
 
-{: .todo}
-> **TODO:** 
-> 
-> Provide an implementation of external tool use for our running example. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. As always, [help is welcome]({{site.baseurl}}/contributing)!
+One way to enhance the quality of synthetic Q&A pairs would be to use an LLM to generate Q&A pairs, as we have been doing, then verify the quality of the answers by reformatting them as queries to the DRAA medical application, which would be asked to judge the Q&A pairs. This is similar to LLM as a Judge, but since DRAA is engineered to use reputable resources for expert opinion, not just rely on a model's judgement, it should be a more reliable judge than an LLM alone.
+
+Keep in mind that agent systems, like the DRAA application, usually have significantly higher overhead compared to &ldquo;plain&rdquo; LLM inference. This will likely rule out their use during _live_ sessions with real users, whereas other external tools may operate fast enough to be used in such contexts.
+
+Also, this approach isn't useful for all possible Q&A pairs. The companion ChatBot application has Q&A pairs for more use cases than we discuss in this guide. An example is queries related to appointments, such as asking to reschedule an appointment, asking if a visit is necessary for some purpose, etc. Other example queries relate to paying bills. Obviously, it wouldn't make sense to validate these Q&A pairs with a research-oriented tool like DRAA. Fortunately, these scenarios are sufficiently generic and &ldquo;mainstream&rdquo; that a regular LLM as a Judge approach is sufficient.
 
 ## Experiments to Try
 

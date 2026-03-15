@@ -32,6 +32,7 @@ In production deployments, an LLM could also be used to judge model responses du
 > 1. Manual evaluation of synthetic data and model responses (during testing and inference) doesn't scale and is error prone. 
 > 1. Let one or more &ldquo;smart&rdquo; _teacher models_ do the judging.
 > 1. Small models don't make very good judges, but using a &ldquo;panel&rdquo; of judges with _majority wins_ or _average scoring_ provides more resiliency and can be used when a single large, expensive model isn't a viable choice.
+> 1. A more effective option is to use an agent framework that integrates reliable, expert data sources to formulate responses, rather than just relying on an LLM itself.
 > 1. Deciding on appropriate pass/fail thresholds will require studying actual content, continued experiments, and a growing intuition about what is required. Different values will emerge for use in data validation, test runs, and possibly production judging of generated responses.
 
 Normally, a judge model is chosen because it is considered very &ldquo;smart&rdquo; or capable for evaluating the content in question. It may also be large and expensive to use or otherwise considered not suitable for production use in the application. As for one-time data synthesis, one-time judging of the data can be a cost-effective way to maximize application quality while keeping production costs as low as possible.
@@ -74,6 +75,14 @@ This approach is a good way to leverage smaller, more cost-effective models, rat
 ### Using External Tools for Evaluation
 
 In [A Variation of LLM as a Judge?]({{site.baseurl}}/testing-strategies/external-verification/#a-variation-of-llm-as-a-judge) in the [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/) chapter, we discuss the idea of leveraging the feedback of external tools for validation, where the  &ldquo;judge&rdquo; model doesn't do the validation itself, but instead it invokes other tools for validation and then interprets the results appropriately.
+
+### Using _Agents as a Judge_
+
+[Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are increasingly important designs for real-world applications, because they complement LLMs with tools like reliable, expert data sources, reasoning and planning capabilities, etc., to produce more reliable results. An effective healthcare ChatBot will rely on a combination of expert medical information and general-purpose capabilities.
+
+For example, the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="draa"} (DRAA) provides three example applications, one of which is a medical tool that accepts a user query about a medical condition or pharmaceutical, then queries reputable sources for up-to-date information. A way to use this application as part of an _Agent as a Judge_ is also discussed in the [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/) chapter.
+
+We will continue to use _LLM as a Judge_ as the title for this chapter's concept, because in practical terms, whether you use a &ldquo;plain&rdquo; LLM or an agent system for judgement, the choice will be transparent to your synthetic data work flow. Hopefully, the results will be noticeable better when using agents!
 
 ## Evaluating the Synthetic Data
 
