@@ -429,3 +429,9 @@
 {"query":"I have a severe sore throat after taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
 {"query":"I have a severe stomach cramp after taking {prescriptions}. What should I do?","label":"prescription","actions":"inquiry","rating":4}
 {"query":"I have trouble sleeping, ever since I started taking {prescriptions}.","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up visit for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need to schedule a follow-up appointment for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up visit for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
+{"query":"Do I need a follow-up appointment for my prescription for {prescriptions}?","label":"prescription","actions":"inquiry","rating":5}
