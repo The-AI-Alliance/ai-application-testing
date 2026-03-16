@@ -175,7 +175,7 @@ class TestBase(unittest.TestCase):
 
     def tearDown(self):
         TestBase.total_error_count += len(self.errors)
-        lcrs = [lcr.json() for lcr in self.low_confidence_results]
+        lcrs = [lcr.dict() for lcr in self.low_confidence_results]
         d = {
             'step':              'tearDown',
             'samples_count':     self.samples_count,
@@ -191,6 +191,8 @@ class TestBase(unittest.TestCase):
         js1 = json.dumps(d)
         js  = re.sub(r'\n', r'\\n', js1)  # Try to print true JSONL records
         print(js, file=TestBase.log_file)
+        if not self.samples_count:
+            raise ValueError(f"No samples were loaded!")            
 
     @classmethod
     def setUpClass(cls):
@@ -282,8 +284,12 @@ class TestBase(unittest.TestCase):
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
                 self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
             else:
-                # Do the actions match for the other label cases?
-                self.assertEqual(exp_actions, actual_actions, f"{exp_actions} != {actual_actions}, error_msg = {err_msg}")
+                # Do the actions match for the other label cases? Note that the ChatBot could return
+                # more than one, a comma-separated list, so we just check if the one or more expected
+                # actions are present.
+                for action in exp_actions.split(','):
+                    a = action.strip()
+                    self.assertTrue(actual_actions.find(a) > 0, f"""expected action "{a}" not found in != "{actual_actions}", exp_actions = "{exp_actions}", error_msg = {err_msg}""")
 
             # For the "place holders", ignore case, since sometimes proper names,
             # like for pharmaceuticals, can occur with different cases. Also, we
@@ -294,7 +300,7 @@ class TestBase(unittest.TestCase):
             for key in exp_place_holders:
                 expected = exp_place_holders.get(key).lower()
                 actual   = actual_reply.get(key).lower()
-                self.assertTrue(actual.find(expected) >= 0, f"for key = {key}: expected = {expected}, actual = {actual}, {err_msg}")
+                self.assertTrue(actual.find(expected) >= 0, f"""for key = "{key}": expected = "{expected}", actual = "{actual}", {err_msg}""")
 
     def try_query_accumulate(self, 
         test_prompt: TestPrompt,
@@ -374,9 +380,17 @@ class TestBase(unittest.TestCase):
                 if exp_rtu != actual_rtu:
                     errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:
-                # Do the actions match for the other label cases?
-                if exp_actions != actual_actions:
-                    errors['actions'] = f"{exp_actions} != {actual_actions}"
+                # Do the actions match for the other label cases? Note that the ChatBot could return
+                # more than one, a comma-separated list, so we just check if the one or more expected
+                # actions are present.
+                missing_actions = []
+                for action in exp_actions.split(','):
+                    a = action.strip()
+                    if actual_actions.find(a) < 0:
+                        missing_actions.append(a)
+                if missing_actions:
+                    errors['actions'] = f"""some expected actions "{missing_actions}" (out of "{exp_actions}") not found in the actual actions "{actual_actions}"."""
+
             # For the "place holders", ignore case, since sometimes proper names,
             # like for pharmaceuticals, can occur with different cases. Also, we
             # check that _expected_ values, if any are present, but also allow for
@@ -436,17 +450,18 @@ class TestBase(unittest.TestCase):
         The sample_rate (between 0.0 and 1.0) is a pragmatic compromise due to relatively slow local inference
         and expensive inference services. Use a low value for unit tests that are run frequently and need to be fast.
         Use a high value for integration and acceptance tests, usually 1.0, to run most or all of the available test
-        prompts, for more exhaustive coverage. However, if the total number of test prompts is less than 5 (arbitrary),
-        we run all of them, for any sample_rate > 0.
+        prompts, for more exhaustive coverage. However, if the sampled number of test prompts will be less than 5
+        (arbitrary), we run the first five available (if the collection has that many...).
         """
         minimum_n = 5
         n = len(collection)
+        self.assertTrue(n > 0, f"Collection has no elements! {collection}")
         samples = collection
-        if sample_rate <= 0.0 or n <= minimum_n:
-            samples = collection[0:minimum_n]
-        elif sample_rate < 1.0:
+        if n > minimum_n and sample_rate < 1.0:
             # The samples will be unsorted, but that's okay, as we would like to catch subtle differences
             # in behavior that might be triggered by different ordering.
-            k = int(sample_rate * n) if n > minimum_n else minimum_n
+            k = round(sample_rate * n)
+            if k < minimum_n:
+                k = minimum_n
             samples = random.sample(collection, k=k)
         return samples
