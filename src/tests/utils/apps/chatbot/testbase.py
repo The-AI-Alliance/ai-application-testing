@@ -77,11 +77,24 @@ class TestBase(unittest.TestCase):
 
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
+    place_holders = {}
+    total_error_count = 0
 
-    place_holders = {
-        'prescriptions': ['prilosec', 'xanax'],
-        'body_parts': ['stomach', 'heart'],
-    }
+    def __set_place_holders(self, use_all: bool):
+        """
+        Set the dictionary of "place holders" for substitution into test prompts.
+        If we aren't testing all examples, e.g., for unit tests, we only use one
+        item for each variable.
+        """
+        # Keep the size of the lists equal!
+        prescriptions = ['prilosec', 'xanax', 'boniva']
+        body_parts    = ['heart', 'stomach', 'head']
+        
+        count = len(prescriptions) if use_all else 1
+        TestBase.place_holders = {
+            'prescriptions': prescriptions[0:count],
+            'body_parts':    body_parts[0:count],
+        }
 
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
@@ -114,43 +127,53 @@ class TestBase(unittest.TestCase):
         self.verbose: bool                = bool(os.environ.get('VERBOSE', False))
         if self.test_all_examples:
             self.sample_rate = 1.0
-        
+        if self.sample_rate < 1.0:
+            self.__set_place_holders(False)
+        else:
+            self.__set_place_holders(True)
+
         self.low_confidence_results = []
-        self.errors = {}
+        self.errors = []
         self.samples_count: int = 0
 
         self.make_chatbot()
 
-        if self.verbose:
-            d = {
-                'step' :                        'setUp',
-                'model':                        self.model,
-                'service_url':                  self.service_url,
-                'template_dir':                 self.template_dir,
-                'data_dir':                     self.data_dir,
-                'test_all_examples':            self.test_all_examples,
-                'default sample_rate':          self.sample_rate,
-                'default rating_threshold':     self.rating_threshold,
-                'default confidence_threshold': self.confidence_threshold,
-            }
-            rprint(json.dumps(d))
+        d = {
+            'step' :                        'setUp',
+            'model':                        self.model,
+            'service_url':                  self.service_url,
+            'template_dir':                 self.template_dir,
+            'data_dir':                     self.data_dir,
+            'test_all_examples':            self.test_all_examples,
+            'default sample_rate':          self.sample_rate,
+            'default rating_threshold':     self.rating_threshold,
+            'default confidence_threshold': self.confidence_threshold,
+        }
+        rprint(json.dumps(d))
 
     def tearDown(self):
-        if self.verbose:
-            lcrs = [lcr.json() for lcr in self.low_confidence_results]
-            d = {
-                'step':              'tearDown',
-                'samples_count':     self.samples_count,
-                'low_confidence_results': {
-                    'count':         len(self.low_confidence_results),
-                    'results':       lcrs,
-                },
-                'errors': {
-                    'count':         len(self.errors),
-                    'errors':        self.errors,
-                },
-            }
-            rprint(json.dumps(d))
+        self.total_error_count += len(self.errors)
+        lcrs = [lcr.json() for lcr in self.low_confidence_results]
+        d = {
+            'step':              'tearDown',
+            'samples_count':     self.samples_count,
+            'low_confidence_results': {
+                'count':         len(self.low_confidence_results),
+                'results':       lcrs,
+            },
+            'errors': {
+                'count':         len(self.errors),
+                'errors':        self.errors,
+            },
+        }
+        js1 = json.dumps(d)
+        js  = re.sub(r'\n', r'\\n', js1)  # Try to print true JSONL records
+        rprint(js)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.total_error_count:
+            raise AssertionError(f"{cls.total_error_count} errors occurred!")
 
     def load_test_data(self, path: Path) -> [TestPrompt]:
         if not path.exists():
@@ -261,7 +284,7 @@ class TestBase(unittest.TestCase):
         
         errors_metadata = {
             'prompt': prompt,
-            'test_prompt': test_prompt,
+            'test_prompt': test_prompt.json(),
             'place_holders': place_holders,
             'rating_threshold': rating_threshold,
             'confidence_threshold': confidence_threshold,
@@ -351,16 +374,15 @@ class TestBase(unittest.TestCase):
         elif not sample_rate:
             sample_rate = self.sample_rate
         
-        if self.verbose:
-            d = {
-                'step':                  'try_queries',
-                'file_name':             str(file_name),
-                'sample_rate':           sample_rate,
-                'rating_threshold':      rating_threshold,
-                'confidence_threshold':  confidence_threshold,
-                'place_holders':         place_holders,
-            }
-            rprint(json.dumps(d))
+        d = {
+            'step':                  'try_queries',
+            'file_name':             str(file_name),
+            'sample_rate':           sample_rate,
+            'rating_threshold':      rating_threshold,
+            'confidence_threshold':  confidence_threshold,
+            'place_holders':         place_holders,
+        }
+        rprint(json.dumps(d))
 
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
@@ -370,7 +392,7 @@ class TestBase(unittest.TestCase):
                 errs = self.try_query_accumulate(test_prompt, place_holders, 
                     rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
                 if errs:
-                    self.errors[test_prompt] = errs
+                    self.errors.append(errs)
             else:
                 self.try_query(test_prompt, place_holders, 
                     rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
