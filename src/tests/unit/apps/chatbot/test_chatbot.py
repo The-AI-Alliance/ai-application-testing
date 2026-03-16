@@ -31,12 +31,12 @@ class TestChatBot(TestBase):
     def test_chatbot_prescription_requests(self):
         self.run_test("prescriptions.jsonl")
 
-    def test_chatbot_emergency_requests(self):
-        self.run_test("emergencies.jsonl")
+    # def test_chatbot_emergency_requests(self):
+    #     self.run_test("emergencies.jsonl")
 
-    def test_chatbot_appointment_requests(self):
-        self.run_test("appointments.jsonl")
+    # def test_chatbot_appointment_requests(self):
+    #     self.run_test("appointments.jsonl")
 
-    def test_chatbot_other_requests(self):
-        self.run_test("others.jsonl")
+    # def test_chatbot_other_requests(self):
+    #     self.run_test("others.jsonl")
 

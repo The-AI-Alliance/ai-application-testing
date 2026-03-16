@@ -659,6 +659,8 @@ test tests unit-tests:: run-command-checks
 	  uv run python -m unittest discover \
 	  	--start-directory tests/unit \
 	  	--top-level-directory .
+	  @echo "A log file was written to ${SRC_DIR/tests/logs}. It may be empty!"
+	  @ls -l ${SRC_DIR/tests/logs}
 
 integ-tests integration-tests:: unit-tests-as-integration-tests ded-integ-tests dedicated-integration-tests
 

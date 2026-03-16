@@ -132,7 +132,7 @@ This could be the next business day. If you are having an emergency, please call
                     case 'prescription' | 'appointment':
                         answer = text
                     case 'emergency':
-                        answer = self.replies.get('emergency')
+                        answer = self.replies['emergency']
                     case _:
                         answer = other
             

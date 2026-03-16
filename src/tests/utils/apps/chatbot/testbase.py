@@ -4,9 +4,9 @@
 from hypothesis import given, strategies as st
 
 import json, logging, os, random, re, sys, unittest
+from datetime import datetime
 from io import StringIO
 from pathlib import Path
-from rich import print as rprint
 
 from apps.chatbot import ChatBot, ChatBotResponseHandler, ChatBotShell
 from common.utils import parse_json
@@ -35,14 +35,15 @@ class TestPrompt():
     def __repr__(self) -> str:
         return f"""TestPrompt(query='{self.query}',label='{self.label}',actions='{self.actions}',rating={self.rating})"""
 
+    def dict(self) -> dict[str,any]:
+        d = {
+            'name': 'TestPrompt',
+        }
+        d.update(vars(self))
+        return d
+
     def json(self) -> str:
-        return json.dumps({
-            'name':    'TestPrompt',
-            'query':   self.query,
-            'label':   self.label,
-            'actions': self.actions,
-            'rating':  self.rating,
-        })
+        return json.dumps(self.dict())
 
 class LowConfidenceResult():
     """
@@ -60,25 +61,46 @@ class LowConfidenceResult():
     def __repr__(self) -> str:
         return f"""LowConfidenceResult(query='{self.query}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
-    def json(self) -> str:
-        return json.dumps({
+    def dict(self) -> dict[str,any]:
+        # We don't use __dict__ here because we need to turn the TestPrompt instance into a dictionary.
+        # TODO: Is there a more standard way to make any class recursively convertible to a dictionary?
+        return {
             'name':                  'LowConfidenceResult',
             'query':                 self.query,
-            'reply':                 json.dumps(self.reply),
-            'test_prompt':           self.test_prompt.json(),
+            'reply':                 self.reply,
+            'test_prompt':           self.test_prompt.dict(),
             'rating_threshold':      self.rating_threshold,
             'confidence_threshold':  self.confidence_threshold,
-        })
+        }
+
+    def json(self) -> str:
+        return json.dumps(self.dict())
 
 class TestBase(unittest.TestCase):
     """
-    Base class for ChatBot tests.
+    Base class for ChatBot tests. This class implements a number of extensions to normal 
+    TestCase behavior, which we added to address some of the challenges of testing stochastic
+    AI behaviors. The features include the following:
+    
+    * A _confidence threshold_:
+        * Minimal testing is done on a response if the confidence score included in the
+        response is below a threshold.
+    * A _rating threshold_:
+        * Similarly, if the generated Q&A pair was validated below a threshold, we don't
+        require testing with it to "pass".
+    * A flag for _testing all examples_ or not and a _sampling rate_:
+        * Running with all the test Q&A pairs and some variable substitutions supported
+        takes a very long time, so we support sampling a subset for faster unit test runs.
+    * Accumulating all errors vs. failing fast:
+        We have found it useful to accumulate and report all found errors vs. the normal
+        approach of failing fast on the first error.
     """
-
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
     place_holders = {}
     total_error_count = 0
+    log_file_name = ''
+    log_file = None
 
     def __set_place_holders(self, use_all: bool):
         """
@@ -149,10 +171,10 @@ class TestBase(unittest.TestCase):
             'default rating_threshold':     self.rating_threshold,
             'default confidence_threshold': self.confidence_threshold,
         }
-        rprint(json.dumps(d))
+        print(json.dumps(d), file=TestBase.log_file)
 
     def tearDown(self):
-        self.total_error_count += len(self.errors)
+        TestBase.total_error_count += len(self.errors)
         lcrs = [lcr.json() for lcr in self.low_confidence_results]
         d = {
             'step':              'tearDown',
@@ -168,12 +190,20 @@ class TestBase(unittest.TestCase):
         }
         js1 = json.dumps(d)
         js  = re.sub(r'\n', r'\\n', js1)  # Try to print true JSONL records
-        rprint(js)
+        print(js, file=TestBase.log_file)
+
+    @classmethod
+    def setUpClass(cls):
+        log_dir = "tests/logs"
+        TestBase.log_file_name = f"{log_dir}/{cls.__name__}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+        print(f"Logging to {TestBase.log_file_name}")
+        os.makedirs(log_dir, exist_ok=True)
+        TestBase.log_file = open(TestBase.log_file_name, 'w')
 
     @classmethod
     def tearDownClass(cls):
-        if cls.total_error_count:
-            raise AssertionError(f"{cls.total_error_count} errors occurred!")
+        if TestBase.total_error_count:
+            raise AssertionError(f"{TestBase.total_error_count} errors occurred!")
 
     def load_test_data(self, path: Path) -> [TestPrompt]:
         if not path.exists():
@@ -222,6 +252,7 @@ class TestBase(unittest.TestCase):
         self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
         actual_query1        = answer.get('query')
         actual_content       = answer.get('content')
+        actual_rtu           = answer.get('reply_to_user')
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
@@ -230,22 +261,29 @@ class TestBase(unittest.TestCase):
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         # actual_text          = actual_reply.get('text', '')
-        actual_rtu           = actual_reply.get('reply-to-user', None)
 
         err_msg = str(answer)
         self.assertEqual(prompt, actual_query1, err_msg)
         self.assertEqual(prompt, actual_query2, err_msg)
-        if actual_confidence >= confidence_threshold and exp_rating >= rating_threshold:
-            self.assertEqual(exp_label,   actual_label,   err_msg)
+
+        if actual_confidence < confidence_threshold:
+            self.assertEqual('other', actual_label, f"label: other != {actual_label}, error_msg = {err_msg}")
+            exp_rtu = ChatBotResponseHandler.replies['other']
+            self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
+        elif exp_rating < rating_threshold:
+            self.low_confidence_results.append(LowConfidenceResult(
+                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
+        else:
+            self.assertEqual(exp_label, actual_label, f"label: {exp_label} != {actual_label}, error_msg = {err_msg}")
             if exp_label == 'emergency' or exp_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
-                self.assertEqual(exp_rtu, actual_rtu, err_msg)
+                self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
             else:
                 # Do the actions match for the other label cases?
-                self.assertEqual(exp_actions, actual_actions, err_msg)
+                self.assertEqual(exp_actions, actual_actions, f"{exp_actions} != {actual_actions}, error_msg = {err_msg}")
 
             # For the "place holders", ignore case, since sometimes proper names,
             # like for pharmaceuticals, can occur with different cases. Also, we
@@ -257,10 +295,6 @@ class TestBase(unittest.TestCase):
                 expected = exp_place_holders.get(key).lower()
                 actual   = actual_reply.get(key).lower()
                 self.assertTrue(actual.find(expected) >= 0, f"for key = {key}: expected = {expected}, actual = {actual}, {err_msg}")
-        else:
-            self.low_confidence_results.append(LowConfidenceResult(
-                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
-    
 
     def try_query_accumulate(self, 
         test_prompt: TestPrompt,
@@ -284,7 +318,7 @@ class TestBase(unittest.TestCase):
         
         errors_metadata = {
             'prompt': prompt,
-            'test_prompt': test_prompt.json(),
+            'test_prompt': test_prompt.dict(),
             'place_holders': place_holders,
             'rating_threshold': rating_threshold,
             'confidence_threshold': confidence_threshold,
@@ -303,6 +337,7 @@ class TestBase(unittest.TestCase):
             errors_metadata['answer'] = answer
 
         actual_query1        = answer.get('query')
+        actual_rtu           = answer.get('reply_to_user')
         actual_content       = answer.get('content')
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
@@ -312,7 +347,6 @@ class TestBase(unittest.TestCase):
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         # actual_text          = actual_reply.get('text', '')
-        actual_rtu           = actual_reply.get('reply-to-user', None)
 
         if prompt != actual_query1:
             errors['answer.query'] = f"{prompt} != {actual_query1}"
@@ -325,7 +359,7 @@ class TestBase(unittest.TestCase):
             else:
                 exp_rtu = ChatBotResponseHandler.replies['other']
                 if exp_rtu != actual_rtu:
-                    errors['response-to-user'] = f"{exp_rtu} != {actual_rtu}"
+                    errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
         elif exp_rating < rating_threshold:
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
@@ -338,7 +372,7 @@ class TestBase(unittest.TestCase):
                 # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[exp_label]
                 if exp_rtu != actual_rtu:
-                    errors['response-to-user'] = f"{exp_rtu} != {actual_rtu}"
+                    errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:
                 # Do the actions match for the other label cases?
                 if exp_actions != actual_actions:
@@ -382,7 +416,7 @@ class TestBase(unittest.TestCase):
             'confidence_threshold':  confidence_threshold,
             'place_holders':         place_holders,
         }
-        rprint(json.dumps(d))
+        print(json.dumps(d), file=TestBase.log_file)
 
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
