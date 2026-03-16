@@ -106,8 +106,8 @@ system: >
     - Replace _q_ with the patient's input query.
     - Replace _l_ with one of the following labels, _in priority order_:
         - "emergency" if the question appears to be an urgent or emergency situation, even if a prescription or appointment request is also included.
-        - "appointment" for when the patient wants to schedule or reschedule an appointment, wants a referral, or has a question about an existing appointment.
         - "prescription" if the patient's query appears to be related to one or more prescriptions.
+        - "appointment" for when the patient wants to schedule or reschedule an appointment, wants a referral, or has a question about an existing appointment.
         - "other" for all other patient queries.
     - Replace _p_ with the prescription if a prescription is mentioned in the query. Otherwise, replace _p_ with an empty string.
       If more than one prescription is mentioned, use a comma-separated list of all prescriptions mentioned by the patient.
