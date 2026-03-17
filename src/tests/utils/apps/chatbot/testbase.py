@@ -10,7 +10,8 @@ from pathlib import Path
 
 from apps.chatbot import ChatBot, ChatBotResponseHandler, ChatBotShell
 from common.utils import parse_json
-    
+from common.collections import dict_permutations
+
 class TestPrompt():
     """Class to hold a benchmark datum: a prompt and expected label, actions, and rating."""
     def __init__(self,
@@ -97,26 +98,9 @@ class TestBase(unittest.TestCase):
     """
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
-    place_holders = {}
     total_error_count = 0
     log_file_name = ''
     log_file = None
-
-    def __set_place_holders(self, use_all: bool):
-        """
-        Set the dictionary of "place holders" for substitution into test prompts.
-        If we aren't testing all examples, e.g., for unit tests, we only use one
-        item for each variable.
-        """
-        # Keep the size of the lists equal!
-        prescriptions = ['prilosec', 'xanax', 'boniva']
-        body_parts    = ['heart', 'stomach', 'head']
-        
-        count = len(prescriptions) if use_all else 1
-        TestBase.place_holders = {
-            'prescriptions': prescriptions[0:count],
-            'body_parts':    body_parts[0:count],
-        }
 
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
@@ -149,10 +133,6 @@ class TestBase(unittest.TestCase):
         self.verbose: bool                = bool(os.environ.get('VERBOSE', False))
         if self.test_all_examples:
             self.sample_rate = 1.0
-        if self.sample_rate < 1.0:
-            self.__set_place_holders(False)
-        else:
-            self.__set_place_holders(True)
 
         self.low_confidence_results = []
         self.errors = []
@@ -231,6 +211,7 @@ class TestBase(unittest.TestCase):
     def try_query(self, 
         test_prompt: TestPrompt,
         place_holders: dict[str,str],
+        allowed_alt_labels: dict[str,[str]],
         rating_threshold: int = default_rating_threshold,
         confidence_threshold: float = default_confidence_threshold):
         """
@@ -245,10 +226,7 @@ class TestBase(unittest.TestCase):
         exp_label   = test_prompt.label
         exp_actions = test_prompt.actions
         exp_rating  = test_prompt.rating
-        exp_place_holders = {}
-        for key, value in place_holders.items():
-            exp_place_holders[key] = value if exp_query.find('{'+key+'}') >= 0 else ''
-        prompt = exp_query.format_map(exp_place_holders)
+        prompt      = exp_query.format_map(place_holders)
         
         answer = self.chatbot.query(prompt)
         self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
@@ -258,8 +236,6 @@ class TestBase(unittest.TestCase):
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
-        actual_prescriptions = actual_reply.get('prescriptions', '')
-        actual_body_parts    = actual_reply.get('body_parts', '')
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         # actual_text          = actual_reply.get('text', '')
@@ -276,12 +252,13 @@ class TestBase(unittest.TestCase):
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
-            self.assertEqual(exp_label, actual_label, f"label: {exp_label} != {actual_label}, error_msg = {err_msg}")
-            if exp_label == 'emergency' or exp_label == 'other':
+            err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
+            self.assertEqual(0, len(err_msg), err_msg)
+            if actual_label == 'emergency' or actual_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
-                exp_rtu = ChatBotResponseHandler.replies[exp_label]
+                exp_rtu = ChatBotResponseHandler.replies[actual_label]
                 self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
             else:
                 # Do the actions match for the other label cases? Note that the ChatBot could return
@@ -297,14 +274,15 @@ class TestBase(unittest.TestCase):
             # additional actual values. This is because some of the test queries
             # hard-code body parts and pharmaceuticals and don't always use the "{foo}"
             # convention for such things.
-            for key in exp_place_holders:
-                expected = exp_place_holders.get(key).lower()
+            for key in place_holders:
+                expected = place_holders.get(key).lower()
                 actual   = actual_reply.get(key).lower()
                 self.assertTrue(actual.find(expected) >= 0, f"""for key = "{key}": expected = "{expected}", actual = "{actual}", {err_msg}""")
 
     def try_query_accumulate(self, 
         test_prompt: TestPrompt,
         place_holders: dict[str,str],
+        allowed_alt_labels: dict[str,[str]],
         rating_threshold: int = default_rating_threshold,
         confidence_threshold: float = default_confidence_threshold) -> dict[str,any]:
         """
@@ -317,10 +295,7 @@ class TestBase(unittest.TestCase):
         exp_label   = test_prompt.label
         exp_actions = test_prompt.actions
         exp_rating  = test_prompt.rating
-        exp_place_holders = {}
-        for key, value in place_holders.items():
-            exp_place_holders[key] = value if exp_query.find('{'+key+'}') >= 0 else ''
-        prompt = exp_query.format_map(exp_place_holders)
+        prompt      = exp_query.format_map(place_holders)
         
         errors_metadata = {
             'prompt': prompt,
@@ -348,8 +323,6 @@ class TestBase(unittest.TestCase):
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
-        actual_prescriptions = actual_reply.get('prescriptions', '')
-        actual_body_parts    = actual_reply.get('body_parts', '')
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
         # actual_text          = actual_reply.get('text', '')
@@ -370,13 +343,14 @@ class TestBase(unittest.TestCase):
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
-            if exp_label != actual_label:
-                errors['label'] = f"{exp_label} != {actual_label}"
-            if exp_label == 'emergency' or exp_label == 'other':
+            err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
+            if len(err_msg) > 0:
+                errors['label'] = err_msg
+            if actual_label == 'emergency' or actual_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
-                exp_rtu = ChatBotResponseHandler.replies[exp_label]
+                exp_rtu = ChatBotResponseHandler.replies[actual_label]
                 if exp_rtu != actual_rtu:
                     errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:
@@ -398,8 +372,8 @@ class TestBase(unittest.TestCase):
             # hard-code body parts and pharmaceuticals and don't always use the "{foo}"
             # convention for such things.
             missing_phs = {}
-            for key in exp_place_holders:
-                expected = exp_place_holders.get(key).lower()
+            for key in place_holders:
+                expected = place_holders.get(key).lower()
                 actual   = actual_reply.get(key).lower()
                 if not actual.find(expected) >= 0:
                     missing_phs['key'] = f"{expected} vs. {actual}"
@@ -412,7 +386,8 @@ class TestBase(unittest.TestCase):
 
     def try_queries(self, 
         file_name: Path | str, 
-        place_holders: dict[str,str], 
+        place_holders: dict[str,[str]], 
+        allowed_alt_labels: dict[str,[str]],
         sample_rate: float = None, 
         rating_threshold: int = default_rating_threshold,
         confidence_threshold: float = default_confidence_threshold,
@@ -421,7 +396,7 @@ class TestBase(unittest.TestCase):
             sample_rate = 1.0
         elif not sample_rate:
             sample_rate = self.sample_rate
-        
+
         d = {
             'step':                  'try_queries',
             'file_name':             str(file_name),
@@ -435,15 +410,30 @@ class TestBase(unittest.TestCase):
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
         self.samples_count += len(samples)
+
+        # Start by determining if the prompt contains any of the placeholders. If a place holder
+        # key is found in place_holders, then we will iterate through the list of them. If not
+        # found we will skip that key:[str] pair.
+        phs = {}
         for test_prompt in samples:
-            if accumulate_errors:
-                errs = self.try_query_accumulate(test_prompt, place_holders, 
-                    rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
-                if errs:
-                    self.errors.append(errs)
-            else:
-                self.try_query(test_prompt, place_holders, 
-                    rating_threshold=rating_threshold, confidence_threshold=confidence_threshold)
+            for key in place_holders:
+                if test_prompt.query.find('{'+key+'}') >= 0:
+                    phs[key] = place_holders[key]
+
+            # Now create the key-value pairs from phs:
+            n = 1 if self.test_all_examples else -1
+            all_ph_pairs = dict_permutations(phs, max_size=n)
+            for ph_pairs in all_ph_pairs:
+                if accumulate_errors:
+                    errs = self.try_query_accumulate(test_prompt, ph_pairs, allowed_alt_labels,
+                        rating_threshold=rating_threshold, 
+                        confidence_threshold=confidence_threshold)
+                    if errs:
+                        self.errors.append(errs)
+                else:
+                    self.try_query(test_prompt, ph_pairs, allowed_alt_labels,
+                        rating_threshold=rating_threshold, 
+                        confidence_threshold=confidence_threshold)
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
@@ -465,3 +455,13 @@ class TestBase(unittest.TestCase):
                 k = minimum_n
             samples = random.sample(collection, k=k)
         return samples
+
+    def _check_label(self, expected: str, actual: str, allowed_alt_labels: dict[str,[str]]) -> str:
+        if expected == actual:
+            return ""
+        
+        alts = allowed_alt_labels.get(expected)
+        for alt in alts:
+            if expected == alt:
+                return ""
+        return f"{expected} != {actual} and the latter is not allowed as an alternate for the expected label: {alts}"
