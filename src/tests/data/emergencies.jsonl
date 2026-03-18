@@ -140,60 +140,6 @@
 {"query": "I have severe dizziness after taking ozempic and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
 {"query": "I have a severe headache after taking prilosec and I feel dizzy.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
 {"query": "I have a severe headache after taking ozempic and I feel dizzy.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my chest after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my face after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my stomach after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my groin after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my hand after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my arm after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my foot after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my leg after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my neck after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 2}
-{"query": "I have a severe headache in my chest after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my face after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my stomach after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my groin after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my hand after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my arm after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my foot after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my leg after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my neck after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 2}
-{"query": "I have a severe headache in my chest after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my face after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my stomach after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my groin after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my hand after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my arm after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my foot after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my leg after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my neck after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my chest after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my face after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my stomach after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my groin after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my hand after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my arm after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my foot after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my leg after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my neck after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my chest after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my face after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my stomach after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my groin after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my hand after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my arm after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my foot after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my leg after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my neck after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
-{"query": "I have a severe headache in my chest after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my face after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my stomach after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my groin after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my hand after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my arm after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my foot after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my leg after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
-{"query": "I have a severe headache in my neck after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
 {"query": "I have a severe headache that won't go away after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
 {"query": "I have a severe headache that won't go away after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
 {"query": "I have severe nausea after taking prilosec and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
