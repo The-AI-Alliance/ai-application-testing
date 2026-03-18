@@ -1,65 +1,556 @@
-{"query":"I am experiencing rapid heartbeat after taking {prescriptions}.","label":"emergency","actions":"","rating":1}
-{"query":"I am experiencing severe dizziness after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I am experiencing vision loss after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I am experiencing vomiting after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I am feeling a severe nausea after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I am feeling nausea and sweating after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I am having a severe allergic reaction to {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I am having a severe headache after taking {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I am having trouble breathing after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I am having trouble swallowing after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I feel a sudden severe pain in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I feel a tightness in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":3}
-{"query":"I feel like my heart is racing after taking {prescriptions}.","label":"emergency","actions":"","rating":3}
-{"query":"I feel shortness of breath after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I had a blackout after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I had a seizure after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I had a sudden drop in blood pressure after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe breathing difficulty after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe breathing difficulty after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have severe breathing difficulty after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe breathing difficulty in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe burning sensation in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe burning sensation in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe burning sensation in my {body_parts}.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe chest pain after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe chest pain after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe chest pain after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have severe chest pain after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe chest tightness after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe dizziness after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe headache after taking {prescriptions} and I feel dizzy.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe headache in my {body_parts} after starting {prescriptions}.","label":"emergency","actions":"","rating":2}
-{"query":"I have a severe headache in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe headache in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe headache that won't go away after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe nausea after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe pain in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":2}
-{"query":"I have severe pain in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts} and I'm taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have severe pain in my {body_parts}.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe rash in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe rash in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe rash in my {body_parts} and I'm taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe rash in my {body_parts}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe rash in my {body_parts}.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe stomach cramp after taking {prescriptions} and I'm feeling faint.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe stomach cramp after taking {prescriptions}. I think I need a referral.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe stomach cramp after taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe stomach cramp after taking {prescriptions}.","label":"emergency","actions":"","rating":4}
-{"query":"I have a severe swelling in my {body_parts} after taking {prescriptions} and I feel faint.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe swelling in my {body_parts} after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe swelling in my {body_parts} and I'm taking {prescriptions}. What should I do?","label":"emergency","actions":"","rating":5}
-{"query":"I have a severe swelling in my face after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have a sudden difficulty breathing after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have a sudden swelling in my {body_parts} after starting {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"I have severe chest pain after taking {prescriptions}.","label":"emergency","actions":"","rating":5}
-{"query":"My prescription {prescriptions} made me nauseous, and I feel faint.","label":"emergency","actions":"","rating":3}
-{"query":"Since I started taking my prescription for {prescriptions}, I have a severe rash around my {body_parts}.","label":"emergency","actions":"","rating":4}
+{"query": "I am experiencing rapid heartbeat after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 1}
+{"query": "I am experiencing rapid heartbeat after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 1}
+{"query": "I am experiencing severe dizziness after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I am experiencing severe dizziness after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I am experiencing vision loss after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I am experiencing vision loss after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I am experiencing vomiting after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I am experiencing vomiting after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I am feeling a severe nausea after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I am feeling a severe nausea after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I am feeling nausea and sweating after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I am feeling nausea and sweating after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I am having a severe allergic reaction to prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I am having a severe allergic reaction to ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I am having a severe headache after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I am having a severe headache after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I am having trouble breathing after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I am having trouble breathing after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I am having trouble swallowing after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I am having trouble swallowing after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I feel a sudden severe pain in my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a sudden severe pain in my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I feel a tightness in my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel a tightness in my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel a tightness in my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel like my heart is racing after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 3}
+{"query": "I feel like my heart is racing after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 3}
+{"query": "I feel shortness of breath after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I feel shortness of breath after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I had a blackout after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I had a blackout after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I had a seizure after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I had a seizure after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I had a sudden drop in blood pressure after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I had a sudden drop in blood pressure after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe breathing difficulty after taking prilosec and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty after taking ozempic and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty after taking prilosec. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty after taking ozempic. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my chest after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my face after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my stomach after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my groin after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my hand after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my arm after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my foot after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my leg after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my neck after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe breathing difficulty in my chest after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my face after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my stomach after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my groin after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my hand after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my arm after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my foot after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my leg after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe breathing difficulty in my neck after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe burning sensation in my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe burning sensation in my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe burning sensation in my chest. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 4}
+{"query": "I have a severe burning sensation in my face. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 4}
+{"query": "I have a severe burning sensation in my stomach. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 4}
+{"query": "I have a severe burning sensation in my groin. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 4}
+{"query": "I have a severe burning sensation in my hand. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 4}
+{"query": "I have a severe burning sensation in my arm. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 4}
+{"query": "I have a severe burning sensation in my foot. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 4}
+{"query": "I have a severe burning sensation in my leg. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 4}
+{"query": "I have a severe burning sensation in my neck. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 4}
+{"query": "I have a severe burning sensation in my chest.", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 4}
+{"query": "I have a severe burning sensation in my face.", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 4}
+{"query": "I have a severe burning sensation in my stomach.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 4}
+{"query": "I have a severe burning sensation in my groin.", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 4}
+{"query": "I have a severe burning sensation in my hand.", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 4}
+{"query": "I have a severe burning sensation in my arm.", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 4}
+{"query": "I have a severe burning sensation in my foot.", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 4}
+{"query": "I have a severe burning sensation in my leg.", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 4}
+{"query": "I have a severe burning sensation in my neck.", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 4}
+{"query": "I have chest pain after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have chest pain after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe chest pain after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe chest pain after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe chest pain after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe chest pain after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe chest pain after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe chest pain after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe chest pain after taking prilosec. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe chest pain after taking ozempic. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe chest tightness after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe chest tightness after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe dizziness after taking prilosec and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe dizziness after taking ozempic and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe headache after taking prilosec and I feel dizzy.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache after taking ozempic and I feel dizzy.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my chest after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my face after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my stomach after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my groin after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my hand after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my arm after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my foot after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my leg after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my neck after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have a severe headache in my chest after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my face after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my stomach after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my groin after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my hand after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my arm after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my foot after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my leg after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my neck after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have a severe headache in my chest after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my face after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my stomach after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my groin after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my hand after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my arm after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my foot after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my leg after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my neck after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my chest after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my face after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my stomach after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my groin after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my hand after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my arm after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my foot after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my leg after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my neck after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my chest after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my face after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my stomach after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my groin after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my hand after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my arm after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my foot after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my leg after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my neck after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe headache in my chest after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my face after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my stomach after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my groin after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my hand after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my arm after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my foot after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my leg after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache in my neck after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe headache that won't go away after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe headache that won't go away after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe nausea after taking prilosec and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe nausea after taking ozempic and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my face after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my stomach after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my groin after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my hand after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my arm after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my foot after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my leg after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my neck after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have severe pain in my chest after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my face after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my stomach after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my groin after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my hand after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my arm after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my foot after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my leg after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my neck after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have severe pain in my chest after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my face after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my stomach after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my groin after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my hand after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my arm after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my foot after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my leg after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my neck after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 2}
+{"query": "I have severe pain in my chest after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my face after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my stomach after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my groin after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my hand after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my arm after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my foot after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my leg after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my neck after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 2}
+{"query": "I have severe pain in my chest after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my face after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my stomach after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my groin after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my hand after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my arm after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my foot after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my leg after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my neck after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my chest after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my face after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my stomach after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my groin after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my hand after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my arm after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my foot after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my leg after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my neck after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have severe pain in my chest and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my face and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my stomach and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my groin and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my hand and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my arm and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my foot and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my leg and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my neck and I'm taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have severe pain in my chest. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 4}
+{"query": "I have severe pain in my face. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 4}
+{"query": "I have severe pain in my stomach. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 4}
+{"query": "I have severe pain in my groin. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 4}
+{"query": "I have severe pain in my hand. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 4}
+{"query": "I have severe pain in my arm. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 4}
+{"query": "I have severe pain in my foot. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 4}
+{"query": "I have severe pain in my leg. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 4}
+{"query": "I have severe pain in my neck. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 4}
+{"query": "I have severe pain in my chest.", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 4}
+{"query": "I have severe pain in my face.", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 4}
+{"query": "I have severe pain in my stomach.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 4}
+{"query": "I have severe pain in my groin.", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 4}
+{"query": "I have severe pain in my hand.", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 4}
+{"query": "I have severe pain in my arm.", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 4}
+{"query": "I have severe pain in my foot.", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 4}
+{"query": "I have severe pain in my leg.", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 4}
+{"query": "I have severe pain in my neck.", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 4}
+{"query": "I have a severe rash on my chest after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my face after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my face after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my face after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my face after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my face after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my face after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe rash on my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe rash on my chest and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my face and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my stomach and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my groin and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my hand and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my arm and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my foot and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my leg and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my neck and I'm taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe rash on my chest and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my face and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my stomach and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my groin and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my hand and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my arm and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my foot and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my leg and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my neck and I'm taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe rash on my chest. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 5}
+{"query": "I have a severe rash on my face. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 5}
+{"query": "I have a severe rash on my stomach. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 5}
+{"query": "I have a severe rash on my groin. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 5}
+{"query": "I have a severe rash on my hand. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 5}
+{"query": "I have a severe rash on my arm. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 5}
+{"query": "I have a severe rash on my foot. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 5}
+{"query": "I have a severe rash on my leg. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 5}
+{"query": "I have a severe rash on my neck. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 5}
+{"query": "I have a severe rash on my chest.", "label": "emergency", "actions": "", "body_parts": ["chest"], "rating": 5}
+{"query": "I have a severe rash on my face.", "label": "emergency", "actions": "", "body_parts": ["face"], "rating": 5}
+{"query": "I have a severe rash on my stomach.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "rating": 5}
+{"query": "I have a severe rash on my groin.", "label": "emergency", "actions": "", "body_parts": ["groin"], "rating": 5}
+{"query": "I have a severe rash on my hand.", "label": "emergency", "actions": "", "body_parts": ["hand"], "rating": 5}
+{"query": "I have a severe rash on my arm.", "label": "emergency", "actions": "", "body_parts": ["arm"], "rating": 5}
+{"query": "I have a severe rash on my foot.", "label": "emergency", "actions": "", "body_parts": ["foot"], "rating": 5}
+{"query": "I have a severe rash on my leg.", "label": "emergency", "actions": "", "body_parts": ["leg"], "rating": 5}
+{"query": "I have a severe rash on my neck.", "label": "emergency", "actions": "", "body_parts": ["neck"], "rating": 5}
+{"query": "I have a severe stomach cramp after taking prilosec and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking ozempic and I'm feeling faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking prilosec. I think I need a referral.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking ozempic. I think I need a referral.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking prilosec. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking ozempic. What should I do?", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 4}
+{"query": "I have a severe swelling in my chest after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my stomach after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my groin after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my hand after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my arm after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my foot after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my leg after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my neck after taking prilosec and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my chest after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my stomach after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my groin after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my hand after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my arm after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my foot after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my leg after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my neck after taking ozempic and I feel faint.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my chest after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my stomach after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my groin after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my hand after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my arm after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my foot after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my leg after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my neck after taking prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my chest after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my stomach after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my groin after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my hand after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my arm after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my foot after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my leg after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my neck after taking ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my chest and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my face and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my stomach and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my groin and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my hand and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my arm and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my foot and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my leg and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my neck and I'm taking prilosec. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my chest and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my face and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my stomach and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my groin and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my hand and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my arm and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my foot and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my leg and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my neck and I'm taking ozempic. What should I do?", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a severe swelling in my face after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden difficulty breathing after taking prilosec.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden difficulty breathing after taking ozempic.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my chest after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my face after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my stomach after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my groin after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my hand after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my arm after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my foot after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my leg after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my neck after starting prilosec.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 5}
+{"query": "I have a sudden swelling in my chest after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my face after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my stomach after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my groin after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my hand after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my arm after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my foot after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my leg after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "I have a sudden swelling in my neck after starting ozempic.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 5}
+{"query": "My prescription prilosec made me nauseous, and I feel faint.", "label": "emergency", "actions": "", "prescriptions": ["prilosec"], "rating": 3}
+{"query": "My prescription ozempic made me nauseous, and I feel faint.", "label": "emergency", "actions": "", "prescriptions": ["ozempic"], "rating": 3}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my chest.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my face.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my stomach.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my groin.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my hand.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my arm.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my foot.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my leg.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for prilosec, I have a severe rash around my neck.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["prilosec"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my chest.", "label": "emergency", "actions": "", "body_parts": ["chest"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my face.", "label": "emergency", "actions": "", "body_parts": ["face"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my stomach.", "label": "emergency", "actions": "", "body_parts": ["stomach"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my groin.", "label": "emergency", "actions": "", "body_parts": ["groin"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my hand.", "label": "emergency", "actions": "", "body_parts": ["hand"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my arm.", "label": "emergency", "actions": "", "body_parts": ["arm"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my foot.", "label": "emergency", "actions": "", "body_parts": ["foot"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my leg.", "label": "emergency", "actions": "", "body_parts": ["leg"], "prescriptions": ["ozempic"], "rating": 4}
+{"query": "Since I started taking my prescription for ozempic, I have a severe rash around my neck.", "label": "emergency", "actions": "", "body_parts": ["neck"], "prescriptions": ["ozempic"], "rating": 4}

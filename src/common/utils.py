@@ -157,7 +157,7 @@ def make_logger(log_file: str, name: str = '__name__', level: int = logging.INFO
     logger.setLevel(level)
     
     level_str = logging.getLevelName(level)
-    print(f'Logging to {log_file}, level {level_str}')    
+    print(f'** Logging to {log_file}, level {level_str} **')    
     return logger
 
 def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
@@ -247,3 +247,12 @@ def extract_content(litellm_reponse: ModelResponse) -> str:
     # print(f"content (type = {type(content)}: {content})")
     return content
 
+def dict_pop(d: dict[str,any], key: str) -> any:
+    """
+    Works like dict.pop() should work; rather than raise an exception, 
+    just return None and don't modify the dictionary.
+    """
+    try:
+        return d.pop(key)
+    except KeyError:
+        return None

@@ -137,18 +137,27 @@ make run-code           # Synonym for "run-tools".
 make setup              # One-time setup tasks; e.g., builds target install-uv.
 make one-time-setup     # Synonym for "setup".
 make install-uv         # Explain how to install "uv".
-                        # Run "make help-uv" for more information.
+                        # Run "make help-command-uv" for more information.
+make install-jq         # Explain how to install "jq" (an optional CLI tool).
+
 make build              # Build a distribution
 make install            # Install the code locally in development mode
 
-make tests              # Following convention, this target runs the unit tests only.
+make tests              # Following convention, this target runs the unit tests only, building
+                        # the targets "unit-tests-non-ai" and "unit-tests-ai".
+make test               # Synonym for "tests".
 make unit-tests         # Synonym for "tests".
+make unit-tests-non-ai  # All unit tests that don't involve inference invocations.
+make unit-tests-ai      # All unit tests that do involve inference invocations, which take a long time to run.
 make unit-tests-langflow
-                        # Run unit tests for the Langflow components.
+                        # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
+                        # so we don't force you to have Langflow installed.
+
 make integration-tests  # Run the integration tests, including "dedicated" integration tests
-                        # and the unit tests suite with more "exhaustive" flags.
-make dedicated-integration-tests
+                        # and all unit tests with more "exhaustive" sample data flags.
+make integration-tests-dedicated
                         # The "dedicated" integration tests, omitting the unit tests.
+
 make all-tests          # Run the unit and integration tests.
 make all-tests-langflow # Run all the tests for the Langflow integration.
 
@@ -201,9 +210,6 @@ make run-mcp-server     # Synonym for "mcp-server".
 make api-server         # Run the ChatBot's OpenAI-compatible API server.
 make run-api-server     # Synonym for "api-server".
 
-Tasks for testing.
-
-make test
 Tasks for help, debugging, setup, etc.
 
 make help-tools         # Prints this output.
@@ -235,10 +241,10 @@ make help-api-server    # Show help for the ChatBot's OpenAI-compatible API serv
 make view-api-server-docs  # Open a browser showing the API server "docs".
 make view-api-server-redoc # Open a browser showing the API server "redoc".
 
-The "uv" CLI tool is required:
+Several CLI tools are required, like "uv", or only needed for a few special make targets, like "jq":
 
-make help-uv            # Prints specific information about "uv", including installation.
-make help-node          # Prints specific information about "node", including installation.
+make help-command-uv    # Prints specific information about "uv", including installation.
+make help-command-jq    # Prints specific information about "jq", including installation.
 endef
 
 define help_message_uv
@@ -250,6 +256,14 @@ If you want to uninstall uv and you used HomeBrew to install it,
 use 'brew uninstall uv'. Otherwise, if you executed one of the
 installation commands on the website above, find the installation
 location and delete uv.
+
+endef
+
+
+define help_message_jq
+
+The CLI command 'jq' is useful, but not required, for processing JSON file.
+See https://jqlang.org/download/ for installation instructions.
 
 endef
 
@@ -298,7 +312,7 @@ ERROR: Answer "y" (yes) to the prompts and ignore any warnings that you can't un
 endef
 
 define command_check_message
-Shell command \"$$cmd\" is required. Try \"make one-time-setup\", which may be able to install it, or run \"make help\", \"make help-$$cmd\", or see the project's README.md for more information.
+Shell command \"$$cmd\" is required for a make target. Try \"make help-command-$$cmd\" for more information, or \"make install-$$cmd\" may be able to install it. See also the project's README.md for more information.
 endef
 
 define missing_ruby_gem_or_command_error_message
@@ -315,7 +329,7 @@ endef
 
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-tools help-code help-tools-all help-code-all help-uv 
+.PHONY: help help-docs help-tools help-code help-tools-all help-code-all help-command-uv help-command-uvx  help-command-jq
 
 all:: help
 
@@ -324,9 +338,18 @@ help::
 	@echo
 
 help-tools:: help-code
-help-docs help-code help-uv::
+help-docs help-code::
 	$(info ${help_message_${@:help-%=%}})
 	@echo
+help-command-uv help-command-uvx::
+	$(info ${help_message_uv})
+	@echo
+help-command-jq::
+	$(info ${help_message_jq})
+	@echo
+
+help-command-%::
+	@echo "Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'."
 
 help-tools-all help-code-all:: help-code help-terc help-ubds help-ubdv
 
@@ -485,7 +508,7 @@ before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
 
 silent-before-run:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
-run-command-checks:: uv-command-check provider-server-check
+run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
@@ -567,7 +590,7 @@ mcp-server:: before-chatbot
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
-inspect-mcp-server:: node-command-check
+inspect-mcp-server:: command-check-node
 	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
@@ -633,8 +656,8 @@ remove-open-webui::
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: all-tests note-all-tests test tests unit-tests 
-.PHONY: integ-tests integration-tests unit-tests-as-integration-tests dedicated-integration-tests
+.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai
+.PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
 all-tests:: note-all-tests integration-tests
 note-all-tests::
@@ -644,8 +667,20 @@ note-all-tests::
 	@echo "examples sampled, etc., plus some other integration tests."
 	@echo
 
-test tests unit-tests:: run-command-checks
-	@echo "Running the unit tests..."
+test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai
+
+# The --pattern argument is unnecessary here, as we pass the default value, but it is
+# included for "symmetry" with the unit-tests-ai target.
+unit-tests-non-ai::
+	@echo "Running the non-AI unit tests..."
+	cd ${SRC_DIR} && \
+	  uv run python -m unittest discover \
+	    --pattern 'test*.py' \
+	    --start-directory tests/unit \
+	    --top-level-directory .
+
+unit-tests-ai::
+	@echo "Running the AI unit tests..."
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -657,19 +692,30 @@ test tests unit-tests:: run-command-checks
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
 	  uv run python -m unittest discover \
+	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
 	  	--top-level-directory .
 	  @echo "A log file was written to ${SRC_DIR}/tests/logs. It may be empty!"
 	  @ls -l ${SRC_DIR}/tests/logs
 
-integ-tests integration-tests:: unit-tests-as-integration-tests ded-integ-tests dedicated-integration-tests
+.PHONY: nice-ai-tests-logs
 
-unit-tests-as-integration-tests:: run-command-checks
+# This target nicely formats the AI-related test logs into more readable JSON. Requires jq
+nice-ai-tests-logs:: command-check-jq
+	@for f in ${SRC_DIR}/tests/logs/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
+		echo "writing $$ff:"; \
+		jq . $$f > $$ff; \
+	done
+
+integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
+
+# This target runs all the unit-tests, the AI-related, but more exhaustively, as well as the non-AI unit tests.
+integration-tests-from-unit-tests:: run-command-checks
 	@echo "Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
 	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
 
-dedicated-integration-tests:: run-command-checks
-	@echo "Running the dedicated integration tests..."
+integration-tests-dedicated:: run-command-checks
+	@echo "Running the 'dedicated' integration tests..."
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -686,9 +732,9 @@ dedicated-integration-tests:: run-command-checks
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: uninstall-uv 
-.PHONY: install-uv uv-venv
+.PHONY: install-uv uv-venv install-jq
 
-setup one-time-setup:: install-uv uv-venv
+setup one-time-setup:: install-uv uv-venv install-jq
 
 clean-setup:: uninstall-uv
 
@@ -701,15 +747,17 @@ install-uv::
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
 		echo "$$cmd is already installed" || ${MAKE} help-$$cmd
 
-uv-venv:: uv-command-check 
+uv-venv:: command-check-uv 
 	uv venv
+
+install-jq:: help-command-jq
 
 %-error:
 	$(error ${${@}-message})
 
 # Check if a command is on the path.
-%-command-check:
-	@cmd=${@:%-command-check=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1
+command-check-%:
+	@cmd=${@:command-check-%=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1
 
 
 # The next section of this Makefile includes some convenience targets for working 
@@ -782,7 +830,7 @@ install-llm:: help-llm install-llm-templates
 	@echo "** NOTE: ** install-llm-templates was already executed to install our templates."
 	@echo
 
-install-llm-templates:: llm-command-check
+install-llm-templates:: command-check-llm
 	@llmdir="$$(llm templates path)" && \
 	echo "Installing the llm templates from ${PROMPTS_TEMPLATES_DIR} into $$llmdir" && \
 	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
@@ -830,7 +878,7 @@ run-jekyll: clean-docs
 	@echo
 	cd ${DOCS_DIR} && bundle exec jekyll serve --port ${JEKYLL_PORT} --baseurl '' --incremental || ( echo "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'." && exit 1 )
 
-setup-jekyll:: ruby-installed-check bundle-ruby-command-check
+setup-jekyll:: ruby-installed-check command-check-ruby-bundle
 	@echo "Updating Ruby gems required for local viewing of the docs, including jekyll."
 	gem install jekyll bundler jemoji || ${MAKE} gem-error
 	bundle install || ${MAKE} bundle-error
@@ -843,7 +891,7 @@ ruby-installed-check:
 	@command -v gem  > /dev/null || \
 		( echo "ERROR: ${gem_required_message}" && exit 1 )
 
-%-ruby-command-check:
-	@command -v ${@:%-ruby-command-check=%} > /dev/null || \
-		( echo "ERROR: Ruby command/gem ${@:%-ruby-command-check=%} ${missing_ruby_gem_or_command_error_message}" && \
+command-check-ruby-%:
+	@command -v ${@:command-check-ruby-%=%} > /dev/null || \
+		( echo "ERROR: Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}" && \
 			exit 1 )

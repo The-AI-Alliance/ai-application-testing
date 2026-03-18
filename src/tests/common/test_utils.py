@@ -8,6 +8,7 @@ import json, os, re, sys, shutil
 
 from common.utils import (
     all_use_cases,
+    dict_pop,
     ensure_dirs_exist,
     extract_jsonl,
     make_parent_dirs,
@@ -177,6 +178,31 @@ class TestUtils(unittest.TestCase):
         self.do_test_extract_jsonl('',   size, question, label, prescription, body_part)
         self.do_test_extract_jsonl(' ',  size, question, label, prescription, body_part)
         self.do_test_extract_jsonl('\t', size, question, label, prescription, body_part)
+
+    @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
+    def test_dict_pop_returns_key_and_deletes_from_dict(self, dictionary):
+        dlen = len(dictionary)
+        keys = dictionary.keys()
+        for key in list(keys):
+            expected_value = dictionary[key]
+            actual_value = dict_pop(dictionary, key)
+            self.assertEqual(expected_value, actual_value)
+            self.assertTrue(key not in dictionary)
+            dlen -= 1
+            self.assertEqual(dlen, len(dictionary))
+
+    @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
+    def test_dict_pop_returns_None_for_nonexistent_key(self, dictionary):
+        dlen = len(dictionary)
+        keys = dictionary.keys()
+        for key in list(keys):
+            key2 = key+key
+            if key2 in dictionary:  # just in case...
+                key2=key2+key2 
+            actual_value = dict_pop(dictionary, key2)
+            self.assertEqual(None, actual_value)
+            self.assertTrue(key2 not in dictionary)
+            self.assertEqual(dlen, len(dictionary))
 
 if __name__ == "__main__":
     unittest.main()

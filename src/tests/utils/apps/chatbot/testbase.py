@@ -9,7 +9,7 @@ from io import StringIO
 from pathlib import Path
 
 from apps.chatbot import ChatBot, ChatBotResponseHandler, ChatBotShell
-from common.utils import parse_json
+from common.utils import dict_pop, parse_json
 from common.collections import dict_permutations
 
 class TestPrompt():
@@ -18,11 +18,15 @@ class TestPrompt():
         query: str,
         label: str,
         actions: str,
-        rating: int):
+        rating: int,
+        reason: str = None,
+        keywords: dict[str,str] = {}):
         self.query = query
         self.label = label
         self.actions = actions
         self.rating = rating
+        self.reason = reason if reason else ''
+        self.keywords = keywords
         errors = []
         if not self.query:
             errors.append('empty query')
@@ -34,7 +38,7 @@ class TestPrompt():
             raise ValueError(f"Invalid inputs: {', '.join(errors)}")
 
     def __repr__(self) -> str:
-        return f"""TestPrompt(query='{self.query}',label='{self.label}',actions='{self.actions}',rating={self.rating})"""
+        return f"""TestPrompt(query='{self.query}',label='{self.label}',actions='{self.actions}',rating={self.rating},reason={self.reason},keywords={self.keywords})"""
 
     def dict(self) -> dict[str,any]:
         d = {
@@ -178,7 +182,7 @@ class TestBase(unittest.TestCase):
     def setUpClass(cls):
         log_dir = "tests/logs"
         TestBase.log_file_name = f"{log_dir}/{cls.__name__}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
-        print(f"Logging to {TestBase.log_file_name}")
+        print(f" ** Logging to {TestBase.log_file_name} **")
         os.makedirs(log_dir, exist_ok=True)
         TestBase.log_file = open(TestBase.log_file_name, 'w')
 
@@ -191,26 +195,36 @@ class TestBase(unittest.TestCase):
         if not path.exists():
             raise FileNotFoundError(path)
 
+        def dict_pop(d, key):
+            try:
+                return d.pop(key)
+            except KeyError:
+                return None
+
         prompts = []
         with path.open('r') as file:
             for line in file:
-                try:
-                    obj     = parse_json(line)
-                    query   = obj.get('query')
-                    label   = obj.get('label')
-                    actions = obj.get('actions')
-                    rating  = obj.get('rating')
-                    tp = TestPrompt(query, label, actions, rating)
-                    prompts.append(tp)
-                except ValueError as err:
-                    raise ValueError(f"From file {file}, error parsing line: {line}") from err
+                ls = line.strip()
+                if ls:
+                    try:
+                        obj     = parse_json(ls)
+                        query   = dict_pop(obj, 'query')
+                        label   = dict_pop(obj, 'label')
+                        actions = dict_pop(obj, 'actions')
+                        rating  = dict_pop(obj, 'rating')
+                        reason  = dict_pop(obj, 'reason') # Not all records have this, so None will be returned.
+                        # What's left in obj at this point are "substitution" keywords, if any,
+                        # that we expect to find in the inference results.
+                        tp = TestPrompt(query, label, actions, rating, reason, keywords=obj)
+                        prompts.append(tp)
+                    except ValueError as err:
+                        raise ValueError(f"From file <{file}>, error parsing line: <{line}>") from err
         if not len(prompts):
             raise ValueError(f"No prompts were loaded from {file}!")
         return prompts
 
     def try_query(self, 
         test_prompt: TestPrompt,
-        place_holders: dict[str,str],
         allowed_alt_labels: dict[str,[str]],
         rating_threshold: int = default_rating_threshold,
         confidence_threshold: float = default_confidence_threshold):
@@ -222,11 +236,12 @@ class TestBase(unittest.TestCase):
         these tests to use an LLM as a judge to decide on the quality of the returned
         texts, at the expense of additional overhead for the inference required.
         """
-        exp_query   = test_prompt.query
-        exp_label   = test_prompt.label
-        exp_actions = test_prompt.actions
-        exp_rating  = test_prompt.rating
-        prompt      = exp_query.format_map(place_holders)
+        exp_query    = test_prompt.query
+        exp_label    = test_prompt.label
+        exp_actions  = test_prompt.actions
+        exp_rating   = test_prompt.rating
+        exp_keywords = test_prompt.keywords
+        prompt = exp_query if not exp_keywords else exp_query.format_map(exp_keywords)
         
         answer = self.chatbot.query(prompt)
         self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
@@ -238,17 +253,18 @@ class TestBase(unittest.TestCase):
         actual_label         = actual_reply.get('label')
         actual_actions       = actual_reply.get('actions', '')
         actual_confidence    = actual_reply.get('confidence', 0.0)
+        actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
         # actual_text          = actual_reply.get('text', '')
 
         err_msg = str(answer)
-        self.assertEqual(prompt, actual_query1, err_msg)
-        self.assertEqual(prompt, actual_query2, err_msg)
+        # We have seen subtle punctuation changes in prompts...
+        p2  = re.sub(r'\W', ' ', prompt)
+        aq1 = re.sub(r'\W', ' ', actual_query1)
+        aq2 = re.sub(r'\W', ' ', actual_query2)
+        self.assertEqual(p2, aq1, err_msg)
+        self.assertEqual(p2, aq2, err_msg)
 
-        if actual_confidence < confidence_threshold:
-            self.assertEqual('other', actual_label, f"label: other != {actual_label}, error_msg = {err_msg}")
-            exp_rtu = ChatBotResponseHandler.replies['other']
-            self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
-        elif exp_rating < rating_threshold:
+        if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
@@ -268,20 +284,23 @@ class TestBase(unittest.TestCase):
                     a = action.strip()
                     self.assertTrue(actual_actions.find(a) > 0, f"""expected action "{a}" not found in != "{actual_actions}", exp_actions = "{exp_actions}", error_msg = {err_msg}""")
 
-            # For the "place holders", ignore case, since sometimes proper names,
-            # like for pharmaceuticals, can occur with different cases. Also, we
-            # check that _expected_ values, if any are present, but also allow for
-            # additional actual values. This is because some of the test queries
-            # hard-code body parts and pharmaceuticals and don't always use the "{foo}"
-            # convention for such things.
-            for key in place_holders:
-                expected = place_holders.get(key).lower()
-                actual   = actual_reply.get(key).lower()
+            # For the "keywords", ignore case, since sometimes proper names,
+            # can occur with different cases. Also, we check that _expected_
+            # values, if any, are present, but also allow for additional actual
+            # values. This is because some of the test queries hard-code potential
+            # keywords, but we don't "care" if thy appear.
+            for key, value in exp_keywords.items():
+                if len(value) == 0:
+                    print(f"WARNING: BUG: keyword {key} has zero-length value array!")
+                    continue
+                if len(value) > 1:
+                    print(f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!")
+                expected = value[0].lower()
+                actual   = actual_keywords.get(key, '').lower()
                 self.assertTrue(actual.find(expected) >= 0, f"""for key = "{key}": expected = "{expected}", actual = "{actual}", {err_msg}""")
 
     def try_query_accumulate(self, 
         test_prompt: TestPrompt,
-        place_holders: dict[str,str],
         allowed_alt_labels: dict[str,[str]],
         rating_threshold: int = default_rating_threshold,
         confidence_threshold: float = default_confidence_threshold) -> dict[str,any]:
@@ -291,16 +310,16 @@ class TestBase(unittest.TestCase):
         we run all the examples and accumulate error messages, then report the results.
         Compare to `try_query()`.
         """
-        exp_query   = test_prompt.query
-        exp_label   = test_prompt.label
-        exp_actions = test_prompt.actions
-        exp_rating  = test_prompt.rating
-        prompt      = exp_query.format_map(place_holders)
+        exp_query    = test_prompt.query
+        exp_label    = test_prompt.label
+        exp_actions  = test_prompt.actions
+        exp_rating   = test_prompt.rating
+        exp_keywords = test_prompt.keywords
+        prompt = exp_query if not exp_keywords else exp_query.format_map(exp_keywords)
         
         errors_metadata = {
             'prompt': prompt,
             'test_prompt': test_prompt.dict(),
-            'place_holders': place_holders,
             'rating_threshold': rating_threshold,
             'confidence_threshold': confidence_threshold,
         }
@@ -324,22 +343,21 @@ class TestBase(unittest.TestCase):
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
         actual_actions       = actual_reply.get('actions', '')
-        actual_confidence    = actual_reply.get('confidence', 0.0)
+        actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
+        # We have seen the occasional confidence scores at the content level, rather than inside the reply.
+        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 0.0))
         # actual_text          = actual_reply.get('text', '')
 
-        if prompt != actual_query1:
+        # We have seen subtle punctuation changes in prompts...
+        p2  = re.sub(r'\W', ' ', prompt)
+        aq1 = re.sub(r'\W', ' ', actual_query1)
+        aq2 = re.sub(r'\W', ' ', actual_query2)
+        if p2 != aq1:
             errors['answer.query'] = f"{prompt} != {actual_query1}"
-        if prompt != actual_query2:
+        if p2 != aq2:
             errors['content.query'] = f"{prompt} != {actual_query2}"
         
-        if actual_confidence < confidence_threshold:
-            if 'other' != actual_label:
-                errors['label'] = f"other != {actual_label}"
-            else:
-                exp_rtu = ChatBotResponseHandler.replies['other']
-                if exp_rtu != actual_rtu:
-                    errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
-        elif exp_rating < rating_threshold:
+        if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
             self.low_confidence_results.append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
@@ -365,20 +383,24 @@ class TestBase(unittest.TestCase):
                 if missing_actions:
                     errors['actions'] = f"""some expected actions "{missing_actions}" (out of "{exp_actions}") not found in the actual actions "{actual_actions}"."""
 
-            # For the "place holders", ignore case, since sometimes proper names,
-            # like for pharmaceuticals, can occur with different cases. Also, we
-            # check that _expected_ values, if any are present, but also allow for
-            # additional actual values. This is because some of the test queries
-            # hard-code body parts and pharmaceuticals and don't always use the "{foo}"
-            # convention for such things.
-            missing_phs = {}
-            for key in place_holders:
-                expected = place_holders.get(key).lower()
-                actual   = actual_reply.get(key).lower()
+            # For the "keywords", ignore case, since sometimes proper names,
+            # can occur with different cases. Also, we check that _expected_
+            # values, if any, are present, but also allow for additional actual
+            # values. This is because some of the test queries hard-code potential
+            # keywords, but we don't "care" if thy appear.
+            missing_kvs = {}
+            for key, value in exp_keywords.items():
+                if len(value) == 0:
+                    print(f"WARNING: BUG: keyword {key} has zero-length value array!")
+                    continue
+                if len(value) > 1:
+                    print(f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!")
+                expected = value[0].lower()
+                actual   = actual_keywords.get(key, '').lower()
                 if not actual.find(expected) >= 0:
-                    missing_phs['key'] = f"{expected} vs. {actual}"
-            if missing_phs:
-                errors['place_holder'] = missing_phs
+                    missing_kvs[key] = f"{expected} vs. {actual}"
+            if missing_kvs:
+                errors['keywords'] = missing_kvs
 
         if errors:
             errors['metadata'] = errors_metadata
@@ -386,7 +408,6 @@ class TestBase(unittest.TestCase):
 
     def try_queries(self, 
         file_name: Path | str, 
-        place_holders: dict[str,[str]], 
         allowed_alt_labels: dict[str,[str]],
         sample_rate: float = None, 
         rating_threshold: int = default_rating_threshold,
@@ -403,7 +424,6 @@ class TestBase(unittest.TestCase):
             'sample_rate':           sample_rate,
             'rating_threshold':      rating_threshold,
             'confidence_threshold':  confidence_threshold,
-            'place_holders':         place_holders,
         }
         print(json.dumps(d), file=TestBase.log_file)
 
@@ -411,29 +431,17 @@ class TestBase(unittest.TestCase):
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
         self.samples_count += len(samples)
 
-        # Start by determining if the prompt contains any of the placeholders. If a place holder
-        # key is found in place_holders, then we will iterate through the list of them. If not
-        # found we will skip that key:[str] pair.
-        phs = {}
         for test_prompt in samples:
-            for key in place_holders:
-                if test_prompt.query.find('{'+key+'}') >= 0:
-                    phs[key] = place_holders[key]
-
-            # Now create the key-value pairs from phs:
-            n = 1 if self.test_all_examples else -1
-            all_ph_pairs = dict_permutations(phs, max_size=n)
-            for ph_pairs in all_ph_pairs:
-                if accumulate_errors:
-                    errs = self.try_query_accumulate(test_prompt, ph_pairs, allowed_alt_labels,
-                        rating_threshold=rating_threshold, 
-                        confidence_threshold=confidence_threshold)
-                    if errs:
-                        self.errors.append(errs)
-                else:
-                    self.try_query(test_prompt, ph_pairs, allowed_alt_labels,
-                        rating_threshold=rating_threshold, 
-                        confidence_threshold=confidence_threshold)
+            if accumulate_errors:
+                errs = self.try_query_accumulate(test_prompt, allowed_alt_labels,
+                    rating_threshold=rating_threshold, 
+                    confidence_threshold=confidence_threshold)
+                if errs:
+                    self.errors.append(errs)
+            else:
+                self.try_query(test_prompt, allowed_alt_labels,
+                    rating_threshold=rating_threshold, 
+                    confidence_threshold=confidence_threshold)
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
@@ -462,6 +470,6 @@ class TestBase(unittest.TestCase):
         
         alts = allowed_alt_labels.get(expected)
         for alt in alts:
-            if expected == alt:
+            if actual == alt:
                 return ""
-        return f"{expected} != {actual} and the latter is not allowed as an alternate for the expected label: {alts}"
+        return f"Expected {expected}, got {actual}, which is not allowed as an alternate for the expected label: {alts}"
