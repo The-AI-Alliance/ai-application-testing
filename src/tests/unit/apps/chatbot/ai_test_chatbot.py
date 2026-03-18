@@ -40,7 +40,7 @@ class AITestChatBot(TestBase):
     def run_test(self, data_file: str):
         self.try_queries(
             self.benchmark_data_dir / data_file,
-            allowed_alt_labels = TestChatBot.allowed_alt_labels,
+            allowed_alt_labels = AITestChatBot.allowed_alt_labels,
             accumulate_errors = True)
 
     def test_chatbot_prescription_requests(self):

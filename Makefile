@@ -480,6 +480,7 @@ run-tdd-example-refill-chatbot:: before-run
 
 run-unit-benchmark-data-synthesis:: before-run
 	$(info ${$@-message})
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
@@ -489,10 +490,11 @@ run-unit-benchmark-data-synthesis:: before-run
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
 
 run-unit-benchmark-data-validation:: before-run
 	$(info ${$@-message})
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 	  --model ${MODEL} \
@@ -502,7 +504,7 @@ run-unit-benchmark-data-validation:: before-run
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 	  ${JUST_STATS} ${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
 
 before-run:: silent-before-run
 	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
@@ -667,7 +669,7 @@ note-all-tests::
 	@echo "examples sampled, etc., plus some other integration tests."
 	@echo
 
-test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai
+test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai show-test-logs
 
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
@@ -679,6 +681,10 @@ unit-tests-non-ai::
 	    --start-directory tests/unit \
 	    --top-level-directory .
 
+# The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
+# to make the "show-test-logs" target whether or not the tests pass, and also
+# effectively return success (==0) or failure (!=0) status from the tests.
+# (Note we are in the src directory so we have to tell make to go to the parent...)
 unit-tests-ai::
 	@echo "Running the AI unit tests..."
 	cd ${SRC_DIR} && \
@@ -691,21 +697,28 @@ unit-tests-ai::
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
-	  uv run python -m unittest discover \
+	  ${TIME} uv run python -m unittest discover \
 	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
-	  	--top-level-directory .
-	  @echo "A log file was written to ${SRC_DIR}/tests/logs. It may be empty!"
-	  @ls -l ${SRC_DIR}/tests/logs
+	  	--top-level-directory . && make --directory .. show-test-logs || ! make --directory .. show-test-logs
 
-.PHONY: nice-ai-tests-logs
+show-test-logs::
+	@echo
+	@echo "A time-stamped JSONL log file was written to ${SRC_DIR}/tests/logs. It may be empty!"
+	@ls -l ${SRC_DIR}/tests/logs
+	@echo
+	@echo "Tip: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file."
+	@echo "(Requires the 'jq' CLI tool.)"
+
+.PHONY: nice-ai-test-logs
 
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-tests-logs:: command-check-jq
+nice-ai-test-logs:: command-check-jq
 	@for f in ${SRC_DIR}/tests/logs/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
 		echo "writing $$ff:"; \
 		jq . $$f > $$ff; \
-	done
+	done; \
+	ls -l ${SRC_DIR}/tests/logs/*.json*
 
 integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
 

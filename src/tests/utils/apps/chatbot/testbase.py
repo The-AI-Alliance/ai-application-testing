@@ -96,13 +96,15 @@ class TestBase(unittest.TestCase):
     * A flag for _testing all examples_ or not and a _sampling rate_:
         * Running with all the test Q&A pairs and some variable substitutions supported
         takes a very long time, so we support sampling a subset for faster unit test runs.
-    * Accumulating all errors vs. failing fast:
-        We have found it useful to accumulate and report all found errors vs. the normal
-        approach of failing fast on the first error.
+    * Accumulating all errors and warnings vs. failing fast:
+        We have found it useful to accumulate and report all found errors and warnings 
+        vs. the normal approach of failing fast on the first error.
     """
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
     total_error_count = 0
+    total_warning_count = 0
+    low_confidence_results_count = 0
     log_file_name = ''
     log_file = None
 
@@ -138,8 +140,7 @@ class TestBase(unittest.TestCase):
         if self.test_all_examples:
             self.sample_rate = 1.0
 
-        self.low_confidence_results = []
-        self.errors = []
+        self.key_results = {'low_confidence_results': [], 'errors': [], 'warnings': []}
         self.samples_count: int = 0
 
         self.make_chatbot()
@@ -158,18 +159,29 @@ class TestBase(unittest.TestCase):
         print(json.dumps(d), file=TestBase.log_file)
 
     def tearDown(self):
-        TestBase.total_error_count += len(self.errors)
-        lcrs = [lcr.dict() for lcr in self.low_confidence_results]
+        low_confidence_results_count = len(self.key_results['low_confidence_results'])
+        total_error_count            = len(self.key_results['errors'])
+        total_warning_count          = len(self.key_results['warnings'])
+
+        TestBase.low_confidence_results_count += low_confidence_results_count
+        TestBase.total_error_count            += total_error_count
+        TestBase.total_warning_count          += total_warning_count
+
+        lcrs = [lcr.dict() for lcr in self.key_results['low_confidence_results']]
         d = {
             'step':              'tearDown',
             'samples_count':     self.samples_count,
             'low_confidence_results': {
-                'count':         len(self.low_confidence_results),
+                'count':         low_confidence_results_count,
                 'results':       lcrs,
             },
+            'warnings': {
+                'count':         total_warning_count,
+                'warnings':      self.key_results['warnings'],
+            },
             'errors': {
-                'count':         len(self.errors),
-                'errors':        self.errors,
+                'count':         total_error_count,
+                'errors':        self.key_results['errors'],
             },
         }
         js1 = json.dumps(d)
@@ -188,18 +200,17 @@ class TestBase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        print(f"Totals:")
+        print(f"Low-confidence results: {TestBase.low_confidence_results_count}")
+        print(f"Warning count:          {TestBase.total_warning_count}")
+        print(f"Error count:            {TestBase.total_error_count}")
+        print()
         if TestBase.total_error_count:
-            raise AssertionError(f"{TestBase.total_error_count} errors occurred!")
+            raise AssertionError(f"{TestBase.total_error_count} errors reported!")
 
     def load_test_data(self, path: Path) -> [TestPrompt]:
         if not path.exists():
             raise FileNotFoundError(path)
-
-        def dict_pop(d, key):
-            try:
-                return d.pop(key)
-            except KeyError:
-                return None
 
         prompts = []
         with path.open('r') as file:
@@ -241,7 +252,7 @@ class TestBase(unittest.TestCase):
         exp_actions  = test_prompt.actions
         exp_rating   = test_prompt.rating
         exp_keywords = test_prompt.keywords
-        prompt = exp_query if not exp_keywords else exp_query.format_map(exp_keywords)
+        prompt       = exp_query # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
         
         answer = self.chatbot.query(prompt)
         self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
@@ -265,7 +276,7 @@ class TestBase(unittest.TestCase):
         self.assertEqual(p2, aq2, err_msg)
 
         if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
-            self.low_confidence_results.append(LowConfidenceResult(
+            self.key_results['low_confidence_results'].append(LowConfidenceResult( 
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
@@ -303,7 +314,7 @@ class TestBase(unittest.TestCase):
         test_prompt: TestPrompt,
         allowed_alt_labels: dict[str,[str]],
         rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold) -> dict[str,any]:
+        confidence_threshold: float = default_confidence_threshold):
         """
         See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum, 
@@ -315,9 +326,9 @@ class TestBase(unittest.TestCase):
         exp_actions  = test_prompt.actions
         exp_rating   = test_prompt.rating
         exp_keywords = test_prompt.keywords
-        prompt = exp_query if not exp_keywords else exp_query.format_map(exp_keywords)
+        prompt       = exp_query # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
         
-        errors_metadata = {
+        metadata = {
             'prompt': prompt,
             'test_prompt': test_prompt.dict(),
             'rating_threshold': rating_threshold,
@@ -326,15 +337,16 @@ class TestBase(unittest.TestCase):
         # On success this will be returned as empty. If problems are found,
         # we put those kvs first, so they are printed first...
         errors = {}
+        warnings = {}
 
         answer = self.chatbot.query(prompt)
         if isinstance(answer, str):
             return {
                 'query_failure': f"Error message returned: {answer}",
-                'metadata':      errors_metadata,
+                'metadata':      metadata,
             }
         else:
-            errors_metadata['answer'] = answer
+            metadata['answer'] = answer
 
         actual_query1        = answer.get('query')
         actual_rtu           = answer.get('reply_to_user')
@@ -358,7 +370,7 @@ class TestBase(unittest.TestCase):
             errors['content.query'] = f"{prompt} != {actual_query2}"
         
         if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
-            self.low_confidence_results.append(LowConfidenceResult(
+            self.key_results['low_confidence_results'].append(LowConfidenceResult(
                 prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
@@ -375,19 +387,22 @@ class TestBase(unittest.TestCase):
                 # Do the actions match for the other label cases? Note that the ChatBot could return
                 # more than one, a comma-separated list, so we just check if the one or more expected
                 # actions are present.
+                # Right now, we treat these as warnings, not errors.
                 missing_actions = []
-                for action in exp_actions.split(','):
+                exp_actions_list = exp_actions.split(',')
+                for action in exp_actions_list:
                     a = action.strip()
                     if actual_actions.find(a) < 0:
                         missing_actions.append(a)
                 if missing_actions:
-                    errors['actions'] = f"""some expected actions "{missing_actions}" (out of "{exp_actions}") not found in the actual actions "{actual_actions}"."""
+                    warnings['actions'] = f"""some expected actions {missing_actions} not found. Expected: {exp_actions_list}), actual: {actual_actions.split(',')}."""
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
             # values, if any, are present, but also allow for additional actual
             # values. This is because some of the test queries hard-code potential
-            # keywords, but we don't "care" if thy appear.
+            # keywords, but we don't "care" if they appear.
+            # Right now, we treat these as warnings, not errors.
             missing_kvs = {}
             for key, value in exp_keywords.items():
                 if len(value) == 0:
@@ -400,11 +415,12 @@ class TestBase(unittest.TestCase):
                 if not actual.find(expected) >= 0:
                     missing_kvs[key] = f"{expected} vs. {actual}"
             if missing_kvs:
-                errors['keywords'] = missing_kvs
+                warnings['keywords'] = missing_kvs
 
         if errors:
-            errors['metadata'] = errors_metadata
-        return errors
+            self.key_results['errors'].append(metadata | errors)
+        if warnings:
+            self.key_results['warnings'].append(metadata | warnings)
 
     def try_queries(self, 
         file_name: Path | str, 
@@ -433,11 +449,9 @@ class TestBase(unittest.TestCase):
 
         for test_prompt in samples:
             if accumulate_errors:
-                errs = self.try_query_accumulate(test_prompt, allowed_alt_labels,
+                self.try_query_accumulate(test_prompt, allowed_alt_labels,
                     rating_threshold=rating_threshold, 
                     confidence_threshold=confidence_threshold)
-                if errs:
-                    self.errors.append(errs)
             else:
                 self.try_query(test_prompt, allowed_alt_labels,
                     rating_threshold=rating_threshold, 

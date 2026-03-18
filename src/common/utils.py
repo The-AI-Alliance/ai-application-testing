@@ -247,12 +247,12 @@ def extract_content(litellm_reponse: ModelResponse) -> str:
     # print(f"content (type = {type(content)}: {content})")
     return content
 
-def dict_pop(d: dict[str,any], key: str) -> any:
+def dict_pop(dictionary: dict[str,any], key: str) -> any:
     """
     Works like dict.pop() should work; rather than raise an exception, 
     just return None and don't modify the dictionary.
     """
     try:
-        return d.pop(key)
+        return dictionary.pop(key)
     except KeyError:
         return None
