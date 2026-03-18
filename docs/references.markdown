@@ -206,6 +206,11 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 * [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
 * [Spec-Driven Development: 10 things you need to know about specs](https://tessl.io/blog/spec-driven-development-10-things-you-need-to-know-about-specs/){:target="10-things"}
 
+YouTube videos about SDD:
+
+* [How I Code With AI Agents (Spec-Driven Development)](){:target="youtube1"} is Owain Lewis' detailed explanation of how he uses SDD.
+* [Spec-Driven Development: AI Assisted Coding Explained](https://www.youtube.com/watch?v=mViFYTwWvcM){:target="youtube2"} provides a quick introduction of SDD and how it compares to traditional software development approaches, from IBM.
+
 See also [Mellea](#mellea).
 
 ## University of Tübingen

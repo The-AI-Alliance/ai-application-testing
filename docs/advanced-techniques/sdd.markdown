@@ -182,8 +182,7 @@ While designed primarily for [Claude Code](https://www.anthropic.com/claude-code
 
 ## Other Related Tools
 
-* The [Mellea](https://mellea.ai/){:target="mellea"} has similar concepts, such as emphasizing specifynig requirements through a Python API rather than arbitrary prompts.
-
+* The [Mellea](https://mellea.ai/){:target="mellea"} has similar concepts, such as emphasizing specifying requirements through a Python API rather than arbitrary prompts.
 
 ## What's Next?
 
