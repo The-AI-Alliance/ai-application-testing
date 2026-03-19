@@ -56,15 +56,22 @@ class LowConfidenceResult():
     answer has confidence below `confidence_threshold`, or both, in which case we can't trust that the returned answer
     should be exactly as expected.
     """        
-    def __init__(self, query: str, reply: dict[str,any], test_prompt: TestPrompt, rating_threshold: int, confidence_threshold: float):
+    def __init__(self, 
+        query: str, 
+        reasons: str,
+        reply: dict[str,any], 
+        test_prompt: TestPrompt, 
+        rating_threshold: int, 
+        confidence_threshold: float):
         self.query = query
+        self.reasons = reasons
         self.reply = reply
         self.test_prompt = test_prompt
         self.rating_threshold = rating_threshold
         self.confidence_threshold = confidence_threshold
     
     def __repr__(self) -> str:
-        return f"""LowConfidenceResult(query='{self.query}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
+        return f"""LowConfidenceResult(query='{self.query}',reasons='{self.reasons}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
     def dict(self) -> dict[str,any]:
         # We don't use __dict__ here because we need to turn the TestPrompt instance into a dictionary.
@@ -72,6 +79,7 @@ class LowConfidenceResult():
         return {
             'name':                  'LowConfidenceResult',
             'query':                 self.query,
+            'reasons':               self.reasons,
             'reply':                 self.reply,
             'test_prompt':           self.test_prompt.dict(),
             'rating_threshold':      self.rating_threshold,
@@ -190,11 +198,16 @@ class TestBase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        log_dir = "tests/logs"
-        TestBase.log_file_name = f"{log_dir}/{cls.__name__}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
-        print(f" ** Logging to {TestBase.log_file_name} **")
-        os.makedirs(log_dir, exist_ok=True)
-        TestBase.log_file = open(TestBase.log_file_name, 'w')
+        def_log_dir = "tests/logs"
+        log_file_template = os.environ.get('TESTS_LOGS_FILE_TEMPLATE')
+        if not log_file_template:
+            print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
+            log_file_template = f"{def_log_dir}/{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+
+        TestBase.log_file_path = Path(log_file_template.format(class_name=cls.__name__))
+        print(f"\n  ** Logging to {TestBase.log_file_path} ** \n")
+        os.makedirs(TestBase.log_file_path.parent, exist_ok=True)
+        TestBase.log_file = TestBase.log_file_path.open('a') # append mode, because we _may_ share it across tests.
 
     @classmethod
     def tearDownClass(cls):
@@ -273,9 +286,16 @@ class TestBase(unittest.TestCase):
         self.assertEqual(p2, aq1, err_msg)
         self.assertEqual(p2, aq2, err_msg)
 
-        if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
+        low_confidence_reasons = []
+        if actual_confidence < confidence_threshold:
+            low_confidence_reasons.append(f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold}).")
+        if exp_rating < rating_threshold:
+            low_confidence_reasons.append(f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold}).")
+        
+        if low_confidence_reasons:
+            reasons = ' '.join(low_confidence_reasons)
             self.key_results['low_confidence_results'].append(LowConfidenceResult( 
-                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
+                prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
             self.assertEqual(0, len(err_msg), err_msg)
@@ -367,9 +387,16 @@ class TestBase(unittest.TestCase):
         if p2 != aq2:
             errors['content.query'] = f"{prompt} != {actual_query2}"
         
-        if actual_confidence < confidence_threshold or exp_rating < rating_threshold:
-            self.key_results['low_confidence_results'].append(LowConfidenceResult(
-                prompt, actual_reply, test_prompt, rating_threshold, confidence_threshold))
+        low_confidence_reasons = []
+        if actual_confidence < confidence_threshold:
+            low_confidence_reasons.append(f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold}).")
+        if exp_rating < rating_threshold:
+            low_confidence_reasons.append(f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold}).")
+
+        if low_confidence_reasons:
+            reasons = ' '.join(low_confidence_reasons)
+            self.key_results['low_confidence_results'].append(LowConfidenceResult( 
+                prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold))
         else:
             err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
             if len(err_msg) > 0:
