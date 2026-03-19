@@ -479,7 +479,7 @@ make tests               # unit tests. Synonyms: test, unit-tests
 make integration-tests   # integration tests
 ```
 
-The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory. Specifically, the generative AI _unit benchmarks_ are driven by one test suite, [`src/tests/unit/apps/chatbot/ai_test_chatbot.py`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/ai_test_chatbot.py){:target="atc"}, while most of the implementation is in a `TestBase` parent class in  [`src/tests/utils/apps/chatbot/testbase.py`]({{site.gh_edit_repository}}/tree/main/src/tests/utils/apps/chatbot/testbase.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
+The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory. Specifically, the generative AI _unit benchmarks_ are driven by four test suites in [`src/tests/unit/apps/chatbot/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="atc"} that are named `ai_test_chatbot_*.py`, where `*` is one of the use case names. Most of the implementation is in a `TestBase` parent class in  [`src/tests/utils/apps/chatbot/testbase.py`]({{site.gh_edit_repository}}/tree/main/src/tests/utils/apps/chatbot/testbase.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
 
 Test data files of Q&A  (question and answer) pairs (and additional metadata) were adapted from the example tool outputs found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}. However, _we made a lot of changes reflecting what we learned while iterating on the development of the ChatBot application!_ 
 
@@ -492,9 +492,55 @@ These test data files in JSONL format are in the [`src/tests/data`]({{site.gh_ed
 | [Appointments]({{site.gh_edit_repository}}/tree/main/src/tests/data/appointments.jsonl){:target="test-data"} | Requests to schedule or reschedule an appointment. |
 | [Others]({{site.gh_edit_repository}}/tree/main/src/tests/data/others.jsonl){:target="test-data"} | Other general health questions and other kinds of queries, such as how to pay a bill, where the office is located, etc. (Many of these Q&A pairs suggest possible future use cases to support.) |
 
-The AI-specific tests support a few features not normally found in conventional test suites, reflecting some unique challenges when writing automated tests for generative AI applications. Let's discuss these enhancements in depth.
+There is one JSONL file per _use case_. The format is illustrated with this example from `appointments.jsonl` (nicely formatted...):
+
+```json
+{
+  "query":   "I need to reschedule my next appointment.",
+  "labels":  ["appointment"],
+  "actions": ["reschedule"],
+  "rating":  5
+}
+```
+
+We have been calling these examples _Q&A_ (question and answer) pairs, but they actually contain a query (question) and three expected metadata values corresponding to metadata fields the prompt asks the ChatBot to return. At this time, don't do any testing on the actual generated text in the response, as it is too stochastic, but a possible enhancement is to use _LLM as a Judge_ to assess how good they are:
+
+| Expected Metadata Field | Corresponding Response Field | Discussion |
+| :---------------------- | :--------------------------- | :--------- |
+| `labels`  | `label`   | The response's `label` is expected to be found in the `labels` list. Usually there is just one element in `labels`, but sometimes more than one label is listed when the query is potentially ambiguous. |
+| `actions` | `actions` | The response `actions` list should be a subset of the allowed `actions`. |
+| `rating`  | _N/A_     | How the _LLM as a Judge_ validation process rated this synthetic example. |
+
+In addition, there are optional fields that may appear in the examples:
+
+| Expected Metadata Field | Corresponding Response Field | Discussion |
+| :---------------------- | :--------------------------- | :--------- |
+| `reason`        | _N/A_           | Why the judge rated the example the way it did. |
+| `prescriptions` | `prescriptions` | List of one or more prescriptions mentioned in the query. |
+| `body_parts`    | `body_parts`    | List of one or more body parts mentioned in the query. |
+| `vaccines`      | `vaccines`      | List of one or more vaccines mentioned in the query. |
+
+The last three fields only appear in an example JSONL if they are non-empty.
+
+During testing, if the `rating` is below a threshold, the ChatBot result is logged as _low confidence_ and not checked for expected results. The ChatBot is also asked to provide its _confidence_ of the result, which is used similarly during the test.
+
+The `label` returned by the ChatBot should correspond to the use case file name! However, in practice, some queries are ambiguous enough that more than one label would be a reasonable interpretation, which is why `labels` is a list. The first list element is always the name of the use case. So, for example, there are many examples in `prescriptions.jsonl` with the label list `["prescription", "appointment"]`, like this one:
+
+```json
+{
+  "query":         "Do I need a follow-up appointment for my prescription for ozempic?",
+  "labels":        ["prescription","appointment"],
+  "actions":       ["inquiry"],
+  "prescriptions": ["ozempic"],
+  "rating": 5
+}
+```
+
+You can see from the query that it's reasonable to interpret the query as an appointment or prescription query. It is really both, but we &ldquo;force&rdquo; the ChatBot to choose and return only one `label`.
 
 #### Dealing with Slow and Expensive Inference
+
+The AI-specific tests support a few features not normally found in conventional test suites, reflecting some unique challenges when writing automated tests for generative AI applications. Let's discuss these enhancements in depth, starting with the challenge of long test runs.
 
 Normally, we want our unit tests to run very quickly, so we can run them frequently during every small iteration of development. Because inference is relatively slow and expensive, running the full set of Q&A pairs is only practical for occasional (e.g., nightly) integration tests. 
 

@@ -3,7 +3,7 @@
 
 from hypothesis import given, strategies as st
 
-import json, logging, os, random, re, sys, unittest
+import json, logging, os, random, re, sys, time, unittest
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
@@ -13,16 +13,16 @@ from common.utils import dict_pop, parse_json
 from common.collections import dict_permutations
 
 class TestPrompt():
-    """Class to hold a benchmark datum: a prompt and expected label, actions, and rating."""
+    """Class to hold a benchmark datum: a prompt and expected labels, actions, and rating."""
     def __init__(self,
         query: str,
-        label: str,
-        actions: str,
+        labels: [str],
+        actions: [str],
         rating: int,
         reason: str = None,
         keywords: dict[str,str] = {}):
         self.query = query
-        self.label = label
+        self.labels = labels
         self.actions = actions
         self.rating = rating
         self.reason = reason if reason else ''
@@ -30,15 +30,15 @@ class TestPrompt():
         errors = []
         if not self.query:
             errors.append('empty query')
-        if not self.label:
-            errors.append('empty label')
+        if not self.labels:
+            errors.append('empty labels')
         if rating < 0 or rating > 5:
             errors.append(f'invalid rating {self.rating} (not between 0 and 5, inclusive)')
         if errors:
             raise ValueError(f"Invalid inputs: {', '.join(errors)}")
 
     def __repr__(self) -> str:
-        return f"""TestPrompt(query='{self.query}',label='{self.label}',actions='{self.actions}',rating={self.rating},reason={self.reason},keywords={self.keywords})"""
+        return f"""TestPrompt(query='{self.query}',labels='{self.labels}',actions='{self.actions}',rating={self.rating},reason={self.reason},keywords={self.keywords})"""
 
     def dict(self) -> dict[str,any]:
         d = {
@@ -91,22 +91,8 @@ class LowConfidenceResult():
 
 class TestBase(unittest.TestCase):
     """
-    Base class for ChatBot tests. This class implements a number of extensions to normal 
-    TestCase behavior, which we added to address some of the challenges of testing stochastic
-    AI behaviors. The features include the following:
-    
-    * A _confidence threshold_:
-        * Minimal testing is done on a response if the confidence score included in the
-        response is below a threshold.
-    * A _rating threshold_:
-        * Similarly, if the generated Q&A pair was validated below a threshold, we don't
-        require testing with it to "pass".
-    * A flag for _testing all examples_ or not and a _sampling rate_:
-        * Running with all the test Q&A pairs and some variable substitutions supported
-        takes a very long time, so we support sampling a subset for faster unit test runs.
-    * Accumulating all errors and warnings vs. failing fast:
-        We have found it useful to accumulate and report all found errors and warnings 
-        vs. the normal approach of failing fast on the first error.
+    Base class for tests that need to instantiate a ChatBot, but not necessarily run inference with it.
+    Use `TestBaseRunner`, a derived class of this class, for those tests.
     """
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
@@ -142,8 +128,8 @@ class TestBase(unittest.TestCase):
         self.data_dir                      = os.environ.get('DATA_DIR', 'data')
         self.accumulate_test_results: bool = bool(os.environ.get('ACCUMULATE_TEST_ERRORS', False))
         self.sample_rate: float            = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
-        self.rating_threshold: int         = int(os.environ.get('RATING_THRESHOLD', self.default_rating_threshold))
-        self.confidence_threshold: float   = float(os.environ.get('CONFIDENCE_THRESHOLD', self.default_confidence_threshold))
+        self.rating_threshold: int         = int(os.environ.get('RATING_THRESHOLD', TestBase.default_rating_threshold))
+        self.confidence_threshold: float   = float(os.environ.get('CONFIDENCE_THRESHOLD', TestBase.default_confidence_threshold))
         self.verbose: bool                 = bool(os.environ.get('VERBOSE', False))
 
         self.key_results = {'low_confidence_results': [], 'errors': [], 'warnings': []}
@@ -151,6 +137,31 @@ class TestBase(unittest.TestCase):
 
         self.make_chatbot()
 
+class TestBaseRunner(TestBase):
+    """
+    Base class for ChatBot tests. This class implements a number of extensions to normal 
+    TestCase behavior, which we added to address some of the challenges of testing stochastic
+    AI behaviors. The features include the following:
+    
+    * A _confidence threshold_:
+        * Minimal testing is done on a response if the confidence score included in the
+        response is below a threshold.
+    * A _rating threshold_:
+        * Similarly, if the generated Q&A pair was validated below a threshold, we don't
+        require testing with it to "pass".
+    * A flag for _testing all examples_ or not and a _sampling rate_:
+        * Running with all the test Q&A pairs and some variable substitutions supported
+        takes a very long time, so we support sampling a subset for faster unit test runs.
+    * Accumulating all errors and warnings vs. failing fast:
+        We have found it useful to accumulate and report all found errors and warnings 
+        vs. the normal approach of failing fast on the first error.
+    """
+
+    benchmark_data_dir = Path("tests/data")
+
+    def setUp(self):
+        super().setUp()
+        
         d = {
             'step' :                        'setUp',
             'model':                        self.model,
@@ -162,7 +173,7 @@ class TestBase(unittest.TestCase):
             'default rating_threshold':     self.rating_threshold,
             'default confidence_threshold': self.confidence_threshold,
         }
-        print(json.dumps(d), file=TestBase.log_file)
+        print(json.dumps(d), file=TestBaseRunner.log_file)
 
     def tearDown(self):
         low_confidence_results_count = len(self.key_results['low_confidence_results'])
@@ -192,7 +203,7 @@ class TestBase(unittest.TestCase):
         }
         js1 = json.dumps(d)
         js  = re.sub(r'\n', r'\\n', js1)  # Try to print true JSONL records
-        print(js, file=TestBase.log_file)
+        print(js, file=TestBaseRunner.log_file)
         if not self.samples_count:
             raise ValueError(f"No samples were loaded!")            
 
@@ -204,10 +215,10 @@ class TestBase(unittest.TestCase):
             print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
             log_file_template = f"{def_log_dir}/{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
-        TestBase.log_file_path = Path(log_file_template.format(class_name=cls.__name__))
-        print(f"\n  ** Logging to {TestBase.log_file_path} ** \n")
-        os.makedirs(TestBase.log_file_path.parent, exist_ok=True)
-        TestBase.log_file = TestBase.log_file_path.open('a') # append mode, because we _may_ share it across tests.
+        TestBaseRunner.log_file_path = Path(log_file_template.format(class_name=cls.__name__))
+        print(f"\n  ** Logging to {TestBaseRunner.log_file_path} ** \n")
+        os.makedirs(TestBaseRunner.log_file_path.parent, exist_ok=True)
+        TestBaseRunner.log_file = TestBaseRunner.log_file_path.open('a') # append mode, because we _may_ share it across tests.
 
     @classmethod
     def tearDownClass(cls):
@@ -231,13 +242,13 @@ class TestBase(unittest.TestCase):
                     try:
                         obj     = parse_json(ls)
                         query   = dict_pop(obj, 'query')
-                        label   = dict_pop(obj, 'label')
+                        labels  = dict_pop(obj, 'labels')
                         actions = dict_pop(obj, 'actions')
                         rating  = dict_pop(obj, 'rating')
                         reason  = dict_pop(obj, 'reason') # Not all records have this, so None will be returned.
                         # What's left in obj at this point are "substitution" keywords, if any,
                         # that we expect to find in the inference results.
-                        tp = TestPrompt(query, label, actions, rating, reason, keywords=obj)
+                        tp = TestPrompt(query, labels, actions, rating, reason, keywords=obj)
                         prompts.append(tp)
                     except ValueError as err:
                         raise ValueError(f"From file <{file}>, error parsing line: <{line}>") from err
@@ -247,11 +258,10 @@ class TestBase(unittest.TestCase):
 
     def try_query(self, 
         test_prompt: TestPrompt,
-        allowed_alt_labels: dict[str,[str]],
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
+        rating_threshold: int = TestBase.default_rating_threshold,
+        confidence_threshold: float = TestBase.default_confidence_threshold):
         """
-        See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
+self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
         Compare to `try_query_accumulate()`.
         We don't check the text returned. For a few labels, we don't use that text,
         but for other labels, we would show the text to the user. We could enhance
@@ -259,7 +269,7 @@ class TestBase(unittest.TestCase):
         texts, at the expense of additional overhead for the inference required.
         """
         exp_query    = test_prompt.query
-        exp_label    = test_prompt.label
+        exp_labels   = test_prompt.labels
         exp_actions  = test_prompt.actions
         exp_rating   = test_prompt.rating
         exp_keywords = test_prompt.keywords
@@ -274,7 +284,8 @@ class TestBase(unittest.TestCase):
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
         actual_actions       = actual_reply.get('actions', '')
-        actual_confidence    = actual_reply.get('confidence', 0.0)
+        # We have seen the occasional confidence scores at the content level, rather than inside the reply.
+        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
         actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
         # actual_text          = actual_reply.get('text', '')
 
@@ -294,10 +305,12 @@ class TestBase(unittest.TestCase):
         
         if low_confidence_reasons:
             reasons = ' '.join(low_confidence_reasons)
-            self.key_results['low_confidence_results'].append(LowConfidenceResult( 
-                prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold))
+            lcr = LowConfidenceResult(prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold)
+            self.key_results['low_confidence_results'].append(lcr)
+            if self.verbose:
+                print(lcr)
         else:
-            err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
+            err_msg = self._check_label(exp_labels, actual_label)
             self.assertEqual(0, len(err_msg), err_msg)
             if actual_label == 'emergency' or actual_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
@@ -307,11 +320,11 @@ class TestBase(unittest.TestCase):
                 self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
             else:
                 # Do the actions match for the other label cases? Note that the ChatBot could return
-                # more than one, a comma-separated list, so we just check if the one or more expected
-                # actions are present.
-                for action in exp_actions.split(','):
-                    a = action.strip()
-                    self.assertTrue(actual_actions.find(a) > 0, f"""expected action "{a}" not found in != "{actual_actions}", exp_actions = "{exp_actions}", error_msg = {err_msg}""")
+                # more than one, a comma-separated list, so we check if the actual actions are a subset of
+                # the expected actions.
+                exp_set = set(exp_actions)
+                actual_set = set(actual_actions)
+                self.assertTrue(actual_set.issubset(exp_set), f"""At least one actual action "{actual_actions}" not found in the allowed (expected) actions = "{exp_actions}", error_msg = {err_msg}""")
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
@@ -330,9 +343,8 @@ class TestBase(unittest.TestCase):
 
     def try_query_accumulate(self, 
         test_prompt: TestPrompt,
-        allowed_alt_labels: dict[str,[str]],
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
+        rating_threshold: int = TestBase.default_rating_threshold,
+        confidence_threshold: float = TestBase.default_confidence_threshold):
         """
         See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum, 
@@ -340,7 +352,7 @@ class TestBase(unittest.TestCase):
         Compare to `try_query()`.
         """
         exp_query    = test_prompt.query
-        exp_label    = test_prompt.label
+        exp_labels   = test_prompt.labels
         exp_actions  = test_prompt.actions
         exp_rating   = test_prompt.rating
         exp_keywords = test_prompt.keywords
@@ -359,10 +371,14 @@ class TestBase(unittest.TestCase):
 
         answer = self.chatbot.query(prompt)
         if isinstance(answer, str):
-            return {
+            qf = {
                 'query_failure': f"Error message returned: {answer}",
                 'metadata':      metadata,
             }
+            self.key_results['errors'].append(qf)
+            if self.verbose:
+                print(qf)
+            return qf
         else:
             metadata['answer'] = answer
 
@@ -375,7 +391,7 @@ class TestBase(unittest.TestCase):
         actual_actions       = actual_reply.get('actions', '')
         actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
         # We have seen the occasional confidence scores at the content level, rather than inside the reply.
-        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 0.0))
+        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
         # actual_text          = actual_reply.get('text', '')
 
         # We have seen subtle punctuation changes in prompts...
@@ -383,9 +399,9 @@ class TestBase(unittest.TestCase):
         aq1 = re.sub(r'\W', ' ', actual_query1)
         aq2 = re.sub(r'\W', ' ', actual_query2)
         if p2 != aq1:
-            errors['answer.query'] = f"{prompt} != {actual_query1}"
+            errors['unexpected answer.query'] = f"{prompt} != {actual_query1}"
         if p2 != aq2:
-            errors['content.query'] = f"{prompt} != {actual_query2}"
+            errors['unexpected content.query'] = f"{prompt} != {actual_query2}"
         
         low_confidence_reasons = []
         if actual_confidence < confidence_threshold:
@@ -395,32 +411,30 @@ class TestBase(unittest.TestCase):
 
         if low_confidence_reasons:
             reasons = ' '.join(low_confidence_reasons)
-            self.key_results['low_confidence_results'].append(LowConfidenceResult( 
-                prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold))
+            lcr = LowConfidenceResult(prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold)
+            self.key_results['low_confidence_results'].append(lcr)
+            if self.verbose:
+                print(lcr)
         else:
-            err_msg = self._check_label(exp_label, actual_label, allowed_alt_labels)
+            err_msg = self._check_label(exp_labels, actual_label)
             if len(err_msg) > 0:
-                errors['label'] = err_msg
+                errors['unexpected label'] = err_msg
             if actual_label == 'emergency' or actual_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
                 exp_rtu = ChatBotResponseHandler.replies[actual_label]
                 if exp_rtu != actual_rtu:
-                    errors['reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
+                    errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:
                 # Do the actions match for the other label cases? Note that the ChatBot could return
-                # more than one, a comma-separated list, so we just check if the one or more expected
-                # actions are present.
+                # more than one, a comma-separated list, so we check if the actual actions are a subset of
+                # the expected actions.
                 # Right now, we treat these as warnings, not errors.
-                missing_actions = []
-                exp_actions_list = exp_actions.split(',')
-                for action in exp_actions_list:
-                    a = action.strip()
-                    if actual_actions.find(a) < 0:
-                        missing_actions.append(a)
-                if missing_actions:
-                    warnings['actions'] = f"""some expected actions {missing_actions} not found. Expected: {exp_actions_list}), actual: {actual_actions.split(',')}."""
+                exp_set = set(exp_actions)
+                actual_set = set(actual_actions)
+                if not actual_set.issubset(exp_set):
+                    warnings['unexpected actions'] = f"""At least one actual action "{actual_actions}" not found in the allowed (expected) actions = "{exp_actions}", error_msg = {err_msg}"""
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
@@ -431,28 +445,33 @@ class TestBase(unittest.TestCase):
             missing_kvs = {}
             for key, value in exp_keywords.items():
                 if len(value) == 0:
-                    print(f"WARNING: BUG: keyword {key} has zero-length value array!")
+                    warnings['unexpected keywords'] = f"BUG: keyword {key} has zero-length value array!"
                     continue
                 if len(value) > 1:
-                    print(f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!")
+                    warnings['unexpected keywords'] = f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!"
                 expected = value[0].lower()
                 actual   = actual_keywords.get(key, '').lower()
                 if not actual.find(expected) >= 0:
                     missing_kvs[key] = f"{expected} vs. {actual}"
             if missing_kvs:
-                warnings['keywords'] = missing_kvs
+                warnings['unexpected keywords'] = missing_kvs
 
         if errors:
-            self.key_results['errors'].append(metadata | errors)
+            me = errors | metadata
+            self.key_results['errors'].append(me)
+            if self.verbose:
+                print(me)
         if warnings:
-            self.key_results['warnings'].append(metadata | warnings)
+            mw = warnings | metadata
+            self.key_results['warnings'].append(mw)
+            if self.verbose:
+                print(mw)
 
     def try_queries(self, 
         file_name: Path | str, 
-        allowed_alt_labels: dict[str,[str]],
         sample_rate: float = None, 
-        rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold):
+        rating_threshold: int = TestBase.default_rating_threshold,
+        confidence_threshold: float = TestBase.default_confidence_threshold):
         
         if not sample_rate:
             sample_rate = self.sample_rate
@@ -464,21 +483,33 @@ class TestBase(unittest.TestCase):
             'rating_threshold':      rating_threshold,
             'confidence_threshold':  confidence_threshold,
         }
-        print(json.dumps(d), file=TestBase.log_file)
+        print(json.dumps(d), file=TestBaseRunner.log_file)
 
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
         self.samples_count += len(samples)
 
+        # Some logic to detect when it appears the system has deadlocked in some way.
+        # If so, then error out.
+        last_time = time.time()
+        slow_count = 0
+        allowed_time_delta = 120 # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
+
         for test_prompt in samples:
             if self.accumulate_test_results:
-                self.try_query_accumulate(test_prompt, allowed_alt_labels,
+                self.try_query_accumulate(test_prompt,
                     rating_threshold=rating_threshold, 
                     confidence_threshold=confidence_threshold)
             else:
-                self.try_query(test_prompt, allowed_alt_labels,
+                self.try_query(test_prompt,
                     rating_threshold=rating_threshold, 
                     confidence_threshold=confidence_threshold)
+    
+            now = time.time()
+            difference = int(last_time - now)
+            self.assertLess(difference, allowed_time_delta, f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}")
+            last_time = now
+            print('+', end='')  # show we aren't dead...
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
@@ -501,12 +532,5 @@ class TestBase(unittest.TestCase):
             samples = random.sample(collection, k=k)
         return samples
 
-    def _check_label(self, expected: str, actual: str, allowed_alt_labels: dict[str,[str]]) -> str:
-        if expected == actual:
-            return ""
-        
-        alts = allowed_alt_labels.get(expected)
-        for alt in alts:
-            if actual == alt:
-                return ""
-        return f"Expected {expected}, got {actual}, which is not allowed as an alternate for the expected label: {alts}"
+    def _check_label(self, expected: [str], actual: str) -> str:
+        return "" if actual in expected else f"label {actual} not in expected {expected}."
