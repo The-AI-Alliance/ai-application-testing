@@ -14,10 +14,13 @@
 # done
 
 echo "Unique Labels:"
-grep -o '"label":"[^"]*"' src/tests/data/*.jsonl | sort | uniq
+jq -c '{label}' src/tests/data/*.jsonl | sort | uniq
 
 echo "Unique Labels and Actions:"
-grep -o '"label":"[^"]*","actions":"[^"]*"' src/tests/data/*.jsonl | sort | uniq
+jq -c '{label, actions}' src/tests/data/*.jsonl | sort | uniq
+
+echo "Checking for missing fields. NOTE: blank lines will be reported!"
+echo "e.g., 'src/tests/data/appointments.jsonl:10:' (note nothing after the 'number:')"
 
 echo "Missing Labels:"
 grep -vn '"label":' src/tests/data/*.jsonl
