@@ -5,7 +5,7 @@ This script tests that the MCP server can be imported and initialized
 with FastMCP.
 """
 
-import logging, sys, unittest
+import logging, os, sys
 from pathlib import Path
 
 # Add src to path for imports
@@ -13,9 +13,9 @@ from pathlib import Path
 
 from apps.chatbot import ChatBot
 from apps.chatbot.mcp_server.server import create_mcp_server
-# from tests.utils.apps.chatbot.testbase import TestBase
+from tests.utils.apps.chatbot.testbase import TestBase
 
-class TestMCPServer(unittest.TestCase):
+class TestMCPServer(TestBase):
     """
     Test the MCP Server for the ChatBot.
     """

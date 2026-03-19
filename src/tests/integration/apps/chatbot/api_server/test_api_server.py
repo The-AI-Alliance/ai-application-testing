@@ -4,7 +4,7 @@ Integration tests for the ChatBot API server.
 These tests verify that the OpenAI-compatible API server works correctly
 with the ChatBot implementation.
 """
-import json, pytest, unittest
+import json, pytest
 from fastapi.testclient import TestClient
 from pathlib import Path
 
@@ -39,8 +39,7 @@ def client(api_server):
     """Create a test client for the API server."""
     return TestClient(api_server.app)
 
-
-class TestAPIServerEndpoints(unittest.TestCase):
+class TestAPIServerEndpoints:
     """Test the API server endpoints."""
     
     def test_root_endpoint(self, client):
