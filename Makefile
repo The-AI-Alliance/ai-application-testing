@@ -49,10 +49,16 @@ CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 CONFIDENCE_THRESHOLD  ?= 0.9
 
 # Some specific variables passed as env. vars. to the test suites.
-# TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
-# RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
-TEST_ALL_EXAMPLES     ?= True
-RATING_THRESHOLD      ?= 4
+# ACCUMULATE_TEST_ERRORS:   Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
+# RATING_THRESHOLD:         What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
+# TESTS_LOGS_DIR:           Where special AI test logs are written. RELATIVE TO ${SRC_DIR}!
+# TESTS_LOGS_FILE_TEMPLATE: A file name pattern, where "{class_name}" will be replaced with the test class name.
+# TESTS_LOGS_FILE_GLOB:     Just used for messages printed by targets.
+ACCUMULATE_TEST_ERRORS    ?= True
+RATING_THRESHOLD          ?= 4
+TESTS_LOGS_DIR            ?= tests/logs
+TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{class_name}-${TIMESTAMP}.jsonl
+TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
 # Sampling rates for different kinds of tests.
 UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
@@ -363,39 +369,40 @@ clean-code:: clean-tools
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "For the GitHub Pages website:"
-	@echo "  GITHUB_PAGES_URL:      ${GITHUB_PAGES_URL}"
-	@echo "  PWD:                   ${PWD} ('print working directory')"
-	@echo "  DOCS_DIR:              ${DOCS_DIR}"
-	@echo "  SITE_DIR:              ${SITE_DIR}"
-	@echo "  JEKYLL_PORT:           ${JEKYLL_PORT}"
+	@echo "  GITHUB_PAGES_URL:        ${GITHUB_PAGES_URL}"
+	@echo "  PWD:                     ${PWD} ('print working directory')"
+	@echo "  DOCS_DIR:                ${DOCS_DIR}"
+	@echo "  SITE_DIR:                ${SITE_DIR}"
+	@echo "  JEKYLL_PORT:             ${JEKYLL_PORT}"
 	@echo
 
 print-info-tools:: print-info-code
 print-info-code::
 	@echo "For the example code and tools:"
-	@echo "  MODEL:                 ${MODEL} (the default)"
-	@echo "  MODELS: (all we use)   ${MODELS}"
-	@echo "  ALL_TOOLS:             ${ALL_TOOLS}"
-	@echo "  INFERENCE_SERVICE:     ${INFERENCE_SERVICE}"
-	@echo "  INFERENCE_URL:         ${INFERENCE_URL}"
-	@echo "  PROMPTS_TEMPLATES_DIR: ${PROMPTS_TEMPLATES_DIR}"
-	@echo "  SRC_DIR:               ${SRC_DIR}"
-	@echo "  APP_ARGS:              ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
+	@echo "  MODEL:                   ${MODEL} (the default)"
+	@echo "  MODELS: (all we use)     ${MODELS}"
+	@echo "  ALL_TOOLS:               ${ALL_TOOLS}"
+	@echo "  INFERENCE_SERVICE:       ${INFERENCE_SERVICE}"
+	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
+	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
+	@echo "  SRC_DIR:                 ${SRC_DIR}"
+	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
-	@echo "  OUTPUT_DIR:            ${OUTPUT_DIR}"
-	@echo "  OUTPUT_LOGS_DIR:       ${OUTPUT_LOGS_DIR}"
-	@echo "  DATA_DIR:              ${DATA_DIR}"
-	@echo "  TEST_ALL_EXAMPLES:     ${TEST_ALL_EXAMPLES} (For tests, run all examples, then report errors. '' == False)"
+	@echo "  OUTPUT_DIR:              ${OUTPUT_DIR}"
+	@echo "  OUTPUT_LOGS_DIR:         ${OUTPUT_LOGS_DIR}"
+	@echo "  TESTS_LOGS_DIR:          ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
+	@echo "  DATA_DIR:                ${DATA_DIR}"
+	@echo "  ACCUMULATE_TEST_ERRORS:  ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
 	@echo "The environment:"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
-	@echo "  TIMESTAMP:             ${TIMESTAMP}"
-	@echo "  MAKEFLAGS:             ${MAKEFLAGS}"
-	@echo "  MAKEFLAGS_RECURSIVE:   ${MAKEFLAGS_RECURSIVE}"
-	@echo "  UNAME:                 ${UNAME}"
-	@echo "  ARCHITECTURE:          ${ARCHITECTURE}"
-	@echo "  GIT_HASH:              ${GIT_HASH}"
+	@echo "  GIT_HASH:                ${GIT_HASH}"
+	@echo "  TIMESTAMP:               ${TIMESTAMP}"
+	@echo "  MAKEFLAGS:               ${MAKEFLAGS}"
+	@echo "  MAKEFLAGS_RECURSIVE:     ${MAKEFLAGS_RECURSIVE}"
+	@echo "  UNAME:                   ${UNAME}"
+	@echo "  ARCHITECTURE:            ${ARCHITECTURE}"
+	@echo "  GIT_HASH:                ${GIT_HASH}"
 	@echo
 # Code Targets
 
@@ -655,7 +662,7 @@ remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
 
-${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai
@@ -685,40 +692,66 @@ unit-tests-non-ai::
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai::
+unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "Running the AI unit tests..."
+	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
-	  export TEST_ALL_EXAMPLES=${TEST_ALL_EXAMPLES} && \
+	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
+	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest discover \
 	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
-	  	--top-level-directory . && make --directory .. show-test-logs || ! make --directory .. show-test-logs
+	  	--top-level-directory . ${APP_ARGS} && \
+	      make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
+	    ! make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
+
+# A special target for running one of the AI tests. Invoke as follows:
+# make TEST=path/to/test.py one-test-ai
+one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
+	@echo "Running one AI unit test: TEST = ${TEST} ..."
+	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
+	cd ${SRC_DIR} && \
+	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
+	  export MODEL=${MODEL} && \
+	  export INFERENCE_URL=${INFERENCE_URL} && \
+	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export DATA_DIR=${DATA_DIR} && \
+	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
+	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
+	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
+	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export VERBOSE='True' && \
+	  ${TIME} uv run python -m unittest ${TEST} && \
+	      make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
+	    ! make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
 
 show-test-logs::
 	@echo
-	@echo "A time-stamped JSONL log file was written to ${SRC_DIR}/tests/logs. It may be empty!"
-	@ls -l ${SRC_DIR}/tests/logs
+	@echo "Time-stamped JSONL log files were written to ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}. They may be empty!"
+	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo
-	@echo "Tip: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file."
-	@echo "(Requires the 'jq' CLI tool.)"
+	@echo "TIP: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
+	@echo 
 
-.PHONY: nice-ai-test-logs
+.PHONY: nice-ai-test-logs do-nice-ai-test-logs show-nice-ai-test-logs
 
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-test-logs:: command-check-jq
-	@for f in ${SRC_DIR}/tests/logs/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
-		echo "writing $$ff:"; \
-		jq . $$f > $$ff; \
-	done; \
-	ls -l ${SRC_DIR}/tests/logs/*.json*
+nice-ai-test-logs:: command-check-jq do-nice-ai-test-logs show-nice-ai-test-logs
+do-nice-ai-test-logs::
+	@for f in ${SRC_DIR}/${TESTS_LOGS_DIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
+	  echo "writing $$ff:"; \
+	  jq . $$f > $$ff; \
+	done
+show-nice-ai-test-logs::
+	ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 
 integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
 
@@ -735,7 +768,7 @@ integration-tests-dedicated:: run-command-checks
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
-	  export TEST_ALL_EXAMPLES=${TEST_ALL_EXAMPLES} && \
+	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
