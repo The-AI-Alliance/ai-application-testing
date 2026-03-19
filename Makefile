@@ -51,7 +51,7 @@ CONFIDENCE_THRESHOLD  ?= 0.9
 # Some specific variables passed as env. vars. to the test suites.
 # TEST_ALL_EXAMPLES:    Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
 # RATING_THRESHOLD:     What's the minimum rating (out of 5) for which a test prompt is "good enough" for the particular use case?
-TEST_ALL_EXAMPLES     ?= 
+TEST_ALL_EXAMPLES     ?= True
 RATING_THRESHOLD      ?= 4
 
 # Sampling rates for different kinds of tests.
@@ -725,7 +725,7 @@ integ-tests integration-tests:: integration-tests-dedicated integration-tests-fr
 # This target runs all the unit-tests, the AI-related, but more exhaustively, as well as the non-AI unit tests.
 integration-tests-from-unit-tests:: run-command-checks
 	@echo "Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
-	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} TEST_ALL_EXAMPLES="True" tests
+	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} tests
 
 integration-tests-dedicated:: run-command-checks
 	@echo "Running the 'dedicated' integration tests..."

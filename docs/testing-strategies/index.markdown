@@ -7,14 +7,16 @@ has_children: true
 
 # Testing Strategies and Techniques
 
-After discussing [architecture and design considerations]({{site.baseurl}}/arch-design/), we turn to testing strategies and techniques that can be used to create reliable, repeatable tests for generative AI applications. 
+After discussing [architecture and design considerations]({{site.baseurl}}/arch-design/), we turn to testing strategies and techniques with the goal of creating reliable, repeatable tests for generative AI applications. 
 
-For educational purposes, we demonstrate techniques using relatively simple tools that are easy for you to try. While they are designed to be suitable for research and development processes, we also describe more sophisticated tools that may be necessary for more &ldquo;advanced&rdquo; uses, larger teams, etc. These additional tools are described in sections with titles that begin with **Other Tools...** near the end of each chapter. Also, note that many startups and consulting organizations now offer proprietary tools and services to aid developer testing, but we won't cover those options.
+For educational purposes, we demonstrate techniques using relatively simple tools that are easy for you to try. While these tools are designed to be suitable for real project development purposes, we also briefly discuss more sophisticated tools that may be preferred for more &ldquo;advanced&rdquo; uses, larger teams, etc. These additional tools are described in sections with titles that begin with **Other Tools...** near the end of each chapter. Also, note that many startups and consulting organizations now offer proprietary tools and services to aid developer testing, but we won't cover those options.
 
-The end of each chapter has an **Experiments to Try** section for further exploration.
+We emphasize concepts in these chapters. For the details of applying them to automated test suites for real-world projects, see the companion [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application), specifically the section [Automated Testing: Practical Enhancements]({{site.baseurl}}/working-example/#automated-testing-practical-enhancements).
+
+Finally, the end of each chapter has an **Experiments to Try** section for further exploration.
 
 {: .tip}
-> **TIP:** The [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies the ideas in these chapters to an example ChatBot application.
+> **TIP:** These chapters focus on ideas and the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies them to a realistic, generative AI project.
 
 {: .note }
 > **NOTE:** 

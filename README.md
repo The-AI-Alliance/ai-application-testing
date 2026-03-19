@@ -56,7 +56,7 @@ ollama serve             # in one terminal window
 ollama pull gpt-oss:20b  # in another terminal window
 ```
 
-In our experiments, we used the models shown in **Table 1** (see also a similar table [here]({{site.baseurl}}/arch-design/tdd/#table-1)): 
+In our experiments, we used the models shown in **Table 1** (see also a similar table [in the user guide](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/#table-1)): 
 
 | Model                        | # Parameters | Notes |
 | :--------------------------- | -----------: | :---- |
@@ -66,7 +66,7 @@ In our experiments, we used the models shown in **Table 1** (see also a similar 
 | `smollm2:1.7b-instruct-fp16` | 1.7B | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/), which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
 
 {: .tip}
-> **REQUEST:** [Let us know]({{site.baseurl}}/contributing#join-us) which models work well for you!
+> **REQUEST:** [Let us know](https://the-ai-alliance.github.io/ai-application-testing/contributing#join-us) which models work well for you!
 
 **Table 1:** Models used for our experiments.
 
@@ -138,7 +138,7 @@ On MacOS and Linux, using `make` is the easiest way to run the exercises. The ac
 
 ### Run `tdd-example-refill-chatbot`
 
-This tool is explained in the section on [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/). It introduces some concepts, but isn't intended to be a tool you use long term, in contrast to the next two `unit-benchmark-data-*` tools discussed below.
+This tool is explained in the section on [Test-Driven Development](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/). It introduces some concepts, but isn't intended to be a tool you use long term, in contrast to the next two `unit-benchmark-data-*` tools discussed below.
 
 Run this `make` command:
 
@@ -187,18 +187,18 @@ The arguments are as follows:
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
-The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
+The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
 {: .note}
 > **NOTE:**
 >
 > These template files were originally designed for use with the `llm` CLI tool (see the Appendix in the repo's [`README`]({{site.gh_edit_repository}}/) for details about `llm`). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
 
-The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter]({{site.baseurl}}/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
+The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
 
 ### Run `unit-benchmark-data-synthesis`
 
-Described in [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/), this tool uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
+Described in [Unit Benchmarks](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/unit-benchmarks/), this tool uses an LLM to generate Q&A (question and answer) pairs for _unit benchmarks_. It addresses some of the limitations of the more ad-hoc approach to benchmark creation used in the previous TDD exercise:
 
 ```shell
 make run-unit-benchmark-data-synthesis
@@ -258,7 +258,7 @@ Hence, you have to quote the first two names. The default is to process all of t
 
 ### Run `unit-benchmark-data-validation`
 
-Described in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/), this tool uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
+Described in [LLM as a Judge](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/llm-as-a-judge/), this tool uses a _teacher model_ to _validate_ the quality of the Q&A pairs that were generated in the previous exercise:
 
 ```shell
 make run-unit-benchmark-data-validation
@@ -353,11 +353,11 @@ The source code, etc. for this application and the automated tests are located i
 
 | Content | Location | Notes |
 | :------ | :------- | :---- |
-| Source code      | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/) | Main source code for the ChatBot and the MCP server |
-| Prompt Templates | [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/) | The prompts used. |
-| Data             | [`src/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/) | Application data location, but not currently used! |
-| Tests            | [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/) (unit tests) and [`src/tests/integration/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/apps/chatbot/) (integration tests) | |
-| Test Data        | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/) | Test prompts and expected results. |
+| Source code       | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
+| Prompt Templates  | [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/){:target="prompts"} | The prompts used. |
+| Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
+| Integration Tests | [`src/tests/integration/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
+| Test Data         | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
 
 ### An MCP Server for the ChatBot
 
@@ -397,68 +397,13 @@ For more details on running the OpenAI-compatible API server, see the [`src/apps
 
 ### Using the ChatBot with Open WebUI
 
-Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com).
+Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com). See the [user guide](https://the-ai-alliance.github.io/ai-application-testing/working-example/#using-the-chatbot-with-open-webui) for details.
 
-Begin by running the API server, e.g., `make api-server`. Then in a separate terminal window, run one of these commands:
+## Automated Testing: Practical Enhancements 
 
-```shell
-make open-webui            # Run Open WebUI configured to provide a GUI for the ChatBot.
-make run-open-webui        # Synonym for "open-webui".
-```
+Now we have automated tests in the [`src/tests`](src/tests/) directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_](https://the-ai-alliance.github.io/ai-application-testing/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/), but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ 
 
-In a browser, open the URL [http://localhost:8080](http://localhost:8080).
-
-You will be prompted to create an admin user account. Pick whatever name, email, and password you want.
-
-For completeness, there are two other useful commands:
-
-```shell
-make help-open-webui       # Show help for the API server.
-make remove-open-webui     # Cleans up some temporary "uv" and other files created for this app.
-```
-
-Next, a little setup is required; we have to tell Open WebUI about the ChatBot server at `http://localhost:8000`. To do this, open the link administration settings link, [http://localhost:8080/admin/settings/db](http://localhost:8080/admin/settings/db).
-
-![Open WebUI Database Settings]({{site.baseurl}}/assets/images/open-webui-database-settings.jpg "Open WebUI Database Settings")
-
-Click _Import_ link on the right hand side under **Config** (shown in the red oval highlight). Then browse to `src/apps/chatbot/open-webui/open-webui.config.json` in the project repository or download that file from [here](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/open-webui/open-webui.config.json). Submit the dialog to load the settings.
-
-Next, check that they were successfully applied. Go to the Administration connection settings, [http://localhost:8080/admin/settings/connections](http://localhost:8080/admin/settings/connections). You should see the following:
-
-![Open WebUI Connections Settings]({{site.baseurl}}/assets/images/open-webui-connections-settings.jpg "Open WebUI Connections Settings")
-
-The changes we made are highlighted:
-
-1. Disabled OpenAI connections. 
-1. Added a custom OpenAI-compatible connection to our API server at `http://localhost:8000`.
-1. Disabled Ollama connections. 
-
-The first and third change were just to simplify the experience and prevent unintentionally talking directly to OpenAI and Ollama. If you prefer, you can turn these back on by clicking the grey slider on the right for each one (it will turn green). Click the &ldquo;gear&rdquo; icons to edit the connections.
-
-Finally, if you go to the chat page, [http://localhost:8080](http://localhost:8080/){:target="open-webui-home"}, you should see the model selected `ollama_chat/gpt-oss:20b`, which will be served through our API server. If you see another model name shown, click the down arrow (&ldquo;chevron&rdquo;) and select this model. With the OpenAI and Ollama direct connections disabled, there should only be this option and possibly one other added by Open WebUI.
-
-![Open WebUI Chat]({{site.baseurl}}/assets/images/open-webui-chat.jpg "Open WebUI Chat")
-
-Try it!
-
-> [!NOTE]
-> It is also possible to configure Open WebUI to use the ChatBot MCP server. See the Open WebUI [documentation](https://docs.openwebui.com) for details on configuring MCP servers.
-
-### Practical Testing Enhancements 
-
-Now we have automated tests in the `src/tests` directory and test data, which is a set of JSONL files with example prompt/answer pairs (with other metadata) used to test each supported use case of the ChatBot. In other words, this data is used for the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) we have been advocating you use. This data was adapted from the example outputs of the tools found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/), but _with changes reflecting what we learned while iterating on the development of the ChatBot application!_ For example, the test data covers a few new use cases, refines some handling of expected responses, excludes some synthetic data was validated as poor, and makes other changes. This is how we would expect your development projects to proceed, where you use the tools we described above to generate and validate test data, for example, then refine the data for use as unit-benchmark data.
-
-The AI-specific tests support a few features not normally found in conventional test suites, reflecting some unique challenges when writing automated tests for AI applications. 
-
-First, because inference is slow and expensive, the unit tests by default sample 25% of the test prompts per use case (configurable; see `Makefile` variable `UNIT_TEST_DATA_SAMPLE_RATE`), but no fewer than five (arbitrary) samples per use case, when there aren't a lot to begin with. However, the integration tests (`integration-tests` target) run all 100% of them. This compromise provides faster turn around for unit tests, but also some extra randomness, as a test prompt could cause a test failure, but it won't be triggered every time! Hence, in real development projects, the `integration-tests` target should be built as frequently as &ldquo;reasonable&rdquo;, since it will find such cases that could be missed.
-
-Second, a `Makefile` variable `TEST_ALL_EXAMPLES` is used as an environment variable that triggers another feature flag. If true, it tells the test suite to run all of the test prompts and accumulate any errors, then report them at the end, rather than the normal approach of &ldquo;failing fast&rdquo; on the first error. This flag defaults to false for unit tests, meaning the regular fail-fast approach is used, but it is set to true for the integration tests. The rationale for this feature is to make it easier to capture all the possible problems in one run, as they may group into common limitations in the prompt file, logic for handling of suboptimal results, etc.
-
-Third, a feature called &ldquo;low-confidence results&rdquo; is supported. During our data validation discussion, where we used the `unit-benchmark-data-validation.py` tool, we said the output includes a rating of how good we think the prompt is for the use case, etc. We kept these ratings in the automated test data used for the ChatBot. In fact, we simply stripped out poorly rated synthetic data from the test data set. That leaves some test prompts as &ldquo;okay&rdquo;, but possibly poor. So, during testing, if an input prompt and answer carries a rating lower than a certain threshold, the inference result for that test prompt is reported at the end of the test, but no checking is done on the result. In other words, it is simply assumed the result is unreliable for that prompt. This reflects our recommendation for real-world ChatBot inference; if you don't have complete confidence in the response, perhaps because the user prompt is confusing, then default to a safe-handling path, such as asking a human to take over the conversation or perhaps asking the user for clarification. 
-
-A second threshold used in the application is for the inference process's own confidence in its work. If it returns a confidence level below a configurable threshold, the default &ldquo;safe&rdquo; response is returned to the user. These two thresholds are also handled as `Makefile` variables, `RATING_THRESHOLD`, defined as `4` on a scale of `1` to `5`, and `CONFIDENCE_THRESHOLD`, defined as `0.9` on a scale of `0.0` to `1.0`, corresponding to a range of 0% to 100%.
-
-Finally, the AI-related unit tests (benchmarks), as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage.
+See the section [Automated Testing: Practical Enhancements](https://the-ai-alliance.github.io/ai-application-testing//working-example/#automated-testing-practical-enhancements) in the [The Working Example and Tools](https://the-ai-alliance.github.io/ai-application-testing//working-example/#run-the-chatbot-example-application) chapter for more details.
 
 ## Getting Involved
 

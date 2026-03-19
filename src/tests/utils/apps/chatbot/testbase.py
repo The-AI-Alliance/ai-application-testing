@@ -128,17 +128,15 @@ class TestBase(unittest.TestCase):
         between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum 
         threshold of 5 samples, if available, will be used in all cases.)
         """
-        self.model                        = os.environ.get('MODEL', 'ollama_chat/gpt-oss:20b')
-        self.service_url                  = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
-        self.template_dir                 = os.environ.get('PROMPTS_TEMPLATES_DIR', 'prompts/templates')
-        self.data_dir                     = os.environ.get('DATA_DIR', 'data')
-        self.test_all_examples: bool      = bool(os.environ.get('TEST_ALL_EXAMPLES', False))
-        self.sample_rate: float           = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
-        self.rating_threshold: int        = int(os.environ.get('RATING_THRESHOLD', self.default_rating_threshold))
-        self.confidence_threshold: float  = float(os.environ.get('CONFIDENCE_THRESHOLD', self.default_confidence_threshold))
-        self.verbose: bool                = bool(os.environ.get('VERBOSE', False))
-        if self.test_all_examples:
-            self.sample_rate = 1.0
+        self.model                         = os.environ.get('MODEL', 'ollama_chat/gpt-oss:20b')
+        self.service_url                   = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
+        self.template_dir                  = os.environ.get('PROMPTS_TEMPLATES_DIR', 'prompts/templates')
+        self.data_dir                      = os.environ.get('DATA_DIR', 'data')
+        self.accumulate_test_results: bool = bool(os.environ.get('ACCUMULATE_TEST_ERRORS', False))
+        self.sample_rate: float            = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
+        self.rating_threshold: int         = int(os.environ.get('RATING_THRESHOLD', self.default_rating_threshold))
+        self.confidence_threshold: float   = float(os.environ.get('CONFIDENCE_THRESHOLD', self.default_confidence_threshold))
+        self.verbose: bool                 = bool(os.environ.get('VERBOSE', False))
 
         self.key_results = {'low_confidence_results': [], 'errors': [], 'warnings': []}
         self.samples_count: int = 0
@@ -151,7 +149,7 @@ class TestBase(unittest.TestCase):
             'service_url':                  self.service_url,
             'template_dir':                 self.template_dir,
             'data_dir':                     self.data_dir,
-            'test_all_examples':            self.test_all_examples,
+            'accumulate_test_results':      self.accumulate_test_results,
             'default sample_rate':          self.sample_rate,
             'default rating_threshold':     self.rating_threshold,
             'default confidence_threshold': self.confidence_threshold,
@@ -427,11 +425,9 @@ class TestBase(unittest.TestCase):
         allowed_alt_labels: dict[str,[str]],
         sample_rate: float = None, 
         rating_threshold: int = default_rating_threshold,
-        confidence_threshold: float = default_confidence_threshold,
-        accumulate_errors: bool = True):
-        if self.test_all_examples:   # Override based on env. var.?
-            sample_rate = 1.0
-        elif not sample_rate:
+        confidence_threshold: float = default_confidence_threshold):
+        
+        if not sample_rate:
             sample_rate = self.sample_rate
 
         d = {
@@ -448,7 +444,7 @@ class TestBase(unittest.TestCase):
         self.samples_count += len(samples)
 
         for test_prompt in samples:
-            if accumulate_errors:
+            if self.accumulate_test_results:
                 self.try_query_accumulate(test_prompt, allowed_alt_labels,
                     rating_threshold=rating_threshold, 
                     confidence_threshold=confidence_threshold)
