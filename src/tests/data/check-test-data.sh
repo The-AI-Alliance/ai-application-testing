@@ -14,16 +14,16 @@
 # done
 
 echo "Unique Labels:"
-jq -c '{label}' src/tests/data/*.jsonl | sort | uniq
+jq -c '{labels}' src/tests/data/*.jsonl | sort | uniq
 
 echo "Unique Labels and Actions:"
-jq -c '{label, actions}' src/tests/data/*.jsonl | sort | uniq
+jq -c '{labels, actions}' src/tests/data/*.jsonl | sort | uniq
 
 echo "Checking for missing fields. NOTE: blank lines will be reported!"
 echo "e.g., 'src/tests/data/appointments.jsonl:10:' (note nothing after the 'number:')"
 
 echo "Missing Labels:"
-grep -vn '"label":' src/tests/data/*.jsonl
+grep -vn '"labels":' src/tests/data/*.jsonl
 
 echo "Missing Actions:"
 grep -vn '"actions":' src/tests/data/*.jsonl

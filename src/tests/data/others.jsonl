@@ -1,35 +1,35 @@
-{"query": "I am having pain in my neck. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["neck"], "rating": 5}
-{"query": "I am having pain in my leg. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["leg"], "rating": 5}
-{"query": "I am having pain in my foot. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["foot"], "rating": 5}
-{"query": "I am having pain in my arm. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["arm"], "rating": 5}
-{"query": "I am having pain in my hand. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["hand"], "rating": 5}
-{"query": "I am having pain in my groin. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["groin"], "rating": 5}
-{"query": "I am having pain in my stomach. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["stomach"], "rating": 5}
-{"query": "I am having pain in my face. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["face"], "rating": 5}
-{"query": "I am having some swelling on my neck. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["neck"], "rating": 5}
-{"query": "I am having some swelling on my leg. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["leg"], "rating": 5}
-{"query": "I am having some swelling on my foot. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["foot"], "rating": 5}
-{"query": "I am having some swelling on my arm. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["arm"], "rating": 5}
-{"query": "I am having some swelling on my hand. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["hand"], "rating": 5}
-{"query": "I am having some swelling on my groin. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["groin"], "rating": 5}
-{"query": "I am having some swelling on my stomach. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["stomach"], "rating": 5}
-{"query": "I am having some swelling on my face. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["face"], "rating": 5}
-{"query": "I am having itchy skin on my neck. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["neck"], "rating":5}
-{"query": "I am having itchy skin on my leg. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["leg"], "rating":5}
-{"query": "I am having itchy skin on my foot. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["foot"], "rating":5}
-{"query": "I am having itchy skin on my arm. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["arm"], "rating":5}
-{"query": "I am having itchy skin on my hand. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["hand"], "rating":5}
-{"query": "I am having itchy skin on my groin. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["groin"], "rating":5}
-{"query": "I am having itchy skin on my stomach. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["stomach"], "rating":5}
-{"query": "I am having itchy skin on my face. What should I do?", "label": "other", "actions": "inquiry", "body_parts": ["face"], "rating":5}
+{"query": "I am having pain in my neck. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
+{"query": "I am having pain in my leg. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
+{"query": "I am having pain in my foot. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
+{"query": "I am having pain in my arm. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
+{"query": "I am having pain in my hand. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
+{"query": "I am having pain in my groin. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
+{"query": "I am having pain in my stomach. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
+{"query": "I am having pain in my face. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
+{"query": "I am having some swelling on my neck. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
+{"query": "I am having some swelling on my leg. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
+{"query": "I am having some swelling on my foot. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
+{"query": "I am having some swelling on my arm. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
+{"query": "I am having some swelling on my hand. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
+{"query": "I am having some swelling on my groin. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
+{"query": "I am having some swelling on my stomach. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
+{"query": "I am having some swelling on my face. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
+{"query": "I am having itchy skin on my neck. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating":5}
+{"query": "I am having itchy skin on my leg. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating":5}
+{"query": "I am having itchy skin on my foot. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating":5}
+{"query": "I am having itchy skin on my arm. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating":5}
+{"query": "I am having itchy skin on my hand. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["hand"], "rating":5}
+{"query": "I am having itchy skin on my groin. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating":5}
+{"query": "I am having itchy skin on my stomach. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating":5}
+{"query": "I am having itchy skin on my face. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["face"], "rating":5}
 
-{"query": "What are your office hours?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "Can I come by the office to pay my bill?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "What is the address for the clinic?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "What is the address for the doctor's office?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "What hours are you open?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "What is the due date for paying my current bill?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "I think there is a mistake in my bill. Can you help me resolve it?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "How do I sign up for the online patient portal?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "Can I leave a message for my doctor?", "label": "other", "actions": "inquiry", "rating": 5}
-{"query": "My doctor called me. Can I leave a reply here?", "label": "other", "actions": "inquiry", "rating":5}
+{"query": "What are your office hours?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "Can I come by the office to pay my bill?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "What is the address for the clinic?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "What is the address for the doctor's office?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "What hours are you open?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "What is the due date for paying my current bill?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "I think there is a mistake in my bill. Can you help me resolve it?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "How do I sign up for the online patient portal?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "Can I leave a message for my doctor?", "labels": ["other"], "actions": ["inquiry"], "rating": 5}
+{"query": "My doctor called me. Can I leave a reply here?", "labels": ["other"], "actions": ["inquiry"], "rating":5}
