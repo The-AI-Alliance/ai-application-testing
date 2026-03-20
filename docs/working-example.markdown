@@ -551,7 +551,9 @@ Hence, the first unique feature supported by the test suite is an environment va
 
 The integration tests (`integration-tests` target) run all 100% of the Q&A pairs, by default. 
 
-Hence, the sampling feature provides faster turn around for unit tests, but also some extra randomness, as a test prompt could cause a test failure, but it won't be triggered every time! In real development projects, the `integration-tests` target should be built as frequently as possibly (at least nightly?), since they are more likely to find such cases that the unit tests might miss.
+Hence, the sampling feature provides faster turn around for unit tests, but also some extra randomness, as a test prompt could cause a test failure, but it won't be triggered every time! In real development projects, the `integration-tests` target should be built as frequently as possibly (at least nightly?), since they are more likely to find such cases that the unit tests might miss. 
+
+On the other hand, many of the examples are very close to each other, either a few word changes or very similar phrasing, so it is likely that the ChatBot will respond the same way to each variant. So, in terms of _behavior_, the unit test coverage is better than the sample percentage might suggest.
 
 Second, an environment variable `ACCUMULATE_TEST_ERRORS` is used to trigger another feature flag, when the value is non-empty, meaning true. If true, it tells the test suite to run all of the test prompts and accumulate any errors, then report them at the end, rather than the normal approach of &ldquo;failing fast&rdquo; on the first error. The rationale for this feature is to make it easier to capture all the possible problems in one run, given how much time they take, and then work to address them at once. Sometimes common patterns or limitations are evident, e.g., a set of mislabeled Q&A pairs in a data file. This flag defaults to true in the `Makefile`. As we become more comfortable with writing and running the AI-specific unit tests, we may set the default to false for unit tests, returning to the familiar, fail-fast behavior, while keeping it enabled for integration tests. 
 
