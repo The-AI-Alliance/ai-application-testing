@@ -710,8 +710,8 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
 	  	--top-level-directory . ${APP_ARGS} && \
-	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
-	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
+	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \
+	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs
 
 # A special target for running one of the AI tests. Invoke as follows:
 # make TEST=path/to/test.py one-test-ai
