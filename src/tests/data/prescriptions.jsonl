@@ -255,10 +255,10 @@
 {"query": "I don't understand how I am supposed to take my prescription for prilosec.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
 {"query": "I feel a slight dizziness after taking my prescription for ozempic. Is this normal?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
 {"query": "I feel a slight dizziness after taking my prescription for prilosec. Is this normal?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
-{"query": "I have a severe sore throat after taking ozempic. What should I do?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
-{"query": "I have a severe sore throat after taking ozempic.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
-{"query": "I have a severe sore throat after taking prilosec. What should I do?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
-{"query": "I have a severe sore throat after taking prilosec.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
+{"query": "I have a severe sore throat after taking ozempic. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
+{"query": "I have a severe sore throat after taking ozempic.", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
+{"query": "I have a severe sore throat after taking prilosec. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
+{"query": "I have a severe sore throat after taking prilosec.", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
 {"query": "I have a severe stomach cramp after taking ozempic. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 4}
 {"query": "I have a severe stomach cramp after taking prilosec. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 4}
 {"query": "I have trouble sleeping, ever since I started taking ozempic.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}

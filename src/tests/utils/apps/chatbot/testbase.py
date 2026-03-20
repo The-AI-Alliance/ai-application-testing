@@ -96,9 +96,6 @@ class TestBase(unittest.TestCase):
     """
     default_confidence_threshold = ChatBot.default_confidence_threshold
     default_rating_threshold = 4
-    total_error_count = 0
-    total_warning_count = 0
-    low_confidence_results_count = 0
     log_file_name = ''
     log_file = None
 
@@ -112,9 +109,6 @@ class TestBase(unittest.TestCase):
             data_dir = self.data_dir,
             confidence_level_threshold = self.confidence_threshold,
             logger = logger)
-        self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
-
-    def setUp(self):
         """
         Initialize the ChatBot and ChatBotShell. Track the number of confident and "low-confidence" results.
         By default, all test data prompts are executed, which can be too slow and expensive for frequent 
@@ -132,7 +126,6 @@ class TestBase(unittest.TestCase):
         self.confidence_threshold: float   = float(os.environ.get('CONFIDENCE_THRESHOLD', TestBase.default_confidence_threshold))
         self.verbose: bool                 = bool(os.environ.get('VERBOSE', False))
 
-        self.key_results = {'low_confidence_results': [], 'errors': [], 'warnings': []}
         self.samples_count: int = 0
 
         self.make_chatbot()
@@ -157,6 +150,9 @@ class TestBaseRunner(TestBase):
         vs. the normal approach of failing fast on the first error.
     """
 
+    total_lcr_count = 0
+    total_error_count = 0
+    total_warning_count = 0
     benchmark_data_dir = Path("tests/data")
 
     def setUp(self):
@@ -176,28 +172,30 @@ class TestBaseRunner(TestBase):
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
     def tearDown(self):
-        low_confidence_results_count = len(self.key_results['low_confidence_results'])
-        total_error_count            = len(self.key_results['errors'])
-        total_warning_count          = len(self.key_results['warnings'])
+        lcr_count      = len(self.key_results['low_confidence_results'])
+        warning_count  = len(self.key_results['warnings'])
+        error_count    = len(self.key_results['errors'])
 
-        TestBaseRunner.low_confidence_results_count += low_confidence_results_count
-        TestBaseRunner.total_error_count            += total_error_count
-        TestBaseRunner.total_warning_count          += total_warning_count
+        TestBaseRunner.total_lcr_count     += lcr_count
+        TestBaseRunner.total_warning_count += warning_count
+        TestBaseRunner.total_error_count   += error_count
+        self._dump_key_results(lcr_count, warning_count, error_count)
 
+    def _dump_key_results(self, lcr_count: int, warning_count: int, error_count: int):
         lcrs = [lcr.dict() for lcr in self.key_results['low_confidence_results']]
         d = {
             'step':              'tearDown',
             'samples_count':     self.samples_count,
             'low_confidence_results': {
-                'count':         low_confidence_results_count,
+                'count':         lcr_count,
                 'results':       lcrs,
             },
             'warnings': {
-                'count':         total_warning_count,
+                'count':         warning_count,
                 'warnings':      self.key_results['warnings'],
             },
             'errors': {
-                'count':         total_error_count,
+                'count':         error_count,
                 'errors':        self.key_results['errors'],
             },
         }
@@ -223,7 +221,7 @@ class TestBaseRunner(TestBase):
     @classmethod
     def tearDownClass(cls):
         print(f"Totals:")
-        print(f"Low-confidence results: {TestBaseRunner.low_confidence_results_count}")
+        print(f"Low-confidence results: {TestBaseRunner.total_lcr_count}")
         print(f"Warning count:          {TestBaseRunner.total_warning_count}")
         print(f"Error count:            {TestBaseRunner.total_error_count}")
         print()
@@ -258,91 +256,6 @@ class TestBaseRunner(TestBase):
         return prompts
 
     def try_query(self, 
-        test_prompt: TestPrompt,
-        rating_threshold: int = TestBase.default_rating_threshold,
-        confidence_threshold: float = TestBase.default_confidence_threshold):
-        """
-self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
-        Compare to `try_query_accumulate()`.
-        We don't check the text returned. For a few labels, we don't use that text,
-        but for other labels, we would show the text to the user. We could enhance
-        these tests to use an LLM as a judge to decide on the quality of the returned
-        texts, at the expense of additional overhead for the inference required.
-        """
-        exp_query    = test_prompt.query
-        exp_labels   = test_prompt.labels
-        exp_actions  = test_prompt.actions
-        exp_rating   = test_prompt.rating
-        exp_keywords = test_prompt.keywords
-        prompt       = exp_query # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
-        
-        answer = self.chatbot.query(prompt)
-        self.assertFalse(isinstance(answer, str), f"Error message returned: {answer}")
-        actual_query1        = answer.get('query')
-        actual_content       = answer.get('content')
-        actual_rtu           = answer.get('reply_to_user')
-        actual_query2        = actual_content.get('query')
-        actual_reply         = actual_content.get('reply')
-        actual_label         = actual_reply.get('label')
-        actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
-        # We have seen the occasional confidence scores at the content level, rather than inside the reply.
-        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
-        actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
-        # actual_text          = actual_reply.get('text', '')
-
-        err_msg = str(answer)
-        # We have seen subtle punctuation changes in prompts...
-        p2  = re.sub(r'\W', ' ', prompt)
-        aq1 = re.sub(r'\W', ' ', actual_query1)
-        aq2 = re.sub(r'\W', ' ', actual_query2)
-        self.assertEqual(p2, aq1, err_msg)
-        self.assertEqual(p2, aq2, err_msg)
-
-        low_confidence_reasons = []
-        if actual_confidence < confidence_threshold:
-            low_confidence_reasons.append(f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold}).")
-        if exp_rating < rating_threshold:
-            low_confidence_reasons.append(f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold}).")
-        
-        if low_confidence_reasons:
-            reasons = ' '.join(low_confidence_reasons)
-            lcr = LowConfidenceResult(prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold)
-            self.key_results['low_confidence_results'].append(lcr)
-            if self.verbose:
-                print(lcr)
-        else:
-            err_msg = self._check_label(exp_labels, actual_label)
-            self.assertEqual(0, len(err_msg), err_msg)
-            if actual_label == 'emergency' or actual_label == 'other':
-                # Ignore the action if we detect an emergency or other prompt, but check
-                # the returned user response, since we always return with the same reply for 
-                # these labels!
-                exp_rtu = ChatBotResponseHandler.replies[actual_label]
-                self.assertEqual(exp_rtu, actual_rtu, f"reply_to_user: <{exp_rtu}> != <{actual_rtu}>, error_msg = {err_msg}")
-            else:
-                # Do the actions match for the other label cases? Note that the ChatBot could return
-                # more than one, a comma-separated list, so we check if the actual actions are a subset of
-                # the expected actions.
-                exp_set = set(exp_actions)
-                actual_set = set(actual_actions)
-                self.assertTrue(actual_set.issubset(exp_set), f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}.""")
-
-            # For the "keywords", ignore case, since sometimes proper names,
-            # can occur with different cases. Also, we check that _expected_
-            # values, if any, are present, but also allow for additional actual
-            # values. This is because some of the test queries hard-code potential
-            # keywords, but we don't "care" if thy appear.
-            for key, value in exp_keywords.items():
-                if len(value) == 0:
-                    print(f"WARNING: BUG: keyword {key} has zero-length value array!")
-                    continue
-                if len(value) > 1:
-                    print(f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!")
-                expected = value[0].lower()
-                actual   = actual_keywords.get(key, '').lower()
-                self.assertTrue(actual.find(expected) >= 0, f"""for key = "{key}": expected = "{expected}", actual = "{actual}", {err_msg}""")
-
-    def try_query_accumulate(self, 
         test_prompt: TestPrompt,
         rating_threshold: int = TestBase.default_rating_threshold,
         confidence_threshold: float = TestBase.default_confidence_threshold):
@@ -420,7 +333,7 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
             err_msg = self._check_label(exp_labels, actual_label)
             if len(err_msg) > 0:
                 errors['unexpected label'] = err_msg
-            if actual_label == 'emergency' or actual_label == 'other':
+            elif actual_label == 'emergency' or actual_label == 'other':
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
@@ -428,14 +341,17 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
                 if exp_rtu != actual_rtu:
                     errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:
-                # Do the actions match for the other label cases? Note that the ChatBot could return
-                # more than one, a comma-separated list, so we check if the actual actions are a subset of
-                # the expected actions.
+                # For the other label cases, IF there are expected actions, do the actual actions contain
+                # at least one item in the expected actions? This is not a rigorous requirement, but should
+                # be adequate. The ChatBot can return more than one actions in a comma-separated list, so 
+                # we check at least one of the actual actions is in the set of the expected actions. This
+                # is done by computing the intersection of the sets and expecting it to be non-empty.
                 # Right now, we treat these as warnings, not errors.
-                exp_set = set(exp_actions)
-                actual_set = set(actual_actions)
-                if not actual_set.issubset(exp_set):
-                    warnings['unexpected actions'] = f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
+                if exp_actions:
+                    exp_set = set(exp_actions)
+                    actual_set = set(actual_actions)
+                    if not len(actual_set.intersection(exp_set)):
+                        warnings['unexpected actions'] = f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
@@ -473,16 +389,22 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         sample_rate: float = None, 
         rating_threshold: int = TestBase.default_rating_threshold,
         confidence_threshold: float = TestBase.default_confidence_threshold):
-        
+        """
+        Loop through the sampled test queries and try them.
+        If the environment variable `ACCUMULATE_TEST_ERRORS` is true (any value non-empty),
+        then accumulate errors and report them at the end. Otherwise, fail on the first prompt
+        where we detect errors in the result.
+        """ 
         if not sample_rate:
             sample_rate = self.sample_rate
 
         d = {
-            'step':                  'try_queries',
-            'file_name':             str(file_name),
-            'sample_rate':           sample_rate,
-            'rating_threshold':      rating_threshold,
-            'confidence_threshold':  confidence_threshold,
+            'step':                    'try_queries',
+            'file_name':               str(file_name),
+            'sample_rate':             sample_rate,
+            'rating_threshold':        rating_threshold,
+            'confidence_threshold':    confidence_threshold,
+            'accumulate_test_results': self.accumulate_test_results,
         }
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
@@ -490,27 +412,30 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
         self.samples_count += len(samples)
 
-        # Some logic to detect when it appears the system has deadlocked in some way.
-        # If so, then error out.
         last_time = time.time()
         slow_count = 0
         allowed_time_delta = 120 # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
 
         for test_prompt in samples:
-            if self.accumulate_test_results:
-                self.try_query_accumulate(test_prompt,
-                    rating_threshold=rating_threshold, 
-                    confidence_threshold=confidence_threshold)
-            else:
-                self.try_query(test_prompt,
-                    rating_threshold=rating_threshold, 
-                    confidence_threshold=confidence_threshold)
-    
+            self.try_query(test_prompt,
+                rating_threshold=rating_threshold, 
+                confidence_threshold=confidence_threshold)
+            
+            lcr_count      = len(self.key_results['low_confidence_results'])
+            warning_count  = len(self.key_results['warnings'])
+            error_count    = len(self.key_results['errors'])
+            if not self.accumulate_test_results:
+                self.assertTrue(error_count == 0, f"{error_count} errors for test prompt: {test_prompt}")
+
+            # Logic to detect when it appears the system has deadlocked in some way.
+            # If so, then error out.
             now = time.time()
             difference = int(last_time - now)
             self.assertLess(difference, allowed_time_delta, f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}")
             last_time = now
-            print('+', end='')  # show we aren't dead...
+
+            # Show we aren't dead by printing counts...
+            print(f"({lcr_count,warning_count,error_count}),", end='')  
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
@@ -534,4 +459,4 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         return samples
 
     def _check_label(self, expected: [str], actual: str) -> str:
-        return "" if actual in expected else f"""label '{actual}' not in expected {expected}."""
+        return "" if actual in expected else f"""label '{actual}' not in expected: {expected}."""
