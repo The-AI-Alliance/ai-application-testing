@@ -738,6 +738,7 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 post-proc-test-logs:: 
 	@echo
 	@echo "Time-stamped JSONL log files were written to ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}. They may be empty!"
+	@echo "The corresponding '*.json' files (if any) were generated using 'jq' and target 'nice-ai-test-logs'. They are easier to read."
 	@echo
 	@${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs
 
@@ -747,17 +748,15 @@ show-test-logs::
 	@echo "TIP: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
 	@echo 
 
-.PHONY: nice-ai-test-logs do-nice-ai-test-logs show-nice-ai-test-logs
+.PHONY: nice-ai-test-logs
 
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-test-logs:: silent-command-check-jq do-nice-ai-test-logs show-nice-ai-test-logs
-do-nice-ai-test-logs::
+nice-ai-test-logs:: silent-command-check-jq 
 	@for f in ${SRC_DIR}/${TESTS_LOGS_DIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
 	  echo "writing $$ff:"; \
 	  jq . $$f > $$ff; \
 	done
-show-nice-ai-test-logs::
-	ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
+	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 
 integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
 
