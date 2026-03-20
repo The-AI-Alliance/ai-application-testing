@@ -259,8 +259,8 @@
 {"query": "I have a severe sore throat after taking ozempic.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
 {"query": "I have a severe sore throat after taking prilosec. What should I do?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
 {"query": "I have a severe sore throat after taking prilosec.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
-{"query": "I have a severe stomach cramp after taking ozempic. What should I do?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 4}
-{"query": "I have a severe stomach cramp after taking prilosec. What should I do?", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking ozempic. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 4}
+{"query": "I have a severe stomach cramp after taking prilosec. What should I do?", "labels": ["prescription","emergency"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 4}
 {"query": "I have trouble sleeping, ever since I started taking ozempic.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["ozempic"], "rating": 5}
 {"query": "I have trouble sleeping, ever since I started taking prilosec.", "labels": ["prescription"], "actions": ["inquiry"], "prescriptions":["prilosec"], "rating": 5}
 {"query": "I need a new supply of ozempic.", "labels": ["prescription"], "actions": ["refill"], "prescriptions":["ozempic"], "rating": 5, "reason": "The question explicitly requests a new supply of a prescription medication, which directly matches the refill category."}

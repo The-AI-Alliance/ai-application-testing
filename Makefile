@@ -676,7 +676,7 @@ note-all-tests::
 	@echo "examples sampled, etc., plus some other integration tests."
 	@echo
 
-test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai show-test-logs
+test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai 
 
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
@@ -710,8 +710,8 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
 	  	--top-level-directory . ${APP_ARGS} && \
-	      make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
-	    ! make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
+	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
+	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
 
 # A special target for running one of the AI tests. Invoke as follows:
 # make TEST=path/to/test.py one-test-ai
@@ -730,13 +730,19 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest ${TEST} && \
-	      make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs || \
-	    ! make TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. show-test-logs
+	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \
+	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs
 
-show-test-logs::
+.PHONY: post-proc-test-logs show-test-logs
+
+post-proc-test-logs:: 
 	@echo
 	@echo "Time-stamped JSONL log files were written to ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}. They may be empty!"
-	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}
+	@echo
+	@${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs
+
+show-test-logs::
+	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 	@echo
 	@echo "TIP: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
 	@echo 
@@ -744,7 +750,7 @@ show-test-logs::
 .PHONY: nice-ai-test-logs do-nice-ai-test-logs show-nice-ai-test-logs
 
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-test-logs:: command-check-jq do-nice-ai-test-logs show-nice-ai-test-logs
+nice-ai-test-logs:: silent-command-check-jq do-nice-ai-test-logs show-nice-ai-test-logs
 do-nice-ai-test-logs::
 	@for f in ${SRC_DIR}/${TESTS_LOGS_DIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
 	  echo "writing $$ff:"; \
@@ -803,8 +809,10 @@ install-jq:: help-command-jq
 
 # Check if a command is on the path.
 command-check-%:
-	@cmd=${@:command-check-%=%} && command -v $$cmd > /dev/null || ! echo "ERROR: ${command_check_message}" || exit 1
+	@cmd=${@:command-check-%=%} && ${MAKE} silent-$@ || ! echo "ERROR: ${command_check_message}" || exit 1
 
+silent-command-check-%:
+	@cmd=${@:silent-command-check-%=%} && command -v $$cmd > /dev/null
 
 # The next section of this Makefile includes some convenience targets for working 
 # with the "llm" CLI tool. It is NOT required to install and use this tool.

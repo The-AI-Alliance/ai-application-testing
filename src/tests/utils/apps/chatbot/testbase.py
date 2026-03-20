@@ -180,9 +180,9 @@ class TestBaseRunner(TestBase):
         total_error_count            = len(self.key_results['errors'])
         total_warning_count          = len(self.key_results['warnings'])
 
-        TestBase.low_confidence_results_count += low_confidence_results_count
-        TestBase.total_error_count            += total_error_count
-        TestBase.total_warning_count          += total_warning_count
+        TestBaseRunner.low_confidence_results_count += low_confidence_results_count
+        TestBaseRunner.total_error_count            += total_error_count
+        TestBaseRunner.total_warning_count          += total_warning_count
 
         lcrs = [lcr.dict() for lcr in self.key_results['low_confidence_results']]
         d = {
@@ -223,12 +223,13 @@ class TestBaseRunner(TestBase):
     @classmethod
     def tearDownClass(cls):
         print(f"Totals:")
-        print(f"Low-confidence results: {TestBase.low_confidence_results_count}")
-        print(f"Warning count:          {TestBase.total_warning_count}")
-        print(f"Error count:            {TestBase.total_error_count}")
+        print(f"Low-confidence results: {TestBaseRunner.low_confidence_results_count}")
+        print(f"Warning count:          {TestBaseRunner.total_warning_count}")
+        print(f"Error count:            {TestBaseRunner.total_error_count}")
         print()
-        if TestBase.total_error_count:
-            raise AssertionError(f"{TestBase.total_error_count} errors reported!")
+        TestBaseRunner.log_file.close()
+        if TestBaseRunner.total_error_count:
+            raise AssertionError(f"{TestBaseRunner.total_error_count} errors reported!")
 
     def load_test_data(self, path: Path) -> [TestPrompt]:
         if not path.exists():
@@ -283,7 +284,7 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
-        actual_actions       = actual_reply.get('actions', '')
+        actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
         # We have seen the occasional confidence scores at the content level, rather than inside the reply.
         actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
         actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
@@ -324,7 +325,7 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
                 # the expected actions.
                 exp_set = set(exp_actions)
                 actual_set = set(actual_actions)
-                self.assertTrue(actual_set.issubset(exp_set), f"""At least one actual action "{actual_actions}" not found in the allowed (expected) actions = "{exp_actions}", error_msg = {err_msg}""")
+                self.assertTrue(actual_set.issubset(exp_set), f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}.""")
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
@@ -388,7 +389,7 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         actual_query2        = actual_content.get('query')
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
-        actual_actions       = actual_reply.get('actions', '')
+        actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
         actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
         # We have seen the occasional confidence scores at the content level, rather than inside the reply.
         actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
@@ -434,7 +435,7 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
                 exp_set = set(exp_actions)
                 actual_set = set(actual_actions)
                 if not actual_set.issubset(exp_set):
-                    warnings['unexpected actions'] = f"""At least one actual action "{actual_actions}" not found in the allowed (expected) actions = "{exp_actions}", error_msg = {err_msg}"""
+                    warnings['unexpected actions'] = f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
 
             # For the "keywords", ignore case, since sometimes proper names,
             # can occur with different cases. Also, we check that _expected_
@@ -533,4 +534,4 @@ self.        See src/apps/prompts/templates/patient-chatbot.yaml for "requiremen
         return samples
 
     def _check_label(self, expected: [str], actual: str) -> str:
-        return "" if actual in expected else f"label {actual} not in expected {expected}."
+        return "" if actual in expected else f"""label '{actual}' not in expected {expected}."""

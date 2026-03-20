@@ -8,20 +8,20 @@
 {"query": "I need to reschedule my appointment for a flu vaccine.", "labels": ["appointment"], "actions": ["schedule"], "vaccines": ["flu"], "rating": 5}
 {"query": "I need to reschedule my appointment for a COVID vaccine.", "labels": ["appointment"], "actions": ["schedule"], "vaccines": ["COVID"], "rating": 5}
 
-{"query": "I am having pain in my neck. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
-{"query": "I am having pain in my leg. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
-{"query": "I am having pain in my foot. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
-{"query": "I am having pain in my arm. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
-{"query": "I am having pain in my hand. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
-{"query": "I am having pain in my groin. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
-{"query": "I am having pain in my stomach. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
-{"query": "I am having pain in my face. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
+{"query": "I am having pain in my neck. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
+{"query": "I am having pain in my leg. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
+{"query": "I am having pain in my foot. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
+{"query": "I am having pain in my arm. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
+{"query": "I am having pain in my hand. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
+{"query": "I am having pain in my groin. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
+{"query": "I am having pain in my stomach. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
+{"query": "I am having pain in my face. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
 
-{"query": "I am having some swelling in my neck. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
-{"query": "I am having some swelling in my leg. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
-{"query": "I am having some swelling in my foot. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
-{"query": "I am having some swelling in my arm. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
-{"query": "I am having some swelling in my hand. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
-{"query": "I am having some swelling in my groin. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
-{"query": "I am having some swelling in my stomach. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
-{"query": "I am having some swelling in my face. I think I need a referral to a specialist.", "labels": ["appointment"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
+{"query": "I am having some swelling in my neck. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
+{"query": "I am having some swelling in my leg. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
+{"query": "I am having some swelling in my foot. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
+{"query": "I am having some swelling in my arm. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
+{"query": "I am having some swelling in my hand. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["hand"], "rating": 5}
+{"query": "I am having some swelling in my groin. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
+{"query": "I am having some swelling in my stomach. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
+{"query": "I am having some swelling in my face. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
