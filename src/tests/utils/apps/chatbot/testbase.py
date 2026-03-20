@@ -109,6 +109,9 @@ class TestBase(unittest.TestCase):
             data_dir = self.data_dir,
             confidence_level_threshold = self.confidence_threshold,
             logger = logger)
+        self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
+
+    def setUp(self):
         """
         Initialize the ChatBot and ChatBotShell. Track the number of confident and "low-confidence" results.
         By default, all test data prompts are executed, which can be too slow and expensive for frequent 
@@ -127,6 +130,7 @@ class TestBase(unittest.TestCase):
         self.verbose: bool                 = bool(os.environ.get('VERBOSE', False))
 
         self.samples_count: int = 0
+        self.key_results = {'low_confidence_results': [], 'errors': [], 'warnings': []}
 
         self.make_chatbot()
 
@@ -418,7 +422,7 @@ class TestBaseRunner(TestBase):
 
         for test_prompt in samples:
             self.try_query(test_prompt,
-                rating_threshold=rating_threshold, 
+                rating_threshold=rating_threshold,
                 confidence_threshold=confidence_threshold)
             
             lcr_count      = len(self.key_results['low_confidence_results'])
@@ -435,7 +439,7 @@ class TestBaseRunner(TestBase):
             last_time = now
 
             # Show we aren't dead by printing counts...
-            print(f"({lcr_count,warning_count,error_count}),", end='')  
+            print(f"({lcr_count},{warning_count},{error_count}),", end='')  
 
     def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
         """
