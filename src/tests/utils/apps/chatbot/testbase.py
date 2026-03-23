@@ -224,7 +224,7 @@ class TestBaseRunner(TestBase):
 
     @classmethod
     def tearDownClass(cls):
-        print(f"Totals:")
+        print(f"\nTotals:")
         print(f"Low-confidence results: {TestBaseRunner.total_lcr_count}")
         print(f"Warning count:          {TestBaseRunner.total_warning_count}")
         print(f"Error count:            {TestBaseRunner.total_error_count}")
