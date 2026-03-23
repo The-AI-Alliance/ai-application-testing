@@ -44,6 +44,6 @@ Check any of these boxes on the form that look interesting. In particular, _Eval
 
 ## Notes on Improving this User Guide
 
-The sources for this website are in the GitHub repository's [`docs`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/docs){:target="repo-docs"} directory. 
+The sources for this guide are in the GitHub repository's [`docs`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/docs){:target="repo-docs"} directory. 
 
-Notice that every page on this website has an _Edit this page on GitHub_ link, which makes it easy to view a page's source, make edits, and submit a PR! This is the easiest way to help us fix typos and make other single-page improvements.
+Notice that every page in this guide has an _Edit this page on GitHub_ link, which makes it easy to view a page's source, make edits, and submit a PR! This is the easiest way to help us fix typos and make other single-page improvements.

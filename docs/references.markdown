@@ -6,7 +6,7 @@ nav_order: 80
 
 # References
 
-References for more details on testing, especially in the AI context, and other topics. Note that outside references to particular tools that are mentioned in this web site are not repeated here. 
+References for more details on testing, especially in the AI context, and other topics. Note that most of the outside references to particular tools that are mentioned elsewhere in this guide site are not repeated here. 
 
 <details open markdown="block">
   <summary>
@@ -19,7 +19,7 @@ References for more details on testing, especially in the AI context, and other 
 
 ## Adrian Cockcroft
 
-[Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this website. See also [Dean Wampler](#dean-wampler) and the discussion in [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems).
+[Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this guide. See also [Dean Wampler](#dean-wampler) and the discussion in [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems).
 
 ## AI for Education
 

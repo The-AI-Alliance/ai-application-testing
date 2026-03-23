@@ -14,12 +14,12 @@ has_children: false
 >
 > _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI agent applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
 
-Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Agent Applications**. We are building the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
+Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Agent Applications**. This guide documents the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
 {: note}
 > **Note:**
 >
-> This site isn't about using AI to generate conventional tests (or code). You can find many online resources about that topic. Instead, this site focuses on the problem of how to do testing of any kind when an application contains generative AI components, given the nondeterminism they introduce.
+> This guide isn't about using AI to generate conventional tests (or code). You can find many online resources about that topic. Instead, this guide focuses on the problem of how to do testing of any kind when an application contains generative AI components, given the nondeterminism they introduce.
 
 ## The Challenge We Face
 
@@ -67,7 +67,7 @@ Then we discuss [Architecture and Design]({{site.baseurl}}/arch-design) concepts
 * [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/): TDD is really a _design_ methodology as much as a _testing_ discipline, despite the name, promoting incremental delivery and iterative development. What tools are provided by TDD for attacking the AI testing challenge? What do AI-specific tests look like in a TDD context?
 * [Component Design]({{site.baseurl}}/arch-design/component-design): How do classic principles of _coupling_ and _cohesion_ help us encapsulate generative AI behaviors in ways that make them easier to develop, test, and integrate into whole systems?
 
-With this background on architecture and design principles, we move to the main focus of this site, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
+With this background, we move to the main focus of this guide, [Testing Strategies and Techniques]({{site.baseurl}}/testing-strategies/) that ensure our confidence in AI-enabled applications:
 
 * [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks): Adapting [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} techniques, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}, for [Unit Testing] and similarly for [Integration Testing]({{site.glossaryurl}}/#integration-test){:target="_glossary"} and [Acceptance Testing]({{site.glossaryurl}}/#acceptance-test){:target="_glossary"}.
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.

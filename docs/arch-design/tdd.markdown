@@ -180,7 +180,7 @@ We tried both system prompts with a number of user prompts (details below) using
 > 
 > 1. These models are available in different sizes. We chose sizes that should work for most developer workstations, but consider smaller or larger versions depending on your hardware resources. Production deployments may require larger versions.
 > 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of each model instead.
-> 1. Sample results for all the examples in this site and for some of the models listed above can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
+> 1. Sample results for all the examples in this guide and for some of the models listed above can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
 
 With our system prompts and model choices, let's try some queries.
 
