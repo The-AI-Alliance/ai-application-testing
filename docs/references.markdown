@@ -213,9 +213,15 @@ YouTube videos about SDD:
 
 See also [Mellea](#mellea).
 
+## Stanford 
+
+[What Makes a Good AI Benchmark?](https://hai.stanford.edu/policy/what-makes-a-good-ai-benchmark){:target="hai"} from Stanford's Human-Centered Artificial Intelligence project provides a careful analysis of the qualities of good benchmarks, along with assessments of many well-known, public benchmarks. See also their [BetterBench](https://betterbench.stanford.edu/){:target="bb"} repository of assessments.
+
+Some of the criteria pertain to documentation, ease of adoption, and feedback mechanisms, which may be less important for small-scale and especially private benchmarks, like _unit benchmarks_ discussed in this guide. Other criteria are more applicable, such as clearly defining the goals of the benchmark, how those goals are implemented by the benchmark, how to interpret the results, how involved were domain experts in constructing the benchmark, etc.
+
 ## University of Tübingen
 
-[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details.
+[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
 
 ## Unsloth
 

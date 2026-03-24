@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing Agents
-nav_order: 360
+nav_order: 350
 parent: Testing Strategies and Techniques
 has_children: false
 ---
@@ -17,21 +17,28 @@ has_children: false
 {:toc}
 </details>
 
-Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. This chapter explores the requirements and available approaches.
+So far in this guide, we have focused on testing AI-enabled applications in a generic sense, not focusing on specific concerns for testing LLMs, agents, or other application patterns. This chapter discusses agent testing.
+
+[Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are a broad class of software components with behaviors  that are complementary to the capabilities that models themselves provide. They range from relatively simple to very sophisticated. The healthcare ChatBot application is relatively simple. It adds context information to user queries to create prompts and it uses custom handling of the responses. For most use cases, instead of returning the generated text to the user, it presents a message from a limited set of predefined messages, so we have better control over potentially &ldquo;suboptimal&rdquo; generated responses. 
+
+More sophisticated agents include planning, adjustment of the plan based on results (i.e., _course correction_), reasoning, and even autonomous action (when permitted). An example of a more sophisticated agent is the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="_blank"}, which demonstrates an important agent design pattern, <em>Deep Research Agents</em>, with several example applications. (It is built on [LastMile AI's](https://www.lastmileai.dev/){:target="lastmile"} agent framework, [MCP Agent](https://github.com/lastmile-ai/mcp-agent){:target="mcp-agent"}.) An example of an even more advanced agent is [OpenClaw](https://openclaw.ai).
+
+Agents use the same _de facto_ standard access APIs that LLMs use, promoting uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents has led to an explosion of new benchmark suites, both for general-purpose and domain-specific evaluation. This trend is driving efforts to standardize how benchmarks are defined and executed.
+
+[^1]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
 
 {: .todo}
 > **TODO:** 
 > 
-> This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
-
+> This chapter needs additional contributions. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 <a id="highlights"></a>
 
 {: .tip}
 > **Highlights:**
 >
-> TODO
-
+> 1. Agent testing uses the same tools and techniques (e.g., benchmarks) that have been used for models themselves.
+> 1. The diversity of agent behaviors has led to an explosion of general-purpose and domain-specific benchmarks, as well as some new tools. This trend is driving interest in standardizing how benchmarks are written and executed.
 
 
 {: .todo}
@@ -41,10 +48,24 @@ Agents are inherently more complex than application patterns that use &ldquo;con
 > 1. Catalog the unique requirements for agent testing.
 > 1. Provide specific examples of how to use those concepts.
 
-A list of agent-related tools and techniques to investigate:
+## The Challenges of Writing Agent Evaluations
 
-* Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents. See also [Anthropic]({{site.referencesurl}}//#anthropic){:target="_reference"}.
+Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, including new requirements for evaluations that didn't exist when we only focused on evaluating models. Here is a summary of the key ideas.
 
+* **Agents are multi-turn:** They can make several invocations of models, tools, and other agents to accomplish their goals. Analysis of early responses can lead to refining the initial plan, including what work to do next. LLM evaluations assumed a single invocation and response. So far, we have relied on unit benchmarks with Q&A pairs, but the complexity of agent behaviors make this approach insufficient, as mentioned in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#how-many-qa-pairs-do-we-need) chapter.
+* **Automated Evaluations are mandatory:** They make the same argument that software engineers have known for decades, that without automated tests to catch regressions and ensure continued, acceptable performance as the system is evolved, progress will quickly grind to a halt.
+
+MORE TODO...
+
+
+
+
+### TODO: Incorporate Ideas from the Following Sources
+
+* Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents.
+
+* CUBE Standard and Harness
+* https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/
 * PyTorch OpenEnv:
     * https://meta-pytorch.org/OpenEnv/
     * https://huggingface.co/blog/openenv

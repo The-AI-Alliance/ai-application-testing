@@ -270,7 +270,6 @@ To automatically check the quality of synthetic Q&A test pairs, including how we
 
 Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other insignificant differences. This convenient certainty won't happen very often, especially when we explore edge cases.
 
-
 ## Try This Yourself!
 
 Our examples are written as Python tools. They are run using `make` commands. 

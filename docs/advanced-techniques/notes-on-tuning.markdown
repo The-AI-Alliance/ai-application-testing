@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Notes on Tuning
-nav_order: 425
+title: Appendix - Notes on Tuning
+nav_order: 490
 parent: Advanced Techniques
 has_children: false
 ---
 
-# Notes on Tuning
+# Appendix - Notes on Tuning
 
 <details open markdown="block">
   <summary>

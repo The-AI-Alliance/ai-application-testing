@@ -66,7 +66,10 @@ We will continue to follow this strategy:
 
 1. Identify a new _unit_ (behavior) to implement.
 1. Write one or more new unit benchmarks for it, including...
-  1. [Generate Synthetic Data]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"} for a separate data set of Q&A pairs for the benchmark. 
+    1. Write [Prompts]({{site.glossaryurl}}/#prompt){:target="_glossary"} for the unit. For the generative AI parts of an application, the prompts become the most important specification of the requirements. (We will explore this more in [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/).) Several related prompts will be needed per unit:
+        1. A prompt for data synthesis.
+        1. A prompt for directing runtime behavior (integrated with all the other unit prompts into one runtime prompt).
+    1. [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"} for a separate data set of Q&A pairs for the benchmark. 
 1. Write whatever application logic is required for the unit, including suitable prompts for the generative models involved.
 
 We will focus on the first two steps. The third step will be covered in [A Working Example]({{site.baseurl}}/working-example).
@@ -79,7 +82,7 @@ In addition to synthesizing Q&A pairs for the two behaviors we already have, we 
 
 The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a tool [`src/tools/unit-benchmark-data-synthesis.py`]({{site.gh_edit_repository}}/blob/main/src/tools/unit-benchmark-data-synthesis.py/){:target="_blank"} that uses an LLM to generate Q&A pairs for the three unit benchmarks, each corresponding to the `prompt` from the following template files[^3]:
 
-[^3]: Recall we said previously that these templates files are designed to be compatible with the `llm` CLI tool.
+[^3]: Recall we said previously that these templates are designed to be compatible with the `llm` CLI tool.
 
 | Unit Benchmark | Template File | 
 | :------------- | :------------ | 
@@ -139,31 +142,40 @@ In the answer,
 
 The other two prompts are similarly worded for their requirements.
 
+{: .note}
+> **NOTE:** The runtime prompt template used by the ChatBot application, [`patient-chatbot.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/patient-chatbot.yaml){:target="_blank"}, integrates these three behavioral units and additional behaviors.
+
 ### How Many Q&A Pairs Do We Need?
 
-The prompts above ask for _at least 100_ Q&A pairs. This is an arbitrary number. The well-known, broad benchmarks for AI often have many thousands of Q&A pairs (or their equivalents).
+The prompts above ask for _at least 100_ Q&A pairs. This is an arbitrary number. The well-known, broad benchmarks for AI often have thousands to hundreds of thousands of Q&A pairs (or their equivalents). At the same time, benchmarks that focus on more involved tasks, rather than &ldquo;simple&rdquo; questions and answers, will have a relatively smaller number of those tasks, but each one will be much more sophisticated compared to benchmarks using Q&A pairs. Also, the broader the scope of the benchmark, the more Q&A pairs (or task examples) are required. A general high-school math benchmark will need a lot more Q&A pairs than a benchmark focused on Boolean algebra, for example. For now, we will focus on benchmarks that utilize Q&A pairs, returning to more sophisticated benchmarks in [Testing Agents]({{site.baseulr}}/testing-strategies/testing-agents/).
 
-For fine-grained _unit_ benchmarks, a suitable number could vary between tens of pairs, for simpler test scenarios, to hundreds of pairs for &ldquo;average&rdquo; complexity test scenarios, to thousands of pairs for complex test scenarios. The optimal number will also vary from one unit benchmark to another. 
+So, 100 is a good starting point, but you should experiment to determine what works best for each unit in your applications. Some points to consider: 
 
-Because [Integration Benchmarks]({{site.glossaryurl}}/#integration-benchmark){:target="_glossary"} and [Acceptance Benchmarks]({{site.glossaryurl}}/#acceptance-benchmark){:target="_glossary"} have broader scope, by design, they will usually require relatively larger data sets.
+* How complex and varied is the behavior in this unit?
+    * Is the behavior so broad that I should consider decomposing it into more fine-grained units?
+* For the Q&A pairs available for this unit benchmark (e.g., the ones will generate below):
+    * How many of them are very similar and potentially redundant?
+        * Be careful of similarities that are more significant than they appear. In our ChatBot example, one drug vs. another might require very different answers to questions that are identical except for the name of the drug. Similarly, a sharp pain in the chest might indicate a medical emergency, more so than a sharp pain in a foot.
+    * How well do they cover the possibilities for this unit?
+* If I add incrementally more Q&A pairs, at one point do the evaluation results appear to plateau?
 
-There aren't any hard and fast rules; we will have to experiment to determine what works best for each case. More specifically, as we study the results of a particular benchmark's runs, what number of pairs gives us sufficient, comprehensive coverage and therefore confidence that this benchmark thoroughly exercises the behavior? We can always err on the side of too much test data, but we may run into overhead concerns. 
+Ultimately, we want just enough pairs to give us comprehensive coverage and therefore confidence that the benchmark thoroughly exercises the behavior. Err on the side of too much test data vs. too little, but pay attention to the testing overhead. 
 
 ### Thinking about Overhead
 
 What about the cost of running lots of examples through an LLM? Say we have 100 examples in each fine-grained unit benchmark and we have 100 of those benchmarks. How long will each full test run take for those 10,000 invocations and how expensive will they be? We will have to benchmark these runs to answer these questions. If we use a commercial service for model inference during tests, we may need to watch those costs carefully.
 
-For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. Instantaneous would be ideal, but running unit benchmarks are likely to be much slower, especially for larger data sets and doing inference during tests with larger models. Using a hosted service for inference vs. local inference _may_ be slower, but if the development machine is hitting resource limits when doing inference, it may be slower than going over the Internet for a hosted-service inference call!
+For traditional unit testing, our development tools usually only invoke the unit tests associated with the source files that have just changed, saving full test runs for occasional purposes, such as part of the PR (pull request) process in GitHub. This provides near instantaneous feedback. For this to work, the development environment has to know through code analysis which unit tests exercise the code being modified. This optimization not only saves compute resources, it makes the cycle of editing and testing much faster. 
 
-When we [discuss integration]({{site.baseurl}}/working-example/#integration-into-test-suites) of our benchmarks into our testing suites, like PyTest, We can try to ensure that only a relevant subset of them are invoked for incremental feature changes, while the full suite is invoked less frequently, such as during PR (pull request) processes. 
+Running unit benchmarks will be much slower, especially for more sophisticated agents and when using larger models for inference. Using local inference saves costs during testing vs. paying for an inference service, but it can be slower than using an optimized service.
 
-Similarly, runs of the integration and acceptance tests, which are relatively slow and expensive, are typically run a few times per day. 
+In the discussion of [using benchmarks as automated tests]({{site.baseurl}}/working-example/#automated-testing-practical-enhancements), we use a strategy of [sampling the Q&A pairs in unit tests]({{site.baseurl}}/working-example/#dealing-with-slow-and-expensive-inference) to make them run faster, with the downside of losing some coverage. The integration test suite runs the same tests with all pairs (plus other tests). It could also use the version of the model that will be deployed to production, but if this is still too expensive, consider running the same tests with the production model as part of the acceptance tests, which ultimate decide when features are &ldquo;done&rdquo;.
 
-To reduce testing time and costs, we will want to experiment with model choices, both for the production deployments and for development purposes. For example, if we have picked a production version of a model, there may be smaller versions we can use successfully during development. We might have to trade off the quality of responses, as long as the results during testing remain &ldquo;good enough&rdquo;. 
+For incremental development cycles, more fine-grained units (i.e., use cases) will be better, as they will need fewer Q&A pairs for coverage. Currently, there isn't an automated way for your development environment or your testing framework to know which unit benchmarks to run while you are working on a particular unit of behavior. However, the CLIs for all testing tools let you specify individual test files to run.
 
-However, since acceptance tests are designed to confirm that a feature is working in real production scenarios (or as close to those as possible in our test environment), we must use the full production models for acceptance tests. 
+To further reduce testing time and costs, experiment with model choices, too. Pick a model from a model family with a  parameter count that gives excellent performance in production deployments. Then look for a version that works sufficiently well during development, but with less overhead. For example, a [Quantized]({{site.glossaryurl}}/#quantization){:target="_glossary"} version of the production model or smaller parameter-count versions in the same model family. You could use models from different families, but you will have wider variation in behavior between testing and production, making your testing a less reliable predictor of production behavior.
 
-### Running the Data Synthesis Tool
+## Running the Data Synthesis Tool
 
 Try running this tool yourself using `make`. If you haven't done so, follow the setup instructions in the [Try It Yourself!]({{site.baseurl}}/arch-design/tdd/#try-it-yourself) section in the [Test-Driven Development]({{site.baseurl}}/arch-design/tdd/) chapter. The instructions are also the project repository's [README]({{site.gh_edit_repository}}/){:target="_blank"}. 
 
@@ -299,6 +311,12 @@ What other domains would you like to see here?
 
 <a id="other-tools"/>
 
+## Evaluating Benchmark Quality
+
+See [What Makes a Good AI Benchmark?](https://hai.stanford.edu/policy/what-makes-a-good-ai-benchmark){:target="hai"} from Stanford's Human-Centered Artificial Intelligence project for a careful analysis of the qualities of good benchmarks, along with assessments of many well-known, public benchmarks. See also their [BetterBench](https://betterbench.stanford.edu/){:target="bb"} repository of assessments.
+
+Some of the criteria pertain to documentation, ease of adoption, and feedback mechanisms, which may be less important for small-scale and especially private benchmarks, like _unit benchmarks_ discussed here. Other criteria are more applicable, such as clearly defining the goals of the benchmark, how those goals are implemented by the benchmark, how to interpret the results, how involved were domain experts in constructing the benchmark, etc.
+
 ## Other Tools for Unit Benchmarks
 
 We are using relatively-simple, custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are some additional tools to explore. 
@@ -346,12 +364,7 @@ Synthetic Data Kit uses one or more documents you specify as sources of informat
 
 ### More Advanced Benchmark and Evaluation Tools
 
-Similarly, there are other general-purpose tools for authoring, managing, and running benchmarks and evaluations. 
-
-{: .todo}
-> **TODO:** 
-> 
-> The following sections are placeholders. We intend to provide more coverage of these tools, as well as add new tools as we become aware of them. [Contributions are welcome!]({{site.baseurl}}/contributing). See [issue #22](https://github.com/The-AI-Alliance/ai-application-testing/issues/22){:target="_blank"} for details. Other [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues/){:target="_blank"} discuss particular tools on our radar for investigation.
+Similarly, there are other general-purpose tools for authoring, managing, and running benchmarks and evaluations, many with more sophisticated capabilities than we can discuss here.. 
 
 #### PleurAI Intellagent
 
@@ -381,8 +394,6 @@ Be careful to check the licenses for any benchmarks or tools you use, as some of
 
 [Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
 
-While use of benchmarks with synthetic data generation of Q&A pairs is standard practice, see [this &ldquo;Beyond Benchmarks&rdquo; discussion]({{site.referencesurl}}/#university-of-tübingen) about a possible alternative approach.
-
 ## Experiments to Try
 
 There is a lot to explore here:
@@ -390,8 +401,8 @@ There is a lot to explore here:
 * Study the Q&A pairs generated. How might you refine the prompts to be more effective at generating good data?
 * One way to assist studying the data is to ask the model to also generate a _confidence_ rating for how good it thinks the Q&A pair is for the target unit benchmark and how good it thinks the answer is for the question. Try this experiment using a scale of 1-5, where one is low confidence and five is high confidence. Make sure to also ask for an explanation for why it provided that rating. Review the Q&A pairs with low confidence scores. Should they be discarded automatically below a certain threshold? Do they instead suggest good corner cases for further exploration? If there are a lot of low confidence pairs in the output, could the prompt be improved to provide better clarity about the desired output data set?  
 * Try different runs where you vary the requested number of Q&A pairs in the prompts from tens of pairs up to many hundreds. What are the impacts for compute resources and time required? Look through the data sets. Can you develop an intuition about which sizes are sufficient large for good coverage? Is there an approximate size beyond which lots of redundancy is apparent? Save these outputs for revisiting in subsequent chapters. 
-* Add more unit benchmarks for new behaviors. For example, explore requests for referrals to specialists.
-* Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;, like Llama.
+* Add more unit benchmarks for new behaviors. For example, explore queries about appointments or requests for referrals to specialists.
+* Try other models. See how bigger and smaller models perform, especially within the same &ldquo;family&rdquo;.
 * How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling. In other words, our _classifier_ only returns one label for the prompt. What if it returned a list of labels and a _confidence_ score for each one? Because of _cross pollination_, all the prompts used to generate Q&A pairs for all the unit benchmarks should be modified to support one or more responses (e.g., the requested JSONL format of the &ldquo;answers&rdquo;). However, treat testing for this specific situation as a new unit benchmark.
 * For all of the above, note the resource requirements, such as execution times, hardware resources required for the models, service costs if you use an inference service, etc.
 
