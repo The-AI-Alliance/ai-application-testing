@@ -20,16 +20,3 @@ If you have any questions or concerns about this effort, please contact us at [c
 ## About Guide
 
 This guide is built with [GitHub Pages](https://pages.github.com/){:target="github-pages"}, which uses [Jekyll](https://github.com/jekyll/jekyll){:target="gh-jekyll"} to serve the website. We use the [Just the Docs](https://just-the-docs.github.io/just-the-docs/){:target="just-the-docs"} Jekyll theme.
-
-### Version History
-
-| Version  | Date       |
-| :------- | :--------- |
-| V0.3.2   | 2025-11-23 |
-| V0.3.0   | 2025-10-12 |
-| V0.2.1   | 2025-09-27 |
-| V0.2.0   | 2025-09-11 |
-| V0.1.2   | 2025-08-21 |
-| V0.1.0   | 2025-07-16 |
-| V0.0.6   | 2025-06-03 |
-| V0.0.1   | 2024-10-25 |
