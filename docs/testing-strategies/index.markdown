@@ -16,7 +16,9 @@ We emphasize concepts in these chapters. For the details of applying them to aut
 Finally, the end of each chapter has an **Experiments to Try** section for further exploration.
 
 {: .tip}
-> **TIP:** These chapters focus on ideas and the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies them to a realistic, generative AI project.
+> **TIPS:** 
+> * These user guide chapters focus on concepts, with the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies them to a demonstration project that uses generative AI.
+> * Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides a valuable overview of _evaluation_ concepts, with advanced guidance on testing [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}. It is recommended reading. (See also the [References]({{site.baseurl}}/references/)).
 
 {: .note }
 > **NOTE:** 

@@ -37,7 +37,7 @@ Agents use the same _de facto_ standard access APIs that LLMs use, promoting uni
 {: .tip}
 > **Highlights:**
 >
-> 1. Agent testing uses the same tools and techniques (e.g., benchmarks) that have been used for models themselves.
+> 1. Agent testing can use the same tools and techniques (e.g., benchmarks) that have been used for models themselves, but more advanced agent workflows require additional tools beyond simple Q&A pairs.
 > 1. The diversity of agent behaviors has led to an explosion of general-purpose and domain-specific benchmarks, as well as some new tools. This trend is driving interest in standardizing how benchmarks are written and executed.
 
 
@@ -50,19 +50,28 @@ Agents use the same _de facto_ standard access APIs that LLMs use, promoting uni
 
 ## The Challenges of Writing Agent Evaluations
 
-Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, including new requirements for evaluations that didn't exist when we only focused on evaluating models. Here is a summary of the key ideas.
+Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, including new requirements for evaluations that didn't exist when we only focused on evaluating models. Here is a summary of the key points.
 
-* **Agents are multi-turn:** They can make several invocations of models, tools, and other agents to accomplish their goals. Analysis of early responses can lead to refining the initial plan, including what work to do next. LLM evaluations assumed a single invocation and response. So far, we have relied on unit benchmarks with Q&A pairs, but the complexity of agent behaviors make this approach insufficient, as mentioned in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#how-many-qa-pairs-do-we-need) chapter.
-* **Automated Evaluations are mandatory:** They make the same argument that software engineers have known for decades, that without automated tests to catch regressions and ensure continued, acceptable performance as the system is evolved, progress will quickly grind to a halt.
+* **Agents are multi-turn:** Agents can make several invocations of models, tools, and other agents to accomplish their goals, including several round trips. Analysis of early responses can lead to refining the initial plan, including what work to do next. LLM evaluations assumed a single invocation and response. So far, we have relied on unit benchmarks with Q&A pairs, but the complexity of agent behaviors make this approach insufficient, as we mentioned in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/#how-many-qa-pairs-do-we-need) chapter.
+* **Automated evaluations are mandatory:** Software engineers have known for decades that without automated tests to catch regressions and ensure continued, acceptable performance as the system is evolved, progress will quickly grind to a halt. The same argument is true for agent evaluations. Another benefit of automated evaluations is the ability to try new versions of models or new model families with relative ease.
+* **Tools for agent evaluation:** Anthropic sees three kinds of _graders_ used in evaluations:
+    * **Code-based graders:** Non-AI tools like string and regex matching, rules verification, static analysis like linting, typing, and security checks, and analysis of the _agent under test's_ log of activities. These tools are fast and cheap to use, deterministic and hence reproducible, and easy to write and debug. However, they are more brittle to small, but insignificant differences compared to model-based graders and they aren't suitable for more &ldquo;nuanced&rdquo; tasks.
+    * **Model-based graders:** Using models, generative or not, to analyze results. LLM as a Judge is an example. They provide greater flexibility, especially for &ldquo;nuanced&rdquo; tasks and tasks with more open-ended behaviors. They can also handle more free form inputs. However, they are non-deterministic, expensive to run, and require careful human calibration to ensure they work correctly.
+    * **Human graders:** Subject matter experts, crowd sourcing, spot checks of samples, A/B testing, etc. They are considered the gold standard for quality, especially where expert-level performance for a domain is required. Often human experts are used to calibrate model-based graders, rather then used to grade agent outputs themselves. Downsides include the fact that humans make mistakes, especially when fatigued, they are expensive and slow, and experts may be hard to find.
+* **Scoring:** Options include weighted scores that combine results of different graders, binary (all must pass), or a mixture.
+* **Capability vs. regression evaluations:** _Capability_ (or _quality_) evaluations ask, "What does this agent do well?" A low pass rate can be expected in the early phases of development. _Regression_ evaluations ask, "Does the agent still handle all the tasks is handled previously?" A high pass rate is required, ideally 100%, but realistically something close to that. Once a capability evaluation has a high pass rate, it can be migrated to the regression evaluations.
+* **Examples:** The post discusses evaluation examples for three use cases.
+    * **Coding agents:** Agents that perform software development tasks. Deterministic evaluation of code is well established, e.g., unit tests, so deterministic graders can do much of the work evaluating coding agents. There are several, well-known coding-agent benchmarks, too.
+    * **Conversational agents:** Our ChatBot application is an example. The quality of the interaction, as well as the outcomes, are important areas to evaluate. Often, a second LLM is used to represent the user of the agent in the conversation. The evaluation is often multidimensional. Was the desired end state reached (sometimes a deterministic state check, but other times a more subjective evaluation suitable for an LLM to perform)? Did it finish within a budget constraint (also deterministic)? Was the conversational tone appropriate (a subjective evaluation suitable for an LLM to perform)?
+    * **Research agents:** Agents that gather, synthesize, and analyze information, then prepare a report for human consumption. There are partially subjective qualities, like &ldquo;comprehensiveness&rdquo;, &ldquo;well-sourced&rdquo;, and &ldquo;correct&rdquo;, as well as a mix of more objective outcomes, like were particular, essential facts retrieved? Frequent evaluation by human experts is necessary to ensure these agents work as desired.
+    * **Computer use agents:** Agents that interact with computer systems the way a human would, such as through a GUI. Often, these agents can be evaluated with deterministic graders, but since they usually work with the DOM (domain object model) of web pages, which can be large and inefficient to process, techniques for optimizing performance are important.
+* **How to think about non-determinism in evaluations for agents:**
 
-MORE TODO...
 
 
 
 
 ### TODO: Incorporate Ideas from the Following Sources
-
-* Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents.
 
 * CUBE Standard and Harness
 * https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/

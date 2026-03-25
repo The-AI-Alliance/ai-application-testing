@@ -35,7 +35,7 @@ The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"
 
 ## Anthropic
 
-Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents.
+Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, but also general guidance on evaluation concepts. Highly recommended.
 
 ## Babeş-Bolyai University
 

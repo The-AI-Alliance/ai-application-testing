@@ -1,6 +1,8 @@
 # README for AI Test's Data Directory
 
-There is one JSONL file per _use case_. The format is illustrated with this example from `appointments.jsonl` (nicely formatted...):
+The JSONL files in this directory, one per _use case_, are adapted from the outputs of the data synthesis and validation tools discussed in the guide. However, quite a few changes have been made reflecting experience working with these data sets, adding additional uses, etc. Hence, this README discusses some important details.
+
+The format used is illustrated with this example from `appointments.jsonl` (nicely formatted...):
 
 ```json
 {
@@ -11,7 +13,7 @@ There is one JSONL file per _use case_. The format is illustrated with this exam
 }
 ```
 
-We call these _Q&A_ (question and answer) pairs in the documentation, but they actually contain a query (question) and expected metadata values corresponding to metadata fields the prompt asks the ChatBot to return:
+We call these _Q&A_ (question and answer) pairs in the guide, but they actually contain a query (question) and expected metadata values corresponding to metadata fields the prompt asks the ChatBot to return. This metadata is used in the tests and in the ChatBot to returned predefined (and hence controlled) responses to the user, rather than returning the generated text, which may contain incorrect information. In other words, we rely on the LLMS to determine the nature of the patient query and some useful information in it (like mentioned prescriptions). In the current form of the ChatBot, we don't rely on the LLM's generated text:
 
 | Expected Metadata Field | Corresponding Response Field | Discussion |
 | :---------------------- | :--------------------------- | :--------- |
