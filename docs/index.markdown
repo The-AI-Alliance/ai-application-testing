@@ -7,25 +7,23 @@ has_children: false
 
 # Testing Generative AI Agent Applications
 
-(Previous Title: _Achieving Confidence in Enterprise AI Agent Applications_)
-
 {: .attention }
 > _**I am an enterprise developer; how do I test my AI agent applications??**_
 >
 > _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI agent applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
 
-Welcome to the **The AI Alliance** project to advance the state of the art for **Enterprise Testing of Generative AI Agent Applications**. This guide documents the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
+Welcome to the [The AI Alliance](https://aialliance.org){:target="aia"} project to advance the state of the art for **Testing Generative AI Agent Applications**. This guide documents the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
 {: note}
 > **Note:**
 >
-> This guide isn't about using AI to generate conventional tests (or code). You can find many online resources about that topic. Instead, this guide focuses on the problem of how to do testing of any kind when an application contains generative AI components, given the nondeterminism they introduce.
+> This guide isn't about using AI to generate conventional automated tests (or code). You can find many excellent resources about that topic. Instead, this guide focuses on the problem of how to do repeatable, automated testing of any kind when an application contains generative AI components, given the nondeterminism they introduce.
 
 ## The Challenge We Face
 
 We enterprise software developers know how to write [Repeatable]({{site.glossaryurl}}/#repeatable){:target="_glossary"} and [Automatable]({{site.glossaryurl}}/#automatable){:target="_glossary"} tests. In particular, we rely on [Determinism]({{site.glossaryurl}}/#determinism){:target="_glossary"} when we write tests to verify expected [Behavior]({{site.glossaryurl}}/#behavior){:target="_glossary"} and to ensure that no [Regressions]({{site.glossaryurl}}/#regression){:target="_glossary"} occur as our code base evolves. Why is determinism a key ingredient? We know that if we pass the same arguments repeatedly to _most_ [Functions]({{site.glossaryurl}}/#function){:target="_glossary"} (with some exceptions), we will get the same answer back consistently. This property enables our core testing techniques, which give us _**the essential confidence**_ that our applications meet our requirements, that they implement the [Use Cases]({{site.glossaryurl}}/#use-case){:target="_glossary"} our customers expect. We are accustomed to unambiguous _pass/fail_ answers!
 
-Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"}, where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"}, meaning the outputs are governed by a probability model, and hence _nondeterministic_. We can't write the same kinds of tests now, so what alternative approaches should we use instead? The problems are compounded when we have applications built on [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}, each of which will have some stochastic behavior of its own, if it encapsulates a generative model.
+Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"}, where generated output is inherently [Stochastic]({{site.glossaryurl}}/#stochastic){:target="_glossary"}, meaning the outputs are governed by a probability model, and hence [Nondeterministic]({{site.glossaryurl}}/#determinism){:target="_glossary"}. We can't write the same kinds of tests now, so what alternative approaches should we use instead? The problems are compounded when we have applications built on [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}, each of which will have some stochastic behavior of its own, if it encapsulates a generative model.
 
 In contrast, our AI-expert colleagues (researchers and data scientists) use the tools of [Probability and Statistics]({{site.glossaryurl}}/#probability-and-statistics){:target="_glossary"} to analyze stochastic model responses and to assess how well the models perform against particular objectives. For example, a model might score 85% on a [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} for high school-level mathematical knowledge. Is that good enough? It depends on the application in mind! Rarely are simple _pass/fail_ answers available.
 
@@ -54,7 +52,7 @@ The goals of this project are two fold:
 > **Tips:**
 >
 > 1. Use the search box at the top of any page to find specific content.
-> 2. [Capitalized Terms]({{site.glossaryurl}}/){:target="_glossary"} link to glossary definitions.
+> 2. &ldquo;Capitalized Terms&rdquo; link to [glossary definitions]({{site.glossaryurl}}/){:target="_glossary"}.
 > 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
 > 4. Many chapters end with an **Experiments to Try** section for further exploration.
 > 5. [This AI Alliance blog post](https://www.aialliance.org/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
@@ -73,18 +71,18 @@ With this background, we move to the main focus of this guide, [Testing Strategi
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.
-* [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test){:target="_glossary"}, etc. What lessons can we learn here?
 * [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents): Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. This chapter explores the requirements and available approaches.
+* [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test){:target="_glossary"}, etc. What lessons can we learn here?
 
-The final section is more speculative. It considers ways that generative AI might change software development, and testing specifically, in more fundamental ways:
+The next section covers more advanced topics, some of which may become mainstream:
 
-* [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/): Building on the idea of eliminating source code, can we specify enough detail using human language (e.g., English) to allow models to generate and validate whole applications?
-* [Can We Eliminate Source Code?]({{site.baseurl}}/advanced-techniques/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text, i.e., programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have failed (with a few exceptions). Could generative AI finally eliminate the need for source code?
+* [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/): Coding agents are making rapid progress at automating software development tasks. In order for them to create the _correct_ software, we have to get better at the prompts we feed to agents during different &ldquo;phases&rdquo; of software development. The goal of _specification-driven development_ (SDD) is to more formally structure our prompts to achieve the desired outcomes. In a sense, we switch from developing software using a programming language to writing code with a human language, such as English.
 * [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/): Our current approach to testing is to use tests to detect suboptimal behavior, fix it somehow, then repeat until we have the behavior we want. Can we instead add an iterative and incremental model _tuning_ process that adapts the model to the desired behavior automatically?
+* [Can We Eliminate Source Code?]({{site.baseurl}}/advanced-techniques/eliminate-source-code/) Computer scientists have wondered for decades why we still program computers using structured text in the form of programming languages. Attempts to switch to alternatives, such as graphical &ldquo;drag-and-drop&rdquo; environments, have mostly failed, with a few exceptions. Could generative AI finally eliminate the need for source code? Successful adoption of _specification-driven development_ (SDD) or a similar [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"} methodology will be required.
 
-Throughout this guide, we use a healthcare ChatBot example. [A Working Example]({{site.baseurl}}/working-example) summarizes all the features discussed for this example.
+Throughout this guide, we use a healthcare ChatBot example. [A Working Example]({{site.baseurl}}/working-example) summarizes all the features discussed for this example, including the automated tests that apply the concepts discussed in this guide.
 
-Finally, there is a [Glossary of Terms]({{site.glossaryurl}}){:target="_glossary"} and [References]({{site.referencesurl}}/) for additional information.
+Finally, [References]({{site.referencesurl}}/) provide additional information. See also the AI Alliance [Glossary of Terms]({{site.glossaryurl}}){:target="_glossary"}.
 
 ## How to Use This Site
 
@@ -94,7 +92,7 @@ This site is designed to be read from beginning to end, but who does that anymor
 
 This is very much a work in progress. This content will be updated frequently to fill in **TODO** gaps, as well as updates to our current thinking, emerging recommendations, and reusable assets. Your [contributions]({{site.baseurl}}/contributing) are needed and most welcome!
 
-See also [About Us]({{site.baseurl}}/about) for more details about this project and the AI Alliance.
+See also [About Us]({{site.baseurl}}/about) for more details about this project and the AI Alliance, as a whole.
 
 ## Additional Links
 

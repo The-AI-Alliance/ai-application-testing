@@ -19,14 +19,12 @@ has_children: false
 
 So far in this guide, we have focused on testing AI-enabled applications in a generic sense, not focusing on specific concerns for testing LLMs, agents, or other application patterns. This chapter discusses agent testing.
 
-[Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are a broad class of software components with behaviors  that are complementary to the capabilities that models themselves provide. They range from relatively simple to very sophisticated. The healthcare ChatBot application is relatively simple. It adds context information to user queries to create prompts and it uses custom handling of the responses. For most use cases, instead of returning the generated text to the user, it presents a message from a limited set of predefined messages, so we have better control over potentially &ldquo;suboptimal&rdquo; generated responses. 
+[Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are a broad class of software components with behaviors that are complementary to the capabilities that models themselves provide. They range from relatively simple to very sophisticated. The healthcare ChatBot application is relatively simple. It adds context information to user queries to create prompts and it uses custom handling of the responses. For most use cases, instead of returning the generated text to the user, it presents a message from a limited set of predefined messages, so we have better control over potentially &ldquo;suboptimal&rdquo; generated responses. 
 
 More sophisticated agents include planning, adjustment of the plan based on results (i.e., _course correction_), reasoning, and even autonomous action (when permitted). An example of a more sophisticated agent is the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="_blank"}, which demonstrates an important agent design pattern, <em>Deep Research Agents</em>, with several example applications. (It is built on [LastMile AI's](https://www.lastmileai.dev/){:target="lastmile"} agent framework, [MCP Agent](https://github.com/lastmile-ai/mcp-agent){:target="mcp-agent"}.) An example of an even more advanced agent is [OpenClaw](https://openclaw.ai).
 
-Agents use the same _de facto_ standard access APIs that LLMs use, promoting uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents has led to an explosion of new benchmark suites, both for general-purpose and domain-specific evaluation. This trend is driving efforts to standardize how benchmarks are defined and executed.
-
-[^1]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
-
+Agents are arguably the most rapidly evolving area of the AI ecosystem right now. While we believe the concepts discussed in this chapter will remain relevant for a long time, specific tools and services mentioned may not.
+ 
 {: .todo}
 > **TODO:** 
 > 
@@ -65,11 +63,35 @@ Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/e
     * **Conversational agents:** Our ChatBot application is an example. The quality of the interaction, as well as the outcomes, are important areas to evaluate. Often, a second LLM is used to represent the user of the agent in the conversation. The evaluation is often multidimensional. Was the desired end state reached (sometimes a deterministic state check, but other times a more subjective evaluation suitable for an LLM to perform)? Did it finish within a budget constraint (also deterministic)? Was the conversational tone appropriate (a subjective evaluation suitable for an LLM to perform)?
     * **Research agents:** Agents that gather, synthesize, and analyze information, then prepare a report for human consumption. There are partially subjective qualities, like &ldquo;comprehensiveness&rdquo;, &ldquo;well-sourced&rdquo;, and &ldquo;correct&rdquo;, as well as a mix of more objective outcomes, like were particular, essential facts retrieved? Frequent evaluation by human experts is necessary to ensure these agents work as desired.
     * **Computer use agents:** Agents that interact with computer systems the way a human would, such as through a GUI. Often, these agents can be evaluated with deterministic graders, but since they usually work with the DOM (domain object model) of web pages, which can be large and inefficient to process, techniques for optimizing performance are important.
-* **How to think about non-determinism in evaluations for agents:**
+* **How to think about non-determinism in evaluations for agents:** We summarize their discussion of _pass@k_ and _pass^k_ metrics in [Statistical Analysis of Data for Stochastic Systems]({{site.baseurl}}/testing-strategies/statistical-tests/#statistical-analysis-of-data-for-stochastic-systems).
+* **Going from zero to one: a roadmap to great evals for agents:** The second half of this post provides a roadmap for building agent evaluations.
+    * **Collect tasks for the initial eval dataset:**
+        * **Step 0. Start early:** Translate early, detected failures into test scenarios. 20-50 is a good start. You don't need hundreds to build evaluations.
+        * **Step 1. Start with what you already test manually:** Translate manual tests into automated evaluations.
+        * **Step 2: Write unambiguous tasks with reference solutions:** Can human agents unambiguously perform a task, based on the specification for it? Do the graders check every outcome and other system change in the specification? Conversely, do the graders make any assumptions that aren't in the specification? A low _pass@k_ result may indicate ambiguities in the specification or graders.
+        * **Step 3: Build balanced problem sets:** Test what should happen, but also what should _not_ happen. The post cites an example of testing that web searches are not done when the information required is already known by the model.
+    * **Design the eval harness and graders:**
+        * **Step 4: Build a robust eval harness with a stable environment:** Follow established software testing principles such as begin with a clean environment (to avoid contamination from left-over content - like files - from previous test runs), make the test environment as close to production as possible, etc.
+        * **Step 5: Design graders thoughtfully:** Use deterministic graders wherever possible, LLM graders were necessary, and human graders strategically, but sparingly. Avoid brittle graders, like assuming step sequences that aren't required for successful outcomes and would penalize agent &ldquo;creativity&rdquo;. Consider partial credit, e.g., when an agent succeeds in some, but not all tasks. Have human graders calibrate LLM graders. Look for potential &ldquo;cheats&rdquo; in the graders that an agent could exploit to artificially improve its grade.
+    * **Maintain and use the eval long-term:**
+        * **Step 6: Check the transcripts** Use automated and human review of evaluation transcripts to look for evidence of bugs in the graders, etc. Are the evaluations working as expected.
+        * **Step 7: Monitor for capability eval saturation:** Evaluation scores at 100% can be used for regression testing, but won't provide any signal that performance is improving. Often, high scores, but below 100%, will be slow to improve further, because the remaining failing tasks are the most difficult to implement successfully.
+        * **Step 8: Keep evaluation suites healthy long-term through open contribution and maintenance:** Evaluations should be owned and maintained by the development team, just like the similar practice for long-term maintenance of unit tests. Proactively build evaluations for forthcoming features and drive their requirements from customer feedback as much as possible.
+* **How evals fit with other methods for a holistic understanding of agents:** Evaluations before deployment aren't the end. Production monitoring, A/B testing, human log review, customer feedback, etc. help ensure the features work as desired.
+
+Of course, many of these points apply to AI evaluation in general, not just for agents.
+The post ends with an appendix of evaluation frameworks, which we include in [Other Tools for Testing Agents](#other-tools-for-testing-agents) below.
 
 
+## Standardizing Evaluations
 
+Agents may offer the same _de facto_ standard access APIs that LLMs use (like OpenAI API compatibility), promoting uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents has led to an explosion of new benchmark suites, both for general-purpose and domain-specific evaluation. This trend is driving efforts to standardize how benchmarks are defined and executed.
 
+[^1]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
+
+Today, if you want to use a third-party benchmark, you often have to adopt a tool chain specific to that benchmark or somehow adapt the benchmark's core logic and data to whatever tool chain you want to use.
+
+[CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="cube-standard"} is an AI Alliance project with the goal of standardizing wrapping of benchmarks so users can adopt and use otherwise-incompatible benchmarks in a uniform way. A companion project, [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness){:target="cube-harness"}, is an evaluation runtime that runs agents against CUBE-compatible benchmarks. 
 
 ### TODO: Incorporate Ideas from the Following Sources
 
@@ -104,6 +126,20 @@ Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/e
 
 ## Other Tools for Testing Agents
 
+The following tools meet various requirements for large-scale, enterprise development of agents.
+
+### Arize Phoenix
+
+(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [Arize Phoenix](https://arize.com/) is an open-source platform for LLM tracing, debugging, and offline or online evaluations. AX is their SaaS offering with additional scalability and other capabilities.
+
+### AssetOpsBench
+
+[AssetOpsBench](https://github.com/IBM/AssetOpsBench){:target="ibm-aob"} from IBM is a unified framework for developing, orchestrating, and evaluating domain-specific AI agents in industrial asset operations and maintenance. It is designed for maintenance engineers, reliability specialists, and facility planners, it allows reproducible evaluation of multi-step workflows in simulated industrial environments.
+
+### Braintrust
+
+(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [Braintrust](https://www.braintrust.dev/){:target="bt"} integrates offline evaluation with production traces, for example allowing interesting traces to be easily converted into evaluations.
+
 ### DoomArena
 
 [DoomArena](https://servicenow.github.io/DoomArena/){:target="_blank"} from [ServiceNow](https://www.servicenow.com/){:target="_blank"} is a framework for testing AI Agents against evolving security threats. It offers a modular, configurable, plug-in framework for testing the security of AI agents across multiple attack scenarios.
@@ -116,13 +152,18 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 
 Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
 
+### Harbor
+
+(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [Harbor](https://harborframework.com/){:target="harbor"} is a framework for evaluating and optimizing agents and models in container environments. It can run at scale in cloud environments.
+
+### LangSmith
+
+(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [LangSmith](https://docs.langchain.com/langsmith/evaluation){:target="ls"}, part of the [LangChain](https://docs.langchain.com/){:target="lc"} ecosystem, integrates offline and online evaluation.
+[Langfuse](https://langfuse.com){:target="lf"} offers similar capabilities in an open-source package that support on-premise use.
+
 ### LastMile AI's MCP Eval
 
 [MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol.
-
-### IBM's AssetOpsBench
-
-[AssetOpsBench](https://github.com/IBM/AssetOpsBench){:target="ibm-aob"} is a unified framework for developing, orchestrating, and evaluating domain-specific AI agents in industrial asset operations and maintenance. It is designed for maintenance engineers, reliability specialists, and facility planners, it allows reproducible evaluation of multi-step workflows in simulated industrial environments.
 
 ## Experiments to Try
 
