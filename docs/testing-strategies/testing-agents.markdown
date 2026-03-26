@@ -28,7 +28,7 @@ Agents are arguably the most rapidly evolving area of the AI ecosystem right now
 {: .todo}
 > **TODO:** 
 > 
-> This chapter needs additional contributions. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
+> This chapter describes some of the unique considerations for implementing and evaluating [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}. We intend to add a working example, _managing appointments_ for the example ChatBot application. Contributions are welcome. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing).
 
 <a id="highlights"></a>
 
@@ -37,14 +37,6 @@ Agents are arguably the most rapidly evolving area of the AI ecosystem right now
 >
 > 1. Agent testing can use the same tools and techniques (e.g., benchmarks) that have been used for models themselves, but more advanced agent workflows require additional tools beyond simple Q&A pairs.
 > 1. The diversity of agent behaviors has led to an explosion of general-purpose and domain-specific benchmarks, as well as some new tools. This trend is driving interest in standardizing how benchmarks are written and executed.
-
-
-{: .todo}
-> **TODOs:**
->
-> 1. Research the work of experts in this area. See the following list.
-> 1. Catalog the unique requirements for agent testing.
-> 1. Provide specific examples of how to use those concepts.
 
 ## The Challenges of Writing Agent Evaluations
 
@@ -82,29 +74,43 @@ Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/e
 Of course, many of these points apply to AI evaluation in general, not just for agents.
 The post ends with an appendix of evaluation frameworks, which we include in [Other Tools for Testing Agents](#other-tools-for-testing-agents) below.
 
-
 ## Standardizing Evaluations
 
-Agents may offer the same _de facto_ standard access APIs that LLMs use (like OpenAI API compatibility), promoting uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents has led to an explosion of new benchmark suites, both for general-purpose and domain-specific evaluation. This trend is driving efforts to standardize how benchmarks are defined and executed.
+Agents may offer the same _de facto_ standard access APIs that LLMs use (like OpenAI API compatibility), promoting some uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents, has led to an explosion of agent tool kits and benchmark suites, both for general-purpose and domain-specific purposes. This trend is driving efforts to standardize how benchmarks are defined and executed.
 
 [^1]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
 
 Today, if you want to use a third-party benchmark, you often have to adopt a tool chain specific to that benchmark or somehow adapt the benchmark's core logic and data to whatever tool chain you want to use.
 
-[CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="cube-standard"} is an AI Alliance project with the goal of standardizing wrapping of benchmarks so users can adopt and use otherwise-incompatible benchmarks in a uniform way. A companion project, [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness){:target="cube-harness"}, is an evaluation runtime that runs agents against CUBE-compatible benchmarks. 
+[CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="cube-standard"} is a new AI Alliance project with the goal of standardizing wrapping of benchmarks so users can adopt and use otherwise-incompatible benchmarks in a uniform way. A companion project, [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness){:target="cube-harness"}, is an evaluation runtime that runs agents against CUBE-compatible benchmarks. 
+
+A key feature of CUBE Standard is support for tasks with multiple steps, which are required for testing agents.
+
+A complementary project is [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"} (see [references]({{site.baseurl}}/references/#evaleval-coalition)), which attempts to standardize how evaluation results are reported and catalog all relevant AI evaluations.
+
+## The Role of Simulation
+
+Agents interact with other agents, tools, and systems with often complex behaviors. Evaluation of agents can't always interact with real systems, so _digital twins_ or simulation of such systems is necessary.
+
+Simulation of environments has been an important part of [Reinforcement Learning]({{site.glossaryurl}}/#reinforcement-learning){:target="_glossary"} (RL) for a long time. [Gymnasium](https://github.com/Farama-Foundation/Gymnasium){:target="gymnasium"}, the successor to OpenAI's [Gym](https://github.com/openai/gym){:target="oai-gym"}, is a popular framework, for example.
+
+As RL for AI has evolved, so has the requirements for simulation environments.
+
+The [PyTorch](https://pytorch.org){:target="pytorch"} community recently announced [OpenEnv](https://meta-pytorch.org/OpenEnv/){:target="openenv"}, &ldquo;an end-to-end framework designed to standardize how agents interact with execution environments during reinforcement learning (RL) training. At its core, OpenEnv provides a consistent, Gymnasium-compatible interface through three simple APIs: step(), reset(), and state().&rdquo;. (Other links: [GitHub](https://github.com/meta-pytorch/OpenEnv){:target="openenv-gh"}, [HuggingFace](https://huggingface.co/openenv){:target="hf"}), [HuggingFace blog post](https://huggingface.co/blog/openenv){:target="hf-blog"})
+
+    * Agent Beats Competition:
+        * https://www.linkedin.com/posts/jspisak_agentic-ai-weekly-berkeley-rdi-january-activity-7414721490018906112-UbpX
+        * https://berkeleyrdi.substack.com/p/agentic-ai-weekly-berkeley-rdi-january
+
 
 ### TODO: Incorporate Ideas from the Following Sources
 
-* CUBE Standard and Harness
-* https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/
 * PyTorch OpenEnv:
     * https://meta-pytorch.org/OpenEnv/
     * https://huggingface.co/blog/openenv
     * https://huggingface.co/openenv
     * https://github.com/meta-pytorch/OpenEnv
-    * Agent Beats Competition:
-        * https://www.linkedin.com/posts/jspisak_agentic-ai-weekly-berkeley-rdi-january-activity-7414721490018906112-UbpX
-        * https://berkeleyrdi.substack.com/p/agentic-ai-weekly-berkeley-rdi-january
+* Agent Beats Competition.
 * https://research.ibm.com/blog/cuga-agent-framework
     * https://github.com/cuga-project/cuga-agent
     * https://huggingface.co/blog/ibm-research/cuga-on-hugging-face
@@ -121,6 +127,7 @@ Today, if you want to use a third-party benchmark, you often have to adopt a too
 * https://github.com/rustyoldrake/security_governance_compliance_ai_agentic
 * https://mellea.ai/
 * https://openagi.aiplanet.com/ - "OpenAGI"
+* weave CLI's eval feature
 
 <a id="other-tools"/>
 

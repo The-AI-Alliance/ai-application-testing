@@ -65,6 +65,12 @@ In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://dean
 
 Elvis Saravia's [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"}, part of his [DAIR.AI](https://www.dair.ai/){:target="_blank"} learning academy, provides in depth information on [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}.
 
+## EvalEval Coalition
+
+[EvalEval](https://evalevalai.com/){:target="ee"} ([Blog post](https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/){:target="ee-blog"}, [GitHub organization](https://github.com/evaleval){:target="ee-gh"}) is a research coalition on _evaluating evaluations_, hence the name _EvalEval_. Its work is hosted by Hugging Face, University of Edinburgh, and EleutherAI.
+
+The main project is [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"}, &ldquo;a shared schema and crowdsourced evaluation database. It defines a standardized metadata format for storing AI evaluation results — from leaderboard scrapes and research papers to local evaluation runs — so that results from different frameworks can be compared, reproduced, and reused.&rdquo;
+
 ## Evan Miller
 
 [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
