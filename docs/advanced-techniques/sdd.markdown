@@ -35,6 +35,8 @@ The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agen
 
 [Specification-Driven Development]({{site.glossaryurl}}/#specification-Driven-development){:target="_glossary"} (SDD), also known as _spec-driven development_ and  _spec-driven coding_, attempts to impose more structure on prompts so models do a better job generating source code that we actually need. Similarly, it identifies different &ldquo;phases&rdquo; of software creation and customizes the prompts and tools used for each one. The ad hoc, free-form prompts we currently use for [Vibe Coding]({{site.glossaryurl}}/#vibe-coding){:target="_glossary"} are not adequate for creating quality, maintainable software. SDD is likely to be a core part of emerging engineering practices, like [Vibe Engineering]({{site.glossaryurl}}/#vibe-engineering){:target="_glossary"} and [Agentic Engineering]({{site.glossaryurl}}/#agentic-engineering){:target="_glossary"}, both of which are conceptual arguments for adding the rigor required for true engineering to vibe coding.
 
+For a slightly different take on how software engineering might be transformed by AI, see [this post](https://ambient-code.ai/about/){:target="ambient"}.
+
 For an industry analyst's perspective on SDD, see [this RedMonk blog post](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"}.
 
 Several different people and groups are exploring this idea in related ways. See the [Specification-Driven Development references]({{site.referencesurl}}/#specification-driven-development) for a list of sources, most of which are quoted below.

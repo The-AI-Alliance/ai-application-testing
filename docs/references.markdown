@@ -25,7 +25,7 @@ References for more details on testing, especially in the AI context, and other 
 
 The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
 
-### Allen Institute of AI
+## Allen Institute of AI
 
 [Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is discussed by [Nathan Lambert](#nathan-lambert) below. It tries to meet similar goals as [InstructLab](#redhat). See [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
 

@@ -80,6 +80,8 @@ For example, a _grader_ is used to verify outputs, analogous to [LLM as a Judge]
 
 Subsequent slides go into the tuning data format, how answers are analyzed for correctness, etc.
 
+Beyond model optimization, we also need the ability to optimize agents. Microsoft's [Agent Lightning](https://www.microsoft.com/en-us/research/project/agent-lightning/){:target="ms"} ([blog post](https://www.microsoft.com/en-us/research/blog/agent-lightning-adding-reinforcement-learning-to-ai-agents-without-code-rewrites/){:target="ms-blog"}) is a framework designed to enable seamless agent optimization for almost any existing agent framework, using the various optimization techniques widely used for models, including fine-tuning, prompt tuning, model selection, etc.
+
 {: .todo}
 > **TODO:** 
 > 
