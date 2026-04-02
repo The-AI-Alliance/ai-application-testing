@@ -1,10 +1,11 @@
 # Unit tests for the "utils" module using Hypothesis for property-based testing.
 # https://hypothesis.readthedocs.io/en/latest/
 
-from hypothesis import given, strategies as st
-import unittest
-from pathlib import Path
 import json, os, re, sys, shutil
+import unittest
+from hypothesis import given, strategies as st
+from pathlib import Path
+from typing import Any, Mapping
 
 from common.utils import (
     all_use_cases,
@@ -42,7 +43,7 @@ class TestUtils(unittest.TestCase):
             shutil.rmtree(self.test_temp)
 
     @given(st.lists(valid_dirs(), max_size=5))
-    def test_model_dir_name(self, strs: [str]):
+    def test_model_dir_name(self, strs: list[str]):
         s = ':'.join(strs)
         expected = s.replace(':', '_')
         self.assertEqual(expected, model_dir_name(s))
@@ -54,7 +55,7 @@ class TestUtils(unittest.TestCase):
         self.assertIsNotNone(self.use_cases.get(use_case_name))
 
     @given(st.lists(valid_dirs(), max_size=5))
-    def test_make_parent_dirs_that_do_not_exist(self, dirs: [str]):
+    def test_make_parent_dirs_that_do_not_exist(self, dirs: list[str]):
         fdir = f"{self.test_temp}/{'/'.join(dirs)}"
         file = f"{fdir}/foo.txt"
         path = make_parent_dirs(file, exist_ok = False)
@@ -63,7 +64,7 @@ class TestUtils(unittest.TestCase):
         self.clean()
 
     @given(st.lists(valid_dirs(), max_size=5))
-    def test_make_parent_dirs_with_allowed_preexisting_dirs(self, dirs: [str]):
+    def test_make_parent_dirs_with_allowed_preexisting_dirs(self, dirs: list[str]):
         fdir = f"{self.test_temp}/{'/'.join(dirs)}"
         file = f"{fdir}/foo.txt"
         path = make_parent_dirs(file, exist_ok = False)
@@ -79,14 +80,14 @@ class TestUtils(unittest.TestCase):
         self.clean()
 
     @given(st.lists(valid_dirs(), max_size=5))
-    def test_ensure_dirs_exist_does_not_raise_for_existing_dirs(self, dirs: [str]):
+    def test_ensure_dirs_exist_does_not_raise_for_existing_dirs(self, dirs: list[str]):
         fdir = f"{self.test_temp}/{'/'.join(dirs)}"
         path = make_parent_dirs(f"{fdir}/foo.txt", exist_ok = False)
         ensure_dirs_exist(fdir)
         self.clean()
 
     @given(st.lists(valid_dirs(), max_size=5))
-    def test_ensure_dirs_exist_raises_for_missing_dirs(self, dirs: [str]):
+    def test_ensure_dirs_exist_raises_for_missing_dirs(self, dirs: list[str]):
         fdir = f"{self.test_temp}/{'/'.join(dirs)}"
         with self.assertRaises(ValueError):
             ensure_dirs_exist(fdir)
@@ -143,7 +144,7 @@ class TestUtils(unittest.TestCase):
     def do_test_extract_jsonl(self, delim: str,
         size: int, question: str, label: str, prescription: str, body_part: str):
         """We only worry about parsing responses we expect to receive..."""
-        def d(i: int) -> {str,str}:
+        def d(i: int) -> Mapping[str,Any]:
             return {
                 "question": f"{question} {i}",
                 "answer": {
@@ -156,12 +157,12 @@ class TestUtils(unittest.TestCase):
         strs = extract_jsonl(delim.join(jsons))
         self.assertEqual(size, len(strs))
         for n in range(size):
-            d = parse_json(strs[n])
-            self.assertEqual(f"{question} {n}", d['question'])
-            a = d['answer']
-            self.assertEqual(f"{label} {n}", a['label'])
-            self.assertEqual(f"{prescription} {n}", a['prescription'])
-            self.assertEqual(f"{body_part} {n}", a['body-part'])
+            data = parse_json(strs[n])
+            self.assertEqual(f"{question} {n}", data['question'])
+            answ = data['answer']
+            self.assertEqual(f"{label} {n}", answ['label'])
+            self.assertEqual(f"{prescription} {n}", answ['prescription'])
+            self.assertEqual(f"{body_part} {n}", answ['body-part'])
 
     @given(st.integers(min_value=0, max_value=5),
         escaped_dquotes(), escaped_dquotes(), escaped_dquotes(), escaped_dquotes())

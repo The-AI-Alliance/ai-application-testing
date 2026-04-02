@@ -1,9 +1,11 @@
 import os
 import sys
-from pathlib import Path
 import logging
 import Levenshtein
+from pathlib import Path
 from litellm import completion
+from typing import assert_type
+
 from openai import OpenAIError
 from common.utils import setup, common_defaults, load_yaml, make_full_prompt, extract_content
 
@@ -55,65 +57,66 @@ class TDDExampleRefillChatbot:
         self.logger.info("Comparisons ignore case, remove leading '-', and '*' around words (Markdown-style formatting).")
         self.logger.info(f"Levenshtein ratio used, with values above {self.lev_threshold} interpreted as 'equal'.")
 
-        if not self.queries_responses[label]:
+        for_label = self.queries_responses.get(label)
+        if not for_label:
             self.logger.error(f'No queries and expected responses are known for key {label}.')
             sys.exit(1)
+        else:
+            queries = for_label.get('queries', [])
+            expected_response = for_label.get('expected_response', '')
+            if not queries:
+                self.logger.error(f'No queries are known for key {label}.')
+            if not expected_response:
+                self.logger.error(f'No expected responses are known for key {label}.')
+            if not queries or not expected_response:
+                sys.exit(1)
 
-        queries = self.queries_responses[label]['queries']
-        expected_response = self.queries_responses[label]['expected_response']
-        if not queries:
-            self.logger.error(f'No queries are known for key {label}.')
-        if not expected_response:
-            self.logger.error(f'No expected responses are known for key {label}.')
-        if not queries or not expected_response:
-            sys.exit(1)
-        
-        for template_name in self.template_names:
-            self.logger.info(f"  Using template {template_name} in {self.template_dir}:")
-            template = load_yaml(Path(self.template_dir, template_name+".yaml"))
+            for template_name in self.template_names:
+                self.logger.info(f"  Using template {template_name} in {self.template_dir}:")
+                template = load_yaml(Path(self.template_dir, template_name+".yaml"))
 
-            for query in queries:
-                for drug in self.drugs:
-                    expected = expected_response.replace("_P_", drug)
-                    expected_lc = expected.lower()
-                    query_with_drug = query.replace("_P_", drug)
+                for query in queries:
+                    for drug in self.drugs:
+                        expected = str(expected_response).replace("_P_", drug)
+                        expected_lc = expected.lower()
+                        query_with_drug = query.replace("_P_", drug)
 
-                    try:
-                        response = completion(
-                            model = self.model_name, 
-                            messages = [{ 
-                                "content": make_full_prompt(query_with_drug, template['system']),
-                                "role": "user",
-                            }], 
-                            api_base = self.service_url, 
-                            stream = False,
-                            verbose = False,
-                        )
-                        count += 1
-                        actual = extract_content(response)
-                        prefix_str = f"    Query: {query_with_drug} => "
-                        if actual == expected:
-                            self.logger.info(f"{prefix_str} SUCCESS! (strings identical, actual = expected = \"{expected}\")")
-                        elif actual != expected:
-                            actual_lc = actual.lower().strip()
-                            # Remove leading `-` if present. Remove "*" around words.
-                            actual_lc = actual_lc.lstrip("-").replace('*', '')
-                            ratio = Levenshtein.ratio(actual_lc, expected_lc)
-                            if ratio >= self.lev_threshold:
-                                self.logger.info(f"{prefix_str} SUCCESS! (leading '-' and all '*' removed, Lev. distance ratio {ratio} >= {self.lev_threshold}: actual = \"{actual}\", expected = \"{expected}\")")
-                            else:
-                                errors += 1
-                                resp_str = f"Lev. ratio = {ratio} > {self.lev_threshold}, actual = \"{actual}\", expected = \"{expected}\" (full response: \"{response}\")"
-                                self.logger.warning(f"{prefix_str} FAILURE! ({resp_str})")
+                        try:
+                            response = completion(
+                                model = self.model_name, 
+                                messages = [{ 
+                                    "content": make_full_prompt(query_with_drug, template['system']),
+                                    "role": "user",
+                                }], 
+                                api_base = self.service_url, 
+                                stream = False,
+                                verbose = False,
+                            )
+                            count += 1
+                            actual = extract_content(response)
+                            prefix_str = f"    Query: {query_with_drug} => "
+                            if actual == expected:
+                                self.logger.info(f"{prefix_str} SUCCESS! (strings identical, actual = expected = \"{expected}\")")
+                            elif actual != expected:
+                                actual_lc = actual.lower().strip()
+                                # Remove leading `-` if present. Remove "*" around words.
+                                actual_lc = actual_lc.lstrip("-").replace('*', '')
+                                ratio = Levenshtein.ratio(actual_lc, expected_lc)
+                                if ratio >= self.lev_threshold:
+                                    self.logger.info(f"{prefix_str} SUCCESS! (leading '-' and all '*' removed, Lev. distance ratio {ratio} >= {self.lev_threshold}: actual = \"{actual}\", expected = \"{expected}\")")
+                                else:
+                                    errors += 1
+                                    resp_str = f"Lev. ratio = {ratio} > {self.lev_threshold}, actual = \"{actual}\", expected = \"{expected}\" (full response: \"{response}\")"
+                                    self.logger.warning(f"{prefix_str} FAILURE! ({resp_str})")
 
-                    except OpenAIError as e:
-                        self.logger.error(f"OpenAIError thrown: {e}")
-                        sys.exit(1)
+                        except OpenAIError as e:
+                            self.logger.error(f"OpenAIError thrown: {e}")
+                            sys.exit(1)
 
-            self.logger.info(f"Total queries = {count}, errors = {errors}")
+                self.logger.info(f"Total queries = {count}, errors = {errors}")
 
-        if errors > 0:
-            self.logger.warning(f'"{label}" run had errors, but we will continue running.')
+            if errors > 0:
+                self.logger.warning(f'"{label}" run had errors, but we will continue running.')
 
 def main():
 

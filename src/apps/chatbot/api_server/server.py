@@ -19,7 +19,7 @@ from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel, Field
 import uvicorn
 
-from apps.chatbot import ChatBot
+from apps.chatbot import ChatBot, ChatBotResponseHandler
 from common.utils import setup, get_package_version
 
 
@@ -98,10 +98,10 @@ class APIServer:
         service_url: str,
         template_dir: str,
         data_dir: str,
-        confidence_level_threshold: float = 0.9,
-        host: str = "0.0.0.0",
-        port: int = 8000,
-        logger: logging.Logger | None = None
+        confidence_level_threshold: float,
+        host: str,
+        port: int,
+        logger: logging.Logger
     ):
         """
         Initialize the API server.
@@ -135,6 +135,9 @@ class APIServer:
             template_dir=self.template_dir,
             data_dir=self.data_dir,
             confidence_level_threshold=self.confidence_level_threshold,
+            response_handler = ChatBotResponseHandler(
+                confidence_level_threshold=self.confidence_level_threshold, 
+                logger=self.logger),
             logger=self.logger
         )
         

@@ -1,10 +1,11 @@
 # Unit tests for the "collections" module using Hypothesis for property-based testing.
 # https://hypothesis.readthedocs.io/en/latest/
 
-from hypothesis import given, strategies as st
-import unittest
-from pathlib import Path
 import json, os, re, sys, shutil
+import unittest
+from hypothesis import given, strategies as st
+from pathlib import Path
+from typing import Any
 
 from common.collections import dict_permutations, mult
 
@@ -13,7 +14,7 @@ class TestCollections(unittest.TestCase):
     Test the collections utilities.
     """
 
-    def _check(self, dictionary: {str,any}, n:int = -1):
+    def _check(self, dictionary: dict[str,Any], n:int = -1):
         actual = dict_permutations(dictionary, max_size=n)
         # Check the size of the returned array.
         def _length(col):
@@ -44,7 +45,7 @@ class TestCollections(unittest.TestCase):
 
     @given(
         st.dictionaries(st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4))
-    def test_dict_permutations(self, dictionary: {str,any}):
+    def test_dict_permutations(self, dictionary: dict[str,Any]):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values
         We use a set for the values because we want to assume uniqueness, which is how
@@ -55,7 +56,7 @@ class TestCollections(unittest.TestCase):
     @given(
         st.dictionaries(st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4),
         st.integers(min_value=0, max_value=4))
-    def test_dict_permutations_limit_n(self, dictionary: {str,any}, n: int):
+    def test_dict_permutations_limit_n(self, dictionary: dict[str,Any], n: int):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values,
         but truncating the input collections to size n.
@@ -95,7 +96,7 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected1, actual1)
 
     @given(st.lists(st.integers(), max_size=5))
-    def test_mult_with_not_skipping_zeros(self, ints: [int]):
+    def test_mult_with_not_skipping_zeros(self, ints: list[int]):
         expected = 0
         if ints:
             expected = 1
@@ -105,7 +106,7 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected, mult(ints))
 
     @given(st.lists(st.integers(), max_size=5))
-    def test_mult_with_skipping_zeros(self, ints: [int]):
+    def test_mult_with_skipping_zeros(self, ints: list[int]):
         ints2 = [n for n in ints if n]
         expected = 0
         if ints2:

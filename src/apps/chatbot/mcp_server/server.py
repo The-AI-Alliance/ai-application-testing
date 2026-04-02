@@ -8,10 +8,10 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 
 from fastmcp import FastMCP
-
-from apps.chatbot import ChatBot
+from apps.chatbot import ChatBot, ChatBotResponseHandler
 from common.utils import setup
 
 
@@ -20,9 +20,9 @@ def create_mcp_server(
     service_url: str,
     template_dir: str,
     data_dir: str,
-    confidence_level_threshold: float = 0.9,
-    logger: logging.Logger | None = None
-) -> tuple[FastMCP, ChatBot] | None:
+    confidence_level_threshold: float,
+    logger: logging.Logger,
+) -> tuple[FastMCP, ChatBot]:
     """
     Create and configure an MCP server for the chatbot using FastMCP.
     
@@ -45,6 +45,9 @@ def create_mcp_server(
         template_dir=template_dir,
         data_dir=data_dir,
         confidence_level_threshold=confidence_level_threshold,
+        response_handler = ChatBotResponseHandler(
+            confidence_level_threshold=confidence_level_threshold, 
+            logger=logger),
         logger=logger
     )
     
@@ -70,17 +73,20 @@ def create_mcp_server(
             A response containing the chatbot's reply and metadata about the interaction
         """
         if not query:
-            return "Error: No query provided"
+            error_msg = "Error: No query provided"
+            logger.error(error_msg)
+            return error_msg
         
-        if logger:
-            logger.info(f"MCP tool query_chatbot called with: {query}")
+        logger.info(f"MCP tool query_chatbot called with: {query}")
         
         try:
             response = chatbot.query(query)
             
             if isinstance(response, str):
                 # Error occurred
-                return f"Error: {response}"
+                error_msg = f"Error: response is a string! response = {response}"
+                logger.error(error_msg)
+                return error_msg
             
             # Extract the reply to user
             reply_to_user = response.get('reply_to_user', 'No reply generated')
@@ -92,15 +98,13 @@ def create_mcp_server(
             # Format the response
             result = f"Reply: {reply_to_user}\n\nMetadata:\n- Label: {label}\n- Confidence: {confidence:.2f}"
             
-            if logger:
-                logger.info(f"MCP tool query_chatbot response: {result}")
+            logger.info(f"MCP tool query_chatbot response: {result}")
             
             return result
             
         except Exception as e:
             error_msg = f"Error processing chatbot query: {str(e)}"
-            if logger:
-                logger.error(error_msg)
+            logger.error(error_msg)
             return error_msg
     
     @mcp.tool()
@@ -114,14 +118,15 @@ def create_mcp_server(
         Returns:
             A formatted list of all queries and responses in the current session
         """
-        if logger:
-            logger.info("MCP tool get_chatbot_session_history called")
+        logger.info("MCP tool get_chatbot_session_history called")
         
         try:
             responses = chatbot.response_handler.responses
             
             if not responses:
-                return "No session history available. The chatbot has not processed any queries yet."
+                error_msg = "No session history available. The chatbot has not processed any queries yet."
+                logger.error(error_msg)
+                return error_msg
             
             history_lines = ["Session History:", "=" * 50]
             
@@ -146,8 +151,7 @@ def create_mcp_server(
             
         except Exception as e:
             error_msg = f"Error retrieving session history: {str(e)}"
-            if logger:
-                logger.error(error_msg)
+            logger.error(error_msg)
             return error_msg
     
     @mcp.tool()
@@ -161,8 +165,7 @@ def create_mcp_server(
         Returns:
             Configuration details of the chatbot
         """
-        if logger:
-            logger.info("MCP tool get_chatbot_info called")
+        logger.info("MCP tool get_chatbot_info called")
         
         try:
             info = {
@@ -189,12 +192,10 @@ def create_mcp_server(
             
         except Exception as e:
             error_msg = f"Error retrieving chatbot info: {str(e)}"
-            if logger:
-                logger.error(error_msg)
+            logger.error(error_msg)
             return error_msg
     
-    if logger:
-        logger.info(f"FastMCP server created with model: {model}")
+    logger.info(f"FastMCP server created with model: {model}")
     
     return mcp, chatbot
 

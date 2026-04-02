@@ -1,5 +1,6 @@
+from typing import Any
 
-def dict_permutations(dictionary: {str,any}, max_size: int = -1) -> [{str,any}]:
+def dict_permutations(dictionary: dict[str,Any], max_size: int = -1) -> list[dict[str,Any]]:
     """
     From an input dictionary, where the values are collections, return an array of dictionaries
     with all permutations of the same keys and individual values from the value collections. 
@@ -50,7 +51,7 @@ def dict_permutations(dictionary: {str,any}, max_size: int = -1) -> [{str,any}]:
     return list(reversed(perm([], dcopy))) # return in input order!
 
 
-def mult(collection: [int], skip_zeros: bool = False) -> int:
+def mult(collection: list[int], skip_zeros: bool = False) -> int:
     """Multiple the integers in the collection, optionally _skipping zeros!_"""
     values = collection if not skip_zeros else [n for n in collection if n]
     if values:

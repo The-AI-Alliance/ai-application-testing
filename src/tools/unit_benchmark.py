@@ -8,6 +8,7 @@ import sys
 import json
 import logging
 from pathlib import Path
+from typing import Any, MutableMapping
 
 from litellm import completion
 from openai import OpenAIError
@@ -29,7 +30,7 @@ class UnitBenchmarkDataParent:
         service_url: str, 
         template_dir: str, 
         data_dir: str, 
-        use_cases: [str], 
+        use_cases: list[str], 
         logger: logging.Logger):
         self.model_name      = model_name
         self.service_url     = service_url
@@ -60,7 +61,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
         service_url: str, 
         template_dir: str, 
         data_dir: str, 
-        use_cases: [str], 
+        use_cases: list[str], 
         logger: logging.Logger):
         super().__init__(
             model_name,
@@ -111,7 +112,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
             self.logger.error(f"Data file {data_file} not found.")
             sys.exit(1)
 
-    def do_generate(self, data_file: str, template: dict, expected_label: str) -> int:
+    def do_generate(self, data_file: str, template: dict[str,str], expected_label: str) -> int:
         try:
             content = template['prompt']
             if len(content) == 0:
@@ -175,7 +176,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         service_url: str, 
         template_dir: str, 
         data_dir: str, 
-        use_cases: [str], 
+        use_cases: list[str], 
         just_stats: bool, 
         logger: logging.Logger):
         super().__init__(
@@ -202,7 +203,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             self.logger.warning(f" JSON parsing failed (exception: {je}): line #{line_number} = {line}")
         return -1
 
-    def return_stats(self, data_file: str, validation_file: str) -> dict:
+    def return_stats(self, data_file: str, validation_file: str) -> MutableMapping[str,Any]:
         ratings = [0 for i in range(5)]
         total_count = 0
         error_count = 0
@@ -249,7 +250,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             self.logger.error(f"OpenAIError thrown: {e}")
             sys.exit(1)
 
-    def validate(self) -> dict:
+    def validate(self) -> MutableMapping[str,Any]:
         """Validate the generated data labeling."""    
         system_prompt = self.template['system']
         if len(system_prompt) == 0:
@@ -282,16 +283,18 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             total_stats.update({data_file: stats})
         return total_stats
 
-    def print_stats(self, stats: dict):
+    def print_stats(self, stats: MutableMapping[str,Any]):
         name_len = 80 # hack
         name_fmt = '{:' + f"{name_len}" + 's}  |'
         col_fmt  = '  {:3d}  |'
         border_fmt = '{:'+f"{name_len}"+"s}  |-------|-------|-------|-------|-------|-------|"
         
-        line = [name_fmt.format("Files:")]
-        [line.append(col_fmt.format(i+1)) for i in range(5)]
-        line.append(' Total |')
-        self.logger.info("".join(line))
+        header: list[str] = [name_fmt.format("Files:")]
+        for i in range(5):
+            col: str = col_fmt.format(i+1)
+            header.append(col)
+        header.append(' Total |')
+        self.logger.info("".join(header))
 
         self.logger.info(border_fmt.format("-"*name_len))
 
@@ -305,10 +308,11 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             total_count     = stts['total_count']
             error_count     = stts['error_count']
             dfile = os.path.split(syn_data_file)[1]
-            line = [name_fmt.format(dfile)]
-            [line.append(col_fmt.format(ratings[i])) for i in range(5)]
-            line.append(col_fmt.format(sum(ratings)))
-            self.logger.info("".join(line))
+            lines = [name_fmt.format(dfile)]
+            for i in range(5):
+                lines.append(col_fmt.format(str(ratings[i])))
+            lines.append(col_fmt.format(sum(ratings)))
+            self.logger.info("".join(lines))
 
             for i in range(5):
                 tri = all_ratings[i]
@@ -317,9 +321,10 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             all_error_count += error_count
 
         self.logger.info(border_fmt.format("-"*name_len))
-        line = [name_fmt.format("Totals:")]
-        [line.append(col_fmt.format(all_ratings[i])) for i in range(5)]
-        line.append(col_fmt.format(sum(all_ratings)))
-        self.logger.info("".join(line))
+        totals: list[str] = [name_fmt.format("Totals:")]
+        for i in range(5):
+            totals.append(col_fmt.format(str(all_ratings[i])))
+        totals.append(col_fmt.format(str(sum(all_ratings))))
+        self.logger.info("".join(totals))
         self.logger.info(border_fmt.format("-"*name_len))
         self.logger.info(f"Total count: {all_count} (includes errors), total errors: {all_error_count}")

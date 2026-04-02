@@ -167,6 +167,8 @@ make integration-tests-dedicated
 make all-tests          # Run the unit and integration tests.
 make all-tests-langflow # Run all the tests for the Langflow integration.
 
+make type-check         # Run the "ty" type checker on the code.
+
 make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
 make clean-code         # Synonym for "clean-tools".
 make clean-setup        # Undoes everything done by the setup target or provides
@@ -540,10 +542,7 @@ langflow-pipeline::
 	  ${JUST_STATS} ${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
-help-lf::
-	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
-
-help-langflow help-langflow-pipeline::
+help-lf help-langflow help-langflow-pipeline::
 	@echo "Help on the Langflow unit benchmark pipeline:"
 	@echo
 	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
@@ -780,6 +779,15 @@ integration-tests-dedicated:: run-command-checks
 	  uv run python -m unittest discover \
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
+
+.PHONY: type-check type-check-watch
+
+type-check::
+	@echo "Running 'ty' on the code."
+	uvx ty check ${SRC_DIR} 
+type-check-watch::
+	@echo "Running 'ty' on the code in 'watch' mode."
+	uvx ty check --watch ${SRC_DIR} 
 
 .PHONY: one-time-setup setup clean-setup 
 .PHONY: uninstall-uv 

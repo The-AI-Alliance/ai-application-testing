@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 
 from common.utils import setup
-from apps.chatbot import ChatBot, ChatBotShell, ResponseHandler
+from apps.chatbot import ChatBot, ChatBotShell, ChatBotResponseHandler
 
 def main():
     """
@@ -45,6 +45,9 @@ def main():
         template_dir = args.template_dir,
         data_dir = args.data_dir,
         confidence_level_threshold = args.confidence_threshold,
+        response_handler = ChatBotResponseHandler(
+            confidence_level_threshold = args.confidence_threshold, 
+            logger = logger),
         logger = logger)
     shell = ChatBotShell(chatbot, verbose = args.verbose)
     shell.cmdloop()

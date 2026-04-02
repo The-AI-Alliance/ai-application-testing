@@ -104,13 +104,13 @@ While oriented towards RL, OpenEnv can be used to build environment simulations 
 
 Similarly, [Patronus AI](https://www.patronus.ai){:target="patronus"} has described a technology they are working on called [Generative Simulators](https://www.patronus.ai/blog/introducing-generative-simulators){:target="patronus"} ([paper](https://patronus.ai/generative-simulators?_gl=1*94dbox*__gcl_au*MTg1ODg5MTQ0OC4xNzcxMzQ1MTg1) - PDF), an outgrowth of their work on various benchmarks, e.g., for the financial sector.
 
-## Registries, Competitions, and Leaderboards
+## Benchmarks, Registries, Competitions, and Leaderboards
 
-Several agent registries, competitions, and leaderboards have emerged that are good resources for finding agents that work well, along with the evaluations used to assess them.
+Several agent benchmarks, registries, competitions, and leaderboards have emerged that are good resources for finding agents that work well, along with the evaluations used to assess them.
 
 * [Agent Beats](https://agentbeats.dev/){:target="agent-beats"} is registry for agents, benchmarks, and a running competition organized by [Berkeley RDI](https://rdi.berkeley.edu/){:target="berkeley-rdi"} and their [Agentic AI MOOC](https://agenticai-learning.org/f25){:target="mooc"}.
-* [Exgentic](https://www.exgentic.ai/){:target="exg"} ([ArXiv paper](https://arxiv.org/abs/2602.22953){:target="arxiv"}) is an open-source leaderboard for general agents.
 * [Humanity's Last Exam](https://lastexam.ai/){:target="lastexam"} (HLE) is addressing the problem that state-of-the-art LLMs are now achieving over 90% accuracy on the most popular benchmarks, limiting informed measurement of capabilities. HLE is a multi-modal benchmark at the frontier of human knowledge, designed to be the _final_, closed-ended academic benchmark of its kind with broad subject coverage. The dataset consists of 2,500 challenging questions across over a hundred subjects. HLE is a global collaborative effort, with questions from nearly 1,000 subject expert contributors affiliated with over 500 institutions across 50 countries, comprised mostly of professors, researchers, and graduate degree holders.
+* [Exgentic](https://www.exgentic.ai/){:target="exg"} ([ArXiv paper](https://arxiv.org/abs/2602.22953){:target="arxiv"}) is an open-source leaderboard for general agents. Based on their observations, they conclude that general-purpose agents often outperform specialized agents and the model choice has a bigger impact than the agent framework or patterns used. Model choice also has the biggest impact on the cost profile. 
 
 <a id="other-tools"/>
 

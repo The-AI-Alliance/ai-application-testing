@@ -37,6 +37,8 @@ The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"
 
 Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, but also general guidance on evaluation concepts. Highly recommended.
 
+[Petri](https://www.anthropic.com/research/petri-open-source-auditing){:target="petri"} is an open-source auditing tool aimed at safety researchers.
+
 ## Babeş-Bolyai University
 
 [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are explore in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere.

@@ -14,14 +14,14 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from apps.chatbot import ChatBot
+from apps.chatbot import ChatBot, ChatBotResponseHandler
 from apps.chatbot.mcp_server.server import create_mcp_server
 
 def test_imports():
     """Test that all modules can be imported."""
     print("Testing imports...")
     try:
-        from apps.chatbot.mcp_server import create_mcp_server, register_chatbot_tools
+        from apps.chatbot.mcp_server.server import create_mcp_server
         print("✓ Successfully imported MCP server modules")
         return True
     except ImportError as e:
@@ -43,6 +43,9 @@ def test_chatbot_creation():
             template_dir="src/prompts/templates",
             data_dir="src/data",
             confidence_level_threshold=0.9,
+            response_handler = ChatBotResponseHandler(
+                confidence_level_threshold=0.9, 
+                logger=logger),
             logger=logger
         )
         print("✓ Successfully created ChatBot instance")

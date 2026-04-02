@@ -2,6 +2,8 @@
 
 This directory contains preliminary support for the components and orchestration code required to run the benchmark data synthesis and validation pipeline in [Langflow](https://www.langflow.org/).
 
+> **NOTE:** the `make type-check` target, which uses `ty`, skips this directory, so that we don't have to add the langflow dependency to the project, since not everyone will want to use it.
+
 ## Overview
 
 The benchmark pipeline consists of two main steps, but in one Langflow component:

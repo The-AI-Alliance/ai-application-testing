@@ -2,6 +2,7 @@ import io
 import logging
 import os
 import readline
+from typing import Any
 
 from litellm.types.utils import ModelResponse
 from common.utils import parse_json
@@ -11,12 +12,12 @@ class ResponseHandler():
     Understands the specific format of responses and 
     does appropriate deconstruction and handling.
     """
-    def __init__(self, confidence_level_threshold: float, logger: logging.Logger | None = None):
+    def __init__(self, confidence_level_threshold: float, logger: logging.Logger):
         self.logger = logger
         self.responses = []
         self.confidence_level_threshold = confidence_level_threshold
 
-    def __call__(self, response: ModelResponse) -> dict[str,any] | str:
+    def __call__(self, response: ModelResponse) -> dict[str,Any] | str:
         """
         This method deconstructs the response and then calls _handle() with it, 
         which should be overridden by derived classes to perform the desired handling.
@@ -25,7 +26,7 @@ class ResponseHandler():
             response (ModelResponse): The LiteLLM response
 
         Returns:
-            A `Union` that is either a `str` for an error message or a `dict[str,any]`
+            A `Union` that is either a `str` for an error message or a `dict[str,Any]`
             parsed from the response, with the following entries:
                 * "query": the user query
                 * "content": the "core" content we care about, as JSON. Can be `None` on error.
@@ -37,7 +38,7 @@ class ResponseHandler():
         try:
             parsed = parse_json(content)
             full = {
-                "query": parsed.get('query'),
+                "query": parsed.get('query'), 
                 "content": parsed,
                 "response": response.to_dict(),
             }
@@ -46,8 +47,7 @@ class ResponseHandler():
                 return handled
             else:
                 self.responses.append(handled)
-                if self.logger:
-                    self.logger.info(handled)
+                self.logger.info(handled)
                 return handled
         except ValueError as err:
             return f"""ValueError raised: "{err}" for content = "{content}"."""
@@ -56,10 +56,10 @@ class ResponseHandler():
         """Returns the JSON-formatted string content we care about."""
         response_dict = litellm_reponse.to_dict()
         # TODO: There must be an easier way to get the "content"!!!
-        content = response_dict['choices'][0]['message']['content']
+        content = response_dict['choices'][0]['message']['content']  # ty: ignore[not-subscriptable]
         return content
 
-    def _handle(self, processed_response: dict[str,any]) -> dict[str,any] | str:
+    def _handle(self, processed_response: dict[str,Any]) -> dict[str,Any] | str:
         """
         Override this method for additional handling. It is not necessary to call this parent implementation.
         It is okay to modify the values for these keys, but not remove any of them. It is also okay to 
@@ -102,16 +102,16 @@ This could be the next business day. If you are having an emergency, please call
         "other": team_member_reply,
     }
     
-    def __init__(self, confidence_level_threshold: float, logger: logging.Logger | None = None):
+    def __init__(self, confidence_level_threshold: float, logger: logging.Logger):
         super().__init__(confidence_level_threshold=confidence_level_threshold, logger=logger)
 
-    def _handle(self, processed_response: dict[str,any]) -> dict[str,any] | str:
+    def _handle(self, processed_response: dict[str,Any]) -> dict[str,Any] | str:
         """
         _Usually_, we return one of our "canned" replies to the user. Exceptions are
         when we think the generated text is likely (high confidence value...) to be a good response.
         """
         try:
-            content       = processed_response.get('content')
+            content       = processed_response.get('content', {})
             query         = content.get('query')
             reply         = content.get('reply')
             label         = reply.get('label')
@@ -119,20 +119,19 @@ This could be the next business day. If you are having an emergency, please call
             body_parts    = reply.get('body_parts', '')
             actions       = reply.get('actions', '')
             confidence    = reply.get('confidence', 0.0)
-            text          = reply.get('text', '')
+            text          = str(reply.get('text', ''))
             
-            other  = self.replies.get('other')
-            answer = None
+            other  = str(self.replies.get('other', ''))
+            answer = ''
             if confidence < self.confidence_level_threshold:
-                if self.logger:
-                    self.logger.info(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (content = {content})")
+                self.logger.info(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (content = {content})")
                 answer = other
             else:
                 match label:
                     case 'prescription' | 'appointment':
                         answer = text
                     case 'emergency':
-                        answer = self.replies['emergency']
+                        answer = str(self.replies.get('emergency', ''))
                     case _:
                         answer = other
             

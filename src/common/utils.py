@@ -10,7 +10,7 @@ from importlib import metadata
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from pprint import pprint
-from typing import Callable
+from typing import Any, Callable
 
 from litellm.types.utils import ModelResponse
 
@@ -25,27 +25,30 @@ common_defaults = {
 timestamp_str_fmt  = '%Y:%m:%d %H:%M:%S'
 timestamp_file_fmt = '%Y-%m-%d_%H-%M-%S'
 
-
 def setup(
         tool: str, 
         description: str, 
         epilog: str = '', 
-        add_arguments: Callable[[argparse.ArgumentParser], None] = None,
-        omit_arguments: {str} = {}
-    ) -> (argparse.Namespace, logging.Logger):
+        add_arguments: Callable[[argparse.ArgumentParser], None] = lambda ap: None,
+        omit_arguments: set[str] = set(),
+    ) -> tuple[argparse.Namespace, logging.Logger]:
     parser = parser_with_common_args(
         tool, 
         description,
         epilog=epilog,
         omit_arguments=omit_arguments)
-    if add_arguments:
-        add_arguments(parser)
+    add_arguments(parser)
     args = parser.parse_args()
     logger = make_logger(args.log_file, name=tool, level=args.log_level)
     log_args(logger, tool, args, epilog=epilog)
     return args, logger
 
-def parser_with_common_args(tool: str, description: str, epilog: str = None, omit_arguments: {str} = {}) -> argparse.ArgumentParser:
+def parser_with_common_args(
+        tool: str,
+        description: str,
+        epilog: str = '', 
+        omit_arguments: set[str] = set()
+    ) -> argparse.ArgumentParser:
     """
     Returns an `ArgumentParser` with the default arguments and a format string 
     that can be used by the calling program to print the actual values specified
@@ -74,7 +77,7 @@ def parser_with_common_args(tool: str, description: str, epilog: str = None, omi
         parser.add_argument("-l", "--log-file", default=default_log_file, 
             help=f"Where logging is written. Default: {default_log_file}.")
         parser.add_argument("--log-level", default=logging.INFO, type=int, 
-            help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ({logging_level_to_string(default_log_level)}).")
+            help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ('logging.INFO').")
     if not 'verbose' in omit_arguments:
         parser.add_argument("-v", "--verbose", action='store_true',
                 help="Print some extra output. Useful for some testing and debugging scenarios.")
@@ -84,17 +87,17 @@ def add_info_str(label: str, value: str, separator: str = ':') -> str:
     lbl = label + separator
     return f"  {lbl:20s} {value}"
 
-def logging_level_to_string(level: int = -1):
+def logging_level_to_string(logger: logging.Logger, level: int = -1):
     if level < 0:
         level = logger.getEffectiveLevel()
     return logging.getLevelName(level)
 
-def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = None):
+def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ''):
     ns = now_str(fmt = timestamp_str_fmt)
     logging.info(f" ({ns}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
         if k == 'log_level':
-            v = f"{v} (== logging.{logging_level_to_string(v)})"
+            v = f"{v} (== logging.{logging_level_to_string(logger, v)})"
         logging.info(add_info_str(k, v))
 
     if epilog:
@@ -179,7 +182,7 @@ def ensure_dirs_exist(*dirs):
     if len(missing_dirs) > 0:
         raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
 
-def make_full_prompt(prompt: str, system_prompt: any, session: [(str,str)] = []) -> str:
+def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str,str]] = []) -> str:
     ss = ["SESSION:"]
     for query, reply in session:
         ss.append(f"query: {query}")
@@ -196,7 +199,7 @@ USER PROMPT:
 {'\n'.join(ss)}
 """
 
-def parse_json(text: any) -> dict[str,any]:
+def parse_json(text: Any) -> dict[str,Any]:
     """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
     try:
         obj = json.loads(text)
@@ -205,7 +208,7 @@ def parse_json(text: any) -> dict[str,any]:
         raise ValueError(f"JSONDecodeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
 
 
-def extract_jsonl(text: str) -> [str]:
+def extract_jsonl(text: str) -> list[str]:
     """
     Sometimes the JSONL we ask for comes back without line feeds between the JSONL docs!
     Try to detect and fix this while splitting the string into JSONL lines. 
@@ -243,11 +246,11 @@ def extract_content(litellm_reponse: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""
     response_dict = litellm_reponse.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
-    content = response_dict['choices'][0]['message']['content']
+    content = response_dict['choices'][0]['message']['content'] # ty: ignore[not-subscriptable]
     # print(f"content (type = {type(content)}: {content})")
     return content
 
-def dict_pop(dictionary: dict[str,any], key: str) -> any:
+def dict_pop(dictionary: dict[str,Any], key: str) -> Any:
     """
     Works like dict.pop() should work; rather than raise an exception, 
     just return None and don't modify the dictionary.

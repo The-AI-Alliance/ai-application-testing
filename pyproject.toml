@@ -26,3 +26,12 @@ requires = [
   "setuptools >= 40.9.0",
 ]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ty>=0.0.27",
+]
+
+[tool.ty.src]
+include = ["src"]
+exclude = ["src/tools/langflow"]

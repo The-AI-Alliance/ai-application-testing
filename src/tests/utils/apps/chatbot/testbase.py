@@ -7,6 +7,7 @@ import json, logging, os, random, re, sys, time, unittest
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
+from typing import Any
 
 from apps.chatbot import ChatBot, ChatBotResponseHandler, ChatBotShell
 from common.utils import dict_pop, parse_json
@@ -16,10 +17,10 @@ class TestPrompt():
     """Class to hold a benchmark datum: a prompt and expected labels, actions, and rating."""
     def __init__(self,
         query: str,
-        labels: [str],
-        actions: [str],
+        labels: list[str],
+        actions: list[str],
         rating: int,
-        reason: str = None,
+        reason: str = '',
         keywords: dict[str,str] = {}):
         self.query = query
         self.labels = labels
@@ -40,7 +41,7 @@ class TestPrompt():
     def __repr__(self) -> str:
         return f"""TestPrompt(query='{self.query}',labels='{self.labels}',actions='{self.actions}',rating={self.rating},reason={self.reason},keywords={self.keywords})"""
 
-    def dict(self) -> dict[str,any]:
+    def dict(self) -> dict[str,Any]:
         d = {
             'name': 'TestPrompt',
         }
@@ -59,7 +60,7 @@ class LowConfidenceResult():
     def __init__(self, 
         query: str, 
         reasons: str,
-        reply: dict[str,any], 
+        reply: dict[str,Any], 
         test_prompt: TestPrompt, 
         rating_threshold: int, 
         confidence_threshold: float):
@@ -73,7 +74,7 @@ class LowConfidenceResult():
     def __repr__(self) -> str:
         return f"""LowConfidenceResult(query='{self.query}',reasons='{self.reasons}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
-    def dict(self) -> dict[str,any]:
+    def dict(self) -> dict[str,Any]:
         # We don't use __dict__ here because we need to turn the TestPrompt instance into a dictionary.
         # TODO: Is there a more standard way to make any class recursively convertible to a dictionary?
         return {
@@ -108,6 +109,9 @@ class TestBase(unittest.TestCase):
             template_dir = self.template_dir,
             data_dir = self.data_dir,
             confidence_level_threshold = self.confidence_threshold,
+            response_handler = ChatBotResponseHandler(
+                confidence_level_threshold = self.confidence_threshold, 
+                logger = logger),
             logger = logger)
         self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
 
@@ -217,10 +221,10 @@ class TestBaseRunner(TestBase):
             print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
             log_file_template = f"{def_log_dir}/{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
-        TestBaseRunner.log_file_path = Path(log_file_template.format(class_name=cls.__name__))
-        print(f"\n  ** Logging to {TestBaseRunner.log_file_path} ** \n")
-        os.makedirs(TestBaseRunner.log_file_path.parent, exist_ok=True)
-        TestBaseRunner.log_file = TestBaseRunner.log_file_path.open('a') # append mode, because we _may_ share it across tests.
+        log_file_path = Path(log_file_template.format(class_name=cls.__name__))
+        print(f"\n  ** Logging to {log_file_path} ** \n")
+        os.makedirs(log_file_path.parent, exist_ok=True)
+        TestBaseRunner.log_file = log_file_path.open('a') # append mode, because we _may_ share it across tests.
 
     @classmethod
     def tearDownClass(cls):
@@ -229,11 +233,12 @@ class TestBaseRunner(TestBase):
         print(f"Warning count:          {TestBaseRunner.total_warning_count}")
         print(f"Error count:            {TestBaseRunner.total_error_count}")
         print()
-        TestBaseRunner.log_file.close()
+        if TestBaseRunner.log_file:
+            TestBaseRunner.log_file.close()
         if TestBaseRunner.total_error_count:
             raise AssertionError(f"{TestBaseRunner.total_error_count} errors reported!")
 
-    def load_test_data(self, path: Path) -> [TestPrompt]:
+    def load_test_data(self, path: Path) -> list[TestPrompt]:
         if not path.exists():
             raise FileNotFoundError(path)
 
@@ -300,10 +305,10 @@ class TestBaseRunner(TestBase):
         else:
             metadata['answer'] = answer
 
-        actual_query1        = answer.get('query')
+        actual_query1        = str(answer.get('query'))
         actual_rtu           = answer.get('reply_to_user')
-        actual_content       = answer.get('content')
-        actual_query2        = actual_content.get('query')
+        actual_content       = answer.get('content', {})
+        actual_query2        = str(actual_content.get('query'))
         actual_reply         = actual_content.get('reply')
         actual_label         = actual_reply.get('label')
         actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
@@ -390,7 +395,7 @@ class TestBaseRunner(TestBase):
 
     def try_queries(self, 
         file_name: Path | str, 
-        sample_rate: float = None, 
+        sample_rate: float = 0.0, 
         rating_threshold: int = TestBase.default_rating_threshold,
         confidence_threshold: float = TestBase.default_confidence_threshold):
         """
@@ -399,7 +404,7 @@ class TestBaseRunner(TestBase):
         then accumulate errors and report them at the end. Otherwise, fail on the first prompt
         where we detect errors in the result.
         """ 
-        if not sample_rate:
+        if not sample_rate > 0.0:
             sample_rate = self.sample_rate
 
         d = {
@@ -441,7 +446,7 @@ class TestBaseRunner(TestBase):
             # Show we aren't dead by printing counts...
             print(f"({lcr_count},{warning_count},{error_count}),", end='')  
 
-    def _sample(self, collection: list[any], sample_rate: float) -> list[any]:
+    def _sample(self, collection: list[Any], sample_rate: float) -> list[Any]:
         """
         The sample_rate (between 0.0 and 1.0) is a pragmatic compromise due to relatively slow local inference
         and expensive inference services. Use a low value for unit tests that are run frequently and need to be fast.
@@ -462,5 +467,5 @@ class TestBaseRunner(TestBase):
             samples = random.sample(collection, k=k)
         return samples
 
-    def _check_label(self, expected: [str], actual: str) -> str:
+    def _check_label(self, expected: list[str], actual: str) -> str:
         return "" if actual in expected else f"""label '{actual}' not in expected: {expected}."""

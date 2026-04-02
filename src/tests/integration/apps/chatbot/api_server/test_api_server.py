@@ -4,7 +4,7 @@ Integration tests for the ChatBot API server.
 These tests verify that the OpenAI-compatible API server works correctly
 with the ChatBot implementation.
 """
-import json, pytest
+import json, logging, pytest
 from fastapi.testclient import TestClient
 from pathlib import Path
 
@@ -19,7 +19,9 @@ def api_server():
     service_url = "http://localhost:11434"
     template_dir = str(Path(__file__).parent.parent.parent.parent.parent.parent / "prompts" / "templates")
     data_dir = str(Path(__file__).parent.parent.parent.parent.parent.parent / "data")
-    
+    logger = logging.getLogger('test_api_server')
+    logger.setLevel(logging.INFO)
+
     server = APIServer(
         model=model,
         service_url=service_url,
@@ -28,7 +30,7 @@ def api_server():
         confidence_level_threshold=0.9,
         host="127.0.0.1",
         port=8000,
-        logger=None
+        logger=logger
     )
     
     return server

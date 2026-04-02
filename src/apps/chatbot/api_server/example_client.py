@@ -8,6 +8,16 @@ import os
 import sys
 from openai import OpenAI
 
+example_content  = "I need a refill for my blood pressure medication"
+example_messages = [
+    {"role": "user", "content": example_content}
+]
+
+def make_client() -> OpenAI:
+    return OpenAI(
+        base_url="http://localhost:8000/v1",
+        api_key="not-needed"  # API key not required for local server
+    )
 
 def example_basic_query():
     """Example: Basic non-streaming query."""
@@ -15,19 +25,13 @@ def example_basic_query():
     print("Example 1: Basic Non-Streaming Query")
     print("="*60)
     
-    client = OpenAI(
-        base_url="http://localhost:8000/v1",
-        api_key="not-needed"  # API key not required for local server
-    )
+    client = make_client()
     
     response = client.chat.completions.create(
         model="ollama_chat/gpt-oss:20b",
-        messages=[
-            {"role": "user", "content": "I need a refill for my blood pressure medication"}
-        ]
-    )
+        messages=example_messages)  # ty: ignore[invalid-argument-type]
     
-    print(f"\nUser: I need a refill for my blood pressure medication")
+    print(f"\nUser: {example_content}")
     print(f"Assistant: {response.choices[0].message.content}")
     print(f"\nMetadata:")
     print(f"  - Model: {response.model}")
@@ -41,19 +45,14 @@ def example_streaming_query():
     print("Example 2: Streaming Query")
     print("="*60)
     
-    client = OpenAI(
-        base_url="http://localhost:8000/v1",
-        api_key="not-needed"
-    )
+    client = make_client()
     
-    print(f"\nUser: I'd like to schedule an appointment")
+    print(f"\nUser: {example_content}")
     print(f"Assistant: ", end="", flush=True)
     
-    stream = client.chat.completions.create(
+    stream = client.chat.completions.create( # ty: ignore[no-matching-overload]
         model="ollama_chat/gpt-oss:20b",
-        messages=[
-            {"role": "user", "content": "I'd like to schedule an appointment"}
-        ],
+        messages=example_messages,
         stream=True
     )
     
@@ -70,33 +69,29 @@ def example_conversation():
     print("Example 3: Multi-Turn Conversation")
     print("="*60)
     
-    client = OpenAI(
-        base_url="http://localhost:8000/v1",
-        api_key="not-needed"
-    )
-    
-    messages = [
-        {"role": "user", "content": "Hello, I need some help"}
-    ]
+    client = make_client()
     
     # First turn
-    print(f"\nUser: {messages[0]['content']}")
+    print(f"\nUser: {example_messages[0]['content']}")
     response = client.chat.completions.create(
         model="ollama_chat/gpt-oss:20b",
-        messages=messages
+        messages=example_messages   # ty: ignore[invalid-argument-type]
     )
     assistant_reply = response.choices[0].message.content
     print(f"Assistant: {assistant_reply}")
     
+    messages = example_messages.copy()
+
     # Add assistant response to conversation
     messages.append({"role": "assistant", "content": assistant_reply})
     
     # Second turn
+    messages = example_messages.copy()
     messages.append({"role": "user", "content": "I need to refill my lisinopril prescription"})
     print(f"\nUser: {messages[-1]['content']}")
     response = client.chat.completions.create(
         model="ollama_chat/gpt-oss:20b",
-        messages=messages
+        messages=messages   # ty: ignore[invalid-argument-type]
     )
     print(f"Assistant: {response.choices[0].message.content}")
 
@@ -107,19 +102,17 @@ def example_emergency_query():
     print("Example 4: Emergency Query")
     print("="*60)
     
-    client = OpenAI(
-        base_url="http://localhost:8000/v1",
-        api_key="not-needed"
-    )
-    
+    client = make_client()
+
+    content = "I'm having severe chest pain and difficulty breathing"
     response = client.chat.completions.create(
         model="ollama_chat/gpt-oss:20b",
         messages=[
-            {"role": "user", "content": "I'm having severe chest pain and difficulty breathing"}
+            {"role": "user", "content": content}
         ]
     )
     
-    print(f"\nUser: I'm having severe chest pain and difficulty breathing")
+    print(f"\nUser: {content}")
     print(f"Assistant: {response.choices[0].message.content}")
 
 
@@ -129,11 +122,7 @@ def example_list_models():
     print("Example 5: List Available Models")
     print("="*60)
     
-    client = OpenAI(
-        base_url="http://localhost:8000/v1",
-        api_key="not-needed"
-    )
-    
+    client = make_client()    
     models = client.models.list()
     
     print(f"\nAvailable models:")

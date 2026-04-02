@@ -5,6 +5,7 @@ import os
 import readline
 import sys
 from pathlib import Path
+from typing import Any
 
 from litellm import completion
 from openai import OpenAIError
@@ -26,11 +27,12 @@ class ChatBot:
         service_url: str,
         template_dir: str,
         data_dir: str,
-        confidence_level_threshold: float = default_confidence_threshold,
-        response_handler: ResponseHandler | None = None,
-        logger: logging.Logger | None = None):
+        confidence_level_threshold: float,
+        response_handler: ResponseHandler,
+        logger: logging.Logger,
+        ):
         """
-        If the `response_handler` is `None`, a `ChatBotResponseHandler` will be used.
+        Use a `ChatBotResponseHandler` for the response_handler.
         """
         self.model             = model
         self.service_url       = service_url
@@ -76,7 +78,7 @@ class ChatBot:
         self.template = load_yaml(self.template_file)
         self.system_prompt = self.template.get('system')
         if not self.system_prompt:
-            error_msg = f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{template}"
+            error_msg = f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}"
             if self.logger:
                 self.logger.error(error_msg)
             raise ValueError(error_msg)
@@ -91,7 +93,7 @@ class ChatBot:
             self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
 
-    def query(self, query: str) -> dict[str,any] | str:
+    def query(self, query: str) -> dict[str,Any] | str:
         """
         Runs a user query and returns either an error message or a dictionary of values
         in the the parsed response. See the `ResponseHandler` object that was passed to
@@ -175,7 +177,7 @@ class ChatBotShell(cmd.Cmd):
                 print("Try your query again or report an issue to the development team:")
                 print("  https://github.com/The-AI-Alliance/ai-application-testing")
             else:
-                answer = response.get('reply_to_user')
+                answer = response.get('reply_to_user', '')
                 print(answer+'\n', file=self.stdout)
                 if self.verbose:
                     print(f"Full response: {response}\n", file=self.stdout)
