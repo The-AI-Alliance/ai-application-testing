@@ -32,7 +32,8 @@ MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:31b
 MODEL_LLAMA32         ?= ${ollama_prefix}/llama3.2:3B
 MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
-MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_QWEN35} ${MODEL_GEMMA4} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+MODELS                ?= ${MODEL_QWEN35} ${MODEL_GEMMA4}
+#MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_QWEN35} ${MODEL_GEMMA4} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
 MODEL                 ?= ${MODEL_GPT_OSS}
 
@@ -41,8 +42,10 @@ SRC_DIR               ?= src
 OUTPUT_DIR            ?= ${PWD}/output/${MODEL_FILE_NAME}
 OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
-# The same data directory can be used for input and output
+# DATA_DIR: Where the tools write and later read data.
+# TEST_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
 DATA_DIR              ?= ${OUTPUT_DIR}/data
+TEST_DATA_DIR         ?= tests/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
 # Some specific variables passed as env. vars. to the ChatBot.
@@ -702,7 +705,7 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-	  export DATA_DIR=${DATA_DIR} && \
+	  export DATA_DIR=${TEST_DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
@@ -726,7 +729,7 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-	  export DATA_DIR=${DATA_DIR} && \
+	  export DATA_DIR=${TEST_DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
@@ -776,7 +779,7 @@ integration-tests-dedicated:: run-command-checks
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
 	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-	  export DATA_DIR=${DATA_DIR} && \
+	  export DATA_DIR=${TEST_DATA_DIR} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
