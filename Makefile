@@ -27,11 +27,12 @@ JUST_STATS            ?=
 # Different models we have used. See the "all-models-*" targets:
 ollama_prefix          = ollama_chat
 MODEL_GPT_OSS         ?= ${ollama_prefix}/gpt-oss:20b
+MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:35b
+MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:31b
 MODEL_LLAMA32         ?= ${ollama_prefix}/llama3.2:3B
-MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:27b
 MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
-MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_LLAMA32} ${MODEL_QWEN35} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_QWEN35} ${MODEL_GEMMA4} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
 MODEL                 ?= ${MODEL_GPT_OSS}
 
@@ -56,7 +57,7 @@ CONFIDENCE_THRESHOLD  ?= 0.9
 # TESTS_LOGS_FILE_GLOB:     Just used for messages printed by targets.
 ACCUMULATE_TEST_ERRORS    ?= True
 RATING_THRESHOLD          ?= 4
-TESTS_LOGS_DIR            ?= tests/logs
+TESTS_LOGS_DIR            ?= tests/logs/${MODEL_FILE_NAME}
 TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{class_name}-${TIMESTAMP}.jsonl
 TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
@@ -387,6 +388,7 @@ print-info-code::
 	@echo "  INFERENCE_SERVICE:       ${INFERENCE_SERVICE}"
 	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
+	@echo "  CHATBOT_TEMPLATES_DIR:   ${CHATBOT_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:                 ${SRC_DIR}"
 	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
