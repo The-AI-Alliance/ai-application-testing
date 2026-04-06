@@ -8,7 +8,7 @@ dependencies = [
     "gnureadline>=8.3.3",
     "hypothesis>=6.151.9",
     "levenshtein>=0.27.3",
-    "litellm==1.82.0",  # Upgrades NOT allowed currently because of serious sec. vulnerabilities in 1.82.6 and .7!!
+    "litellm>=1.83.0",
     "fastmcp>=0.1.0",
     "openai>=2.26.0",
     "rich>=14.3.3",
