@@ -155,7 +155,59 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 
 ## Agent Development Tools
 
-There is a rapidly growing list of tools for developing agents. In addition to many of the tools mentioned above, Here, we list a few that offer &ldquo;non-trivial&rdquo; integrated support for evaluation.
+There is a rapidly growing list of tools for developing agents. In addition to many of the tools mentioned above, Here, are some additional for consideration.
+
+### Agent Skills
+
+The concept of [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"} was defined recently by [Anthropic](https://anthropic.com/){:target="anthropic"} as a way to specify skills in a structured format and teach agents how to use them. It has the potential to become a widely-used, standard approach. 
+
+Let's examine skills as defined on the [Agent Skills](https://agentskills.io/){:target="agent-skills"} website (see also the [GitHub](https://github.com/agentskills/agentskills){:target="agent-skills-gh"} repo). Quoting from the [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"} page:
+
+{: .attention}
+> Agent Skills are a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
+>
+> At its core, a skill is a folder containing a `SKILL.md` file. This file includes metadata (name and description, at a minimum) and instructions that tell an agent how to perform a specific task. Skills can also bundle scripts, templates, and reference materials. 
+
+The additional, optional content is put in subdirectories:
+
+* `scripts`: Executable code
+* `references`: Documentation
+* `assets`: Templates, resources
+
+Because of context size limitations, skill implementations should use _progressive disclosure_ to manage context efficiently. Quoting again from [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"}:
+
+{: .attention}
+> * **Discovery:** At startup, agents should load only the name and description of each available skill, just enough to know when it might be relevant.
+> * **Activation:** When a task matches a skill’s description, the agent reads the full `SKILL.md` instructions into context.
+> * **Execution:** The agent follows the instructions, optionally loading referenced files or executing bundled code as needed.
+
+Here is an example `SKILL.md` file they provide:
+
+```markdown
+---
+name: pdf-processing
+description: Extract PDF text, fill forms, merge files. Use when handling PDFs.
+---
+
+# PDF Processing
+
+## When to use this skill
+Use this skill when the user needs to work with PDF files...
+
+## How to extract text
+1. Use pdfplumber for text extraction...
+
+## How to fill forms
+...
+```
+
+The full specification for skills is [here](https://agentskills.io/specification){:target="agent-skills"} and examples are in Anthropic's [`skills` GitHub repo](https://github.com/anthropics/skills){:target="anthropic-skills-gh"}. A catalog of skills can be found at [`skills.sh`](https://skills.sh/){:target="skills-sh"}.
+
+See also this blog post, [I Still Prefer MCP Over Skills](https://david.coffee/i-still-prefer-mcp-over-skills/){:target="skills-mcp"}, which compares the pros and cons of using MCP Servers vs. skills for different purposes.
+
+### Other Agent Development Tools
+
+The following is a list of additional tools that offer integrated support for evaluation.
 
 * OpenAI's [AGENTS.md](https://agents.md/){:target="oaia"} ([GitHub](https://github.com/agentsmd/agents.md){:target="oaia-gh"} is a simple Markdown format for guiding coding agents. They describe it as a README for agents: a dedicated, predictable place to provide the context and instructions to help AI coding agents work on projects.
 * [CUGA](https://cuga.dev/){:target="cuga"} (_ConfigUrable Generalist Agent_) ([GitHub](https://github.com/cuga-project/cuga-agent){:target="cuga-gh"}, [IBM blog post](https://research.ibm.com/blog/cuga-agent-framework){:target="ibm-blog"}, [HuggingFace blog post](https://huggingface.co/blog/ibm-research/cuga-on-hugging-face){:target="cuga-hf"}) is an agent framework from IBM Research that is purpose-built for enterprise automation. It integrates several popular agentic patterns, such as [ReAct](https://agent-patterns.readthedocs.io/en/stable/patterns/react.html){:target="agent-patterns"}, [CodeAct](https://machinelearning.apple.com/research/codeact){:target="codeact1"} (and [here](https://notes.muthu.co/2025/12/the-most-interesting-ai-agent-design-pattern-right-now/){:target="codeact2"}), and [Planner-Executor](https://medium.com/@jaouadi.mahdi1/separating-ai-agents-into-planner-and-executor-7705b58d79fd){:target="pe"}. CUGA provides a modular architecture enabling trustworthy, policy-aware, and composable automation across web interfaces, APIs, and custom enterprise systems. It also takes evaluation seriously, with built-in tools and examples.
@@ -163,10 +215,6 @@ There is a rapidly growing list of tools for developing agents. In addition to m
 * Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
 * [Mozilla AI's](https://www.mozilla.ai){:target="mozilla"} [`any-agent`](https://github.com/mozilla-ai/any-agent){:target="mozilla"} ([blog post](https://www.mozilla.ai/open-tools/choice-first-stack/any-agent){:target="mozilla"}) abstracts over other agent frameworks, providing common services like observability with the ability to switch out agent frameworks as needed.
 * [`weave-cli`](https://github.com/maximilien/weave-cli) is a tool for working with vector databases and related agents more easily. It has built-in features for running evaluations.
-
-## Agent Skills
-
-TODO: The concept of _skills_ is getting a lot of attention.
 
 ## Other References on Agent Development
 
