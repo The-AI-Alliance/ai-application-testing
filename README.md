@@ -192,7 +192,7 @@ The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the temp
 {: .note}
 > **NOTE:**
 >
-> These template files were originally designed for use with the `llm` CLI tool (see the Appendix in the repo's [`README`]({{site.gh_edit_repository}}/) for details about `llm`). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
+> These template files were originally designed for use with the `llm` CLI tool (see the Appendix below for details about `llm`). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage) is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
 
 The `tdd-example-refill-chatbot.py` tool passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. As the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/) explains, this is a very ad-hoc approach to creating and testing a _unit benchmark_.
 

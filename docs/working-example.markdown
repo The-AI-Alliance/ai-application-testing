@@ -326,7 +326,7 @@ The same template file was used for evaluating the three data files:
 
 ### Run the Langflow Pipeline for the Tools
 
-The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/) pipeline. See [`src/tools/langflow/README.md`]({{site.gh_edit_repository}}/tree/main/src/tools/langflow/README.md) for details.
+The unit benchmark data synthesis and validation tools can also be executed as a [Langflow](https://www.langflow.org/){:target="langflow"} pipeline. See [`src/tools/langflow/README.md`]({{site.gh_edit_repository}}/tree/main/src/tools/langflow/README.md){:target="langflow-gh"} for details.
 
 ## Run the ChatBot Example Application
 
@@ -427,7 +427,7 @@ Try it!
 
 {: .note}
 > **Note:**
-> It is also possible to configure Open WebUI to use the ChatBot MCP server (discussed next). See the Open WebUI [documentation](https://docs.openwebui.com) for details on configuring MCP servers.
+> It is also possible to configure Open WebUI to use the ChatBot MCP server (discussed next). See the Open WebUI [documentation](https://docs.openwebui.com){:target="openwebui"} for details on configuring MCP servers.
 
 ### An MCP Server for the ChatBot
 

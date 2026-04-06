@@ -21,7 +21,7 @@ So far in this guide, we have focused on testing AI-enabled applications in a ge
 
 [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are a broad class of software components with behaviors that are complementary to the capabilities that models themselves provide. They range from relatively simple to very sophisticated. The healthcare ChatBot application is relatively simple. It adds context information to user queries to create prompts and it uses custom handling of the responses. For most use cases, instead of returning the generated text to the user, it presents a message from a limited set of predefined messages, so we have better control over potentially &ldquo;suboptimal&rdquo; generated responses. 
 
-More sophisticated agents include planning, adjustment of the plan based on results (i.e., _course correction_), reasoning, and even autonomous action (when permitted). An example of a more sophisticated agent is the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="_blank"}, which demonstrates an important agent design pattern, <em>Deep Research Agents</em>, with several example applications. (It is built on [LastMile AI's](https://www.lastmileai.dev/){:target="lastmile"} agent framework, [MCP Agent](https://github.com/lastmile-ai/mcp-agent){:target="mcp-agent"}.) An example of an even more advanced agent is [OpenClaw](https://openclaw.ai).
+More sophisticated agents include planning, adjustment of the plan based on results (i.e., _course correction_), reasoning, and even autonomous action (when permitted). An example of a more sophisticated agent is the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="_blank"}, which demonstrates an important agent design pattern, <em>Deep Research Agents</em>, with several example applications. (It is built on [LastMile AI's](https://www.lastmileai.dev/){:target="lastmile"} agent framework, [MCP Agent](https://github.com/lastmile-ai/mcp-agent){:target="mcp-agent"}.) An example of an even more advanced agent is [OpenClaw](https://openclaw.ai){:target="openclaw"}.
 
 Agents are arguably the most rapidly evolving area of the AI ecosystem right now. While we believe the concepts discussed in this chapter will remain relevant for a long time, specific tools and services mentioned may not.
  
@@ -102,7 +102,7 @@ Some of the benefits of OpenEnv compared to other options include better type sa
 
 While oriented towards RL, OpenEnv can be used to build environment simulations for use by agent evaluations, especially where a task's step-by-step _state evolution_ needs to be observed and progress measured.
 
-Similarly, [Patronus AI](https://www.patronus.ai){:target="patronus"} has described a technology they are working on called [Generative Simulators](https://www.patronus.ai/blog/introducing-generative-simulators){:target="patronus"} ([paper](https://patronus.ai/generative-simulators?_gl=1*94dbox*__gcl_au*MTg1ODg5MTQ0OC4xNzcxMzQ1MTg1) - PDF), an outgrowth of their work on various benchmarks, e.g., for the financial sector.
+Similarly, [Patronus AI](https://www.patronus.ai){:target="patronus"} has described a technology they are working on called [Generative Simulators](https://www.patronus.ai/blog/introducing-generative-simulators){:target="patronus"} ([paper](https://patronus.ai/generative-simulators?_gl=1*94dbox*__gcl_au*MTg1ODg5MTQ0OC4xNzcxMzQ1MTg1){:target="patronus-pdf"} - PDF), an outgrowth of their work on various benchmarks, e.g., for the financial sector.
 
 ## Benchmarks, Registries, Competitions, and Leaderboards
 
@@ -120,7 +120,7 @@ The following tools meet various requirements for large-scale, enterprise develo
 
 ### Arize Phoenix
 
-(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [Arize Phoenix](https://arize.com/) is an open-source platform for LLM tracing, debugging, and offline or online evaluations. AX is their SaaS offering with additional scalability and other capabilities.
+(Mentioned in the [Anthropic evaluation post](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"})) [Arize Phoenix](https://arize.com/){:target="arize"} is an open-source platform for LLM tracing, debugging, and offline or online evaluations. AX is their SaaS offering with additional scalability and other capabilities.
 
 ### AssetOpsBench
 
@@ -214,7 +214,7 @@ The following is a list of additional tools that offer integrated support for ev
     * A related, more recent project from the same team is [Agent Lifecycle Toolkit](https://agenttoolkit.github.io/agent-lifecycle-toolkit/){:target="altk"}, which helps agent builders create better performing agents by addressing errors, like failure to follow instructions, struggling to find the right tool to use, violating business rules.
 * Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents.
 * [Mozilla AI's](https://www.mozilla.ai){:target="mozilla"} [`any-agent`](https://github.com/mozilla-ai/any-agent){:target="mozilla"} ([blog post](https://www.mozilla.ai/open-tools/choice-first-stack/any-agent){:target="mozilla"}) abstracts over other agent frameworks, providing common services like observability with the ability to switch out agent frameworks as needed.
-* [`weave-cli`](https://github.com/maximilien/weave-cli) is a tool for working with vector databases and related agents more easily. It has built-in features for running evaluations.
+* [`weave-cli`](https://github.com/maximilien/weave-cli){:target="weave-cli"} is a tool for working with vector databases and related agents more easily. It has built-in features for running evaluations.
 
 ## Other References on Agent Development
 
