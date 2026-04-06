@@ -39,7 +39,7 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
             name="template_dir",
             display_name="Template Directory",
             info="Directory containing prompt templates",
-            value="prompts/templates",
+            value="tools/prompts/templates",
         ),
         StrInput(
             name="data_dir",

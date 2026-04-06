@@ -40,7 +40,7 @@ def test_chatbot_creation():
         chatbot = ChatBot(
             model="ollama_chat/gpt-oss:20b",
             service_url="http://localhost:11434",
-            template_dir="src/prompts/templates",
+            template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
             confidence_level_threshold=0.9,
             response_handler = ChatBotResponseHandler(
@@ -70,7 +70,7 @@ def test_mcp_server_creation():
         result = create_mcp_server(
             model="ollama_chat/gpt-oss:20b",
             service_url="http://localhost:11434",
-            template_dir="src/prompts/templates",
+            template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
             confidence_level_threshold=0.9,
             logger=logger

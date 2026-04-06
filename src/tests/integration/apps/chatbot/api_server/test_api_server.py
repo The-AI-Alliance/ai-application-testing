@@ -10,15 +10,16 @@ from pathlib import Path
 
 from apps.chatbot.api_server.server import APIServer
 
-
 @pytest.fixture
 def api_server():
     """Create an API server instance for testing."""
     # Use test configuration
     model = "ollama_chat/gpt-oss:20b"
     service_url = "http://localhost:11434"
-    template_dir = str(Path(__file__).parent.parent.parent.parent.parent.parent / "prompts" / "templates")
-    data_dir = str(Path(__file__).parent.parent.parent.parent.parent.parent / "data")
+    # Ugly hack!!
+    src_dir_path = Path(__file__).parent.parent.parent.parent.parent.parent
+    template_dir = str(src_dir_path / "apps/chatbot/prompts/templates")
+    data_dir = str(src_dir_path / "data")
     logger = logging.getLogger('test_api_server')
     logger.setLevel(logging.INFO)
 

@@ -204,7 +204,7 @@ The arguments are as follows:
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
-The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
+The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
 
 {: .note}
 > **NOTE:**
@@ -261,9 +261,9 @@ The prompt used tells the model to return one of these _classification_ labels, 
 
 Each of these data files are generated with a single inference invocation, with each invocation using these corresponding template files:
 
-* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml){:target="yaml1"}
-* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml){:target="yaml2"}
-* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml){:target="yaml3"}
+* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml){:target="yaml1"}
+* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml){:target="yaml2"}
+* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml){:target="yaml3"}
 
 ### Run `unit-benchmark-data-validation`
 
@@ -322,7 +322,7 @@ Is this okay? Each data file is supposed to be for a particular use case, yet in
 
 The same template file was used for evaluating the three data files:
 
-* [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="yaml"}
+* [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="yaml"}
 
 ### Run the Langflow Pipeline for the Tools
 
@@ -372,7 +372,8 @@ The source code, etc. for this application and the automated tests are located i
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates  | [`src/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/){:target="prompts"} | The prompts used. |
+| Prompt Templates (Tools)  | [`src/tools/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/){:target="prompts-tools"} | The prompts used by the tools. |
+| Prompt Templates (ChatBot) | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application. |
 | Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
 | Integration Tests | [`src/tests/integration/`]({{site.gh_edit_repository}}/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |

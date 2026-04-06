@@ -27,11 +27,12 @@ JUST_STATS            ?=
 # Different models we have used. See the "all-models-*" targets:
 ollama_prefix          = ollama_chat
 MODEL_GPT_OSS         ?= ${ollama_prefix}/gpt-oss:20b
+MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:35b
+MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:31b
 MODEL_LLAMA32         ?= ${ollama_prefix}/llama3.2:3B
-MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:27b
 MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
-MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_LLAMA32} ${MODEL_QWEN35} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_QWEN35} ${MODEL_GEMMA4} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
 MODEL                 ?= ${MODEL_GPT_OSS}
 
@@ -56,7 +57,7 @@ CONFIDENCE_THRESHOLD  ?= 0.9
 # TESTS_LOGS_FILE_GLOB:     Just used for messages printed by targets.
 ACCUMULATE_TEST_ERRORS    ?= True
 RATING_THRESHOLD          ?= 4
-TESTS_LOGS_DIR            ?= tests/logs
+TESTS_LOGS_DIR            ?= tests/logs/${MODEL_FILE_NAME}
 TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{class_name}-${TIMESTAMP}.jsonl
 TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
@@ -66,8 +67,8 @@ INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
 DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-PROMPTS_TEMPLATES_DIR   ?= prompts/templates
-CHATBOT_TEMPLATES_DIR   ?= ${PROMPTS_TEMPLATES_DIR}
+PROMPTS_TEMPLATES_DIR   ?= tools/prompts/templates
+CHATBOT_TEMPLATES_DIR   ?= apps/chatbot/prompts/templates
 CHATBOT_DATA_DIR        ?= ${DATA_DIR}/chatbot
 CHATBOT_API_SERVER_HOST ?= localhost
 CHATBOT_API_SERVER_PORT ?= 8000
@@ -387,6 +388,7 @@ print-info-code::
 	@echo "  INFERENCE_SERVICE:       ${INFERENCE_SERVICE}"
 	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
+	@echo "  CHATBOT_TEMPLATES_DIR:   ${CHATBOT_TEMPLATES_DIR}"
 	@echo "  SRC_DIR:                 ${SRC_DIR}"
 	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
@@ -699,6 +701,7 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -722,6 +725,7 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -771,6 +775,7 @@ integration-tests-dedicated:: run-command-checks
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
