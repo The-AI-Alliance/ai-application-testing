@@ -211,7 +211,7 @@ def main():
     )
     parser.add_argument(
         "-t", "--template-dir",
-        default="prompts/templates",
+        default="tools/prompts/templates",
         help="Template directory"
     )
     parser.add_argument(

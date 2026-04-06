@@ -86,9 +86,9 @@ The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a to
 
 | Unit Benchmark | Template File | 
 | :------------- | :------------ | 
-| Prescription refill requests | [`synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
-| Apparent emergencies | [`synthetic-q-and-a_patient-chatbot-emergency-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
-| Other messages | [`synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
+| Prescription refill requests | [`synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills-data.yaml){:target="_blank"} |
+| Apparent emergencies | [`synthetic-q-and-a_patient-chatbot-emergency-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency-data.yaml){:target="_blank"} |
+| Other messages | [`synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml`]({{site.gh_edit_repository}}/blob/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.yaml){:target="_blank"} |
 
 Here is the prompt for the _emergency_ use case:
 
@@ -143,7 +143,7 @@ In the answer,
 The other two prompts are similarly worded for their requirements.
 
 {: .note}
-> **NOTE:** The runtime prompt template used by the ChatBot application, [`patient-chatbot.yaml`]({{site.gh_edit_repository}}/blob/main/src/prompts/templates/patient-chatbot.yaml){:target="_blank"}, integrates these three behavioral units and additional behaviors.
+> **NOTE:** The runtime prompt template used by the ChatBot application, [`patient-chatbot.yaml`]({{site.gh_edit_repository}}/blob/main/src/apps/chatbot/prompts/templates/patient-chatbot.yaml){:target="_blank"}, integrates these three behavioral units and additional behaviors.
 
 ### How Many Q&A Pairs Do We Need?
 

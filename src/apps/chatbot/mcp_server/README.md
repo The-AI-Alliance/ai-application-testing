@@ -138,7 +138,7 @@ All command-line options from the main ChatBot application are supported:
 
 - `--model` / `-m`: LLM model to use (default: "ollama_chat/gpt-oss:20b")
 - `--service-url` / `-s`: Inference service URL (default: "http://localhost:11434")
-- `--template-dir` / `-t`: Prompt template directory (default: "src/prompts/templates")
+- `--template-dir` / `-t`: Prompt template directory (default: "src/apps/chatbot/prompts/templates")
 - `--data-dir` / `-d`: Directory with some data (default: "src/data")
 - `--confidence-threshold` / `-c`: Confidence threshold level (default: 0.9)
 - `--log-file` / `-l`: Log file path

@@ -125,7 +125,7 @@ class TestBase(unittest.TestCase):
         """
         self.model                         = os.environ.get('MODEL', 'ollama_chat/gpt-oss:20b')
         self.service_url                   = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
-        self.template_dir                  = os.environ.get('PROMPTS_TEMPLATES_DIR', 'prompts/templates')
+        self.template_dir                  = os.environ.get('CHATBOT_TEMPLATES_DIR', 'apps/chatbot/prompts/templates')
         self.data_dir                      = os.environ.get('DATA_DIR', 'data')
         self.accumulate_test_results: bool = bool(os.environ.get('ACCUMULATE_TEST_ERRORS', False))
         self.sample_rate: float            = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
@@ -269,7 +269,7 @@ class TestBaseRunner(TestBase):
         rating_threshold: int = TestBase.default_rating_threshold,
         confidence_threshold: float = TestBase.default_confidence_threshold):
         """
-        See src/apps/prompts/templates/patient-chatbot.yaml for "requirements".
+        See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum, 
         we run all the examples and accumulate error messages, then report the results.
         Compare to `try_query()`.

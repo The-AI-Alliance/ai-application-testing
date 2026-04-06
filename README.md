@@ -187,7 +187,7 @@ The arguments are as follows:
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
-The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
+The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
 {: .note}
 > **NOTE:**
@@ -244,9 +244,9 @@ The prompt used tells the model to return one of these _classification_ labels, 
 
 Each of these data files are generated with a single inference invocation, with each invocation using these corresponding template files:
 
-* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
-* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
-* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
+* [`synthetic-q-and-a_patient-chatbot-emergency.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-emergency.yaml)
+* [`synthetic-q-and-a_patient-chatbot-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-prescription-refills.yaml)
+* [`synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-non-prescription-refills.yaml)
 
 There is also an additional, optional argument `--use-cases use-case1 use-case2` that allows you to specify one or more use cases to process. The current list of use cases is the following:
 
@@ -313,7 +313,7 @@ Is this okay? Each data file is supposed to be for a particular use case, yet in
 
 The same template file was used for evaluating the three data files:
 
-* [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml)
+* [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml)
 
 This tool also supports the optional argument `--use-cases use-case1 use-case2` that allows you to specify one or more use cases to process, defaulting to all of them.
 
@@ -354,7 +354,8 @@ The source code, etc. for this application and the automated tests are located i
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates  | [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/){:target="prompts"} | The prompts used. |
+| Prompt Templates (Tools)  | [`src/tools/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/){:target="prompts-tools"} | The prompts used by the tools. |
+| Prompt Templates (ChatBot) | [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application. |
 | Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
 | Integration Tests | [`src/tests/integration/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
@@ -434,7 +435,7 @@ If you want an excellent command-line tool for LLM inference, try [`llm`](https:
 
 There are several `make` targets at the end of `Makefile` that you can use to install and use `llm`. Run `make help-llm` for details. Here we summarize a few key points to know.
 
-We use several &ldquo;templates&rdquo; in [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates) with LiteLLM, but they were original designed for use with `llm`. The `make install-llm-templates` command will install them as `llm` templates, which you could use to make CLI versions of our Python tools, if you prefer.
+We use several &ldquo;templates&rdquo; in [`src/tools/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates) and [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates) with LiteLLM, but they were original designed for use with `llm`. The `make install-llm-templates` command will install them as `llm` templates, which you could use to make CLI versions of our Python tools, if you prefer.
 
 The target first executes the following `llm` command to see where `llm` has templates installed on your system: 
 
@@ -442,7 +443,7 @@ The target first executes the following `llm` command to see where `llm` has tem
 llm templates path
 ```
 
-On MacOS, it will be `$HOME/Library/Application Support/io.datasette.llm/templates`. The target then copies all the YAML files in the [`src/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates) directory to the correct location for templates on your system.
+On MacOS, it will be `$HOME/Library/Application Support/io.datasette.llm/templates`. The target then copies all the YAML files in the [`src/tools/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates) and [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates) directories to the correct location for templates on your system.
 
 Try `llm help` for more details on the CLI.
 

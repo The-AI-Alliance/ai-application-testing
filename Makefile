@@ -66,8 +66,8 @@ INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
 DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-PROMPTS_TEMPLATES_DIR   ?= prompts/templates
-CHATBOT_TEMPLATES_DIR   ?= ${PROMPTS_TEMPLATES_DIR}
+PROMPTS_TEMPLATES_DIR   ?= tools/prompts/templates
+CHATBOT_TEMPLATES_DIR   ?= apps/chatbot/prompts/templates
 CHATBOT_DATA_DIR        ?= ${DATA_DIR}/chatbot
 CHATBOT_API_SERVER_HOST ?= localhost
 CHATBOT_API_SERVER_PORT ?= 8000
@@ -699,6 +699,7 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -722,6 +723,7 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -771,6 +773,7 @@ integration-tests-dedicated:: run-command-checks
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
 	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \

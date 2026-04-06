@@ -92,7 +92,7 @@ The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a to
 
 In this case, we don't use a separate prompt for each unit benchmark. Instead, one prompt works for all cases, as it doesn't mention the benchmark details; it just asks the LLM to judge if the answer is suitable for the question in the Q&A pair. It returns a rating, 1-5, as discussed above, and its reasoning for the rating.
 
-The template file used is [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="_blank"}. The system prompt in the file is the following:
+The template file used is [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="_blank"}. The system prompt in the file is the following:
 
 ```text
 You are a teacher model that evaluates the quality of synthetic question and answer (Q&A) pairs

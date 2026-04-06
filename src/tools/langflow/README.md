@@ -44,7 +44,7 @@ Run `make help-langflow-pipeline` for a complete list and description of the com
 * `--just-validation` - Only run the validation step, which analyzes the synthetic data files it finds in the data directory and writes companion files there. Some final statistics are printed from the validation analysis.
 * `--just-stats` - Just print the statistics. Requires that the validation files are present in the data directory. (This is a useful flag for some quick sanity testing, too.)
 
-Also, by default, all the _use cases_ for which prompt files are found in `src/prompts/templates` are processed. Pass `--use-case USE_CASE` to run process just a single use case. The valid values for `USE_CASE` are:
+Also, by default, all the _use cases_ for which prompt files are found in `src/tools/prompts/templates` are processed. Pass `--use-case USE_CASE` to run process just a single use case. The valid values for `USE_CASE` are:
 
 * `prescription-refills`
 * `non-prescription-refills`
@@ -85,7 +85,7 @@ Start (or restart...) the Langflow app:
 1. Fill in the desired values in the _orchestrator_ comopnent. Some default values are shown. Note where paths start with `...`; they need to be replaced with absolute paths: 
     1. Specify your preferred model.
     1. Specify the service URL.
-    1. Enter the _absolute_ path to the `src/prompts/templates` directory in this repo or copy that directory somewhere else more convenient and use that path.
+    1. Enter the _absolute_ path to the `src/tools/prompts/templates` directory in this repo or copy that directory somewhere else more convenient and use that path.
     1. Enter the _absolute_ path to _either_ the `data` directory used in the CLI commands above or to another more convenient location. This is an output directory, so anywhere is fine.
     1. For the _Use Case_ field, leave it blank to process all use cases or enter one of the values discussed above for the `--use-case` CLI option.
 1. Fill in the output location in the _Write Output_ component, enter an _absolute_ path to the output file (or pick an S3 location, etc.).
