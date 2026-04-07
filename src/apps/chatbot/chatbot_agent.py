@@ -35,6 +35,7 @@ class ChatBotAgent(ChatBot):
         # LangChain Deep Agents uses "provider:model". Also, if
         # we use `ollama_chat` in the model argument, remove the "_chat".
         model2 = model.replace("/", ":").replace("_chat", "")
+
         super().__init__(
             model=model2,
             service_url=service_url,
@@ -46,24 +47,6 @@ class ChatBotAgent(ChatBot):
             template_file=self.default_template_file
         )
         
-        # provider_model = model.split("/")
-        # if len(provider_model) == 2:
-        #     model = provider_model[1]
-        #     if provider_model[0].startswith("ollama"):
-        #         self.agent = create_deep_agent(
-        #             model=model,
-        #             model_provider="ollama",
-        #             system_prompt=self.system_prompt,
-        #             # Additional Deep Agents configuration
-        #         )
-        #     else:
-        #         self.agent = create_deep_agent(
-        #             model=model,
-        #             model_provider=provider_model[0],
-        #             system_prompt=self.system_prompt,
-        #             # Additional Deep Agents configuration
-        #         )
-        # else:
         self.agent = create_deep_agent(
             model=self.model,
             system_prompt=self.system_prompt,
@@ -87,11 +70,20 @@ class ChatBotAgent(ChatBot):
         try:
             
             # Build context from session history
-            context = self._session_prompt()
-            full_query = f"{context}\n{query}" if context else query
-            
+            session = self._session_prompt()
+            query = { 
+                "messages": [
+                    {
+                      "role": "user",
+                      "content": query,
+                      # "content": f"{session}\nquery: {query}",
+                    },
+                ],
+            }
+
             # Invoke the agent
-            response = self.agent.invoke(query)
+            response = self.agent.invoke(query,
+                context=Context(model="openai:gpt-4.1"),)
             
             # Process the response through the handler
             handled = self.response_handler(response)
