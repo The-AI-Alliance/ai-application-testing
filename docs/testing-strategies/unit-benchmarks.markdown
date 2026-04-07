@@ -191,7 +191,7 @@ After some setup, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir tools/prompts/templates \
   --data-dir .../output/ollama_chat/gpt-oss_20b/data \
   --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```

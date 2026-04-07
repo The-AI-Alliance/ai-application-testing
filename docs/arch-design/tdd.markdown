@@ -168,8 +168,10 @@ We tried both system prompts with a number of user prompts (details below) using
 
 | Model | # Parameters | Hugging Face | Ollama | Description |
 | :---- | -----------: | :----------- | :----- | :---------- |
-| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. |
-| `llama3.2:3B` | 3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
+| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. Excellent performance, but requires a lot of memory. |
+| `gemma4:e4b`  |  8B | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} | Excellent performance, memory efficient. Recommended for machines with limited RAM. The larger `gemma4` models available, `26b` and `31b` work even better, but require comparable memory to `gpt-oss:20b`. |
+| `qwen3.5:35b` | 35B [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires a lot of memory. |
+| `llama3.2:3B` |  3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
 | `smollm2:1.7b-instruct-fp16` | 1.7B | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
 | `granite4:latest` | 3B | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
 
@@ -297,7 +299,7 @@ This target runs the following command:
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir tools/prompts/templates \
   --data-dir .../output/ollama_chat/gpt-oss_20b/data \
   --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
@@ -313,14 +315,14 @@ The `time` command returns how much system, user, and "wall clock" times were us
 | :------- | :------ |
 | `--model ollama_chat/gpt-oss:20b` | The model to use. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
-| `--template-dir prompts/templates` | Where we have prompt templates we use for all the examples. They are `llm` compatible, too. See the Appendix below. |
+| `--template-dir tools/prompts/templates` | Where we have prompt templates we use for all the examples. (See also the Appendix below.) |
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where detailed log entries are captured. |
 
 {: .tip}
 > **Tips:**
 > 
-> 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama_chat/llama3.2:3B some_target`, instead of the default `ollama_chat/gpt-oss:3.2:3B`.
+> 1. The [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}'s setup instructions explain how to use different models, e.g., `make MODEL=ollama_chat/llama3.2:3B some_target`, instead of the default `ollama_chat/gpt-oss:20b`.
 > 1. You will need to look at the log files to see how the details of the experimental results.
 
 The tool runs two experiments, each with these two templates files:

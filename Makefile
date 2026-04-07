@@ -27,13 +27,14 @@ JUST_STATS            ?=
 # Different models we have used. See the "all-models-*" targets:
 ollama_prefix          = ollama_chat
 MODEL_GPT_OSS         ?= ${ollama_prefix}/gpt-oss:20b
+MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:e4b
+# MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:26b
+# MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:31b
 MODEL_QWEN35          ?= ${ollama_prefix}/qwen3.5:35b
-MODEL_GEMMA4          ?= ${ollama_prefix}/gemma4:31b
 MODEL_LLAMA32         ?= ${ollama_prefix}/llama3.2:3B
 MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
-MODELS                ?= ${MODEL_QWEN35} ${MODEL_GEMMA4}
-#MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_QWEN35} ${MODEL_GEMMA4} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_GEMMA4} ${MODEL_QWEN35} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
 MODEL                 ?= ${MODEL_GPT_OSS}
 

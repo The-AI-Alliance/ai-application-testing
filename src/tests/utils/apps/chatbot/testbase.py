@@ -419,13 +419,13 @@ class TestBaseRunner(TestBase):
 
         test_prompts = self.load_test_data(Path(file_name))
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
-        self.samples_count += len(samples)
 
         last_time = time.time()
         slow_count = 0
         allowed_time_delta = 120 # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
 
         for test_prompt in samples:
+            self.samples_count += 1
             self.try_query(test_prompt,
                 rating_threshold=rating_threshold,
                 confidence_threshold=confidence_threshold)
@@ -444,7 +444,7 @@ class TestBaseRunner(TestBase):
             last_time = now
 
             # Show we aren't dead by printing counts...
-            print(f"({lcr_count},{warning_count},{error_count}),", end='')  
+            print(f"({self.samples_count},{lcr_count},{warning_count},{error_count}) ", end='')  
 
     def _sample(self, collection: list[Any], sample_rate: float) -> list[Any]:
         """

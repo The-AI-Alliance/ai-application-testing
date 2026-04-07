@@ -75,63 +75,62 @@ ollama pull gpt-oss:20b  # in another terminal window
 
 In our experiments, we used the models shown in **Table 1** (see also a similar table [here]({{site.baseurl}}/arch-design/tdd/#table-1)): 
 
-| Model                        | # Parameters | Notes |
-| :--------------------------- | -----------: | :---- |
-| `gpt-oss:20b`                |  20B | Excellent performance, but requires a lot of memory (see below). |
-| `llama3.2:3B`                |   3B | A small but effective model in the Llama family. Should work on most laptops. |
-| `granite4:latest`            |   3B | Another small model tuned for instruction following and tool calling. |
-| `smollm2:1.7b-instruct-fp16` | 1.7B | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+<a id="table-1"></a>
+
+| Model | # Parameters | Hugging Face | Ollama | Description |
+| :---- | -----------: | :----------- | :----- | :---------- |
+| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. Excellent performance, but requires a lot of memory (see below). |
+| `gemma4:e4b`  |  8B | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} | Excellent performance, memory efficient. Recommended for machines with limited RAM. The larger `gemma4` models available, `26b` and `31b` work even better, but require comparable memory to `gpt-oss:20b`. |
+| `qwen3.5:35b` | 35B [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires a lot of memory. |
+| `llama3.2:3B` |  3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
+| `smollm2:1.7b-instruct-fp16` | 1.7B | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+| `granite4:latest` | 3B | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
+
+**Table 1:** The models we used for experimenting.
+
+(Yes, some models use `B` and others use `b`...)
 
 {: .tip}
 > **REQUEST:** [Let us know]({{site.baseurl}}/contributing#join-us) which models work well for you!
 
 **Table 1:** Models used for our experiments.
 
-To install one or more of these models, use these commands (for any operating system and shell environment):
-
-```shell
-ollama pull gpt-oss:20b
-ollama pull llama3.2:3B
-ollama pull granite4:latest
-ollama pull smollm2:1.7b-instruct-fp16
-```
-
-(Yes, some models use `B` and others use `b`...)
-
 {: .attention}
 > We provide example results for some of these models in [`src/data/examples/ollama`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama){:target="examples"}. 
 
-By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gpt-oss:20b`. (Note the `ollama_chat/` prefix.) All four models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
+By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gpt-oss:20b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
 Unfortunately, a 20B parameter model is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory can struggle when using `gpt-oss:20b`, especially if lots of other apps are using significant memory. 48GB or 64GB of memory is much better. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization){:target="_glossary"} versions of models.
 
 ### Changing the Default Model Used
 
-If you don't want to use the default model setting, `gpt-oss:20b`, or you want to use a different inference option than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage){:target="litellm"} for information about specifying models for other inference services.
+If you don't want to use the default model, `gpt-oss:20b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
 
-There are two ways to specify your preferred model:
+If you want to use a different inference option other than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage){:target="litellm"} for information about specifying models for other inference services. In most cases, it will be as simple as changing a few definitions in the `Makefile` (discussed next).
 
-#### Change the Makefile
+There are two ways to specify your preferred model in the `Makefile`:
+
+#### Edit the Makefile
 
 Edit the [`Makefile`]({{site.gh_edit_repository}}/tree/main/Makefile){:target="makefile"} and change the following definitions:
 
 * `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will make the change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do this if you like...
 * `INFERENCE_SERVICE` - e.g., `openai`, `anthropic`, `ollama`.
-* `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama`.
-* Others? The `LiteLLM` documentation may tell you to define other variables. You will also need an API key or other credentials for most services. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
+* `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama` or `https://api.openai.com/v1` for OpenAI.
+* Others? The `LiteLLM` documentation may tell you to define other variables. You will most likely need an API key or other credentials for hosted services, like OpenAI and Anthropic. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
 
 #### Override Makefile Definitions on the Command Line
 
 On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models. For example:
 
 ```shell
-make MODEL=ollama_chat/llama3.2:3B ...
+make MODEL=ollama_chat/gemma4:e4b chatbot
 ```
 
 If you want to try _all_ the models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
 
 ```shell
-make all-models-all-code
+make all-models-all-chatbot
 ```
 
 You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile`.
@@ -185,7 +184,7 @@ After the setup, the `make` target runs the following command:
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
@@ -196,13 +195,17 @@ The `time` command prints execution time information for the `uv` command. It is
 
 The arguments are as follows:
 
+<a id="table-2"></a>
+
 | Argument | Purpose |
 | :------- | :------ |
 | `--model ollama_chat/gpt-oss:20b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
-| `--template-dir prompts/templates` | Where we keep prompt templates we use for all the examples. |
+| `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+
+**Table 2:** Arguments passed to `tools/tdd-example-refill-chatbot.py`.
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
 
@@ -234,7 +237,7 @@ After the same setup steps as before, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
 ```
@@ -286,7 +289,7 @@ After the same setup steps, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-validation.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
@@ -302,6 +305,8 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 These files &ldquo;rate&rdquo; each Q&A pair from 1 (bad) to 5 (great).
 Also, summary statistics are written to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. (For simplicity, we used the same `gpt-oss:20b` model as the _teacher_ that we used for generation.) From one of our test runs a text version of the following table was written:
 
+<a id="table-3"></a>
+
 Files:                                                                            |    1  |    2  |    3  |    4  |    5  | Total |
 | :------                                                               | ----: | ----: | ----: | ----: | ----: | ----: |
 synthetic-q-and-a_patient-chatbot-emergency-data.jsonl                            |    0  |    4  |    7  |   12  |  168  |  191  |
@@ -309,6 +314,8 @@ synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl               
 synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl             |    2  |    2  |    0  |    1  |  168  |  173  |
 | | | | | | | |
 Totals:                                                                           |    2  |    6  |    7  |   13  |  444  |  472  |
+
+**Table 3:** Example results for ratings.
 
 Total count: 475 (includes errors), total errors: 3
 
@@ -348,7 +355,7 @@ After the same setup steps, like output directory creation, the following comman
 cd src && time uv run python -m apps.chatbot.main \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir tools/prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
   --log-file .../logs/.../chatbot.log
@@ -369,14 +376,18 @@ The arguments are similar to the previously-discussed arguments, with a new argu
 
 The source code, etc. for this application and the automated tests are located in these locations:
 
+<a id="table-4"></a>
+
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates (Tools)  | [`src/tools/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/){:target="prompts-tools"} | The prompts used by the tools. |
-| Prompt Templates (ChatBot) | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application. |
+| Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. |
 | Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
 | Integration Tests | [`src/tests/integration/`]({{site.gh_edit_repository}}/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
+| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gpt-oss_20b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
+
+**Table 4:** Locations for code, data, templates, etc. for the ChatBot application.
 
 We will discuss the automated tests below, in [Automated Testing: Practical Enhancements](#automated-testing-practical-enhancements).
 
@@ -486,12 +497,16 @@ Test data files of Q&A  (question and answer) pairs (and additional metadata) we
 
 These test data files in JSONL format are in the [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} directory. There are four files (at the time of this writing) for user queries that we classify into four, broad use cases:
 
+<a id="table-5"></a>
+
 | Use Case | Description |
 | :------- | :---------- |
 | [Emergencies]({{site.gh_edit_repository}}/tree/main/src/tests/data/emergencies.jsonl){:target="test-data"} | Queries that strongly suggest the patient needs urgent medical attention. In the US, they would be told to call _911_ immediately. |
 | [Prescriptions]({{site.gh_edit_repository}}/tree/main/src/tests/data/prescriptions.jsonl){:target="test-data"} | Refill requests, questions about how to take a medication, store it, compatibility with particular activities, etc. |
 | [Appointments]({{site.gh_edit_repository}}/tree/main/src/tests/data/appointments.jsonl){:target="test-data"} | Requests to schedule or reschedule an appointment. |
 | [Others]({{site.gh_edit_repository}}/tree/main/src/tests/data/others.jsonl){:target="test-data"} | Other general health questions and other kinds of queries, such as how to pay a bill, where the office is located, etc. (Many of these Q&A pairs suggest possible future use cases to support.) |
+
+**Table 5:** Use case test data files.
 
 There is one JSONL file per _use case_. The format is illustrated with this example from `appointments.jsonl` (nicely formatted...):
 
@@ -506,13 +521,19 @@ There is one JSONL file per _use case_. The format is illustrated with this exam
 
 We have been calling these examples _Q&A_ (question and answer) pairs, but they actually contain a query (question) and three expected metadata values corresponding to metadata fields the prompt asks the ChatBot to return. At this time, don't do any testing on the actual generated text in the response, as it is too stochastic, but a possible enhancement is to use _LLM as a Judge_ to assess how good they are:
 
+<a id="table-6"></a>
+
 | Expected Metadata Field | Corresponding Response Field | Discussion |
 | :---------------------- | :--------------------------- | :--------- |
 | `labels`  | `label`   | The response's `label` is expected to be found in the `labels` list. Usually there is just one element in `labels`, but sometimes more than one label is listed when the query is potentially ambiguous. |
 | `actions` | `actions` | The response `actions` list should be a subset of the allowed `actions`. |
 | `rating`  | _N/A_     | How the _LLM as a Judge_ validation process rated this synthetic example. |
 
+**Table 6:** Expected metadata fields.
+
 In addition, there are optional fields that may appear in the examples:
+
+<a id="table-7"></a>
 
 | Expected Metadata Field | Corresponding Response Field | Discussion |
 | :---------------------- | :--------------------------- | :--------- |
@@ -521,9 +542,11 @@ In addition, there are optional fields that may appear in the examples:
 | `body_parts`    | `body_parts`    | List of one or more body parts mentioned in the query. |
 | `vaccines`      | `vaccines`      | List of one or more vaccines mentioned in the query. |
 
+**Table 7:** Optional metadata fields.
+
 The last three fields only appear in an example JSONL if they are non-empty.
 
-During testing, if the `rating` is below a threshold, the ChatBot result is logged as _low confidence_ and not checked for expected results. The ChatBot is also asked to provide its _confidence_ of the result, which is used similarly during the test.
+During testing, if the `rating` is below a threshold, the ChatBot result is logged as _low confidence_ and not checked for expected results. The ChatBot is also asked to provide its _confidence_ of the result, which is used similarly during the test. This is printed to standard output and to a log file, 
 
 The `label` returned by the ChatBot should correspond to the use case file name! However, in practice, some queries are ambiguous enough that more than one label would be a reasonable interpretation, which is why `labels` is a list. The first list element is always the name of the use case. So, for example, there are many examples in `prescriptions.jsonl` with the label list `["prescription", "appointment"]`, like this one:
 

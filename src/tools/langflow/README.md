@@ -31,7 +31,7 @@ cd src
 uv run python -m tools.langflow.unit_benchmark_flow \
     --model ollama_chat/gpt-oss:20b \
     --service-url http://localhost:11434 \
-    --template-dir prompts/templates \
+    --template-dir tools/prompts/templates \
     --data-dir .../output/ollama_chat/gpt-oss_20b/data \
     --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/langflow-pipeline.log \
 ```

@@ -31,7 +31,7 @@ This will install:
 cd src && uv run python -m apps.chatbot.api_server.server \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir apps/chatbot/prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
   --host 0.0.0.0 \
@@ -42,7 +42,7 @@ cd src && uv run python -m apps.chatbot.api_server.server \
 
 - `--model`: The LLM model to use (default: from environment or config)
 - `--service-url`: URL of the inference service (default: http://localhost:11434)
-- `--template-dir`: Directory containing prompt templates
+- `--template-dir`: Directory containing ChatBot prompt templates
 - `--data-dir`: Directory for data storage
 - `--confidence-threshold`: Confidence threshold for responses (0.0-1.0, default: 0.9)
 - `--host`: Host to bind the server to (default: 0.0.0.0)

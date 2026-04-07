@@ -2,7 +2,7 @@
 
 [Published User Guide](https://the-ai-alliance.github.io/ai-application-testing/)
 
-This repo contains the code and documentation for the AI Alliance user guide and tools for _Testing Generative AI Agent Applications_, which explores the inherent difficulties for enterprise developers who need to write the same kinds of repeatable, reliable, and automatable tests for AI behaviors that they are accustomed to writing for "traditional" code. This is much more challenging with generative AI models involved, because non-Gen AI software is (mostly) deterministic and hence predictable, while Gen AI outputs are _stochastic_, governed by a random probability model, so how do you write a _predictable_ test for that kind of behavior?? 
+This repo contains the code and documentation for the AI Alliance user guide and tools for _Testing Generative AI Agent Applications_, which explores the inherent difficulties for enterprise developers who need to write the same kinds of repeatable, reliable, and automated tests for AI behaviors that they are accustomed to writing for "traditional" code. This is much more challenging with generative AI models involved, because non-Gen AI software is (mostly) deterministic and hence predictable, while Gen AI outputs are _stochastic_, governed by a random probability model, so how do you write a _predictable_ test for that kind of behavior?? 
 
 This documentation is the [published user guide](https://the-ai-alliance.github.io/ai-application-testing/), with the GitHub Pages sources in this repo's `docs` folder and the example code in the `src` folder. A `Makefile` provides convenient `make` targets for doing most tasks. 
 
@@ -56,65 +56,60 @@ ollama serve             # in one terminal window
 ollama pull gpt-oss:20b  # in another terminal window
 ```
 
-In our experiments, we used the models shown in **Table 1** (see also a similar table [in the user guide](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/#table-1)): 
+In our experiments, we used the models shown in **Table 1**, served by `ollama`. See also a similar table [in the user guide](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/#table-1): 
 
 | Model                        | # Parameters | Notes |
 | :--------------------------- | -----------: | :---- |
 | `gpt-oss:20b`                |  20B | Excellent performance, but requires a lot of memory (see below). |
+| `gemma4:e4b`                 |   8B | Excellent performance, memory efficient. Recommended for machines with limited RAM. The larger `gemma4` models available, `26b` and `31b` work even better, but require comparable memory to `gpt-oss:20b`. |
+| `qwen3.5:35b`                |  35B | Excellent performance, but requires a lot of memory. |
 | `llama3.2:3B`                |   3B | A small but effective model in the Llama family. Should work on most laptops. |
 | `granite4:latest`            |   3B | Another small model tuned for instruction following and tool calling. |
 | `smollm2:1.7b-instruct-fp16` | 1.7B | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/), which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
+
+(Yes, some models use `B` and others use `b`...)
 
 {: .tip}
 > **REQUEST:** [Let us know](https://the-ai-alliance.github.io/ai-application-testing/contributing#join-us) which models work well for you!
 
 **Table 1:** Models used for our experiments.
 
-To install one or more of these models, use these commands (for any operating system and shell environment):
-
-```shell
-ollama pull gpt-oss:20b
-ollama pull llama3.2:3B
-ollama pull granite4:latest
-ollama pull smollm2:1.7b-instruct-fp16
-```
-
-(Yes, some models use `B` and others use `b`...)
-
 {: .attention}
 > We provide example results for some of these models in [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama). 
 
-By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gpt-oss:20b`. (Note the `ollama_chat/` prefix.) All four models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
+By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. That is what we will show in the examples which follow. Just change the model name as appropriate for your situation. The default model is specified in the `Makefile` with the variable `MODEL`, which is `ollama_chat/gpt-oss:20b`. (Note the `ollama_chat/` prefix.) All the models listed above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
-Unfortunately, a 20B parameter model is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory can struggle when using `gpt-oss:20b`, especially if lots of other apps are using significant memory. 48GB or 64GB of memory is much better. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization) versions of models.
+Unfortunately, a 20B parameter model is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory can struggle when using `gpt-oss:20b`, especially if lots of other apps are using significant memory. 48GB or 64GB of memory is much better. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization) versions of models. It is worth the time to experiment with different models to find the ones that work best for your development environment and production deployments.
 
 ### Changing the Default Model Used
 
-If you don't want to use the default model setting, `gpt-oss:20b`, or you want to use a different inference option than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage) for information about specifying models for other inference services.
+If you don't want to use the default model, `gpt-oss:20b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
 
-There are two ways to specify your preferred model:
+If you want to use a different inference option other than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage) for information about specifying models for other inference services. In most cases, it will be as simple as changing a few definitions in the `Makefile` (discussed next).
 
-#### Change the Makefile
+There are two ways to specify your preferred model in the `Makefile`:
+
+#### Edit the Makefile
 
 Edit the [`Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/Makefile) and change the following definitions:
 
-* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will make the change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do this if you like...
+* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will make the change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do follow this convention, if desired...
 * `INFERENCE_SERVICE` - e.g., `openai`, `anthropic`, `ollama`.
-* `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama`.
-* Others? The `LiteLLM` documentation may tell you to define other variables. You will also need an API key or other credentials for most services. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
+* `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama` or `https://api.openai.com/v1` for OpenAI.
+* Others? The `LiteLLM` documentation may tell you to define other variables. You will most likely need an API key or other credentials for hosted services, like OpenAI and Anthropic. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
 
 #### Override Makefile Definitions on the Command Line
 
-On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models. For example:
+On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models served by `ollama`, for example:
 
 ```shell
-make MODEL=ollama_chat/llama3.2:3B ...
+make MODEL=ollama_chat/gemma4:e4b chatbot
 ```
 
-If you want to try _all_ the models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
+If you want to try _all_ the `ollama`-served models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
 
 ```shell
-make all-models-all-code
+make all-models-chatbot
 ```
 
 You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile`.
@@ -168,7 +163,7 @@ After the setup, the `make` target runs the following command:
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
@@ -183,7 +178,7 @@ The arguments are as follows:
 | :------- | :------ |
 | `--model ollama_chat/gpt-oss:20b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
-| `--template-dir prompts/templates` | Where we keep prompt templates we use for all the examples. |
+| `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
 | `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
 | `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
@@ -217,7 +212,7 @@ After the same setup steps as before, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
 ```
@@ -277,7 +272,7 @@ After the same setup steps, the following command is executed:
 cd src && time uv run tools/unit-benchmark-data-validation.py \
 	--model ollama_chat/gpt-oss:20b \
 	--service-url http://localhost:11434 \
-	--template-dir prompts/templates \
+	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
 	--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
@@ -339,7 +334,7 @@ After the same setup steps, like output directory creation, the following comman
 cd src && time uv run python -m apps.chatbot.main \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir apps/chatbot/prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
   --log-file .../logs/.../chatbot.log
@@ -354,11 +349,11 @@ The source code, etc. for this application and the automated tests are located i
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates (Tools)  | [`src/tools/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/){:target="prompts-tools"} | The prompts used by the tools. |
-| Prompt Templates (ChatBot) | [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application. |
+| Prompt Templates  | [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. |
 | Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
 | Integration Tests | [`src/tests/integration/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
+| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gpt-oss_20b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
 
 ### An MCP Server for the ChatBot
 

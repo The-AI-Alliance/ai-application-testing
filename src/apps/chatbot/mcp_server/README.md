@@ -40,7 +40,7 @@ cd src
 uv run python -m apps.chatbot.mcp_server.server \
   --model "ollama_chat/gpt-oss:20b" \
   --service-url "http://localhost:11434" \
-  --template-dir "prompts/templates" \
+  --template-dir "apps/chatbot/prompts/templates" \
   --data-dir "data" \
   --confidence-threshold 0.9
 ```
@@ -64,7 +64,7 @@ To use this MCP server with MCP clients, add it to the appropriate MCP configura
         "apps.chatbot.mcp_server.server",
         "--model", "ollama_chat/gpt-oss:20b",
         "--service-url", "http://localhost:11434",
-        "--template-dir", "prompts/templates",
+        "--template-dir", "apps/chatbot/prompts/templates",
         "--data-dir", "data",
         "--confidence-threshold", "0.9"
       ],

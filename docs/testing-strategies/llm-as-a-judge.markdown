@@ -139,7 +139,7 @@ After some setup, the following command is executed, which uses the same argumen
 cd src && time uv run tools/unit-benchmark-data-validation.py \
   --model ollama_chat/gpt-oss:20b \
   --service-url http://localhost:11434 \
-  --template-dir prompts/templates \
+  --template-dir tools/prompts/templates \
   --data-dir .../output/ollama_chat/gpt-oss_20b/data \
   --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
