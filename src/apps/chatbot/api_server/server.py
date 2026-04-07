@@ -19,7 +19,7 @@ from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel, Field
 import uvicorn
 
-from apps.chatbot import ChatBot, ChatBotResponseHandler
+from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
 from common.utils import setup, get_package_version
 
 
@@ -101,7 +101,8 @@ class APIServer:
         confidence_level_threshold: float,
         host: str,
         port: int,
-        logger: logging.Logger
+        logger: logging.Logger,
+        which_chatbot: str = 'agent'
     ):
         """
         Initialize the API server.
@@ -115,6 +116,7 @@ class APIServer:
             host: Host to bind the server to
             port: Port to bind the server to
             logger: Optional logger for debugging
+            which_chatbot: Which ChatBot implementation to use ('agent' or 'simple')
         """
         self.model = model
         self.service_url = service_url
@@ -128,15 +130,18 @@ class APIServer:
         if not self.version:
             self.version = '0.1.0'  # An error occurred that was logged by get_package_version()
         
+        # Determine which ChatBot implementation to use
+        chatbot_class = ChatBotAgent if which_chatbot == 'agent' else ChatBotSimple
+        
         # Create the chatbot instance
-        self.chatbot = ChatBot(
+        self.chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
             template_dir=self.template_dir,
             data_dir=self.data_dir,
             confidence_level_threshold=self.confidence_level_threshold,
             response_handler = ChatBotResponseHandler(
-                confidence_level_threshold=self.confidence_level_threshold, 
+                confidence_level_threshold=self.confidence_level_threshold,
                 logger=self.logger),
             logger=self.logger
         )
@@ -372,6 +377,13 @@ def main():
             help="Confidence threshold level (0.0-1.0). Default: 0.9"
         )
         parser.add_argument(
+            "-w", "--which-chatbot",
+            type=str,
+            choices=['agent', 'simple'],
+            default='agent',
+            help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent"
+        )
+        parser.add_argument(
             "--host",
             type=str,
             default="0.0.0.0",
@@ -407,7 +419,8 @@ def main():
             confidence_level_threshold=args.confidence_threshold,
             host=args.host,
             port=args.port,
-            logger=logger
+            logger=logger,
+            which_chatbot=args.which_chatbot
         )
         
         server.run()

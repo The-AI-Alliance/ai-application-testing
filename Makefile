@@ -51,7 +51,9 @@ CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
 # Some specific variables passed as env. vars. to the ChatBot.
 # CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
+# WHICH_CHATBOT: Which ChatBot implementation to use: 'agent' for ChatBotAgent or 'simple' for ChatBotSimple
 CONFIDENCE_THRESHOLD  ?= 0.9
+WHICH_CHATBOT         ?= agent
 
 # Some specific variables passed as env. vars. to the test suites.
 # ACCUMULATE_TEST_ERRORS:   Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
@@ -62,7 +64,7 @@ CONFIDENCE_THRESHOLD  ?= 0.9
 ACCUMULATE_TEST_ERRORS    ?= True
 RATING_THRESHOLD          ?= 4
 TESTS_LOGS_DIR            ?= tests/logs/${MODEL_FILE_NAME}
-TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{class_name}-${TIMESTAMP}.jsonl
+TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
 TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
 # Sampling rates for different kinds of tests.
@@ -577,6 +579,7 @@ chatbot:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
@@ -600,6 +603,7 @@ mcp-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
@@ -625,6 +629,7 @@ api-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
@@ -670,7 +675,7 @@ remove-open-webui::
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai
+.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
 all-tests:: note-all-tests integration-tests
@@ -697,8 +702,10 @@ unit-tests-non-ai::
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
-	@echo "Running the AI unit tests..."
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+
+unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
+	@echo "Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot..."
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
@@ -711,6 +718,7 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export WHICH_CHATBOT=${@:unit-tests-ai-%=%} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest discover \
 	  	--pattern 'ai_test*.py' \
@@ -735,6 +743,7 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export WHICH_CHATBOT=${WHICH_CHATBOT} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest ${TEST} && \
 	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \

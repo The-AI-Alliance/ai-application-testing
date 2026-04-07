@@ -339,6 +339,13 @@ The unit benchmark data synthesis and validation tools can also be executed as a
 
 This purpose of this application is to represent something closer to what you would actually build, with a growing suite of automated unit and integration tests corresponding to incrementally added features. 
 
+There are actually _two_ implementations of this application:
+
+* [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools.
+* [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A a more advanced "agent" implementation that uses Langchain's _deep agent_ tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
+
+A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. In the `Makefile`, the variable `WHICH_CHATBOT` is defined to be `agent` by default, but it can be overridden on the command line with the value `simple` to use the other implementation.
+
 {: .note}
 > **NOTE:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
 
@@ -358,6 +365,7 @@ cd src && time uv run python -m apps.chatbot.main \
   --template-dir tools/prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
+  --which-chatbot agent \
   --log-file .../logs/.../chatbot.log
 ```
 
@@ -381,8 +389,8 @@ The source code, etc. for this application and the automated tests are located i
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. |
-| Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
+| Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. There are different prompts for the "simple" vs. "agent" implementations. |
+| Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} .The AI-specific tests are executed with both ChatBot implementations. |
 | Integration Tests | [`src/tests/integration/`]({{site.gh_edit_repository}}/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
 | Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gpt-oss_20b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
@@ -443,8 +451,7 @@ Try it!
 
 ### An MCP Server for the ChatBot
 
-Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. 
-
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
@@ -462,7 +469,7 @@ For more details on running the MCP server, see the [`src/apps/chatbot/mcp_serve
 
 ### An OpenAI-compatible API Server for the ChatBot
 
-An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. 
+An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
