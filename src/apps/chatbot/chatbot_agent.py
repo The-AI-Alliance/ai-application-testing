@@ -4,6 +4,8 @@ from typing import Any
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
 
+from deepagents import create_deep_agent
+
 class ChatBotAgent(ChatBot):
     """
     ChatBot implementation using LangChain Deep Agents framework.
@@ -30,8 +32,11 @@ class ChatBotAgent(ChatBot):
         Initialize the Deep Agents-based ChatBot implementation.
         Use a `ChatBotResponseHandler` for the response_handler.
         """
+        # LangChain Deep Agents uses "provider:model". Also, if
+        # we use `ollama_chat` in the model argument, remove the "_chat".
+        model2 = model.replace("/", ":").replace("_chat", "")
         super().__init__(
-            model=model,
+            model=model2,
             service_url=service_url,
             template_dir=template_dir,
             data_dir=data_dir,
@@ -41,16 +46,30 @@ class ChatBotAgent(ChatBot):
             template_file=self.default_template_file
         )
         
-        # Initialize the Deep Agent
-        # Note: This is a placeholder implementation. The actual Deep Agents
-        # integration would require:
-        # 1. Installing deepagents package: pip install -qU deepagents
-        # 2. Importing: from deepagents import create_deep_agent
-        # 3. Creating the agent with appropriate configuration
-        # 
-        # For now, we'll use a simple implementation that maintains
-        # compatibility with the existing interface.
-        self.agent = None
+        # provider_model = model.split("/")
+        # if len(provider_model) == 2:
+        #     model = provider_model[1]
+        #     if provider_model[0].startswith("ollama"):
+        #         self.agent = create_deep_agent(
+        #             model=model,
+        #             model_provider="ollama",
+        #             system_prompt=self.system_prompt,
+        #             # Additional Deep Agents configuration
+        #         )
+        #     else:
+        #         self.agent = create_deep_agent(
+        #             model=model,
+        #             model_provider=provider_model[0],
+        #             system_prompt=self.system_prompt,
+        #             # Additional Deep Agents configuration
+        #         )
+        # else:
+        self.agent = create_deep_agent(
+            model=self.model,
+            system_prompt=self.system_prompt,
+            # Additional Deep Agents configuration
+        )
+
         if self.logger:
             self.logger.info("ChatBotAgent initialized (Deep Agents integration pending)")
 
@@ -65,47 +84,25 @@ class ChatBotAgent(ChatBot):
         Returns:
             an error message or a dict with the parsed response.
         """
-        # TODO: Implement Deep Agents integration
-        # For now, this is a placeholder that returns a message indicating
-        # the agent-based implementation is not yet complete.
-        #
-        # The actual implementation would look something like:
-        # 
-        # try:
-        #     if not self.agent:
-        #         from deepagents import create_deep_agent
-        #         self.agent = create_deep_agent(
-        #             model=self.model,
-        #             system_prompt=self.system_prompt,
-        #             # Additional Deep Agents configuration
-        #         )
-        #     
-        #     # Build context from session history
-        #     context = self._session_prompt()
-        #     full_query = f"{context}\n{query}" if context else query
-        #     
-        #     # Invoke the agent
-        #     response = self.agent.invoke(full_query)
-        #     
-        #     # Process the response through the handler
-        #     handled = self.response_handler(response)
-        #     if self.logger:
-        #         self.logger.debug(f"response: {handled}")
-        #     return handled
-        #     
-        # except Exception as e:
-        #     error_msg = f"Deep Agent error: {e}"
-        #     if self.logger:
-        #         self.logger.error(error_msg)
-        #     return error_msg
-        
-        error_msg = (
-            "ChatBotAgent implementation is a placeholder. "
-            "Deep Agents integration requires the 'deepagents' package "
-            "and additional configuration. Please use ChatBotSimple for now."
-        )
-        if self.logger:
-            self.logger.warning(error_msg)
-        return error_msg
+        try:
+            
+            # Build context from session history
+            context = self._session_prompt()
+            full_query = f"{context}\n{query}" if context else query
+            
+            # Invoke the agent
+            response = self.agent.invoke(query)
+            
+            # Process the response through the handler
+            handled = self.response_handler(response)
+            if self.logger:
+                self.logger.debug(f"response: {handled}")
+            return handled
+            
+        except Exception as e:
+            error_msg = f"Deep Agent error: {e}"
+            if self.logger:
+                self.logger.error(error_msg)
+            return error_msg
 
 # Made with Bob
