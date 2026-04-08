@@ -162,27 +162,14 @@ If the request doesn't look like a refill request, reply with this message:
 > 
 > Providing a few examples is known as [Few-Shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-Context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-Shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
 
-We tried both system prompts with a number of user prompts (details below) using the following models served locally using [Ollama](https://ollama.com/){:target="ollama"}. Links to both the corresponding Hugging Face pages (with _model cards_ and other information) and the corresponding Ollama pages are shown in **Table 1**:
-
-<a id="table-1"></a>
-
-| Model | # Parameters | Hugging Face | Ollama | Description |
-| :---- | -----------: | :----------- | :----- | :---------- |
-| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. Excellent performance, but requires a lot of memory. |
-| `gemma4:e4b`  |  8B | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} | Excellent performance, memory efficient. Recommended for machines with limited RAM. The larger `gemma4` models available, `26b` and `31b` work even better, but require comparable memory to `gpt-oss:20b`. |
-| `qwen3.5:35b` | 35B [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires a lot of memory. |
-| `llama3.2:3B` |  3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
-| `smollm2:1.7b-instruct-fp16` | 1.7B | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
-| `granite4:latest` | 3B | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
-
-**Table 1:** The models we used for experimenting.
+We tried both system prompts with a number of user prompts (details below) using the models `gpt-oss:20b`, `granite4`, `llama3.2:3B`, and `smollm2:1.7b-instruct-fp16` served locally using [Ollama](https://ollama.com/){:target="ollama"}. More details about these and other models used can be found in [Table 1]({{site.baseurl}}/working-example/#table-1) in the [Working Example]({{site.baseurl}}/working-example/) chapter.
 
 {: .tip}
 > **TIPs:** 
 > 
-> 1. These models are available in different sizes. We chose sizes that should work for most developer workstations, but consider smaller or larger versions depending on your hardware resources. Production deployments may require larger versions.
-> 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of each model instead.
-> 1. Sample results for all the examples in this guide and for some of the models listed above can be found in the repo's [`src/data/examples/ollama`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
+> 1. Most models are available in different sizes. [Table 1]({{site.baseurl}}/working-example/#table-1) discusses size and performance trade offs. When you choose models, consider smaller or larger versions depending on your hardware resources. Production deployments should lean towards larger versions with better performance.
+> 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of models instead.
+> 1. Sample results for all the examples in this guide and for some of the models tried can be found in the repo's [`src/data/examples/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
 
 With our system prompts and model choices, let's try some queries.
 

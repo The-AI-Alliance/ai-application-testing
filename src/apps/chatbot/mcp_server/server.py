@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Optional
 
 from fastmcp import FastMCP
-from apps.chatbot import ChatBot, ChatBotResponseHandler
+from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
 from common.utils import setup
 
 
@@ -22,6 +22,7 @@ def create_mcp_server(
     data_dir: str,
     confidence_level_threshold: float,
     logger: logging.Logger,
+    which_chatbot: str = 'agent',
 ) -> tuple[FastMCP, ChatBot]:
     """
     Create and configure an MCP server for the chatbot using FastMCP.
@@ -33,20 +34,24 @@ def create_mcp_server(
         data_dir: Directory containing data files
         confidence_level_threshold: Minimum confidence level for responses
         logger: Optional logger for debugging
+        which_chatbot: Which ChatBot implementation to use ('agent' or 'simple')
         
     Returns:
         A tuple of (mcp, chatbot)
     """
     
+    # Determine which ChatBot implementation to use
+    chatbot_class = ChatBotAgent if which_chatbot == 'agent' else ChatBotSimple
+    
     # Create the chatbot instance
-    chatbot = ChatBot(
+    chatbot = chatbot_class(
         model=model,
         service_url=service_url,
         template_dir=template_dir,
         data_dir=data_dir,
         confidence_level_threshold=confidence_level_threshold,
         response_handler = ChatBotResponseHandler(
-            confidence_level_threshold=confidence_level_threshold, 
+            confidence_level_threshold=confidence_level_threshold,
             logger=logger),
         logger=logger
     )
@@ -214,6 +219,13 @@ def main():
             default=0.9,
             help="Confidence threshold level threshold (0.0-1.0). Default: 0.9"
         )
+        parser.add_argument(
+            "-w", "--which-chatbot",
+            type=str,
+            choices=['agent', 'simple'],
+            default='agent',
+            help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent"
+        )
     
     args, logger = setup(
         tool,
@@ -236,7 +248,8 @@ def main():
             template_dir=args.template_dir,
             data_dir=args.data_dir,
             confidence_level_threshold=args.confidence_threshold,
-            logger=logger
+            logger=logger,
+            which_chatbot=args.which_chatbot
         )
         
         if result is None:

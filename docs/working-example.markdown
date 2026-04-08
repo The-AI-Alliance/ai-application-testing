@@ -69,22 +69,22 @@ One of the dependencies managed with `uv` is [`LiteLLM`](https://docs.litellm.ai
 If you use `ollama`, download the models you want to use. For example:
 
 ```shell
-ollama serve             # in one terminal window
-ollama pull gpt-oss:20b  # in another terminal window
+ollama serve            # in one terminal window
+ollama pull gemma4:e4b  # in another terminal window
 ```
 
 In our experiments, we used the models shown in **Table 1** (see also a similar table [here]({{site.baseurl}}/arch-design/tdd/#table-1)): 
 
 <a id="table-1"></a>
 
-| Model | # Parameters | Hugging Face | Ollama | Description |
-| :---- | -----------: | :----------- | :----- | :---------- |
-| `gpt-oss:20b` | 20B |[link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} |  [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | OpenAI's recent open weights model. Excellent performance, but requires a lot of memory (see below). |
-| `gemma4:e4b`  |  8B | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} | Excellent performance, memory efficient. Recommended for machines with limited RAM. The larger `gemma4` models available, `26b` and `31b` work even better, but require comparable memory to `gpt-oss:20b`. |
-| `qwen3.5:35b` | 35B [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires a lot of memory. |
-| `llama3.2:3B` |  3B | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. |
-| `smollm2:1.7b-instruct-fp16` | 1.7B | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we will also use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
-| `granite4:latest` | 3B | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
+| Model | Parameters | Memory | Hugging Face | Ollama | Description |
+| :---- | ---------: | -----: | :----------- | :----- | :---------- |
+| `gemma4:e4b`  |  8 B | 11 GB | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} |  **Default model used in the `Makefile`.** Excellent performance, requiring about 11 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
+| `gpt-oss:20b` | 20 B | 14 GB | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} | [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/) framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116) for details. |
+| `qwen3.5:35b` | 35 B | 27 GB | [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires about 27 GB of memory. |
+| `llama3.2:3B` |  3 B | 7.5 GB | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. A good choice during development when overhead is more important than performance. |
+| `granite4:latest` | 3B | 7 GB | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
+| `smollm2:1.7b-instruct-fp16` | 1.7B | 5.6 GB | [link](https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct){:target="hf-smallm2"} | [link](https://ollama.com/library/smollm2:1.7b-instruct-fp16){:target="ollama-smollm2"} | The model family used in Hugging Face's [LLM course](https://huggingface.co/learn/llm-course/){:target="hf-llm-course"}, which we plan to use to highlight some advanced concepts. The `instruct` label means the model was tuned for improved _instruction following_, important for ChatBots and other user-facing applications. |
 
 **Table 1:** The models we used for experimenting.
 
@@ -96,15 +96,17 @@ In our experiments, we used the models shown in **Table 1** (see also a similar 
 **Table 1:** Models used for our experiments.
 
 {: .attention}
-> We provide example results for some of these models in [`src/data/examples/ollama`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama){:target="examples"}. 
+> We provide example results for some of these models in [`src/data/examples/ollama_chat`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat){:target="examples"}. 
 
-By default, we use `gpt-oss:20b` as our inference model, served by `ollama`. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gpt-oss:20b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
+By default, we use `gemma4:e4b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gemma4:e4b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
-Unfortunately, a 20B parameter model is too large for many developer machines. Specifically, we found that Apple computers with M1 Max chips with 32GB of memory can struggle when using `gpt-oss:20b`, especially if lots of other apps are using significant memory. 48GB or 64GB of memory is much better. However, acceptable performance, especially for learning purposes, was achieved on 32GB machines when using the other, smaller models. We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization){:target="_glossary"} versions of models.
+We find that `gemma4:e4b`, requiring about 11 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
+
+We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization){:target="_glossary"} versions of models. It is worth the time to experiment with different models to find the ones that work best for your development environment and production deployments.
 
 ### Changing the Default Model Used
 
-If you don't want to use the default model, `gpt-oss:20b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
+If you don't want to use the default model, `gemma4:e4b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
 
 If you want to use a different inference option other than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage){:target="litellm"} for information about specifying models for other inference services. In most cases, it will be as simple as changing a few definitions in the `Makefile` (discussed next).
 
@@ -114,7 +116,7 @@ There are two ways to specify your preferred model in the `Makefile`:
 
 Edit the [`Makefile`]({{site.gh_edit_repository}}/tree/main/Makefile){:target="makefile"} and change the following definitions:
 
-* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will make the change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do this if you like...
+* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do this if you like...
 * `INFERENCE_SERVICE` - e.g., `openai`, `anthropic`, `ollama`.
 * `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama` or `https://api.openai.com/v1` for OpenAI.
 * Others? The `LiteLLM` documentation may tell you to define other variables. You will most likely need an API key or other credentials for hosted services, like OpenAI and Anthropic. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
@@ -124,7 +126,7 @@ Edit the [`Makefile`]({{site.gh_edit_repository}}/tree/main/Makefile){:target="m
 On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models. For example:
 
 ```shell
-make MODEL=ollama_chat/gemma4:e4b chatbot
+make MODEL=ollama_chat/llama3.2:3B chatbot
 ```
 
 If you want to try _all_ the models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
@@ -173,8 +175,8 @@ This target first checks the following:
 
 * The `uv` command is installed and on your path.
 * Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
-	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gpt-oss_20b/logs`, when `MODEL` is defined to be `ollama_chat/gpt-oss:20b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama` that contains a `gpt-oss_20b` subdirectory.
-	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gpt-oss_20b/data`, when `MODEL` is defined to be `ollama_chat/gpt-oss:20b`. 
+	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_e4b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:e4b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_e4b` subdirectory.
+	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_e4b/data`. 
 
 If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the corresponding paths shown in the next command.
 
@@ -182,11 +184,11 @@ After the setup, the `make` target runs the following command:
 
 ```shell
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
-	--model ollama_chat/gpt-oss:20b \
+	--model ollama_chat/gemma4:e4b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
-	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
+	--data-dir .../output/ollama_chat/gemma4_e4b/data \
+	--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
 
 `TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are absolute paths. The other paths shown are relative to the `src` directory.
@@ -199,11 +201,11 @@ The arguments are as follows:
 
 | Argument | Purpose |
 | :------- | :------ |
-| `--model ollama_chat/gpt-oss:20b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
+| `--model ollama_chat/gemma4:e4b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
 | `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
-| `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--data-dir .../output/ollama_chat/gemma4_e4b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 **Table 2:** Arguments passed to `tools/tdd-example-refill-chatbot.py`.
 
@@ -235,11 +237,11 @@ After the same setup steps as before, the following command is executed:
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
-	--model ollama_chat/gpt-oss:20b \
+	--model ollama_chat/gemma4:e4b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
-	--log-file .../output/ollama_chat/gpt-oss_20b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
+	--data-dir .../output/ollama_chat/gemma4_e4b/data \
+	--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
 ```
 
 {: .note}
@@ -247,13 +249,13 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 >
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gpt-oss:20b`, the output will be in `.../output/data/ollama_chat/gpt-oss_20b`. We replace `:` with `_`, because `:` is an invalid character for MacOS file paths. This directory will have the following files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:e4b`, the output will be in `.../output/data/ollama_chat/gemma4_e4b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-prescription-refills-data.jsonl`
 
-(Examples can be found in the repo's [`src/data/examples/ollama`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama){:target="examples"} directory.)
+(Examples can be found in the repo's [`src/data/examples/ollama_chat`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat){:target="examples"} directory.)
 
 They cover three unit-benchmarks:
 * `emergency`: The patient prompt suggests the patient needs urgent or emergency care, so they should stop using the ChatBot and call 911 (in the US) immediately.
@@ -287,11 +289,11 @@ After the same setup steps, the following command is executed:
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-validation.py \
-	--model ollama_chat/gpt-oss:20b \
+	--model ollama_chat/gemma4:e4b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gpt-oss_20b/data \
-	--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+	--data-dir .../output/ollama_chat/gemma4_e4b/data \
+	--log-file .../output/ollama_chat/gemma4_e4b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
@@ -300,10 +302,12 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl`
 * `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl`
 
-(See examples in [`src/data/examples/ollama`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama){:target="examples"}.)
+(See examples in [`src/data/examples/ollama_chat`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat){:target="examples"}.)
 
 These files &ldquo;rate&rdquo; each Q&A pair from 1 (bad) to 5 (great).
-Also, summary statistics are written to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. (For simplicity, we used the same `gpt-oss:20b` model as the _teacher_ that we used for generation.) From one of our test runs a text version of the following table was written:
+Also, summary statistics are written to `stdout` and to the output file `temp/output/ollama_chat/<model>/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. For simplicity, we used the same model as the _teacher_ that we used for generation, but for real use, consider using a different model. 
+
+From one of our test runs a text version of the following table was printed:
 
 <a id="table-3"></a>
 
@@ -339,6 +343,13 @@ The unit benchmark data synthesis and validation tools can also be executed as a
 
 This purpose of this application is to represent something closer to what you would actually build, with a growing suite of automated unit and integration tests corresponding to incrementally added features. 
 
+There are actually _two_ implementations of this application:
+
+* [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools.
+* [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A a more advanced "agent" implementation that uses Langchain's _deep agent_ tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
+
+A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. In the `Makefile`, the variable `WHICH_CHATBOT` is defined to be `agent` by default, but it can be overridden on the command line with the value `simple` to use the other implementation.
+
 {: .note}
 > **NOTE:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
 
@@ -353,11 +364,12 @@ After the same setup steps, like output directory creation, the following comman
 
 ```shell
 cd src && time uv run python -m apps.chatbot.main \
-  --model ollama_chat/gpt-oss:20b \
+  --model ollama_chat/gemma4:e4b \
   --service-url http://localhost:11434 \
   --template-dir tools/prompts/templates \
   --data-dir data \
   --confidence-threshold 0.9 \
+  --which-chatbot agent \
   --log-file .../logs/.../chatbot.log
 ```
 
@@ -381,11 +393,11 @@ The source code, etc. for this application and the automated tests are located i
 | Content | Location | Notes |
 | :------ | :------- | :---- |
 | Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
-| Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. |
-| Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} |
+| Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. There are different prompts for the "simple" vs. "agent" implementations. |
+| Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} .The AI-specific tests are executed with both ChatBot implementations. |
 | Integration Tests | [`src/tests/integration/`]({{site.gh_edit_repository}}/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} | Test Q&A data for the AI tests. |
-| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gpt-oss_20b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
+| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gemma4_e4b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
 
 **Table 4:** Locations for code, data, templates, etc. for the ChatBot application.
 
@@ -431,7 +443,7 @@ The changes we made are highlighted with red rounded rectangles:
 
 The first and third change were just to simplify the experience and prevent unintentionally talking directly to OpenAI and Ollama. If you prefer, you can turn these back on by clicking the grey slider on the right for each one (it will turn green). Click the &ldquo;gear&rdquo; icons to edit the connections.
 
-Finally, if you go to the chat page, [http://localhost:8080](http://localhost:8080/){:target="open-webui-home"}, you should see the model selected `ollama_chat/gpt-oss:20b`, which will be served through our API server. If you see another model name shown, click the down arrow (&ldquo;chevron&rdquo;) and select this model. With the OpenAI and Ollama direct connections disabled, there should only be this option and possibly one other added by Open WebUI.
+Finally, if you go to the chat page, [http://localhost:8080](http://localhost:8080/){:target="open-webui-home"}, you should see the model selected `ollama_chat/gemma4:e4b`, which will be served through our API server. If you see another model name shown, click the down arrow (&ldquo;chevron&rdquo;) and select this model. With the OpenAI and Ollama direct connections disabled, there should only be this option and possibly one other added by Open WebUI.
 
 ![Open WebUI Chat]({{site.baseurl}}/assets/images/open-webui-chat.jpg "Open WebUI Chat")
 
@@ -443,8 +455,7 @@ Try it!
 
 ### An MCP Server for the ChatBot
 
-Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. 
-
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
@@ -462,7 +473,7 @@ For more details on running the MCP server, see the [`src/apps/chatbot/mcp_serve
 
 ### An OpenAI-compatible API Server for the ChatBot
 
-An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. 
+An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)

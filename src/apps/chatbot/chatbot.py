@@ -1,14 +1,8 @@
-import cmd
-import io
 import logging
-import os
-import readline
-import sys
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-from litellm import completion
-from openai import OpenAIError
 from common.utils import (
     ensure_dirs_exist,
     get_package_version,
@@ -17,7 +11,11 @@ from common.utils import (
 
 from .response_handler import ResponseHandler, ChatBotResponseHandler
 
-class ChatBot:
+class ChatBot(ABC):
+    """
+    Base class for ChatBot implementations.
+    Provides common initialization and abstract methods for query processing.
+    """
 
     default_confidence_threshold: float = 0.9
     default_template_file = "patient-chatbot.yaml"
@@ -30,9 +28,20 @@ class ChatBot:
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
+        template_file: str | None = None,
         ):
         """
-        Use a `ChatBotResponseHandler` for the response_handler.
+        Initialize the ChatBot base class.
+        
+        Args:
+            model: The model identifier
+            service_url: The inference service URL
+            template_dir: Directory containing prompt templates
+            data_dir: Directory for data storage
+            confidence_level_threshold: Minimum confidence threshold (0.0-1.0)
+            response_handler: Handler for processing responses
+            logger: Logger instance
+            template_file: Optional template file name (defaults to default_template_file)
         """
         self.model             = model
         self.service_url       = service_url
@@ -72,7 +81,8 @@ class ChatBot:
                 confidence_level_threshold = self.confidence_level_threshold, 
                 logger=self.logger)
 
-        self.template_file = Path(template_dir, self.default_template_file)
+        template_filename = template_file if template_file else self.default_template_file
+        self.template_file = Path(template_dir, template_filename)
         if self.logger:
             self.logger.info(f"Using template file: {self.template_file}")
         self.template = load_yaml(self.template_file)
@@ -84,7 +94,7 @@ class ChatBot:
             raise ValueError(error_msg)
 
         if self.logger:
-            self.logger.info("ChatBot Settings:")
+            self.logger.info(f"{self.__class__.__name__} Settings:")
             self.logger.info(f"  version:                    {self.version}")
             self.logger.info(f"  model:                      {self.model}")
             self.logger.info(f"  service_url:                {self.service_url}")
@@ -93,54 +103,40 @@ class ChatBot:
             self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
 
-    def query(self, query: str) -> dict[str,Any] | str:
+    def query(self, query: str) -> dict[str,Any]:
         """
-        Runs a user query and returns either an error message or a dictionary of values
-        in the the parsed response. See the `ResponseHandler` object that was passed to
-        the constructor for details on the keys and values returned. This method is relatively
-        agnostic to the details.
+        Runs a user query and returns a dictionary of values in the parsed
+        response or an error message. 
 
         Args:
             query (str): The user's query
 
         Returns:
-            an error message or a dict with the parsed response.
-        """    
-        try:
-            sysp = f"{self.system_prompt}\n{self.__session_prompt()}"
-            messages = [
-              {
-                "role": "system",
-                "content": sysp,
-              },
-              {
-                "role": "user",
-                "content": query,
-              },
-            ]
-            if self.logger:
-                self.logger.debug(str(messages))
-            stream = False #True if self.model.find('_chat') > 0 else False
-            response = completion(
-                model = self.model, 
-                messages = messages, 
-                api_base = self.service_url, 
-                stream = stream,
-                verbose = False,
-                format = "json",
-            )
-            handled = self.response_handler(response)
-            if self.logger:
-                self.logger.debug(f"response: {handled}")
-            return handled
+            If successful, a dict with the parsed response is returned:
+            ```
+            {
+              "query":    query,
+              "content":  parsed_text_response,
+              "response": whole_response_dict
+            }
+            ```
+            If unsuccessful, `{ "error": "error_message" }` is returned.
+        """
+        response = self._do_query(query)
+        handled = self.response_handler(response)
+        if self.logger:
+            self.logger.debug(f"response: {handled}")
+        return handled
 
-        except OpenAIError as e:
-            error_msg = f"OpenAIError thrown: {e}"
-            if self.logger:
-                self.logger.error(error_msg)
-            return error_msg
+    @abstractmethod
+    def _do_query(self, query: str) -> dict[str,Any]:
+        pass
 
-    def __session_prompt(self) -> str:
+    def _session_prompt(self) -> str:
+        """
+        Build a session prompt from previous responses.
+        Protected method that can be used by subclasses.
+        """
         if not self.response_handler.responses:
             return ''
         strs = ["SESSION:"]
@@ -155,38 +151,4 @@ class ChatBot:
             count += 1
         return '\n'.join(strs)
 
-class ChatBotShell(cmd.Cmd):
-    intro = 'Welcome to the patient ChatBot. Type help or ? to list commands.\n'
-    prompt = 'input> '
-
-    def __init__(self, chatbot: ChatBot, logger: logging.Logger | None = None, verbose: bool = False, stdin = sys.stdin, stdout = sys.stdout):
-        super().__init__(stdin=stdin, stdout=stdout)
-        self.chatbot = chatbot
-        self.verbose = verbose
-        self.logger  = logger 
-
-    def default(self, line):
-        'Process the user prompt'
-        if line == 'EOF':
-            return self.do_bye(line)
-        elif line:
-            print("One moment...", file=self.stdout)
-            response = self.chatbot.query(line)
-            if isinstance(response, str):
-                print(f"Something went wrong: {response}")
-                print("Try your query again or report an issue to the development team:")
-                print("  https://github.com/The-AI-Alliance/ai-application-testing")
-            else:
-                answer = response.get('reply_to_user', '')
-                print(answer+'\n', file=self.stdout)
-                if self.verbose:
-                    print(f"Full response: {response}\n", file=self.stdout)
-
-    def do_bye(self, arg):
-        'Stop the session.'
-        print('\nThank you for using the patient ChatBot', file=self.stdout)
-        self.close()
-        return True
-
-    def close(self):
-        pass
+# Made with Bob

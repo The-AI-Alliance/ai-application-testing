@@ -9,7 +9,7 @@ from io import StringIO
 from pathlib import Path
 from typing import Any
 
-from apps.chatbot import ChatBot, ChatBotResponseHandler, ChatBotShell
+from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler, ChatBotShell
 from common.utils import dict_pop, parse_json
 from common.collections import dict_permutations
 
@@ -103,14 +103,19 @@ class TestBase(unittest.TestCase):
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
-        self.chatbot = ChatBot(
+        
+        # Determine which ChatBot implementation to use based on environment variable
+        which_chatbot = os.environ.get('WHICH_CHATBOT', 'agent').lower()
+        chatbot_class = ChatBotAgent if which_chatbot == 'agent' else ChatBotSimple
+        
+        self.chatbot = chatbot_class(
             model = self.model,
             service_url = self.service_url,
             template_dir = self.template_dir,
             data_dir = self.data_dir,
             confidence_level_threshold = self.confidence_threshold,
             response_handler = ChatBotResponseHandler(
-                confidence_level_threshold = self.confidence_threshold, 
+                confidence_level_threshold = self.confidence_threshold,
                 logger = logger),
             logger = logger)
         self.shell = ChatBotShell(self.chatbot, stdout = StringIO())
@@ -217,11 +222,13 @@ class TestBaseRunner(TestBase):
     def setUpClass(cls):
         def_log_dir = "tests/logs"
         log_file_template = os.environ.get('TESTS_LOGS_FILE_TEMPLATE')
+        which_chatbot_choice = os.environ.get('WHICH_CHATBOT', 'agent').lower()
+        which_chatbot = "ChatBotAgent" if which_chatbot_choice == 'agent' else "ChatBotSimple"
         if not log_file_template:
             print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
-            log_file_template = f"{def_log_dir}/{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+            log_file_template = f"{def_log_dir}/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
-        log_file_path = Path(log_file_template.format(class_name=cls.__name__))
+        log_file_path = Path(log_file_template.format(class_name=cls.__name__, which_chatbot=which_chatbot))
         print(f"\n  ** Logging to {log_file_path} ** \n")
         os.makedirs(log_file_path.parent, exist_ok=True)
         TestBaseRunner.log_file = log_file_path.open('a') # append mode, because we _may_ share it across tests.
@@ -346,7 +353,7 @@ class TestBaseRunner(TestBase):
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
-                exp_rtu = ChatBotResponseHandler.replies[actual_label]
+                exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
                 if exp_rtu != actual_rtu:
                     errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:

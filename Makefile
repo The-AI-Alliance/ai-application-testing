@@ -36,7 +36,7 @@ MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
 MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_GEMMA4} ${MODEL_QWEN35} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
-MODEL                 ?= ${MODEL_GPT_OSS}
+MODEL                 ?= ${MODEL_GEMMA4}
 
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
@@ -51,7 +51,9 @@ CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
 # Some specific variables passed as env. vars. to the ChatBot.
 # CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
+# WHICH_CHATBOT: Which ChatBot implementation to use: 'agent' for ChatBotAgent or 'simple' for ChatBotSimple
 CONFIDENCE_THRESHOLD  ?= 0.9
+WHICH_CHATBOT         ?= agent
 
 # Some specific variables passed as env. vars. to the test suites.
 # ACCUMULATE_TEST_ERRORS:   Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
@@ -62,7 +64,7 @@ CONFIDENCE_THRESHOLD  ?= 0.9
 ACCUMULATE_TEST_ERRORS    ?= True
 RATING_THRESHOLD          ?= 4
 TESTS_LOGS_DIR            ?= tests/logs/${MODEL_FILE_NAME}
-TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{class_name}-${TIMESTAMP}.jsonl
+TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
 TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
 # Sampling rates for different kinds of tests.
@@ -216,8 +218,11 @@ make langflow-pipeline  # Synonym for "run-langflow-pipeline".
 
 The following targets are for the example ChatBot application. See also the "help-*" targets next.
 
-make chatbot            # Run the interactive ChatBot application.
+make chatbot            # Run the ${WHICH_CHATBOT} implementation of the ChatBot application.
 make run-chatbot        # Synonym for "chatbot".
+make agent-chatbot      # Run the 'agent' implementation of the ChatBot.
+make simple-chatbot     # Run the 'simple' implementation of the ChatBot.
+
 make mcp-server         # Run the ChatBot's MCP server.
 make run-mcp-server     # Synonym for "mcp-server".
 make api-server         # Run the ChatBot's OpenAI-compatible API server.
@@ -565,11 +570,10 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: chatbot run-chatbot help-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
 
 run-chatbot:: chatbot
 chatbot:: before-chatbot
-	@echo "Running the ChatBot..."
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
@@ -577,14 +581,22 @@ chatbot:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
+		--verbose ${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+
+agent-chatbot simple-chatbot:: 
+	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
 
 help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+	@echo "Running the \"${WHICH_CHATBOT}\" ChatBot..." && \
+		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
+		echo "ERROR! ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot! (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
+		echo ""
 
 .PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
@@ -600,6 +612,7 @@ mcp-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
@@ -625,6 +638,7 @@ api-server:: before-chatbot
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
@@ -670,7 +684,7 @@ remove-open-webui::
 ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai
+.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
 all-tests:: note-all-tests integration-tests
@@ -697,8 +711,10 @@ unit-tests-non-ai::
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
-	@echo "Running the AI unit tests..."
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+
+unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
+	@echo "Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot..."
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
@@ -711,6 +727,7 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export WHICH_CHATBOT=${@:unit-tests-ai-%=%} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest discover \
 	  	--pattern 'ai_test*.py' \
@@ -721,8 +738,11 @@ unit-tests-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 
 # A special target for running one of the AI tests. Invoke as follows:
 # make TEST=path/to/test.py one-test-ai
+
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "Running one AI unit test: TEST = ${TEST} ..."
+	@echo "TIP: use make list-unit-tests-ai to see the list of tests."
+	@echo
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
@@ -735,10 +755,15 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
 	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
+	  export WHICH_CHATBOT=${WHICH_CHATBOT} && \
 	  export VERBOSE='True' && \
 	  ${TIME} uv run python -m unittest ${TEST} && \
 	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \
 	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs
+
+.PHONY: list-unit-tests-ai
+list-unit-tests-ai::
+	cd ${SRC_DIR} && find . -name 'ai_test*.py'
 
 .PHONY: post-proc-test-logs show-test-logs
 

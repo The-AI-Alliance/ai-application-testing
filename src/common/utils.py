@@ -205,7 +205,7 @@ def parse_json(text: Any) -> dict[str,Any]:
         obj = json.loads(text)
         return obj
     except (JSONDecodeError, TypeError) as err:
-        raise ValueError(f"JSONDecodeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
+        raise ValueError(f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
 
 
 def extract_jsonl(text: str) -> list[str]:
@@ -240,11 +240,11 @@ def extract_jsonl(text: str) -> list[str]:
                     jsonls.append(s2)
     return jsonls
 
-# TODO: This is duplicated now in the HandleResponse class, which is used by
+# TODO: This is duplicated now in the ModelResponseParser class, which is used by
 # the ChatBot app, but not by the "tools".
-def extract_content(litellm_reponse: ModelResponse) -> str:
+def extract_content(litellm_response: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""
-    response_dict = litellm_reponse.to_dict()
+    response_dict = litellm_response.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
     content = response_dict['choices'][0]['message']['content'] # ty: ignore[not-subscriptable]
     # print(f"content (type = {type(content)}: {content})")
