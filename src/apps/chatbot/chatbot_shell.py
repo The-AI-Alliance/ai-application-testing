@@ -7,7 +7,7 @@ from .chatbot import ChatBot
 class ChatBotShell(cmd.Cmd):
     """Interactive shell for the ChatBot."""
     
-    intro = 'Welcome to the patient ChatBot. Type help or ? to list commands.\n'
+    intro = '\nWelcome to the patient ChatBot. Type help or ? to list commands. Use "bye" to quit.\n'
     prompt = 'input> '
 
     def __init__(self, chatbot: ChatBot, logger: logging.Logger | None = None, verbose: bool = False, stdin = sys.stdin, stdout = sys.stdout):
@@ -29,7 +29,11 @@ class ChatBotShell(cmd.Cmd):
                 print("  https://github.com/The-AI-Alliance/ai-application-testing")
             else:
                 answer = response.get('reply_to_user', '')
-                print(answer+'\n', file=self.stdout)
+                if answer:
+                    print(answer+'\n', file=self.stdout)
+                error = response.get('error', '')
+                if error:
+                    print(f"ERROR! {error}\n", file=self.stdout)
                 if self.verbose:
                     print(f"Full response: {response}\n", file=self.stdout)
 

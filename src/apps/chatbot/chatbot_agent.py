@@ -3,6 +3,7 @@ from typing import Any
 
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
+from .response_parser import DeepAgentResponseParser
 
 from deepagents import create_deep_agent
 
@@ -46,6 +47,13 @@ class ChatBotAgent(ChatBot):
             logger=logger,
             template_file=self.default_template_file
         )
+        self.response_parser = DeepAgentResponseParser()
+        if model2.find('gpt-oss') >= 0:
+            err_msg = "The gpt-oss models don't appear to work with LangChain's Deep Agents for TBD reasons!"
+            if self.logger:
+                logger.error(err_msg)
+            else:
+                print(f"ERROR: {err_msg}")
         
         self.agent = create_deep_agent(
             model=self.model,
@@ -56,45 +64,22 @@ class ChatBotAgent(ChatBot):
         if self.logger:
             self.logger.info("ChatBotAgent initialized (Deep Agents integration pending)")
 
-    def query(self, query: str) -> dict[str,Any] | str:
-        """
-        Runs a user query using the Deep Agents framework and returns either 
-        an error message or a dictionary of values in the parsed response.
+    def _do_query(self, query: str) -> dict[str,Any]:
+        # Build context from session history
+        session = self._session_prompt()
+        messages = { 
+            "messages": [
+                {
+                  "role": "user",
+                  "content": query,
+                  # "content": f"{session}\nquery: {query}",
+                },
+            ],
+        }
 
-        Args:
-            query (str): The user's query
-
-        Returns:
-            an error message or a dict with the parsed response.
-        """
-        try:
-            
-            # Build context from session history
-            session = self._session_prompt()
-            query = { 
-                "messages": [
-                    {
-                      "role": "user",
-                      "content": query,
-                      # "content": f"{session}\nquery: {query}",
-                    },
-                ],
-            }
-
-            # Invoke the agent
-            response = self.agent.invoke(query,
-                context=Context(model="openai:gpt-4.1"),)
-            
-            # Process the response through the handler
-            handled = self.response_handler(response)
-            if self.logger:
-                self.logger.debug(f"response: {handled}")
-            return handled
-            
-        except Exception as e:
-            error_msg = f"Deep Agent error: {e}"
-            if self.logger:
-                self.logger.error(error_msg)
-            return error_msg
+        # Invoke the agent
+        response = self.agent.invoke(messages)
+        parsed = self.response_parser.parse(query, response)
+        return parsed
 
 # Made with Bob

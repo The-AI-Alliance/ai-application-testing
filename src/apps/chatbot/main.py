@@ -42,17 +42,16 @@ def main():
         omit_arguments={'use-cases'},
         add_arguments=add_custom_arguments)
 
-    if args.verbose:
-        print(f"{description}")
-        for key, value in vars(args).items():
-            k = key+":"
-            print(f"  {k:20s} {value}")
-        
     # Instantiate the appropriate ChatBot implementation
     chatbot_class = ChatBotAgent if args.which_chatbot == 'agent' else ChatBotSimple
+
     if args.verbose:
-        print(f"Using {chatbot_class.__name__} implementation")
-    
+        print(f"\n{description}")
+        for key, value in vars(args).items():
+            k = key+":"
+            print(f"  {k:25s} {value}")
+        print(f"\nUsing the {chatbot_class.__name__} implementation.")
+        
     chatbot = chatbot_class(
         model = args.model,
         service_url = args.service_url,

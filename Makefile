@@ -36,7 +36,7 @@ MODEL_SMOLLM2         ?= ${ollama_prefix}/smollm2:1.7b-instruct-fp16
 MODEL_GRANITE4        ?= ${ollama_prefix}/granite4:latest
 MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_GEMMA4} ${MODEL_QWEN35} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
 # Default model!
-MODEL                 ?= ${MODEL_GPT_OSS}
+MODEL                 ?= ${MODEL_GEMMA4}
 
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 SRC_DIR               ?= src
@@ -218,8 +218,11 @@ make langflow-pipeline  # Synonym for "run-langflow-pipeline".
 
 The following targets are for the example ChatBot application. See also the "help-*" targets next.
 
-make chatbot            # Run the interactive ChatBot application.
+make chatbot            # Run the ${WHICH_CHATBOT} implementation of the ChatBot application.
 make run-chatbot        # Synonym for "chatbot".
+make agent-chatbot      # Run the 'agent' implementation of the ChatBot.
+make simple-chatbot     # Run the 'simple' implementation of the ChatBot.
+
 make mcp-server         # Run the ChatBot's MCP server.
 make run-mcp-server     # Synonym for "mcp-server".
 make api-server         # Run the ChatBot's OpenAI-compatible API server.
@@ -567,11 +570,10 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: chatbot run-chatbot help-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
 
 run-chatbot:: chatbot
 chatbot:: before-chatbot
-	@echo "Running the ChatBot..."
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
@@ -581,13 +583,20 @@ chatbot:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
+		--verbose ${APP_ARGS}
 	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+
+agent-chatbot simple-chatbot:: 
+	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
 
 help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+	@echo "Running the \"${WHICH_CHATBOT}\" ChatBot..." && \
+		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
+		echo "ERROR! ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot! (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
+		echo ""
 
 .PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
@@ -729,8 +738,11 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 
 # A special target for running one of the AI tests. Invoke as follows:
 # make TEST=path/to/test.py one-test-ai
+
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "Running one AI unit test: TEST = ${TEST} ..."
+	@echo "TIP: use make list-unit-tests-ai to see the list of tests."
+	@echo
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
@@ -748,6 +760,10 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  ${TIME} uv run python -m unittest ${TEST} && \
 	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \
 	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs
+
+.PHONY: list-unit-tests-ai
+list-unit-tests-ai::
+	cd ${SRC_DIR} && find . -name 'ai_test*.py'
 
 .PHONY: post-proc-test-logs show-test-logs
 

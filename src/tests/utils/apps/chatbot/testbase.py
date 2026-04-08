@@ -353,7 +353,7 @@ class TestBaseRunner(TestBase):
                 # Ignore the action if we detect an emergency or other prompt, but check
                 # the returned user response, since we always return with the same reply for 
                 # these labels!
-                exp_rtu = ChatBotResponseHandler.replies[actual_label]
+                exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
                 if exp_rtu != actual_rtu:
                     errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
             else:

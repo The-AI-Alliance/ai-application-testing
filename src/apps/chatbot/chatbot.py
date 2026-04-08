@@ -103,19 +103,33 @@ class ChatBot(ABC):
             self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
 
-    @abstractmethod
-    def query(self, query: str) -> dict[str,Any] | str:
+    def query(self, query: str) -> dict[str,Any]:
         """
-        Runs a user query and returns either an error message or a dictionary of values
-        in the parsed response. See the `ResponseHandler` object that was passed to
-        the constructor for details on the keys and values returned.
+        Runs a user query and returns a dictionary of values in the parsed
+        response or an error message. 
 
         Args:
             query (str): The user's query
 
         Returns:
-            an error message or a dict with the parsed response.
+            If successful, a dict with the parsed response is returned:
+            ```
+            {
+              "query":    query,
+              "content":  parsed_text_response,
+              "response": whole_response_dict
+            }
+            ```
+            If unsuccessful, `{ "error": "error_message" }` is returned.
         """
+        response = self._do_query(query)
+        handled = self.response_handler(response)
+        if self.logger:
+            self.logger.debug(f"response: {handled}")
+        return handled
+
+    @abstractmethod
+    def _do_query(self, query: str) -> dict[str,Any]:
         pass
 
     def _session_prompt(self) -> str:
