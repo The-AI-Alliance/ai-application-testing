@@ -6,6 +6,7 @@ from .chatbot import ChatBot
 from .response_handler import ResponseHandler
 from .response_parser import DeepAgentResponseParser
 from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_tool
+from .skills.date_time import DATE_TIME_TOOLS, now, now_str
 
 from deepagents import create_deep_agent
 
@@ -63,7 +64,7 @@ class ChatBotAgent(ChatBot):
         self.agent = create_deep_agent(
             model=self.model,
             system_prompt=self.system_prompt,
-            tools=APPOINTMENT_TOOLS,
+            tools=APPOINTMENT_TOOLS+DATE_TIME_TOOLS,
         )
 
         self.logger.info("ChatBotAgent initialized (Deep Agents integration pending)")
