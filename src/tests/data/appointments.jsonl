@@ -8,6 +8,14 @@
 {"query": "I need to reschedule my appointment for a flu vaccine.", "labels": ["appointment"], "actions": ["reschedule"], "vaccines": ["flu"], "rating": 5}
 {"query": "I need to reschedule my appointment for a COVID vaccine.", "labels": ["appointment"], "actions": ["reschedule"], "vaccines": ["COVID"], "rating": 5}
 
+{"query": "I need to cancel my appointment for a COVID vaccine.", "labels": ["appointment"], "actions": ["cancel"], "vaccines": ["COVID"], "rating": 5}
+{"query": "I need to confirm my next appointment for a COVID vaccine.", "labels": ["appointment"], "actions": ["inquiry"], "vaccines": ["COVID"], "rating": 5}
+{"query": "I need to cancel my next appointment.", "labels": ["appointment"], "actions": ["cancel"], "rating": 5}
+{"query": "I need to confirm my next appointment.", "labels": ["appointment"], "actions": ["inquiry"], "rating": 5}
+{"query": "When are my scheduled appointments.", "labels": ["appointment"], "actions": ["inquiry"], "rating": 5}
+{"query": "What times are available in the next week for an appointment?", "labels": ["appointment"], "actions": ["inquiry"], "rating": 5}
+{"query": "What times are available in the next month for an appointment?", "labels": ["appointment"], "actions": ["inquiry"], "rating": 5}
+
 {"query": "I am having pain in my neck. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
 {"query": "I am having pain in my leg. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
 {"query": "I am having pain in my foot. I think I need a referral to a specialist.", "labels": ["appointment","other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}

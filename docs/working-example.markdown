@@ -392,7 +392,8 @@ The source code, etc. for this application and the automated tests are located i
 
 | Content | Location | Notes |
 | :------ | :------- | :---- |
-| Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server |
+| Source code       | [`src/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/){:target="chatbot"} | Main source code for the ChatBot and the MCP server. |
+| Agent Skills      | [`src/apps/chatbot/skills`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/){:target="skills"} | Skills for the Deep Agent implementation, including the appointment management skill. |
 | Prompt Templates  | [`src/apps/chatbot/prompts/templates`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/prompts/templates/){:target="prompts-chatbot"} | The prompts used by the ChatBot application and related tests. There are different prompts for the "simple" vs. "agent" implementations. |
 | Unit Tests        | [`src/tests/unit/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit//){:target="utests"} | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="utests"} .The AI-specific tests are executed with both ChatBot implementations. |
 | Integration Tests | [`src/tests/integration/`]({{site.gh_edit_repository}}/tree/main/src/tests/integration/){:target="utests"} | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
@@ -400,6 +401,36 @@ The source code, etc. for this application and the automated tests are located i
 | Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gemma4_e4b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
 
 **Table 4:** Locations for code, data, templates, etc. for the ChatBot application.
+
+### Appointment Management Feature
+
+The ChatBot Agent implementation includes a simple appointment management skill for demonstration purposes, implemented using LangChain's Deep Agents "skills" feature. This skill allows patients to:
+
+- **Schedule appointments**: Create new appointments during weekday business hours
+- **Cancel appointments**: Cancel existing appointments  
+- **Confirm appointments**: Confirm scheduled appointments
+- **Change appointments**: Reschedule to a different time
+- **List appointments**: View all scheduled appointments
+
+The appointment system enforces the following business rules:
+
+- Appointments must be scheduled on the hour (e.g., 10:00, 11:00, not 10:30)
+- Only weekdays (Monday-Friday) are available
+- Common USA holidays are excluded
+- Only one patient per time slot
+
+The appointment data is stored in a JSONL file (`data/appointments.jsonl`) that persists across sessions.
+
+#### Testing the Appointment Feature
+
+Unit tests for the appointment tool can be run with:
+
+```shell
+make unit-tests-appointments
+```
+
+These tests verify all appointment operations including creation, cancellation, confirmation, rescheduling, and validation of business rules using Test-Driven Development (TDD) principles.
+
 
 We will discuss the automated tests below, in [Automated Testing: Practical Enhancements](#automated-testing-practical-enhancements).
 

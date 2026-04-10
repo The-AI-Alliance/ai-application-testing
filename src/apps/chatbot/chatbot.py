@@ -28,7 +28,7 @@ class ChatBot(ABC):
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
-        template_file: str | None = None,
+        template_file: str = '',
         ):
         """
         Initialize the ChatBot base class.
@@ -125,7 +125,7 @@ class ChatBot(ABC):
         response = self._do_query(query)
         handled = self.response_handler(response)
         if self.logger:
-            self.logger.debug(f"response: {handled}")
+            self.logger.debug(f"handled response: {handled}")
         return handled
 
     @abstractmethod
@@ -137,18 +137,20 @@ class ChatBot(ABC):
         Build a session prompt from previous responses.
         Protected method that can be used by subclasses.
         """
-        if not self.response_handler.responses:
-            return ''
-        strs = ["SESSION:"]
-        count = 1
-        for res in self.response_handler.responses:
-            query = res.get('query')
-            reply = res.get('reply_to_user', res.get('content'))
-            strs.append(f"#{count}")
-            strs.append(f"query: {query}")
-            strs.append(f"reply: {reply}")
-            strs.append('\n')
-            count += 1
-        return '\n'.join(strs)
+        # TODO: Eliminate this and use session tools instead.
+        # if not self.response_handler.responses:
+        #     return ''
+        # strs = ["SESSION:"]
+        # count = 1
+        # for res in self.response_handler.responses:
+        #     query = res.get('query')
+        #     reply = res.get('reply_to_user', res.get('content'))
+        #     strs.append(f"#{count}")
+        #     strs.append(f"query: {query}")
+        #     strs.append(f"reply: {reply}")
+        #     strs.append('\n')
+        #     count += 1
+        # return '\n'.join(strs)
+        return ''
 
 # Made with Bob

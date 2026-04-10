@@ -14,7 +14,7 @@ from apps.chatbot.api_server.server import APIServer
 def api_server():
     """Create an API server instance for testing."""
     # Use test configuration
-    model = "ollama_chat/gpt-oss:20b"
+    model = "ollama_chat/gemma4:e4b"
     service_url = "http://localhost:11434"
     # Ugly hack!!
     src_dir_path = Path(__file__).parent.parent.parent.parent.parent.parent
@@ -87,7 +87,7 @@ class TestChatCompletions:
     def test_chat_completion_basic(self, client):
         """Test basic chat completion request."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "I need a refill for my blood pressure medication"}
             ],
@@ -124,7 +124,7 @@ class TestChatCompletions:
     def test_chat_completion_no_user_message(self, client):
         """Test chat completion with no user message returns error."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "system", "content": "You are a helpful assistant"}
             ],
@@ -138,7 +138,7 @@ class TestChatCompletions:
     def test_chat_completion_streaming(self, client):
         """Test streaming chat completion."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "I need a refill for my blood pressure medication"}
             ],
@@ -189,7 +189,7 @@ class TestChatCompletions:
     def test_chat_completion_multiple_messages(self, client):
         """Test chat completion with conversation history."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "Hello"},
                 {"role": "assistant", "content": "Hello! How can I help you today?"},
@@ -213,7 +213,7 @@ class TestAPIServerIntegration:
     def test_prescription_refill_query(self, client):
         """Test a prescription refill query through the API."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "I need to refill my lisinopril prescription"}
             ],
@@ -232,7 +232,7 @@ class TestAPIServerIntegration:
     def test_emergency_query(self, client):
         """Test an emergency query through the API."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "I'm having severe chest pain"}
             ],
@@ -251,7 +251,7 @@ class TestAPIServerIntegration:
     def test_appointment_query(self, client):
         """Test an appointment query through the API."""
         request_data = {
-            "model": "ollama_chat/gpt-oss:20b",
+            "model": "ollama_chat/gemma4:e4b",
             "messages": [
                 {"role": "user", "content": "I'd like to schedule an appointment"}
             ],

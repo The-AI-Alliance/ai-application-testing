@@ -123,6 +123,8 @@ def create_mcp_server(
         Returns:
             A formatted list of all queries and responses in the current session
         """
+        # TODO: This needs rework, based on changes to query/response handling.
+
         logger.info("MCP tool get_chatbot_session_history called")
         
         try:

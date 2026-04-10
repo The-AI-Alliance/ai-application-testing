@@ -58,12 +58,15 @@ system: >
     - "I have a sharp pain in my chest. What should I do?"
     - "I have a sharp pain in my chest. I think I need a referral to a specialist."
 
-    3. Schedule or Reschedule an Appointment
+    3. Manage Appointments
 
     Here are some examples of patient queries about making or changing appointments, or
     getting information about their scheduled appointments.
 
     - "When is my next appointment?"
+    - "When are my next appointments?"
+    - "I need to cancel my next appointment."
+    - "I need to cancel an appointment."
     - "I need to schedule my next appointment."
     - "I need to schedule an appointment."
     - "I need to schedule an appointment for a _V_ vaccine."
@@ -78,6 +81,7 @@ system: >
 
     - "I am having pain in my _B_. What should I do?"
     - "I am having pain in my _B_. I think I need a referral to a specialist."
+    - "I am having pain in my _B_. Should I come in for an evaluation?"
     - "I am having some swelling in my _B_. What should I do?"
     - "I am having some swelling in my _B_. I think I need a referral to a specialist."
     - "I don't understand the message you sent me about my last examination."
@@ -87,16 +91,13 @@ system: >
 
     ```json
     {
-        "query": _q_,
-        "reply": {
-            "label": "_l_", 
-            "prescriptions": "_p_",
-            "body_parts": "_b_",
-            "vaccines": "_v_",
-            "actions": "_a_",
-            "text": "_t_",
-            "confidence": _c_
-        }
+        "label": "_l_", 
+        "prescriptions": "_p_",
+        "body_parts": "_b_",
+        "vaccines": "_v_",
+        "actions": "_a_",
+        "text": "_t_",
+        "confidence": _c_
     }
     ```
 
@@ -104,7 +105,6 @@ system: >
 
     In your response,
 
-    - Replace _q_ with the patient's input query.
     - Replace _l_ with one of the following labels, _in priority order_:
         - "emergency" if the question appears to be an urgent or emergency situation, even if a prescription or appointment request is also included.
         - "prescription" if the patient's query appears to be related to one or more prescriptions.

@@ -1,9 +1,11 @@
 import logging
+from pathlib import Path
 from typing import Any
 
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
 from .response_parser import DeepAgentResponseParser
+from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_tool
 
 from deepagents import create_deep_agent
 
@@ -49,20 +51,22 @@ class ChatBotAgent(ChatBot):
         )
         self.response_parser = DeepAgentResponseParser()
         if model2.find('gpt-oss') >= 0:
-            err_msg = "The gpt-oss models don't appear to work with LangChain's Deep Agents for TBD reasons!"
-            if self.logger:
-                logger.error(err_msg)
-            else:
-                print(f"ERROR: {err_msg}")
+            err_msg = "The gpt-oss models served by ollama don't currently work with LangChain's Deep Agents!"
+            logger.error(err_msg)
+        
+        # Set up appointment tools with the correct data directory
+        appointments_file = Path(self.data_dir) / "appointments.jsonl"
+        appointment_tool = get_appointment_tool(
+            file_path = appointments_file,
+            logger = self.logger)
         
         self.agent = create_deep_agent(
             model=self.model,
             system_prompt=self.system_prompt,
-            # Additional Deep Agents configuration
+            tools=APPOINTMENT_TOOLS,
         )
 
-        if self.logger:
-            self.logger.info("ChatBotAgent initialized (Deep Agents integration pending)")
+        self.logger.info("ChatBotAgent initialized (Deep Agents integration pending)")
 
     def _do_query(self, query: str) -> dict[str,Any]:
         # Build context from session history
@@ -72,7 +76,6 @@ class ChatBotAgent(ChatBot):
                 {
                   "role": "user",
                   "content": query,
-                  # "content": f"{session}\nquery: {query}",
                 },
             ],
         }
@@ -80,6 +83,7 @@ class ChatBotAgent(ChatBot):
         # Invoke the agent
         response = self.agent.invoke(messages)
         parsed = self.response_parser.parse(query, response)
+        self.logger.debug(f"response = <{response}>, parsed = <{parsed}>.")
         return parsed
 
 # Made with Bob

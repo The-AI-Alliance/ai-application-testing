@@ -15,7 +15,7 @@ from typing import Any, Callable
 from litellm.types.utils import ModelResponse
 
 common_defaults = {
-    "model":                        "ollama_chat/gpt-oss:20b",
+    "model":                        "ollama_chat/gemma4:e4b",
     "service-url":                  "http://localhost:11434",
     "template-dir":                 "prompts/templates",
     "data-dir":                     "data",

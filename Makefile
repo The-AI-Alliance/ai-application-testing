@@ -157,11 +157,13 @@ make build              # Build a distribution
 make install            # Install the code locally in development mode
 
 make tests              # Following convention, this target runs the unit tests only, building
-                        # the targets "unit-tests-non-ai" and "unit-tests-ai".
+                        # the targets "unit-tests-non-ai", "unit-tests-ai", and "unit-tests-appointments".
 make test               # Synonym for "tests".
 make unit-tests         # Synonym for "tests".
 make unit-tests-non-ai  # All unit tests that don't involve inference invocations.
 make unit-tests-ai      # All unit tests that do involve inference invocations, which take a long time to run.
+make unit-tests-appointments
+                        # Unit tests for the appointment management tool.
 make unit-tests-langflow
                         # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
                         # so we don't force you to have Langflow installed.
@@ -570,10 +572,11 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: run-chatbot chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
 
 run-chatbot:: chatbot
-chatbot:: before-chatbot
+chatbot:: before-chatbot do-run-chatbot
+do-run-chatbot::
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
@@ -695,7 +698,7 @@ note-all-tests::
 	@echo "examples sampled, etc., plus some other integration tests."
 	@echo
 
-test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai 
+test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-tests-appointments
 
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
@@ -707,12 +710,22 @@ unit-tests-non-ai::
 	    --start-directory tests/unit \
 	    --top-level-directory .
 
+.PHONY: unit-tests-appointments
+
+unit-tests-appointments::
+	@echo "Running the appointment tool unit tests..."
+	cd ${SRC_DIR} && \
+	  uv run python -m unittest discover \
+	    --pattern 'test_appointment*.py' \
+	    --start-directory tests/unit/apps/chatbot \
+	    --top-level-directory .
+
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
-
 unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot..."
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"

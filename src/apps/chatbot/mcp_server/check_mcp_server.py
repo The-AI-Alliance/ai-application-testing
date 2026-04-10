@@ -38,7 +38,7 @@ def test_chatbot_creation():
         logger.setLevel(logging.INFO)
         
         chatbot = ChatBot(
-            model="ollama_chat/gpt-oss:20b",
+            model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
@@ -68,7 +68,7 @@ def test_mcp_server_creation():
         logger.setLevel(logging.INFO)
         
         result = create_mcp_server(
-            model="ollama_chat/gpt-oss:20b",
+            model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",

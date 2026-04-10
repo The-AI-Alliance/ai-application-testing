@@ -1,4 +1,4 @@
-import logging
+import logging, re
 from typing import Any
 
 class ResponseHandler():
@@ -92,43 +92,27 @@ This could be the next business day. If you are having an emergency, please call
         This method has to do a lot of careful processing of the `processed_response` dictionary,
         because the content is unpredictable.
         """
-        if processed_response.get("error"):
-            return processed_response
+        other = str(self.fixed_replies.get('other', ''))  # str() for type checking!
+        answer = other       # "safety" default...
 
-        other    = str(self.fixed_replies.get('other', ''))  # str() for type checking!
-        query    = processed_response.get('query', "?")
-        content  = processed_response.get('content')
-        if content == None:
-            processed_response["error"] = "No 'content' in processed response.",
-            processed_response['reply_to_user'] = other
-        elif isinstance(content, str):
-            processed_response['reply_to_user'] = other
-        elif isinstance(content, dict):
-            reply = content.get('reply')
-            if reply and isinstance(reply, dict):
-                answer        = ''
-                label         = reply.get('label')
-                prescriptions = reply.get('prescriptions', '')
-                body_parts    = reply.get('body_parts', '')
-                actions       = reply.get('actions', '')
-                confidence    = reply.get('confidence', 0.0)
-                text          = str(reply.get('text', ''))   # str() for type checking!
-                if confidence < self.confidence_level_threshold:
-                    self.logger.info(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (content = {content})")
-                    answer = other
-                else:
-                    match label:
-                        case 'prescription' | 'appointment':
-                            answer = text
-                        case 'emergency':
-                            answer = str(self.fixed_replies.get('emergency', ''))   # str() for type checking!
-                        case _:
-                            answer = other
-        
-                answer2 = answer.format(prescriptions=prescriptions, body_parts=body_parts)
-                processed_response['reply_to_user'] = answer2
+        if not processed_response.get("error"):
+            confidence = processed_response.get('confidence', 1.0)
+            if confidence < self.confidence_level_threshold:
+                self.logger.warning(f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (processed_response = {processed_response})")
             else:
-                processed_response['reply_to_user'] = other
+                text  = str(processed_response.get('text', ''))   # str() for type checking!
+                label = processed_response.get('label')
+                match label:
+                    case 'emergency' | 'other':
+                        answer = str(self.fixed_replies.get(label, ''))
+                    case _:
+                        answer = text
+
+        answer2 = answer.format_map(self.DictEmptyStrDefault(processed_response))
+        processed_response['reply_to_user'] = answer2
         
         return processed_response
         
+    class DictEmptyStrDefault(dict):
+        def __missing__(self, key):
+            return '""'
