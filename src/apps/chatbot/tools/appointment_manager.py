@@ -22,7 +22,7 @@ class AppointmentError(Exception):
     pass
 
 
-class AppointmentTool:
+class AppointmentManager:
     """
     Tool for managing patient appointments.
     

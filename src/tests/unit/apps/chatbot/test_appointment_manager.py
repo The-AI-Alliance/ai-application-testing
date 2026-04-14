@@ -10,16 +10,16 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from apps.chatbot.appointment_tool import AppointmentTool, AppointmentError
+from apps.chatbot.appointment_manager import AppointmentManager, AppointmentError
 
 
-class TestAppointmentTool(unittest.TestCase):
-    """Test cases for AppointmentTool"""
+class TestAppointmentManager(unittest.TestCase):
+    """Test cases for AppointmentManager"""
 
-    def _make_tool(self, file_name: str = '') -> AppointmentTool:
+    def _make_tool(self, file_name: str = '') -> AppointmentManager:
         if not file_name:
             file_name = self.temp_file.name
-        self.tool = AppointmentTool(file_name)
+        self.tool = AppointmentManager(file_name)
         return self.tool
 
     def setUp(self):

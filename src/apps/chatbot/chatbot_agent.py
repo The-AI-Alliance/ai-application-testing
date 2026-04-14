@@ -5,8 +5,8 @@ from typing import Any
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
 from .response_parser import DeepAgentResponseParser
-from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_tool
-from .skills.date_time import DATE_TIME_TOOLS, now, now_str
+from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_manager
+from .skills.date_time import DATE_TIME_TOOLS
 
 from deepagents import create_deep_agent
 
@@ -57,7 +57,7 @@ class ChatBotAgent(ChatBot):
         
         # Set up appointment tools with the correct data directory
         appointments_file = Path(self.data_dir) / "appointments.jsonl"
-        appointment_tool = get_appointment_tool(
+        appointment_manager = get_appointment_manager(
             file_path = appointments_file,
             logger = self.logger)
         

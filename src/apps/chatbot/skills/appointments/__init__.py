@@ -2,9 +2,9 @@
 Appointment management skill for the ChatBot.
 """
 
-from .appointment_tools import (
+from .appointment_managers import (
     APPOINTMENT_TOOLS,
-    get_appointment_tool,
+    get_appointment_manager,
     create_appointment,
     cancel_appointment,
     confirm_appointment,
@@ -15,7 +15,7 @@ from .appointment_tools import (
 
 __all__ = [
     'APPOINTMENT_TOOLS',
-    'get_appointment_tool',
+    'get_appointment_manager',
     'create_appointment',
     'cancel_appointment',
     'confirm_appointment',

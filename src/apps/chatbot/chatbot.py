@@ -122,6 +122,7 @@ class ChatBot(ABC):
             ```
             If unsuccessful, `{ "error": "error_message" }` is returned.
         """
+
         response = self._do_query(query)
         handled = self.response_handler(response)
         if self.logger:

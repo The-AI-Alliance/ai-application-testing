@@ -10,18 +10,18 @@ from typing import Any, Optional
 
 from langchain_core.tools import tool
 
-from apps.chatbot.appointment_tool import AppointmentTool, AppointmentError
+from apps.chatbot.tools.appointment_manager import AppointmentManager, AppointmentError
 
 # Initialize the appointment tool with a default file location
 # This will be overridden when integrated with the ChatBot
 _appointments_file = Path("data/appointments.jsonl")
-_appointment_tool_logger = logging.getLogger('AppointmentTool')
-_appointment_tool_logger.setLevel(logging.INFO)
-_appointment_tool: Optional[AppointmentTool] = None
+_appointment_manager_logger = logging.getLogger('AppointmentManager')
+_appointment_manager_logger.setLevel(logging.INFO)
+_appointment_manager: Optional[AppointmentManager] = None
 
-def get_appointment_tool(
+def get_appointment_manager(
     file_path: Path | str = _appointments_file, 
-    logger: logging.Logger = _appointment_tool_logger) -> AppointmentTool:
+    logger: logging.Logger = _appointment_manager_logger) -> AppointmentManager:
     """
     Idempotent: Creates and returns a tool if:
     1. It doesn't already exist.
@@ -30,12 +30,12 @@ def get_appointment_tool(
     Otherwise, the existing tool is returned.
     """
     global _appointments_file
-    global _appointment_tool
-    global _appointment_tool_logger
+    global _appointment_manager
+    global _appointment_manager_logger
     
     create = False
-    if not logger and not _appointment_tool_logger == logger:
-        _appointment_tool_logger = logger
+    if not logger and not _appointment_manager_logger == logger:
+        _appointment_manager_logger = logger
         create = True
 
     fp = Path(file_path)
@@ -43,10 +43,10 @@ def get_appointment_tool(
         _appointments_file = fp
         create = True
 
-    if create or not _appointment_tool:
-        _appointment_tool = AppointmentTool(_appointments_file, _appointment_tool_logger)
+    if create or not _appointment_manager:
+        _appointment_manager = AppointmentManager(_appointments_file, _appointment_manager_logger)
 
-    return _appointment_tool
+    return _appointment_manager
 
 def set_appointments_file(file_path: Path | str) -> None:
     """
@@ -57,8 +57,8 @@ def set_appointments_file(file_path: Path | str) -> None:
     Args:
         file_path: Path to the appointments JSONL file
     """
-    logger = _appointment_tool.logger if _appointment_tool else _appointment_tool_logger
-    get_appointment_tool(file_path = file_path, logger = logger)
+    logger = _appointment_manager.logger if _appointment_manager else _appointment_manager_logger
+    get_appointment_manager(file_path = file_path, logger = logger)
 
 @tool
 def create_appointment(patient_name: str, appointment_time: str, reason: str) -> dict[str, Any]:
@@ -78,7 +78,7 @@ def create_appointment(patient_name: str, appointment_time: str, reason: str) ->
     """
     try:
         appt_time = datetime.fromisoformat(appointment_time)
-        tool = get_appointment_tool()
+        tool = get_appointment_manager()
         result = tool.create_appointment(patient_name, appt_time, reason)
         return result
     except AppointmentError as e:
@@ -102,7 +102,7 @@ def cancel_appointment(appointment_id: str) -> dict[str, Any]:
         cancel_appointment("abc123-def456")
     """
     try:
-        tool = get_appointment_tool()
+        tool = get_appointment_manager()
         result = tool.cancel_appointment(appointment_id)
         return result
     except AppointmentError as e:
@@ -124,7 +124,7 @@ def confirm_appointment(appointment_id: str) -> dict[str, Any]:
         confirm_appointment("abc123-def456")
     """
     try:
-        tool = get_appointment_tool()        
+        tool = get_appointment_manager()        
         result = tool.confirm_appointment(appointment_id)
         return result
     except AppointmentError as e:
@@ -148,7 +148,7 @@ def change_appointment(appointment_id: str, new_time: str) -> dict[str, Any]:
     """
     try:
         new_datetime = datetime.fromisoformat(new_time)
-        tool = get_appointment_tool()
+        tool = get_appointment_manager()
         result = tool.change_appointment(appointment_id, new_datetime)
         return result
     except AppointmentError as e:
@@ -175,7 +175,7 @@ def list_appointments(include_past: bool = False, status_filter: str = '') -> di
         list_appointments(status_filter="confirmed")
     """
     try:
-        tool = get_appointment_tool()
+        tool = get_appointment_manager()
         appointments = tool.list_appointments(include_past, status_filter)
         return {
             "success": True,
@@ -187,7 +187,7 @@ def list_appointments(include_past: bool = False, status_filter: str = '') -> di
 
 
 # Export all tools as a list for easy registration
-# Note that create_appointment_tool is not in this list. It is handled
+# Note that create_appointment_manager is not in this list. It is handled
 # internally and not exposed as a tool.
 APPOINTMENT_TOOLS = [
     create_appointment,
