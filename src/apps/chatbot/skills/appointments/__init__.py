@@ -2,7 +2,7 @@
 Appointment management skill for the ChatBot.
 """
 
-from .appointment_managers import (
+from .appointment_tools import (
     APPOINTMENT_TOOLS,
     get_appointment_manager,
     create_appointment,

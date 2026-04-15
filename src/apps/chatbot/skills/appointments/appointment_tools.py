@@ -110,22 +110,27 @@ def cancel_appointment(appointment_id: str) -> dict[str, Any]:
 
 
 @tool
-def confirm_appointment(appointment_id: str) -> dict[str, Any]:
+def confirm_appointment(criteria: dict[str, Any]) -> list[dict[str, Any]]:
     """
     Confirm an existing appointment.
     
     Args:
-        appointment_id: ID of the appointment to confirm
+        criteria: one or more fields to search with
         
     Returns:
-        Dictionary with confirmation details
+        List of matching dictionaries, updated with confirmation details.
+        If the input criteria is empty, then all appointments are returned, but unchanged.
+        if an error of some kind occurs `{"success": False, "error": error_message}` is returned.
         
     Example:
-        confirm_appointment("abc123-def456")
+        confirm_appointment({
+            'appointment_time': datetime(2026, 4, 20, 8),
+            'patient_name': "John Doe",
+        })
     """
     try:
         tool = get_appointment_manager()        
-        result = tool.confirm_appointment(appointment_id)
+        result = tool.confirm_appointment(criteria)
         return result
     except AppointmentError as e:
         return {"success": False, "error": str(e)}

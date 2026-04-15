@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler, ChatBotShell
-from common.utils import dict_pop, parse_json
+from common.utils import dict_pop, encode_json
 from common.collections import dict_permutations
 
 class TestPrompt():
@@ -258,7 +258,7 @@ class TestBaseRunner(TestBase):
                 ls = line.strip()
                 if ls:
                     try:
-                        obj     = parse_json(ls)
+                        obj     = encode_json(ls)
                         query   = dict_pop(obj, 'query')
                         labels  = dict_pop(obj, 'labels')
                         actions = dict_pop(obj, 'actions')
