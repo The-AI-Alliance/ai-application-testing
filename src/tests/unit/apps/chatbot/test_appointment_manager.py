@@ -1,6 +1,6 @@
 """
 Unit tests for the appointment management tool.
-Uses Hypothesis
+Uses Hypothesis.
 """
 from hypothesis import given, strategies as st
 import json, os, tempfile, unittest
@@ -10,101 +10,47 @@ from pathlib import Path
 from typing import Any, Callable
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager, AppointmentError
+from tests.common.utils import (
+    is_work_hours,
+    future_dates,
+    past_dates,
+    work_dates,
+    work_hours,
+    non_work_hours,
+    on_the_hour_minutes,
+    off_the_hour_minutes,
+    future_work_datetimes,
+    past_work_datetimes,
+    person_names,
+)
 
-def is_work_hours(dt: datetime) -> bool:
-    if (dt.month, dt.day) in AppointmentManager.USA_HOLIDAYS:
-        return False
-    elif dt.weekday() > 4:
-        return False
-    elif dt.hour < 8 or dt.hour >= 17:
-        return False
-    return True
+def appointment_work_hours():
+    return work_hours(end_hour_inclusive = 16)
 
-def future_datetimes(
-    datetime_strategy = st.datetimes,
-    min_value: datetime = datetime.min,
-    max_value: datetime = datetime.max):
-    """
-    Only return datetimes in the future.
+def appointment_non_work_hours():
+    return non_work_hours(first_evening_hour_inclusive = 17)
 
-    Args:
-
-    - min_value for the earliest datetime. If the value is < datetime.now(), then datetime.now() is used.
-    - max_value for the latest datetime. If the value is <= datetime.now() or < min_value, then datetime.max.
-    
-    Returns:
-    datetimes that occur in the future between the min_value and max_value.
-    """
-    now = datetime.now()
-    if min_value < now:
-        min_value = now
-    if max_value <= now or max_value < min_value:
-        max_value = datetime.max
-    return datetime_strategy(min_value = min_value, max_value = max_value)
-
-def years():
-    """Only support this year and next"""
-    this_year = datetime.now().year
-    return st.one_of(st.integers(min_value=this_year, max_value=this_year+1))
-
-def work_dates(future: bool = True):
-    today = datetime.now().date()
-    min_value = today + timedelta(days=1)
-    max_value = date.max
-    if not future:
-        min_value = date.min
-        max_value = today - timedelta(days=1)
-    return st.dates(min_value=min_value, max_value=max_value).filter(
-        lambda dt: dt.weekday() <= 4 and (dt.month, dt.day) not in AppointmentManager.USA_HOLIDAYS
-    )
-
-def work_hours():
-    return st.integers(min_value=8, max_value=16)
-def non_work_hours():
-    return st.one_of(st.integers(min_value=0, max_value=7), st.integers(min_value=17, max_value=23))
-
-def on_the_hour_minutes():
-    return st.just(0)
-def off_the_hour_minutes():
-    return st.integers(min_value=1, max_value=59)
-
-def datetimes(
-    date_strategy = work_dates,
-    hour_strategy = work_hours,
+def appointment_future_work_datetimes(
     minute_strategy = on_the_hour_minutes):
-    def tuple_to_datetime(t: tuple[date,int,int]) -> datetime:
-        (dte, hour, minute) = t
-        return datetime(dte.year, dte.month, dte.day, hour, minute)
-    return st.tuples(date_strategy(), hour_strategy(), minute_strategy()).map(
-        lambda t: tuple_to_datetime(t)
-    )
-
-def past_datetimes(
-    hour_strategy = work_hours,
-    minute_strategy = on_the_hour_minutes):
-    return datetimes(
-        date_strategy = lambda: work_dates(future=False),
-        hour_strategy = hour_strategy,
+    return future_work_datetimes(
+        date_strategy = lambda: work_dates(
+            date_strategy = future_dates,
+            holidays = AppointmentManager.USA_HOLIDAYS),
+        hour_strategy = appointment_work_hours,
         minute_strategy = minute_strategy)
 
-
-def patient_name(test_strategy = st.text, min_name_parts_size=1, max_name_parts_size=3, min_part_length=1, max_part_length=20):
-    if min_name_parts_size < 1:
-        min_name_parts_size = 1
-    if max_name_parts_size < min_name_parts_size or max_name_parts_size < 1:
-        max_name_parts_size = min_name_parts_size + 1
-    if min_part_length < 1:
-        min_part_length = 1
-    if max_part_length < min_part_length or max_part_length < 1:
-        max_part_length = min_part_length + 1
-    return st.lists(test_strategy(
-            min_size=min_part_length, max_size=max_part_length),
-        min_size=min_name_parts_size, max_size=max_name_parts_size
-    ).map(lambda l: ' '.join(l))
+def appointment_future_non_work_datetimes(
+    minute_strategy = on_the_hour_minutes):
+    return future_work_datetimes(
+        date_strategy = lambda: work_dates(
+            date_strategy = future_dates,
+            holidays = AppointmentManager.USA_HOLIDAYS),
+        hour_strategy = appointment_non_work_hours,
+        minute_strategy = minute_strategy)
 
 def appointment_dicts(
-    datetime_strategy = datetimes,
-    patient_name_strategy = patient_name,
+    datetime_strategy = appointment_future_work_datetimes,
+    patient_name_strategy = person_names,
     reason_strategy = st.text):
     return st.tuples(datetime_strategy(), patient_name_strategy(), reason_strategy()).map(lambda t:
         AppointmentManager.make_appointment_dict(
@@ -114,8 +60,8 @@ def appointment_dicts(
         status = 'scheduled'))
 
 def list_appointment_dicts(
-    datetime_strategy = datetimes,
-    patient_name_strategy = patient_name,
+    datetime_strategy = appointment_future_work_datetimes,
+    patient_name_strategy = person_names,
     reason_strategy = st.text):
     return st.lists(
         appointment_dicts(
@@ -253,7 +199,8 @@ class TestAppointmentManager(unittest.TestCase):
         self.tool.clear()
         self._check_success(appointment_dict)
 
-    @given(appointment_dicts(datetime_strategy=past_datetimes))     
+    @given(appointment_dicts(
+        datetime_strategy = past_work_datetimes))
     def test_create_appointment_fails_if_datetime_in_the_past(self, 
         appointment_dict: dict[str,Any]):
         """
@@ -262,7 +209,7 @@ class TestAppointmentManager(unittest.TestCase):
         self._check_failure(appointment_dict)
 
     @given(appointment_dicts(
-        datetime_strategy = lambda: datetimes(hour_strategy = non_work_hours)))
+        datetime_strategy = appointment_future_non_work_datetimes))
     def test_create_appointment_fails_if_datetime_in_the_future_but_not_a_work_hour(self, 
         appointment_dict: dict[str,Any]):
         """
@@ -271,7 +218,7 @@ class TestAppointmentManager(unittest.TestCase):
         self._check_failure(appointment_dict)
 
     @given(appointment_dicts(
-        datetime_strategy = lambda: datetimes(minute_strategy = off_the_hour_minutes)))
+        datetime_strategy = lambda: appointment_future_work_datetimes(minute_strategy = off_the_hour_minutes)))
     def test_create_appointment_fails_if_datetime_in_the_future_but_not_on_the_hour(self, 
         appointment_dict: dict[str,Any]):
         """
@@ -336,7 +283,7 @@ class TestAppointmentManager(unittest.TestCase):
     def test_confirm_appointment_returns_empty_if_it_does_not_exist(self, uuid):
         self.assertEqual([], self.tool.confirm_appointment(str(uuid)))
 
-    @given(appointment_dicts(), datetimes())
+    @given(appointment_dicts(), appointment_future_work_datetimes())
     def test_change_appointment_successful_if_it_exists(self, 
         appointment_dict: dict[str,Any], new_datetime: datetime):
         """
@@ -408,5 +355,3 @@ class TestAppointmentManager(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main()
-
-# Made with Bob

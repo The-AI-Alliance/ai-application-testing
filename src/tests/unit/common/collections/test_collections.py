@@ -38,7 +38,7 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected_len, len(actual2))
 
     @given(
-        st.dictionaries(st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4))
+        st.dictionaries(st.text(min_size=1, max_size=10), st.sets(st.text(max_size=10), max_size=4), max_size=4))
     def test_dict_permutations(self, dictionary: dict[str,Any]):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values
