@@ -19,6 +19,7 @@ common_defaults = {
     "service-url":                  "http://localhost:11434",
     "template-dir":                 "prompts/templates",
     "data-dir":                     "data",
+    "output-dir":                   "output",
     "levenshtein-ratio-threshold":  0.95,
 }
 
@@ -67,6 +68,9 @@ def parser_with_common_args(
     if not 'data-dir' in omit_arguments:
         parser.add_argument("-d", "--data-dir", default=common_defaults['data-dir'], 
             help=f"Directory where data files are read or written. Default: {common_defaults['data-dir']}")
+    if not 'output-dir' in omit_arguments:
+        parser.add_argument("-o", "--output-dir", default=common_defaults['output-dir'], 
+            help=f"Directory where some output files are read or written (may not be used). Default: {common_defaults['output-dir']}")
     if not 'use-cases' in omit_arguments:
         all_ucs = ', '.join([f"'{key}'" for key in all_use_cases().keys()])
         parser.add_argument("-u", "--use-cases", nargs="*",

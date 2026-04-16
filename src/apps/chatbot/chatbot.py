@@ -25,6 +25,7 @@ class ChatBot(ABC):
         service_url: str,
         template_dir: str,
         data_dir: str,
+        output_dir: str,
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
@@ -38,6 +39,7 @@ class ChatBot(ABC):
             service_url: The inference service URL
             template_dir: Directory containing prompt templates
             data_dir: Directory for data storage
+            output_dir: Directory for "miscellaneous" output (may not be used)
             confidence_level_threshold: Minimum confidence threshold (0.0-1.0)
             response_handler: Handler for processing responses
             logger: Logger instance
@@ -47,6 +49,7 @@ class ChatBot(ABC):
         self.service_url       = service_url
         self.template_dir      = template_dir
         self.data_dir          = data_dir
+        self.output_dir        = output_dir
         self.logger            = logger
         if confidence_level_threshold < 0.0:
             confidence_level_threshold = 0.0
@@ -66,13 +69,15 @@ class ChatBot(ABC):
             errors.append('template_dir')
         if not self.data_dir:
             errors.append('data_dir')
+        if not self.output_dir:
+            errors.append('output_dir')
         if errors:
             error_msg = f"These values can't be None or empty: {', '.join(errors)}"
             if self.logger:
                 self.logger.error(error_msg)
             raise ValueError(error_msg)
 
-        ensure_dirs_exist(self.template_dir, self.data_dir)
+        ensure_dirs_exist(self.template_dir, self.data_dir, self.output_dir)
 
         if response_handler:
             self.response_handler = response_handler
@@ -100,6 +105,7 @@ class ChatBot(ABC):
             self.logger.info(f"  service_url:                {self.service_url}")
             self.logger.info(f"  template_dir:               {self.template_dir}")
             self.logger.info(f"  data_dir:                   {self.data_dir}")
+            self.logger.info(f"  output_dir:                 {self.output_dir}")
             self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
 

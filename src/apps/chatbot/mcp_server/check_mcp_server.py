@@ -42,6 +42,7 @@ def test_chatbot_creation():
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
+            output_dir="output/chatbot",
             confidence_level_threshold=0.9,
             response_handler = ChatBotResponseHandler(
                 confidence_level_threshold=0.9, 
@@ -53,6 +54,7 @@ def test_chatbot_creation():
         print(f"  - Service URL: {chatbot.service_url}")
         print(f"  - Template dir: {chatbot.template_dir}")
         print(f"  - Data dir: {chatbot.data_dir}")
+        print(f"  - Output dir: {chatbot.output_dir}")
         print(f"  - Confidence threshold: {chatbot.confidence_level_threshold}")
         return True
     except Exception as e:
@@ -72,6 +74,7 @@ def test_mcp_server_creation():
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
+            output_dir="output/chatbot",
             confidence_level_threshold=0.9,
             logger=logger
         )

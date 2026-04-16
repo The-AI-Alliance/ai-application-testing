@@ -20,6 +20,7 @@ def api_server():
     src_dir_path = Path(__file__).parent.parent.parent.parent.parent.parent
     template_dir = str(src_dir_path / "apps/chatbot/prompts/templates")
     data_dir = str(src_dir_path / "data")
+    output_dir = "output"
     logger = logging.getLogger('test_api_server')
     logger.setLevel(logging.INFO)
 
@@ -28,6 +29,7 @@ def api_server():
         service_url=service_url,
         template_dir=template_dir,
         data_dir=data_dir,
+        output_dir=output_dir,
         confidence_level_threshold=0.9,
         host="127.0.0.1",
         port=8000,

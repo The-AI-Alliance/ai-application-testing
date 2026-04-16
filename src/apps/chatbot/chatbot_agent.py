@@ -56,7 +56,7 @@ class ChatBotAgent(ChatBot):
             logger.error(err_msg)
         
         # Set up appointment tools with the correct data directory
-        appointments_file = Path(self.data_dir) / "appointments.jsonl"
+        appointments_file = Path(self.output_dir) / "appointments.jsonl"
         appointment_manager = get_appointment_manager(
             file_path = appointments_file,
             logger = self.logger)

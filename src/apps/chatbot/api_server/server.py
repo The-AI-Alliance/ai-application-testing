@@ -98,6 +98,7 @@ class APIServer:
         service_url: str,
         template_dir: str,
         data_dir: str,
+        output_dir: str,
         confidence_level_threshold: float,
         host: str,
         port: int,
@@ -112,6 +113,7 @@ class APIServer:
             service_url: The URL of the inference service
             template_dir: Directory containing prompt templates
             data_dir: Directory containing data files
+            output_dir: Directory for "miscellaneous" output (may not be used)
             confidence_level_threshold: Minimum confidence level for responses
             host: Host to bind the server to
             port: Port to bind the server to
@@ -122,6 +124,7 @@ class APIServer:
         self.service_url = service_url
         self.template_dir = template_dir
         self.data_dir = data_dir
+        self.output_dir = output_dir
         self.confidence_level_threshold = confidence_level_threshold
         self.host = host
         self.port = port
@@ -139,6 +142,7 @@ class APIServer:
             service_url=self.service_url,
             template_dir=self.template_dir,
             data_dir=self.data_dir,
+            output_dir=self.output_dir,
             confidence_level_threshold=self.confidence_level_threshold,
             response_handler = ChatBotResponseHandler(
                 confidence_level_threshold=self.confidence_level_threshold,
@@ -416,6 +420,7 @@ def main():
             service_url=args.service_url,
             template_dir=args.template_dir,
             data_dir=args.data_dir,
+            output_dir=args.output_dir,
             confidence_level_threshold=args.confidence_threshold,
             host=args.host,
             port=args.port,

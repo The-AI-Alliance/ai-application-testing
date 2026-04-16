@@ -76,6 +76,7 @@ DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 PROMPTS_TEMPLATES_DIR   ?= tools/prompts/templates
 CHATBOT_TEMPLATES_DIR   ?= apps/chatbot/prompts/templates
 CHATBOT_DATA_DIR        ?= ${DATA_DIR}/chatbot
+CHATBOT_OUTPUT_DIR      ?= ${PWD}/output
 CHATBOT_API_SERVER_HOST ?= localhost
 CHATBOT_API_SERVER_PORT ?= 8000
 CHATBOT_API_SERVER      ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
@@ -400,6 +401,7 @@ print-info-code::
 	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  CHATBOT_TEMPLATES_DIR:   ${CHATBOT_TEMPLATES_DIR}"
+	@echo "  CHATBOT_OUTPUT_DIR:      ${CHATBOT_OUTPUT_DIR}"
 	@echo "  SRC_DIR:                 ${SRC_DIR}"
 	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
@@ -583,6 +585,7 @@ do-run-chatbot::
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -595,7 +598,7 @@ agent-chatbot simple-chatbot::
 help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
-before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 	@echo "Running the \"${WHICH_CHATBOT}\" ChatBot..." && \
 		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
 		echo "ERROR! ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot! (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
@@ -614,6 +617,7 @@ mcp-server:: before-chatbot
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -640,6 +644,7 @@ api-server:: before-chatbot
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -684,7 +689,7 @@ remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
 
-${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple

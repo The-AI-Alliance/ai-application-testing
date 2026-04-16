@@ -14,7 +14,7 @@ from apps.chatbot.tools.appointment_manager import AppointmentManager, Appointme
 
 # Initialize the appointment tool with a default file location
 # This will be overridden when integrated with the ChatBot
-_appointments_file = Path("data/appointments.jsonl")
+_appointments_file = Path("../output/appointments.jsonl")
 _appointment_manager_logger = logging.getLogger('AppointmentManager')
 _appointment_manager_logger.setLevel(logging.INFO)
 _appointment_manager: Optional[AppointmentManager] = None
