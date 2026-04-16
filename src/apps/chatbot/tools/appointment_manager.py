@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Optional
 from uuid import uuid4
 
+from common.file_persistent_storage import FilePersistentStorage
 from common.utils import decode_json, encode_json
 
 class AppointmentError(Exception):
@@ -56,12 +57,8 @@ class AppointmentManager:
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(logging.INFO)
 
+        self.storage = FilePersistentStorage(self.appointments_file, logger)
         self.appointments: dict[str, dict[str, Any]] = {}
-        
-        # Create file if it doesn't exist
-        self.__create_file(self.appointments_file)
-        
-        # Load existing appointments
         self._load_appointments()
     
     def __create_file(self, path: Path, remove_old: bool = False):
@@ -104,36 +101,36 @@ class AppointmentManager:
     def _load_appointments(self) -> None:
         """Load appointments from the JSONL file. The timestamps are parsed with datetime.fromisoformat()"""
         self.appointments = {}
-        if self.appointments_file.exists():
-            with open(self.appointments_file, 'r') as f:
-                for line in f:
-                    line = line.strip()
-                    if line:
-                        try:
-                            appointment = decode_json(line)
-                            # Only load non-cancelled appointments
-                            if appointment.get('status') != 'cancelled':
-                                id = appointment.get('appointment_id')
-                                if id:
-                                    dt = appointment['appointment_time']
-                                    if isinstance(dt, str):
-                                        appointment['appointment_time'] = datetime.fromisoformat(dt)
-                                    self.appointments[appointment['appointment_id']] = appointment
-                                else:
-                                    self.logger.error(f"appointment doesn't have an id! appointment = {appointment}")
-                        except json.JSONDecodeError as e:
-                            self.logger.error(f"Error parsing appointment line: {e} (line: {line})")
+        appts, errors = self.storage.load()
+        if errors:
+            self.logger.error(f"{len(errors)} records out of {len(appts)+len(errors)} failed to parse: {errors}")
+
+        for appointment in appts:
+            # Only load non-cancelled appointments and those with ids.
+            if appointment.get('status') != 'cancelled':
+                id = appointment.get('appointment_id')
+                if id:
+                    dt = appointment['appointment_time']
+                    if isinstance(dt, str): # shouldn't actually happen!!
+                        appointment['appointment_time'] = datetime.fromisoformat(dt)
+                    self.appointments[appointment['appointment_id']] = appointment
+                else:
+                    self.logger.error(f"appointment doesn't have an id! appointment = {appointment}")
     
-    def _save_appointment(self, appointment: dict[str, Any]) -> None:
+    def _save_appointments(self, appointments: list[dict[str, Any]]) -> int:
         """
         Append an appointment to the JSONL file.
         
         Args:
             appointment: The appointment dictionary to save
         """
-        with open(self.appointments_file, 'a') as f:
-            f.write(encode_json(appointment) + '\n')
-    
+        count = self.storage.save(appointments)
+        lena = len(appointments)
+        if count != lena:
+            diff = lena - count
+            self.logger.error(f"Failed to save {diff} out of {lena} appointments to the storage file {self.appointments_file}. appointments = {appointments}")
+        return count
+
     def _is_valid_time(self, appointment_time: datetime, in_the_past_allowed: bool = False) -> tuple[bool, str]:
         """
         Check if the appointment time is valid.
@@ -217,8 +214,7 @@ class AppointmentManager:
         
         # Save to memory and file
         self.appointments[appointment_id] = appointment
-        self._save_appointment(appointment)
-        
+        self._save_appointments([appointment])
         self.logger.info(f"Created appointment {appointment_id} for {patient_name}")
         
         success = appointment.copy()
@@ -246,7 +242,7 @@ class AppointmentManager:
         appointment['cancelled_at'] = datetime.now()
         
         # Save the updated status
-        self._save_appointment(appointment)
+        self._save_appointments([appointment])
         
         # Remove from active appointments
         del self.appointments[appointment_id]
@@ -286,10 +282,11 @@ class AppointmentManager:
             if check(appointment):
                 appointment['status'] = 'confirmed'
                 appointment['confirmed_at'] = datetime.now()
-                # Save the updated status
-                self._save_appointment(appointment)
                 found.append(appointment)        
         
+        # Save the updated status
+        if found:
+            self._save_appointments(found)
         self.logger.info(f"Confirmed appointments for criteria {criteria}: {found}")
 
         return found
@@ -328,7 +325,7 @@ class AppointmentManager:
         appointment['previous_time'] = old_time
         
         # Save the updated appointment
-        self._save_appointment(appointment)
+        self._save_appointments([appointment])
         
         self.logger.info(f"Changed appointment {appointment_id} from {old_time.isoformat()} to {new_time.isoformat()}")
         
