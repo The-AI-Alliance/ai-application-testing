@@ -152,10 +152,6 @@ class AppointmentManager:
         min_allowed_datetime = datetime.now() - one_second 
         if not in_the_past_allowed and appointment_time < min_allowed_datetime:
             return False, "Appointment time is in the past, which is not allowed."
-
-        # Check if it's on the hour
-        if appointment_time.minute != 0 or appointment_time.second != 0:
-            return False, "Appointments must be scheduled on the hour (e.g., 10:00, 11:00)"
         
         # Check if it's a weekday (Monday=0, Sunday=6)
         if appointment_time.weekday() >= 5:
@@ -164,6 +160,14 @@ class AppointmentManager:
         # Check if it's a holiday
         if (appointment_time.month, appointment_time.day) in self.USA_HOLIDAYS:
             return False, "Appointments cannot be scheduled on holidays"
+
+        # Check if it's between 8AM and 5PM, inclusive
+        if appointment_time.hour < 8 or appointment_time.hour >= 17:
+            return False, "Appointments must be scheduled between 8 AM and 5 PM (8:00-17:00)"
+
+        # Check if it's on the hour
+        if appointment_time.minute != 0 or appointment_time.second != 0 or appointment_time.microsecond != 0:
+            return False, "Appointments must be scheduled on the hour (e.g., 10:00, 11:00)"
         
         # Check if the time slot is already booked. We do check if any
         # occupied times are within 1 second of the proposed time.
