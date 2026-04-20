@@ -76,6 +76,7 @@ DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 PROMPTS_TEMPLATES_DIR   ?= tools/prompts/templates
 CHATBOT_TEMPLATES_DIR   ?= apps/chatbot/prompts/templates
 CHATBOT_DATA_DIR        ?= ${DATA_DIR}/chatbot
+CHATBOT_OUTPUT_DIR      ?= ${PWD}/output
 CHATBOT_API_SERVER_HOST ?= localhost
 CHATBOT_API_SERVER_PORT ?= 8000
 CHATBOT_API_SERVER      ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
@@ -157,11 +158,13 @@ make build              # Build a distribution
 make install            # Install the code locally in development mode
 
 make tests              # Following convention, this target runs the unit tests only, building
-                        # the targets "unit-tests-non-ai" and "unit-tests-ai".
+                        # the targets "unit-tests-non-ai", "unit-tests-ai", and "unit-tests-appointments".
 make test               # Synonym for "tests".
 make unit-tests         # Synonym for "tests".
 make unit-tests-non-ai  # All unit tests that don't involve inference invocations.
 make unit-tests-ai      # All unit tests that do involve inference invocations, which take a long time to run.
+make unit-tests-appointments
+                        # Unit tests for the appointment management tool.
 make unit-tests-langflow
                         # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
                         # so we don't force you to have Langflow installed.
@@ -398,6 +401,7 @@ print-info-code::
 	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
 	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
 	@echo "  CHATBOT_TEMPLATES_DIR:   ${CHATBOT_TEMPLATES_DIR}"
+	@echo "  CHATBOT_OUTPUT_DIR:      ${CHATBOT_OUTPUT_DIR}"
 	@echo "  SRC_DIR:                 ${SRC_DIR}"
 	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  The following depend on the value of MODEL:"
@@ -570,16 +574,18 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: run-chatbot chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
 
 run-chatbot:: chatbot
-chatbot:: before-chatbot
+chatbot:: before-chatbot do-run-chatbot
+do-run-chatbot::
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -592,7 +598,7 @@ agent-chatbot simple-chatbot::
 help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
-before-chatbot:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
+before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 	@echo "Running the \"${WHICH_CHATBOT}\" ChatBot..." && \
 		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
 		echo "ERROR! ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot! (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
@@ -611,6 +617,7 @@ mcp-server:: before-chatbot
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -637,6 +644,7 @@ api-server:: before-chatbot
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
+		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -681,7 +689,7 @@ remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
 
-${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
@@ -695,7 +703,7 @@ note-all-tests::
 	@echo "examples sampled, etc., plus some other integration tests."
 	@echo
 
-test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai 
+test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-tests-appointments
 
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
@@ -707,12 +715,22 @@ unit-tests-non-ai::
 	    --start-directory tests/unit \
 	    --top-level-directory .
 
+.PHONY: unit-tests-appointments
+
+unit-tests-appointments::
+	@echo "Running the appointment tool unit tests..."
+	cd ${SRC_DIR} && \
+	  uv run python -m unittest discover \
+	    --pattern 'test_appointment*.py' \
+	    --start-directory tests/unit/apps/chatbot \
+	    --top-level-directory .
+
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
-
 unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot..."
 	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"

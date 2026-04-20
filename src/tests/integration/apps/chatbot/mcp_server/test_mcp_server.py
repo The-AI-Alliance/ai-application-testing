@@ -27,6 +27,7 @@ class TestMCPServer(TestBase):
         print(f"  - Service URL: {self.chatbot.service_url}")
         print(f"  - Template dir: {self.chatbot.template_dir}")
         print(f"  - Data dir: {self.chatbot.data_dir}")
+        print(f"  - Output dir: {self.chatbot.output_dir}")
         print(f"  - Confidence threshold: {self.chatbot.confidence_level_threshold}")
 
     def test_mcp_server_creation(self):
@@ -39,6 +40,7 @@ class TestMCPServer(TestBase):
             service_url=self.chatbot.service_url,
             template_dir=self.chatbot.template_dir,
             data_dir=self.chatbot.data_dir,
+            output_dir=self.chatbot.output_dir,
             confidence_level_threshold=self.chatbot.confidence_level_threshold,
             logger=logger
         )

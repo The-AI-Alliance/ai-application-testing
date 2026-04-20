@@ -27,7 +27,7 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
             name="model_name",
             display_name="Model Name",
             info="The LLM model to use for synthesis",
-            value="ollama_chat/gpt-oss:20b",
+            value="ollama_chat/gemma4:e4b",
         ),
         StrInput(
             name="service_url",

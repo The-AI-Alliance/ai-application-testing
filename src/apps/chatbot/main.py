@@ -57,6 +57,7 @@ def main():
         service_url = args.service_url,
         template_dir = args.template_dir,
         data_dir = args.data_dir,
+        output_dir = args.output_dir,
         confidence_level_threshold = args.confidence_threshold,
         response_handler = ChatBotResponseHandler(
             confidence_level_threshold = args.confidence_threshold,

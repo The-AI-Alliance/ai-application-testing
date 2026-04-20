@@ -38,10 +38,11 @@ def test_chatbot_creation():
         logger.setLevel(logging.INFO)
         
         chatbot = ChatBot(
-            model="ollama_chat/gpt-oss:20b",
+            model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
+            output_dir="output/chatbot",
             confidence_level_threshold=0.9,
             response_handler = ChatBotResponseHandler(
                 confidence_level_threshold=0.9, 
@@ -53,6 +54,7 @@ def test_chatbot_creation():
         print(f"  - Service URL: {chatbot.service_url}")
         print(f"  - Template dir: {chatbot.template_dir}")
         print(f"  - Data dir: {chatbot.data_dir}")
+        print(f"  - Output dir: {chatbot.output_dir}")
         print(f"  - Confidence threshold: {chatbot.confidence_level_threshold}")
         return True
     except Exception as e:
@@ -68,10 +70,11 @@ def test_mcp_server_creation():
         logger.setLevel(logging.INFO)
         
         result = create_mcp_server(
-            model="ollama_chat/gpt-oss:20b",
+            model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
+            output_dir="output/chatbot",
             confidence_level_threshold=0.9,
             logger=logger
         )

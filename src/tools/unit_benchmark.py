@@ -16,7 +16,7 @@ from common.utils import (
     all_use_cases,
     ensure_dirs_exist, 
     extract_content, 
-    extract_jsonl,
+    extract_jsonl_list,
     load_yaml, 
     make_full_prompt, 
 )
@@ -130,7 +130,11 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
                 verbose = False,
                 # format = "json",
             )
-            jsonls = extract_jsonl(extract_content(response))
+            extracted_content = extract_content(response)
+            jsonls, errors = extract_jsonl_list(extracted_content)
+            if errors:
+                self.logger.error("substrings in extracted content didn't parse as JSONL. errors = {errors}, extracted content = {extracted_content}")
+
             with open(data_file, 'w') as f:
                 for line in jsonls:
                     f.write(line)
@@ -243,7 +247,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 verbose = False,
                 # format = "json",
             )
-            for line in extract_jsonl(extract_content(response)):
+            for line in extract_jsonl_list(extract_content(response)):
                 validation_file.write(f"{line}\n")
 
         except OpenAIError as e:
@@ -273,7 +277,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:
                         for line in synthetic_data_file.readlines():
-                            for line2 in extract_jsonl(line):
+                            for line2 in extract_jsonl_list(line):
                                 line3 = line2.strip()
                                 if len(line3) == 0:
                                     continue

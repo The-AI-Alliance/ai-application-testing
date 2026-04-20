@@ -201,7 +201,7 @@ def main():
     )
     parser.add_argument(
         "-m", "--model",
-        default="ollama_chat/gpt-oss:20b",
+        default="ollama_chat/gemma4:e4b",
         help="Model name to use"
     )
     parser.add_argument(

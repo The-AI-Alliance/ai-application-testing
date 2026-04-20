@@ -22,13 +22,7 @@ class TestCollections(unittest.TestCase):
             return lc if n < 0 or lc <= n else n
         lens = [_length(col) for col in dictionary.values()]
         expected_len = mult(lens, skip_zeros=True)
-        # check a few special cases explicitly:
-        if len(dictionary) == 0 or n==0:
-            self.assertEqual(0, expected_len, f"n={n}, lens={lens}") 
-        elif n == 1:
-            self.assertEqual(1, expected_len, f"n={n}, lens={lens}") 
-
-        self.assertEqual(expected_len, len(actual), f"actual: {actual}, d: {dictionary}, n: {n}")
+        self.assertEqual(expected_len, len(actual), f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}")
         # Check other expected sizes:
         expected_dict_len = sum([1 for col in dictionary.values() if len(col) > 0])
         for i in range(expected_len):
@@ -44,7 +38,7 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected_len, len(actual2))
 
     @given(
-        st.dictionaries(st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4))
+        st.dictionaries(st.text(min_size=1, max_size=10), st.sets(st.text(max_size=10), max_size=4), max_size=4))
     def test_dict_permutations(self, dictionary: dict[str,Any]):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values

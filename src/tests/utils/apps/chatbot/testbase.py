@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler, ChatBotShell
-from common.utils import dict_pop, parse_json
+from common.utils import dict_pop, encode_json
 from common.collections import dict_permutations
 
 class TestPrompt():
@@ -128,7 +128,7 @@ class TestBase(unittest.TestCase):
         between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum 
         threshold of 5 samples, if available, will be used in all cases.)
         """
-        self.model                         = os.environ.get('MODEL', 'ollama_chat/gpt-oss:20b')
+        self.model                         = os.environ.get('MODEL', 'ollama_chat/gemma4:e4b')
         self.service_url                   = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
         self.template_dir                  = os.environ.get('CHATBOT_TEMPLATES_DIR', 'apps/chatbot/prompts/templates')
         self.data_dir                      = os.environ.get('DATA_DIR', 'data')
@@ -163,6 +163,7 @@ class TestBaseRunner(TestBase):
         vs. the normal approach of failing fast on the first error.
     """
 
+    total_samples_count = 0
     total_lcr_count = 0
     total_error_count = 0
     total_warning_count = 0
@@ -189,6 +190,7 @@ class TestBaseRunner(TestBase):
         warning_count  = len(self.key_results['warnings'])
         error_count    = len(self.key_results['errors'])
 
+        TestBaseRunner.total_samples_count += self.samples_count
         TestBaseRunner.total_lcr_count     += lcr_count
         TestBaseRunner.total_warning_count += warning_count
         TestBaseRunner.total_error_count   += error_count
@@ -231,11 +233,12 @@ class TestBaseRunner(TestBase):
         log_file_path = Path(log_file_template.format(class_name=cls.__name__, which_chatbot=which_chatbot))
         print(f"\n  ** Logging to {log_file_path} ** \n")
         os.makedirs(log_file_path.parent, exist_ok=True)
-        TestBaseRunner.log_file = log_file_path.open('a') # append mode, because we _may_ share it across tests.
+        TestBaseRunner.log_file = log_file_path.open('a', buffering=1) # append mode, because we _may_ share it across tests.
 
     @classmethod
     def tearDownClass(cls):
         print(f"\nTotals:")
+        print(f"Samples count:          {TestBaseRunner.total_samples_count}")
         print(f"Low-confidence results: {TestBaseRunner.total_lcr_count}")
         print(f"Warning count:          {TestBaseRunner.total_warning_count}")
         print(f"Error count:            {TestBaseRunner.total_error_count}")
@@ -255,7 +258,7 @@ class TestBaseRunner(TestBase):
                 ls = line.strip()
                 if ls:
                     try:
-                        obj     = parse_json(ls)
+                        obj     = encode_json(ls)
                         query   = dict_pop(obj, 'query')
                         labels  = dict_pop(obj, 'labels')
                         actions = dict_pop(obj, 'actions')
@@ -300,94 +303,98 @@ class TestBaseRunner(TestBase):
         warnings = {}
 
         answer = self.chatbot.query(prompt)
-        if isinstance(answer, str):
-            qf = {
-                'query_failure': f"Error message returned: {answer}",
-                'metadata':      metadata,
-            }
-            self.key_results['errors'].append(qf)
-            if self.verbose:
-                print(qf)
-            return qf
-        else:
+        try:
+            if isinstance(answer, str) or answer.get('error'):
+                qf = {
+                    'query_failure': f"unexpected message returned: {answer}",
+                    'metadata':      metadata,
+                    'error':         answer.get('error', ''),
+                }
+                self.key_results['errors'].append(qf)
+                if self.verbose:
+                    print(qf)
+                return qf
+
             metadata['answer'] = answer
 
-        actual_query1        = str(answer.get('query'))
-        actual_rtu           = answer.get('reply_to_user')
-        actual_content       = answer.get('content', {})
-        actual_query2        = str(actual_content.get('query'))
-        actual_reply         = actual_content.get('reply')
-        actual_label         = actual_reply.get('label')
-        actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
-        actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
-        # We have seen the occasional confidence scores at the content level, rather than inside the reply.
-        actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
-        # actual_text          = actual_reply.get('text', '')
+            actual_query         = str(answer.get('query'))
+            actual_rtu           = answer.get('reply_to_user')
+            actual_content       = answer.get('content', {})
+            actual_reply         = actual_content.get('reply')
+            self.assertIsNotNone(actual_reply, str(answer))
+            actual_label         = actual_reply.get('label')
+            actual_actions       = actual_reply.get('actions', '')
+            if isinstance(actual_actions, str):
+                actual_actions       = re.split(r'\s*,\s*', actual_reply.get('actions', ''))
+            actual_keywords      = dict([(key, actual_reply.get(key, '')) for key in exp_keywords])
+            # We have seen the occasional confidence scores at the content level, rather than inside the reply.
+            actual_confidence    = actual_reply.get('confidence', actual_content.get('confidence', 1.0))
+            # actual_text          = actual_reply.get('text', '')
 
-        # We have seen subtle punctuation changes in prompts...
-        p2  = re.sub(r'\W', ' ', prompt)
-        aq1 = re.sub(r'\W', ' ', actual_query1)
-        aq2 = re.sub(r'\W', ' ', actual_query2)
-        if p2 != aq1:
-            errors['unexpected answer.query'] = f"{prompt} != {actual_query1}"
-        if p2 != aq2:
-            errors['unexpected content.query'] = f"{prompt} != {actual_query2}"
-        
-        low_confidence_reasons = []
-        if actual_confidence < confidence_threshold:
-            low_confidence_reasons.append(f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold}).")
-        if exp_rating < rating_threshold:
-            low_confidence_reasons.append(f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold}).")
+            # We have seen subtle punctuation changes in prompts...
+            p2  = re.sub(r'\W', ' ', prompt)
+            aq  = re.sub(r'\W', ' ', actual_query)
+            if p2 != aq:
+                errors['unexpected answer.query'] = f"{prompt} != {actual_query}"
+            
+            low_confidence_reasons = []
+            if actual_confidence < confidence_threshold:
+                low_confidence_reasons.append(f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold}).")
+            if exp_rating < rating_threshold:
+                low_confidence_reasons.append(f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold}).")
 
-        if low_confidence_reasons:
-            reasons = ' '.join(low_confidence_reasons)
-            lcr = LowConfidenceResult(prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold)
-            self.key_results['low_confidence_results'].append(lcr)
-            if self.verbose:
-                print(lcr)
-        else:
-            err_msg = self._check_label(exp_labels, actual_label)
-            if len(err_msg) > 0:
-                errors['unexpected label'] = err_msg
-            elif actual_label == 'emergency' or actual_label == 'other':
-                # Ignore the action if we detect an emergency or other prompt, but check
-                # the returned user response, since we always return with the same reply for 
-                # these labels!
-                exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
-                if exp_rtu != actual_rtu:
-                    errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
+            if low_confidence_reasons:
+                reasons = ' '.join(low_confidence_reasons)
+                lcr = LowConfidenceResult(prompt, reasons, actual_reply, test_prompt, rating_threshold, confidence_threshold)
+                self.key_results['low_confidence_results'].append(lcr)
+                if self.verbose:
+                    print(lcr)
             else:
-                # For the other label cases, IF there are expected actions, do the actual actions contain
-                # at least one item in the expected actions? This is not a rigorous requirement, but should
-                # be adequate. The ChatBot can return more than one actions in a comma-separated list, so 
-                # we check at least one of the actual actions is in the set of the expected actions. This
-                # is done by computing the intersection of the sets and expecting it to be non-empty.
-                # Right now, we treat these as warnings, not errors.
-                if exp_actions:
-                    exp_set = set(exp_actions)
-                    actual_set = set(actual_actions)
-                    if not len(actual_set.intersection(exp_set)):
-                        warnings['unexpected actions'] = f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
+                err_msg = self._check_label(exp_labels, actual_label)
+                if len(err_msg) > 0:
+                    errors['unexpected label'] = err_msg
+                elif actual_label == 'emergency' or actual_label == 'other':
+                    # Ignore the action if we detect an emergency or other prompt, but check
+                    # the returned user response, since we always return with the same reply for 
+                    # these labels!
+                    exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
+                    if exp_rtu != actual_rtu:
+                        errors['unexpected reply_to_user'] = f"<{exp_rtu}> != <{actual_rtu}>"
+                else:
+                    # For the other label cases, IF there are expected actions, do the actual actions contain
+                    # at least one item in the expected actions? This is not a rigorous requirement, but should
+                    # be adequate. The ChatBot can return more than one actions in a comma-separated list, so 
+                    # we check at least one of the actual actions is in the set of the expected actions. This
+                    # is done by computing the intersection of the sets and expecting it to be non-empty.
+                    # Right now, we treat these as warnings, not errors.
+                    if exp_actions:
+                        exp_set = set(exp_actions)
+                        actual_set = set(actual_actions)
+                        if not len(actual_set.intersection(exp_set)):
+                            warnings['unexpected actions'] = f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
 
-            # For the "keywords", ignore case, since sometimes proper names,
-            # can occur with different cases. Also, we check that _expected_
-            # values, if any, are present, but also allow for additional actual
-            # values. This is because some of the test queries hard-code potential
-            # keywords, but we don't "care" if they appear.
-            # Right now, we treat these as warnings, not errors.
-            missing_kvs = {}
-            for key, value in exp_keywords.items():
-                if len(value) == 0:
-                    warnings['unexpected keywords'] = f"BUG: keyword {key} has zero-length value array!"
-                    continue
-                if len(value) > 1:
-                    warnings['unexpected keywords'] = f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!"
-                expected = value[0].lower()
-                actual   = actual_keywords.get(key, '').lower()
-                if not actual.find(expected) >= 0:
-                    missing_kvs[key] = f"{expected} vs. {actual}"
-            if missing_kvs:
-                warnings['unexpected keywords'] = missing_kvs
+                # For the "keywords", ignore case, since sometimes proper names,
+                # can occur with different cases. Also, we check that _expected_
+                # values, if any, are present, but also allow for additional actual
+                # values. This is because some of the test queries hard-code potential
+                # keywords, but we don't "care" if they appear.
+                # Right now, we treat these as warnings, not errors.
+                missing_kvs = {}
+                for key, value in exp_keywords.items():
+                    if len(value) == 0:
+                        warnings['unexpected keywords'] = f"BUG: keyword {key} has zero-length value array!"
+                        continue
+                    if len(value) > 1:
+                        warnings['unexpected keywords'] = f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!"
+                    expected = value[0].lower()
+                    actual   = actual_keywords.get(key, '').lower()
+                    if not actual.find(expected) >= 0:
+                        missing_kvs[key] = f"{expected} vs. {actual}"
+                if missing_kvs:
+                    warnings['unexpected keywords'] = missing_kvs
+        except TypeError as te:
+            print(f"TypeError while parsing answer: {answer}")
+            raise te
 
         if errors:
             me = errors | metadata
@@ -441,7 +448,7 @@ class TestBaseRunner(TestBase):
             warning_count  = len(self.key_results['warnings'])
             error_count    = len(self.key_results['errors'])
             if not self.accumulate_test_results:
-                self.assertTrue(error_count == 0, f"{error_count} errors for test prompt: {test_prompt}")
+                self.assertEqual(0, error_count, f"{error_count} errors for test prompt: {test_prompt}")
 
             # Logic to detect when it appears the system has deadlocked in some way.
             # If so, then error out.

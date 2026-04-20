@@ -15,10 +15,11 @@ from typing import Any, Callable
 from litellm.types.utils import ModelResponse
 
 common_defaults = {
-    "model":                        "ollama_chat/gpt-oss:20b",
+    "model":                        "ollama_chat/gemma4:e4b",
     "service-url":                  "http://localhost:11434",
     "template-dir":                 "prompts/templates",
     "data-dir":                     "data",
+    "output-dir":                   "output",
     "levenshtein-ratio-threshold":  0.95,
 }
 
@@ -67,6 +68,9 @@ def parser_with_common_args(
     if not 'data-dir' in omit_arguments:
         parser.add_argument("-d", "--data-dir", default=common_defaults['data-dir'], 
             help=f"Directory where data files are read or written. Default: {common_defaults['data-dir']}")
+    if not 'output-dir' in omit_arguments:
+        parser.add_argument("-o", "--output-dir", default=common_defaults['output-dir'], 
+            help=f"Directory where some output files are read or written (may not be used). Default: {common_defaults['output-dir']}")
     if not 'use-cases' in omit_arguments:
         all_ucs = ', '.join([f"'{key}'" for key in all_use_cases().keys()])
         parser.add_argument("-u", "--use-cases", nargs="*",
@@ -199,46 +203,71 @@ USER PROMPT:
 {'\n'.join(ss)}
 """
 
-def parse_json(text: Any) -> dict[str,Any]:
+class DatetimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return {"__class__": "datetime", "iso_str": obj.isoformat()}
+        return super().default(obj)
+
+class DatetimeDecoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=DatetimeDecoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        if d.get("__class__") == "datetime":
+            return datetime.fromisoformat(d.get("iso_str"))
+        return d
+
+def_datetime_encoder = DatetimeEncoder()
+def_datetime_decoder = DatetimeDecoder()
+
+def encode_json(dct: dict[str,Any]) -> str:
+    """Create a JSON string from the input object."""
+    return def_datetime_encoder.encode(dct)
+
+def decode_json(text: Any) -> dict[str,Any]:
     """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
     try:
-        obj = json.loads(text)
+        obj = def_datetime_decoder.decode(text)
         return obj
     except (JSONDecodeError, TypeError) as err:
         raise ValueError(f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
 
 
-def extract_jsonl(text: str) -> list[str]:
+def extract_jsonl_list(text: str) -> tuple[list[str],list[str]]:
     """
-    Sometimes the JSONL we ask for comes back without line feeds between the JSONL docs!
-    Try to detect and fix this while splitting the string into JSONL lines. 
-    If this attempt fails for some lines, just return those lines as is.
+    Parse the input text and return a list of JSONL strings.
+
+    Sometimes the JSONL we ask for comes back without line feeds between the JSONL docs.
+    We also don't want commas between the JSONL records.
+    Try to detect and fix these cases, then split the string into JSONL lines. 
+
+    Args:
+        - text to parse into a list of JSONL records
+
+    Return
+        Tuple of two lists of strings. The first list is the successfully
+        parsed JSONL strings. The second list are any "substrings" of the
+        input text that didn't parse. Hopefully, this list is empty.
+        If the input string is empty, striped for leading and trailing whitespace,
+        ([],[]) is returned.
     """
-    jsonl_re = re.compile(r'}\s*{')
-    jsonls = []
     if not text.strip():
-        return []
-    for s in text.split('\n'):
+        return [], []
+    temp_delim = ',,,'
+    split = re.sub(r'\}[,\s]*\{', '}\x00{', text) # Use an unlikely delimiter...
+    fixed = re.split('\x00', split)
+    jsonls = []
+    errors = []
+    for s in fixed:
         try:
-            jsonl = parse_json(s)
+            jsonl = encode_json(s)
             # It parsed! Use s
             jsonls.append(s)
         except ValueError as err:
-            strs = jsonl_re.split(s)
-            len_strs = len(strs)
-            for i in range(len_strs):
-                s2 = strs[i]
-                # Hacks: add the '}' and '{' back. The first and last array elements are special cases.
-                s2a = s2  if i == 0 else '{'+s2
-                s2b = s2a if i == len_strs-1 else s2a+'}'
-                try:
-                    jsonl2 = parse_json(s2b)
-                    # It parsed! Use s2b
-                    jsonls.append(s2b)
-                except ValueError as err2:
-                    # just use s2 as is
-                    jsonls.append(s2)
-    return jsonls
+            errors.append(s)
+    return jsonls, errors
 
 # TODO: This is duplicated now in the ModelResponseParser class, which is used by
 # the ChatBot app, but not by the "tools".

@@ -1,9 +1,9 @@
-import re
+import json, re
 from abc import ABC, abstractmethod
+from json.decoder import JSONDecodeError
 from typing import Any, Generic, TypeVar
 
 from litellm.types.utils import ModelResponse
-from common.utils import parse_json
 
 RESPONSE = TypeVar("RESPONSE")
 
@@ -18,9 +18,15 @@ class ResponseParser(ABC, Generic[RESPONSE]):
 
     def __parse_content(self, content: str) -> dict[str,Any]:
         try:
-            return parse_json(content)
-        except ValueError as ve:
-            return {"error": str(ve)}
+            # hack: Gemma responses sometimes start with "google:" or "json" 
+            # and sometimes it wraps in Markdown: "```json ...```".
+            content1 = re.sub('^google:', '', content)
+            content2 = re.sub('^json', '', content1)
+            content3 = re.sub('^```json *', '', content2)
+            content4 = re.sub('```$', '', content3)
+            return json.loads(content4)
+        except JSONDecodeError as err:
+            return {"text": content4}
     
     def _make_full_response(self, query: str, content: str, response_dict: dict[str,Any]) -> dict[str,Any]:
         """
@@ -31,7 +37,8 @@ class ResponseParser(ABC, Generic[RESPONSE]):
         ```python
         {
             "query":    query, 
-            "content":  parsed_content_field,
+            "text":  parsed_content_field, # Text to optionally show to the user.
+            ... other key-value pairs in the response
             "response": response_dict,
         }
         ```
@@ -46,21 +53,16 @@ class ResponseParser(ABC, Generic[RESPONSE]):
         ```
         """
 
-        # hack: Gemma responses sometimes start with "google:".
-        content2 = re.sub('^google:', '', content)
-        parsed = self.__parse_content(content2)
-        full = {}
+        parsed = self.__parse_content(content)
+        assert isinstance(parsed, dict)
         if "error" in parsed:
-            full = parsed
-            full["content_string"] = content
-        else:
-            full = { "content":  parsed }
+            parsed["content_string"] = content
 
-        full.update({
+        parsed.update({
             "query":    query, 
             "response": response_dict,
         })
-        return full
+        return parsed
 
 class ModelResponseParser(ResponseParser[ModelResponse]):
     def parse(self, query: str, response: ModelResponse) -> dict[str,Any]:

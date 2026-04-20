@@ -6,7 +6,7 @@
 {"query": "I am having pain in my groin. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["groin"], "rating": 5}
 {"query": "I am having pain in my stomach. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["stomach"], "rating": 5}
 {"query": "I am having pain in my face. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["face"], "rating": 5}
-{"query": "I am having some swelling on my neck. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 5}
+{"query": "I am having some swelling on my neck. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["neck"], "rating": 3}
 {"query": "I am having some swelling on my leg. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["leg"], "rating": 5}
 {"query": "I am having some swelling on my foot. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["foot"], "rating": 5}
 {"query": "I am having some swelling on my arm. What should I do?", "labels": ["other"], "actions": ["inquiry"], "body_parts": ["arm"], "rating": 5}
