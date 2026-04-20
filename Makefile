@@ -574,7 +574,7 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot help-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot before-chatbot 
 
 run-chatbot:: chatbot
 chatbot:: before-chatbot do-run-chatbot
@@ -594,6 +594,11 @@ do-run-chatbot::
 
 agent-chatbot simple-chatbot:: 
 	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
+
+.PHONY: help-chatbot help-agent-chatbot help-simple-chatbot 
+
+help-agent-chatbot help-simple-chatbot:: 
+	${MAKE} WHICH_CHATBOT=${@:help-%-chatbot=%} help-chatbot
 
 help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help

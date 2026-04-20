@@ -345,10 +345,10 @@ This purpose of this application is to represent something closer to what you wo
 
 There are actually _two_ implementations of this application:
 
-* [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools.
-* [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A a more advanced "agent" implementation that uses Langchain's _deep agent_ tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
+* [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools. This is the first version of the ChatBot that we started with while developing the initial content of this guide.
+* [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A more advanced "agent" implementation that uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
 
-A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. In the `Makefile`, the variable `WHICH_CHATBOT` is defined to be `agent` by default, but it can be overridden on the command line with the value `simple` to use the other implementation.
+A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. By default, the `Makefile` targets use `ChatBotAgent`, which is selected because the `Makefile` variable `WHICH_CHATBOT` is defined to be `agent`. This value is overridden by `*-`, but it can be overridden on the command line with the value `simple` to use the other implementation.
 
 {: .note}
 > **NOTE:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
@@ -356,8 +356,10 @@ A command-line argument `--which-chatbot` is used with a shared code base to sel
 The application can be invoked in one of several ways:
 
 ```shell
-make chatbot               # Run the interactive ChatBot.
+make chatbot               # Run the interactive ChatBot, agent implementation by default.
 make run-chatbot           # Synonym for "chatbot".
+make agent-chatbot         # Run the agent implementation ChatBot, explicitly.
+make simple-chatbot        # Run the "simple" implementation ChatBot.
 ```
 
 After the same setup steps, like output directory creation, the following command is executed, which you could also run directly, where we show the values for arguments as defined by `Makefile` variables:
@@ -368,6 +370,7 @@ cd src && time uv run python -m apps.chatbot.main \
   --service-url http://localhost:11434 \
   --template-dir tools/prompts/templates \
   --data-dir data \
+  --output-dir output \
   --confidence-threshold 0.9 \
   --which-chatbot agent \
   --log-file .../logs/.../chatbot.log
@@ -379,12 +382,14 @@ cd src && time uv run python -m apps.chatbot.main \
 For help on the application, try this:
 
 ```shell
-make help-chatbot          # Show help for the ChatBot.
+make help-chatbot          # Help on the interactive ChatBot, agent implementation by default.
+make help-agent-chatbot    # Help on the agent implementation ChatBot, explicitly.
+make help-simple-chatbot   # Help on the "simple" implementation ChatBot.
 ```
 
-A simple prompt is presented where you can enter &ldquo;patient prompts&rdquo; and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
+A text prompt is presented where you can enter &ldquo;patient prompts&rdquo; and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
 
-The arguments are similar to the previously-discussed arguments, with a new argument `--confidence-threshold`, which we will explain below.
+The arguments are similar to the previously-discussed arguments, with two new arguments, `--output-dir`, for writing some output during execution, and `--confidence-threshold`, to set how the confident the application needs to be in its answers before or else it should default to &ldquo;safe&rdquo;, generic handling. We discuss this concept in more detail below.
 
 The source code, etc. for this application and the automated tests are located in these locations:
 
@@ -627,24 +632,14 @@ When using this feature, it is convenient to log the key output as JSON to a fil
 
 #### What Does Pass/Fail Mean?
 
-We spent a great deal of time thinking about how to handle _discrepancies_, inference results that didn't exactly match what was expected in the Q&A pair. For the most part, the ChatBot does not return the generated text verbatim to patients. It asks the LLM to return a JSON object with the generated text and metadata like the best use case label and other useful metadata for the user query. For several of the use cases, a &ldquo;canned&rdquo; answer is shown to the user and the generated text is ignored. For example, a message like &ldquo;Call 911!&rdquo; is shown for perceived emergency situations. 
+We spent a great deal of time thinking about how to handle _discrepancies_, inference results that don't exactly match what was expected in the Q&A pair. The labels discussed above are part of the solution. First have the application attempt to determine the use case the patient is invoked (such as a prescription refill), then formulate a deterministic response from that. For some use cases, this eliminates the need to handle the variant responses, while greatly reducing the challenge for other use cases, where we use the response.
 
-For other data differences, we have somewhat involved logic for 
+Still, the system may not return the label and other metadata expected. Sometimes the request vs. expected label is ambiguous. Mentioning &ldquo;severe chest pain&rdquo; should trigger the _emergency_ use case, while &ldquo;severe stomach pain&rdquo; is more ambiguous and &ldquo;severe foot pain&rdquo; is unlikely to be an emergency, although probably an urgent concern.
 
-logic
-warnings vs. errors
+A feature called &ldquo;low-confidence results&rdquo; is supported, a practical testing extension we use, as well as a runtime in the ChatBot. During our discussion of data validation (i.e., for the `unit-benchmark-data-validation.py` tool), we said the output includes a _confidence_ rating for how good we think the Q&A pair is for the use case. While we discarded poorly-rated pairs, we kept those with &ldquo;okay&rdquo; ratings.
 
- a feature called &ldquo;low-confidence results&rdquo; is supported. During our data validation discussion, where we used the `unit-benchmark-data-validation.py` tool, we said the output includes a rating of how good we think the prompt is for the use case, etc. We kept these ratings in the automated test data used for the ChatBot. In fact, we simply stripped out poorly rated synthetic data from the test data set. That leaves some test prompts as &ldquo;okay&rdquo;, but possibly poor. So, during testing, if an input prompt and answer carries a rating lower than a certain threshold, the inference result for that test prompt is reported at the end of the test, but no checking is done on the result. In other words, it is simply assumed the result is unreliable for that prompt. This reflects our recommendation for real-world ChatBot inference; if you don't have complete confidence in the response, perhaps because the user prompt is confusing, then default to a safe-handling path, such as asking a human to take over the conversation or perhaps asking the user for clarification. 
+During testing, if an input prompt and answer carries a rating lower than a certain threshold, the inference result for that test prompt is reported at the end of the test, but no checking is done on the result. We report it as a _low-confidence result._ The `Makefile` variable, `RATING_THRESHOLD`, which defaults to `4` on a scale of `1` to `5`, sets this threshold.
 
-A second threshold used in the application is for the inference process's own confidence in its work. If it returns a confidence level below a configurable threshold, the default &ldquo;safe&rdquo; response is returned to the user. These two thresholds are also handled as `Makefile` variables, `RATING_THRESHOLD`, defined as `4` on a scale of `1` to `5`, and `CONFIDENCE_THRESHOLD`, defined as `0.9` on a scale of `0.0` to `1.0`, corresponding to a range of 0% to 100%.
+Similarly, when invoking the ChatBot application, the `--confidence-threshold` argument allows you to specify a threshold for answers. If the ChatBot rates an answer to a user prompt below this threshold, the system defaults to a &ldquo;safer&rdquo; default handling. In the `Makefile`, the `CONFIDENCE_THRESHOLD` variable defaults to `0.9`, on a scale of `0.0` to `1.0`, corresponding to a range of 0% to 100% confidence.
 
 Finally, the AI-related unit benchmarks, as opposed to unit tests for other code, are also used as the integration tests, with the different feature invocations just described for more exhaustive coverage. There are additional integration tests, too.
-
-
-<!-- 
-refines some handling of expected responses, - hard-coded logic in the tests.
-excludes some synthetic data that was validated as poor, etc.. 
-Reclassifying Q&A pairs.
-What is shown to the user.
--->
-
