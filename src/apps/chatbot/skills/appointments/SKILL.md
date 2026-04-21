@@ -30,7 +30,7 @@ Create a new appointment for a patient.
 
 **Parameters:**
 - `patient_name` (str): Name of the patient
-- `appointment_time` (str): ISO format datetime string (e.g., "2026-04-15T10:00:00")
+- `appointment_date_time` (str): ISO format datetime string (e.g., "2026-04-15T10:00:00")
 - `reason` (str): Reason for the appointment
 
 **Returns:**
@@ -55,8 +55,8 @@ Where:
 - No holidays
 - One patient per time slot
 
-### cancel_appointment_by_id
-Cancels an existing appointment, specified by the appointment ID.
+### cancel_appointment
+Cancels an existing appointment, specified by the appointment ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
 
 **Parameters:**
 - `appointment_id` (str): ID of the appointment to cancel
@@ -77,36 +77,12 @@ Where:
 - The `text` value `T` is replaced with either a success message with the cancellation confirmation, or an error message if a failure occurs.
 - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
 
-### cancel_appointment_by_name_and_date_time
-
-### confirm_appointments
-Confirms one or more existing appointments.
-
-**Parameters:**
-- `appointment_id` (str): ID of the appointment to confirm
-
-**Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
-
-```json
-{
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
-}
-```
-
-Where:
-
-- The `text` value `T` is replaced with either a success message with the confirmation details, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
-
 ### change_appointment
-Changes an appointment to a new time.
+Changes an appointment to a new time, specified by the appointment ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
 
 **Parameters:**
 - `appointment_id` (str): ID of the appointment to change
-- `new_time` (str): New ISO format datetime string
+- `new_date_time` (str): New ISO format datetime string
 
 **Returns:**
 A JSON string using the format specified in the _system prompt_. It must include the following fields:
@@ -125,11 +101,11 @@ Where:
 - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
 
 ### list_appointments
-Lists all active appointments.
+Lists all active appointments, with optional filtering.
 
 **Parameters:**
-- `include_past` (bool, optional): Whether to include past appointments (default: False)
-- `status_filter` (str, optional): Filter by status (e.g., 'scheduled', 'confirmed')
+- `patient_name` (str, optional): Whether to include past appointments (default: False)
+- `after_datetime` (str for a ISO format datetime string, optional): Only include appointments with date times equal to or after this value
 
 **Returns:**
 A JSON string using the format specified in the _system prompt_. It must include the following fields:
@@ -144,7 +120,73 @@ A JSON string using the format specified in the _system prompt_. It must include
 
 Where:
 
-- The `text` value `T` is replaced with either a success message that is a JSON array with all the appointment details for the person, or an error message if a failure occurs.
+- The `text` value `T` is replaced with either a success message that is a JSON array with all the appointments found, or an error message if a failure occurs.
+- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+
+### get_appointments_count
+Return the number of appointments currently scheduled.
+
+**Parameters:**
+
+**Returns:**
+A JSON string using the format specified in the _system prompt_. It must include the following fields:
+
+```json
+{
+    "label": "appointment", 
+    "text": "T",
+    "confidence": C
+}
+```
+
+Where:
+
+- The `text` value `T` is replaced with either a success message that contains the count, or an error message if a failure occurs.
+- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+
+### get_appointment_by_id
+Return a specific appointment for the specified ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
+
+**Parameters:**
+- `appointment_id` (str): ID of the appointment to change
+
+**Returns:**
+A JSON string using the format specified in the _system prompt_. It must include the following fields:
+
+```json
+{
+    "label": "appointment", 
+    "text": "T",
+    "confidence": C
+}
+```
+
+Where:
+
+- The `text` value `T` is replaced with either a success message with the details for the appointment, or an error message if a failure occurs.
+- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+
+### get_appointment_id_for_name_and_date_time
+Retrieve the appointment ID for the specified patient name and date time.
+
+**Parameters:**
+- `patient_name` (str): The patient name for the appointment
+- `appointment_date_time` (str for a ISO format datetime string): the date time for the appointment
+
+**Returns:**
+A JSON string using the format specified in the _system prompt_. It must include the following fields:
+
+```json
+{
+    "label": "appointment", 
+    "text": "T",
+    "confidence": C
+}
+```
+
+Where:
+
+- The `text` value `T` is replaced with either a success message that is a string with the found appointment, or an error message if a failure occurs.
 - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
 
 ## Example Interactions

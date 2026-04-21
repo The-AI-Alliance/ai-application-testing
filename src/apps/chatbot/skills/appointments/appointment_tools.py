@@ -84,6 +84,8 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
 def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
     """
     Cancel an existing appointment, specified by the appointment ID.
+    Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
+    and appointment date and time, if necessary.
     
     Args:
         appointment_id: ID of the appointment to cancel
@@ -98,9 +100,11 @@ def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
     return tool.cancel_appointment_by_id(appointment_id)
 
 @tool
-def change_appointment(appointment_id: str, new_time: str) -> Tuple[bool, str]:
+def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, str]:
     """
     Change an appointment to a new time.
+    Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
+    and appointment date and time, if necessary.
     
     Args:
         appointment_id: ID of the appointment to change
@@ -112,18 +116,18 @@ def change_appointment(appointment_id: str, new_time: str) -> Tuple[bool, str]:
     Example:
         change_appointment("abc123-def456", "2026-04-16T14:00:00")
     """
-    new_datetime = datetime.fromisoformat(new_time)
+    new_datetime = datetime.fromisoformat(new_date_time)
     tool = get_appointment_manager()
     return tool.change_appointment(appointment_id, new_datetime)
 
 @tool
-def list_appointments(include_past: bool = False, status_filter: str = '') -> dict[str, Any]:
+def list_appointments(patient_name: str = '', after_datetime: datetime = datetime.min) -> dict[str, Any]:
     """
-    List all active appointments.
+    List all active appointments, with optional filtering.
     
     Args:
-        include_past: Whether to include past appointments (default: False)
-        status_filter: Optional status to filter by (e.g., 'scheduled', 'confirmed')
+        patient_name: Only return appointments for this patient (default: all patients)
+        after_datetime: Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
         
     Returns:
         Dictionary with list of appointments
@@ -146,7 +150,9 @@ def get_appointments_count() -> int:
 @tool
 def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
     """
-    Get a specific appointment by ID.
+    Return a specific appointment for the specified ID.
+    Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
+    and appointment date and time, if necessary.
     
     Args:
         appointment_id: ID of the appointment

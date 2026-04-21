@@ -390,7 +390,7 @@ class AppointmentManager:
         
         Args:
             patient_name: Only return appointments for this patient (default: all patients)
-            after_datetime: Don't include appointments before this value. Pass datetime.now() to only return future appointments.
+            after_datetime: Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
             
         Returns:
             List of appointment dictionaries
