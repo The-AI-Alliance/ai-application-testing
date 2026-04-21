@@ -58,7 +58,7 @@ If `make` won't work on your machine, do the following steps yourself:
 {:.tip}
 > **TIPS:**
 > 1. Try `make help` for details about the `make` process. There are also `--help` options for all the tools discussed below.
-> 1. For any `make` target, to see what commands will be executed without running them, pass the `-n` or `--dry-run` option to `make`.
+> 1. For any `make` target, to see what commands will be executed without running them, pass the `-n` or `--dry-run` option to `make`. While we try to keep this documentation consistent with the implementations. This is the best way to confirm the correct way to run the various programs.
 > 1. The `make` targets have only been tested on MacOS. Let us know if they don't work on Linux. The actual tools are written in Python for portability.
 > 1. The repo [README]({{site.gh_edit_repository}}/){:target="repo"} has an Appendix with other tools you might find useful to install.
 
@@ -377,7 +377,7 @@ cd src && time uv run python -m apps.chatbot.main \
 ```
 
 {: .tip}
-> **TIP:** You can always see the current version of this command by running `make -n chatbot`.
+> **TIP:** Using the [Open WebUI](#using-the-chatbot-with-open-webui) GUI is recommended for experimenting with the ChatBot.
 
 For help on the application, try this:
 
@@ -387,7 +387,7 @@ make help-agent-chatbot    # Help on the agent implementation ChatBot, explicitl
 make help-simple-chatbot   # Help on the "simple" implementation ChatBot.
 ```
 
-A text prompt is presented where you can enter &ldquo;patient prompts&rdquo; and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
+A text prompt is presented where you can enter &ldquo;patient prompts&rdquo; and see the replies. 
 
 The arguments are similar to the previously-discussed arguments, with two new arguments, `--output-dir`, for writing some output during execution, and `--confidence-threshold`, to set how the confident the application needs to be in its answers before or else it should default to &ldquo;safe&rdquo;, generic handling. We discuss this concept in more detail below.
 
@@ -443,7 +443,11 @@ We will discuss the automated tests below, in [Automated Testing: Practical Enha
 
 If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}.
 
-Begin by running the API server, e.g., `make api-server`. Then in a separate terminal window, run one of these commands:
+{: tip}
+> **TIP:**
+> While it is tedious to set this up, once configured this is the most effective way to experiment with the ChatBot application, especially for the more advanced use cases implemented by the _agent_ version of the ChatBot.
+
+Begin by running the API server, e.g., `make api-server`, which runs the agent-implementation of the ChatBot, by default. Then in a separate terminal window, run one of these commands:
 
 ```shell
 make open-webui            # Run Open WebUI configured to provide a GUI for the ChatBot.

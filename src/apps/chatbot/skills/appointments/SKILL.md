@@ -19,8 +19,9 @@ Use this skill when the patient wants to:
 
 ## General Tips:
 
-When the patient specifies a partial date, for example, April 10th, assume they mean the next possible matching date. For example, if a patient says "April 10th", then assume the patient means this year or, if we are already past April 10th of this year, then the patient means next year.
-Similarly, if the patient says a day of the week, for example, "Thursday", assume the patient means the next Thursday in the calendar.
+- If you don't know the patient's name, start by asking for the name. Don't ask for the appointment ID. The patient won't know what that is.
+- When the patient specifies a partial date, for example, April 10th, assume they mean the next possible matching date. For example, if a patient says "April 10th", then assume the patient means this year or, if we are already past April 10th of this year, then the patient means next year.
+- Similarly, if the patient says a day of the week, for example, "Thursday", assume the patient means the next Thursday in the calendar.
 
 ## Available Tools
 
@@ -54,8 +55,8 @@ Where:
 - No holidays
 - One patient per time slot
 
-### cancel_appointment
-Cancels an existing appointment.
+### cancel_appointment_by_id
+Cancels an existing appointment, specified by the appointment ID.
 
 **Parameters:**
 - `appointment_id` (str): ID of the appointment to cancel
@@ -76,8 +77,10 @@ Where:
 - The `text` value `T` is replaced with either a success message with the cancellation confirmation, or an error message if a failure occurs.
 - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
 
-### confirm_appointment
-Confirms an existing appointment.
+### cancel_appointment_by_name_and_date_time
+
+### confirm_appointments
+Confirms one or more existing appointments.
 
 **Parameters:**
 - `appointment_id` (str): ID of the appointment to confirm

@@ -2,23 +2,51 @@
 "Persistent storage" of JSONL data in a local file.
 """
 
+from __future__ import annotations 
 import json
 import logging
 from collections.abc import Hashable
+from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Callable, Optional
 
 from common.utils import decode_json, encode_json
 
+class FilePersistentStorageEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, FilePersistentStorage):
+            return {"__class__": "FilePersistentStorage", "path": str(obj.storage_file)}
+        return super().default(obj)
+
+class FilePersistentStorageDecoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=FilePersistentStorageDecoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        if d.get("__class__") == "FilePersistentStorage":
+            return FilePersistentStorage(d.get("path"))
+        return d
+
 class FilePersistentStorageError(Exception):
     """Custom exception for storage-related errors"""
     pass
-
 
 class FilePersistentStorage:
     """
     Tool for managing JSONL records in a local file.
     """
+
+    def_json_encoder = FilePersistentStorageEncoder()
+    def_json_decoder = FilePersistentStorageDecoder()
+
+    def encode_json(dct: dict[str,Any]) -> str:
+        """Create a JSON string from the input object."""
+        return FilePersistentStorage.def_json_encoder.encode(dct)
+
+    def decode_json(text: Any) -> dict[str,Any]:
+        """Parse a JSON string, returning a dictionary."""
+        return FilePersistentStorage.def_json_decoder.decode(text)
 
     def __init__(self,
         storage_file: Path | str,
@@ -101,3 +129,13 @@ class FilePersistentStorage:
                 count += 1
         return count
     
+    def __str__(self) -> str:
+        return self.to_json()
+
+    def to_json(self) -> str:
+        """Create a JSON string from the object."""
+        return FilePersistentStorage.def_json_encoder.encode(self)
+
+    def from_json(text: Any) -> FilePersistentStorage:
+        """Attempt to parse a JSON object, returning an instance."""
+        return FilePersistentStorage.def_json_decoder.decode(text)

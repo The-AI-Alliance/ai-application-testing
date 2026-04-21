@@ -17,18 +17,23 @@ has_children: false
 {:toc}
 </details>
 
-So far in this guide, we have focused on testing AI-enabled applications in a generic sense, not focusing on specific concerns for testing LLMs, agents, or other application patterns. This chapter discusses agent testing, which introduces new requirements for testing tools. Effective design patterns and development techniques for agents are also rapidly evolving topics, which we won't attempt to cover here. However, we offer a list of resources and tool kits for further investigation at the [end of this chapter](#agent-development-tools).
+So far in this guide, we have focused on testing AI-enabled applications in a generic sense, not focusing on specific concerns for testing LLMs versus agents versus application patterns like [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"}, etc. This chapter discusses agent testing, which introduces new challenges for testing. Effective design patterns, development techniques, and tool kits for agents are also rapidly evolving, We won't attempt to cover these topics here. However, we offer a list of resources and tool kits for further investigation at the [end of this chapter](#agent-development-tools).
+
+## An Agentic ChatBot
+
+This chapter introduces an agent-based ChatBot implementation, [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"},[^1] which uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, including [Agent Skills](#agent-skills), a modular way of defining agent behaviors. See [Run the ChatBot Example Application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) for details on running the application.
+
+We picked this toolkit for two reasons: LangChain is widely used and Deep Agents supports [Agent Skills](#agent-skills). We also switched to `gemma4:e4b` as our default, open-weights model, when we started this implementation, because we found it worked better for this implementation than the other models we have used.
+
+[^1]: The _simple_ [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} implementation, which just uses LLM inference, is still available and can be run with `make simple-chatbot`.
+
+## About Agents
 
 [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} are a broad class of software components with behaviors that are complementary to the capabilities that models themselves provide. They range from relatively simple to very sophisticated. The healthcare ChatBot application is relatively simple. It adds context information to user queries to create prompts and it uses custom handling of the responses. For most use cases, instead of returning the generated text to the user, it presents a message from a limited set of predefined messages, so we have better control over potentially &ldquo;suboptimal&rdquo; generated responses. 
 
 More sophisticated agents include planning, adjustment of the plan based on results (i.e., _course correction_), reasoning, and even autonomous action (when permitted). An example of a more sophisticated agent is the AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="_blank"}, which demonstrates an important agent design pattern, <em>Deep Research Agents</em>, with several example applications. (It is built on [LastMile AI's](https://www.lastmileai.dev/){:target="lastmile"} agent framework, [MCP Agent](https://github.com/lastmile-ai/mcp-agent){:target="mcp-agent"}.) An example of an even more advanced agent is [OpenClaw](https://openclaw.ai){:target="openclaw"}.
 
 Agents are arguably the most rapidly evolving area of the AI ecosystem right now. While we believe the concepts discussed in this chapter will remain relevant for a long time, specific tools and services mentioned may not.
- 
-{: .todo}
-> **TODO:** 
-> 
-> This chapter describes some of the unique considerations for implementing and evaluating [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"}. We intend to add a working example based on the work flow _managing appointments_ for the example ChatBot application. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/39){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 <a id="highlights"></a>
 
@@ -74,11 +79,139 @@ Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/e
 Of course, many of these points apply to AI evaluation in general, not just for agents.
 The post ends with an appendix of evaluation frameworks, which we include in [Other Tools for Testing Agents](#other-tools-for-testing-agents) below.
 
+## Agent Skills
+
+Agent capabilities can be implemented in many ways. We chose to use the concept of [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"}, which was recently introduced by [Anthropic](https://anthropic.com/){:target="anthropic"} as a way of specifying skills in a structured, modular format. 
+
+Skills are designed to teach agents new capabilities without invasive modifications like tuning the underlying models. Skills has the potential to become a widely-used, standard approach. It is already supported in [LangChain Deep Agents](https://www.langchain.com/deep-agents){:target="lcda"} , which is one reason we chose this framework for our [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} implementation.
+
+The [Agent Skills](https://agentskills.io/){:target="agent-skills"} website provides details, including a [specification](https://agentskills.io/specification){:target="agent-skills"} for skills. Example skills are in Anthropic's [`skills` GitHub repo](https://github.com/anthropics/skills){:target="anthropic-skills-gh"} and a catalog of skills can be found at [`skills.sh`](https://skills.sh/){:target="skills-sh"}. See also the [`agentskills`](https://github.com/agentskills/agentskills){:target="agent-skills-gh"} repo. 
+
+Quoting from [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"}:
+
+{: .attention}
+> Agent Skills are a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
+>
+> At its core, a skill is a folder containing a `SKILL.md` file. This file includes metadata (name and description, at a minimum) and instructions that tell an agent how to perform a specific task. Skills can also bundle scripts, templates, and reference materials. 
+
+The additional, optional content is put in subdirectories:
+
+* `scripts`: Executable code
+* `references`: Documentation
+* `assets`: Templates, resources
+
+Because of context size limitations, skill implementations should use _progressive disclosure_ to manage context efficiently. Quoting again from [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"}:
+
+{: .attention}
+> * **Discovery:** At startup, agents should load only the name and description of each available skill, just enough to know when it might be relevant.
+> * **Activation:** When a task matches a skill’s description, the agent reads the full `SKILL.md` instructions into context.
+> * **Execution:** The agent follows the instructions, optionally loading referenced files or executing bundled code as needed.
+
+Appointment handling in [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} is implemented this way. The [`src/apps/chatbot/skills/appointments`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments){:target="cba-gh"} directory contains a [`SKILL.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/SKILL.md){:target="cba-gh"} file, which is effectively a system prompt explaining how to implement the skill, and a Python file, [`appointment_tools.py`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}, which implements the &ldquo;tools&rdquo; described in `SKILL.md`. These tools are Python functions with a `@tool` annotation and they delegate the work to a very simple class [`AppointmentManager`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/tools/appointments/appointment_manager.py){:target="cba-gh"}, which simulates managing a calendar of appointments for demonstration and test purposes.
+
+Here are parts of the `SKILL.md` file for appointments, with some sections elided (`...`):
+
+> ```markdown
+> ---
+> name: appointments
+> description: Use this skill for managing patient appointments - creating, canceling, confirming, changing, and > listing appointments.
+> ---
+> 
+> # Appointment Management Skill
+> 
+> This skill provides capabilities for managing patient appointments in the healthcare ChatBot.
+> 
+> ## When to Use This Skill
+> 
+> Use this skill when the patient wants to:
+> - Schedule a new appointment
+> - Cancel an existing appointment
+> - Confirm an appointment
+> - Change/reschedule an appointment
+> - List their appointments
+> - Check available appointment times
+> 
+> ## General Tips:
+> 
+> - If you don't know the patient's name, start by asking for the name. Don't ask for the appointment ID. The patient won't know what that is.
+> - When the patient specifies a partial date, for example, April 10th, assume they mean the next possible matching date. For example, if a patient says "April 10th", then assume the patient means this year or, if we are already past April 10th of this year, then the patient means next year.
+> - Similarly, if the patient says a day of the week, for example, "Thursday", assume the patient means the next Thursday in the calendar.
+> 
+> ## Available Tools
+> 
+> ### create_appointment
+> Create a new appointment for a patient.
+> 
+> **Parameters:**
+> - `patient_name` (str): Name of the patient
+> - `appointment_time` (str): ISO format datetime string (e.g., "2026-04-15T10:00:00")
+> - `reason` (str): Reason for the appointment
+> 
+> **Returns:**
+> A JSON string using the format specified in the _system prompt_. It must include the following fields:
+> 
+> {
+>     "label": "appointment", 
+>     "text": "T",
+>     "confidence": C
+> }
+> 
+> Where:
+> 
+> - The `text` value `T` is replaced with either a success message with the appointment_id and details, or an error message if the time slot is unavailable or invalid.
+> - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+> 
+> **Constraints:**
+> - Appointments must be on the hour (10:00, 11:00, not 10:30)
+> - Only weekdays (Monday-Friday)
+> - No holidays
+> - One patient per time slot
+> 
+> ### cancel_appointment
+> Cancels an existing appointment.
+> ...
+> 
+> 
+> ## Example Interactions
+> 
+> **Patient:** "I'd like to schedule an appointment for next Monday at 2pm"
+> **Action:** Use `create_appointment` with appropriate parameters
+> 
+> ...
+> 
+> ## Important Notes
+> 
+> - Always validate appointment times are during business hours (weekdays).
+> ...
+> ```
+
+Most of this is self-explanatory. The `create_appointment` tool is implemented in the Python file, [`appointment_tools.py`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}. (We omit the comment block found in the definition):
+
+```python
+@tool
+def create_appointment(patient_name: str, appointment_time: str, reason: str) -> dict[str, Any]:
+    try:
+        appt_time = datetime.fromisoformat(appointment_time)
+        tool = get_appointment_manager()
+        result = tool.create_appointment(patient_name, appt_time, reason)
+        return result
+    except AppointmentError as e:
+        return {"success": False, "error": str(e)}
+    except ValueError as e:
+        return {"success": False, "error": f"Invalid datetime format: {e}"}
+```
+
+It calls a support function `get_appointment_manager` that retrieves a global instance of the `AppointmentManager` class mentioned above. That class just tracks appointments in a file, `output/applications.jsonl`, and makes several simplifying assumptions and constrains. Obviously a real ChatBot would use a real calendar manager.
+
+In our experience using `gemma4:e4b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not production ready, but it illustrates possibilities.
+
+Finally, see also this blog post, [I Still Prefer MCP Over Skills](https://david.coffee/i-still-prefer-mcp-over-skills/){:target="skills-mcp"}, which compares the pros and cons of using [MCP]({{site.glossaryurl}}/#model-context-protocol){:target="_glossary"} servers vs. skills for different purposes.
+
 ## Standardizing Evaluations
 
-Agents may offer the same _de facto_ standard access APIs that LLMs use (like OpenAI API compatibility), promoting some uniformity for runtime use, as well as testing[^1]. However, the proliferation and greater diversity of agents, has led to an explosion of agent tool kits and benchmark suites, both for general-purpose and domain-specific purposes. This trend is driving efforts to standardize how benchmarks are defined and executed.
+Agents may offer the same _de facto_ standard access APIs that LLMs use (like OpenAI API compatibility), promoting some uniformity for runtime use, as well as testing[^2]. However, the proliferation and greater diversity of agents, has led to an explosion of agent tool kits and benchmark suites, both for general-purpose and domain-specific purposes. This trend is driving efforts to standardize how benchmarks are defined and executed.
 
-[^1]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
+[^2]: The ChatBot [Working Example]({{site.baseurl}}/working-example) application does this. It provides an OpenAI-compatible API that supports invocation from almost all tools providing inference abstractions. The application also provides an MCP server.
 
 Today, if you want to use a third-party benchmark, you often have to adopt a tool chain specific to that benchmark or somehow adapt the benchmark's core logic and data to whatever tool chain you want to use.
 
@@ -155,59 +288,7 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
 
 ## Agent Development Tools
 
-There is a rapidly growing list of tools for developing agents. In addition to many of the tools mentioned above, Here, are some additional for consideration.
-
-### Agent Skills
-
-The concept of [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"} was defined recently by [Anthropic](https://anthropic.com/){:target="anthropic"} as a way to specify skills in a structured format and teach agents how to use them. It has the potential to become a widely-used, standard approach. 
-
-Let's examine skills as defined on the [Agent Skills](https://agentskills.io/){:target="agent-skills"} website (see also the [GitHub](https://github.com/agentskills/agentskills){:target="agent-skills-gh"} repo). Quoting from the [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"} page:
-
-{: .attention}
-> Agent Skills are a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
->
-> At its core, a skill is a folder containing a `SKILL.md` file. This file includes metadata (name and description, at a minimum) and instructions that tell an agent how to perform a specific task. Skills can also bundle scripts, templates, and reference materials. 
-
-The additional, optional content is put in subdirectories:
-
-* `scripts`: Executable code
-* `references`: Documentation
-* `assets`: Templates, resources
-
-Because of context size limitations, skill implementations should use _progressive disclosure_ to manage context efficiently. Quoting again from [What are skills?](https://agentskills.io/what-are-skills){:target="agent-skills"}:
-
-{: .attention}
-> * **Discovery:** At startup, agents should load only the name and description of each available skill, just enough to know when it might be relevant.
-> * **Activation:** When a task matches a skill’s description, the agent reads the full `SKILL.md` instructions into context.
-> * **Execution:** The agent follows the instructions, optionally loading referenced files or executing bundled code as needed.
-
-Here is an example `SKILL.md` file they provide:
-
-```markdown
----
-name: pdf-processing
-description: Extract PDF text, fill forms, merge files. Use when handling PDFs.
----
-
-# PDF Processing
-
-## When to use this skill
-Use this skill when the user needs to work with PDF files...
-
-## How to extract text
-1. Use pdfplumber for text extraction...
-
-## How to fill forms
-...
-```
-
-The full specification for skills is [here](https://agentskills.io/specification){:target="agent-skills"} and examples are in Anthropic's [`skills` GitHub repo](https://github.com/anthropics/skills){:target="anthropic-skills-gh"}. A catalog of skills can be found at [`skills.sh`](https://skills.sh/){:target="skills-sh"}.
-
-See also this blog post, [I Still Prefer MCP Over Skills](https://david.coffee/i-still-prefer-mcp-over-skills/){:target="skills-mcp"}, which compares the pros and cons of using MCP Servers vs. skills for different purposes.
-
-### Other Agent Development Tools
-
-The following is a list of additional tools that offer integrated support for evaluation.
+There is a rapidly growing list of tools for developing agents. In addition to many of the tools mentioned above, Here, are some additional for consideration, all of which offer integrated support for evaluation, in one form or another.
 
 * OpenAI's [AGENTS.md](https://agents.md/){:target="oaia"} ([GitHub](https://github.com/agentsmd/agents.md){:target="oaia-gh"} is a simple Markdown format for guiding coding agents. They describe it as a README for agents: a dedicated, predictable place to provide the context and instructions to help AI coding agents work on projects.
 * [CUGA](https://cuga.dev/){:target="cuga"} (_ConfigUrable Generalist Agent_) ([GitHub](https://github.com/cuga-project/cuga-agent){:target="cuga-gh"}, [IBM blog post](https://research.ibm.com/blog/cuga-agent-framework){:target="ibm-blog"}, [HuggingFace blog post](https://huggingface.co/blog/ibm-research/cuga-on-hugging-face){:target="cuga-hf"}) is an agent framework from IBM Research that is purpose-built for enterprise automation. It integrates several popular agentic patterns, such as [ReAct](https://agent-patterns.readthedocs.io/en/stable/patterns/react.html){:target="agent-patterns"}, [CodeAct](https://machinelearning.apple.com/research/codeact){:target="codeact1"} (and [here](https://notes.muthu.co/2025/12/the-most-interesting-ai-agent-design-pattern-right-now/){:target="codeact2"}), and [Planner-Executor](https://medium.com/@jaouadi.mahdi1/separating-ai-agents-into-planner-and-executor-7705b58d79fd){:target="pe"}. CUGA provides a modular architecture enabling trustworthy, policy-aware, and composable automation across web interfaces, APIs, and custom enterprise systems. It also takes evaluation seriously, with built-in tools and examples.

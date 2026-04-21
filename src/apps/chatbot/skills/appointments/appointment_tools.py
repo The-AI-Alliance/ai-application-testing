@@ -6,11 +6,11 @@ These tools are used by the Deep Agent's appointment skill.
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from langchain_core.tools import tool
 
-from apps.chatbot.tools.appointment_manager import AppointmentManager, AppointmentError
+from apps.chatbot.tools.appointment_manager import AppointmentManager
 
 # Initialize the appointment tool with a default file location
 # This will be overridden when integrated with the ChatBot
@@ -61,83 +61,44 @@ def set_appointments_file(file_path: Path | str) -> None:
     get_appointment_manager(file_path = file_path, logger = logger)
 
 @tool
-def create_appointment(patient_name: str, appointment_time: str, reason: str) -> dict[str, Any]:
+def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[bool, str]:
     """
     Create a new appointment for a patient.
     
     Args:
         patient_name: Name of the patient
-        appointment_time: ISO format datetime string (e.g., "2026-04-15T10:00:00")
+        appointment_date_time: ISO format datetime string (e.g., "2026-04-15T10:00:00")
         reason: Reason for the appointment
         
     Returns:
-        Dictionary with appointment details including appointment_id
+        True with success message or False with a failure message with reasons for the failure.
         
     Example:
         create_appointment("John Doe", "2026-04-15T10:00:00", "Annual checkup")
     """
-    try:
-        appt_time = datetime.fromisoformat(appointment_time)
-        tool = get_appointment_manager()
-        result = tool.create_appointment(patient_name, appt_time, reason)
-        return result
-    except AppointmentError as e:
-        return {"success": False, "error": str(e)}
-    except ValueError as e:
-        return {"success": False, "error": f"Invalid datetime format: {e}"}
-
+    appt_time = datetime.fromisoformat(appointment_date_time)
+    tool = get_appointment_manager()
+    return tool.create_appointment(patient_name, appt_time, reason)
 
 @tool
-def cancel_appointment(appointment_id: str) -> dict[str, Any]:
+def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
     """
-    Cancel an existing appointment.
+    Cancel an existing appointment, specified by the appointment ID.
     
     Args:
         appointment_id: ID of the appointment to cancel
         
     Returns:
-        Dictionary with cancellation confirmation
+        True with success message or False with a failure message with reasons for the failure.
         
     Example:
         cancel_appointment("abc123-def456")
     """
-    try:
-        tool = get_appointment_manager()
-        result = tool.cancel_appointment(appointment_id)
-        return result
-    except AppointmentError as e:
-        return {"success": False, "error": str(e)}
-
+    tool = get_appointment_manager()
+    return tool.cancel_appointment_by_id(appointment_id)
 
 @tool
-def confirm_appointment(criteria: dict[str, Any]) -> list[dict[str, Any]]:
-    """
-    Confirm an existing appointment.
-    
-    Args:
-        criteria: one or more fields to search with
-        
-    Returns:
-        List of matching dictionaries, updated with confirmation details.
-        If the input criteria is empty, then all appointments are returned, but unchanged.
-        if an error of some kind occurs `{"success": False, "error": error_message}` is returned.
-        
-    Example:
-        confirm_appointment({
-            'appointment_time': datetime(2026, 4, 20, 8),
-            'patient_name': "John Doe",
-        })
-    """
-    try:
-        tool = get_appointment_manager()        
-        result = tool.confirm_appointment(criteria)
-        return result
-    except AppointmentError as e:
-        return {"success": False, "error": str(e)}
-
-
-@tool
-def change_appointment(appointment_id: str, new_time: str) -> dict[str, Any]:
+def change_appointment(appointment_id: str, new_time: str) -> Tuple[bool, str]:
     """
     Change an appointment to a new time.
     
@@ -146,21 +107,14 @@ def change_appointment(appointment_id: str, new_time: str) -> dict[str, Any]:
         new_time: New ISO format datetime string
         
     Returns:
-        Dictionary with old and new times
+        True with success message or False with a failure message with reasons for the failure.
         
     Example:
         change_appointment("abc123-def456", "2026-04-16T14:00:00")
     """
-    try:
-        new_datetime = datetime.fromisoformat(new_time)
-        tool = get_appointment_manager()
-        result = tool.change_appointment(appointment_id, new_datetime)
-        return result
-    except AppointmentError as e:
-        return {"success": False, "error": str(e)}
-    except ValueError as e:
-        return {"success": False, "error": f"Invalid datetime format: {e}"}
-
+    new_datetime = datetime.fromisoformat(new_time)
+    tool = get_appointment_manager()
+    return tool.change_appointment(appointment_id, new_datetime)
 
 @tool
 def list_appointments(include_past: bool = False, status_filter: str = '') -> dict[str, Any]:
@@ -179,17 +133,47 @@ def list_appointments(include_past: bool = False, status_filter: str = '') -> di
         list_appointments(include_past=True)
         list_appointments(status_filter="confirmed")
     """
-    try:
-        tool = get_appointment_manager()
-        appointments = tool.list_appointments(include_past, status_filter)
-        return {
-            "success": True,
-            "count": len(appointments),
-            "appointments": appointments
-        }
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+    tool = get_appointment_manager()
+    return tool.list_appointments(include_past, status_filter)
 
+
+@tool
+def get_appointments_count() -> int:
+    """Return the number of appointments currently scheduled."""
+    tool = get_appointment_manager()
+    return len(tool.get_appointments_count())
+
+@tool
+def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
+    """
+    Get a specific appointment by ID.
+    
+    Args:
+        appointment_id: ID of the appointment
+        
+    Returns:
+        Appointment dictionary or {} if not found
+    """
+    tool = get_appointment_manager()
+    return tool.get_appointment_by_id(appointment_id)
+
+
+@tool
+def get_appointment_id_for_name_and_date_time(self, 
+    patient_name: str,
+    appointment_date_time: datetime) -> str:
+    """
+    Retrieve the appointment ID for the specified patient and date time.
+    
+    Args:
+        patient_name: Name of the patient
+        appointment_date_time: Date time of the appointment
+        
+    Returns:
+        ID of the appointment or '' if there is no appointment for that patient at that date time.
+    """
+    tool = get_appointment_manager()
+    return tool.get_appointment_id_for_name_and_date_time(patient_name, appointment_date_time)
 
 # Export all tools as a list for easy registration
 # Note that create_appointment_manager is not in this list. It is handled
@@ -197,9 +181,9 @@ def list_appointments(include_past: bool = False, status_filter: str = '') -> di
 APPOINTMENT_TOOLS = [
     create_appointment,
     cancel_appointment,
-    confirm_appointment,
     change_appointment,
     list_appointments,
+    get_appointments_count,
+    get_appointment_by_id,
+    get_appointment_id_for_name_and_date_time,
 ]
-
-# Made with Bob

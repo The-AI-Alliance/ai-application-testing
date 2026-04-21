@@ -9,27 +9,74 @@ This tool manages patient appointments with the following constraints:
 - Appointments must be on the hour (e.g., 10:00, 11:00, not 10:30)
 """
 
+from __future__ import annotations 
 import json
 import logging
 from datetime import datetime, timedelta
+from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 from uuid import uuid4
 
-from common.file_persistent_storage import FilePersistentStorage
-from common.utils import decode_json, encode_json
+from common.utils import (
+    decode_json,
+    encode_json,
+    DatetimeDecoder,
+    DatetimeEncoder,
+)
+from common.file_persistent_storage import (
+    FilePersistentStorage,
+    FilePersistentStorageDecoder,
+    FilePersistentStorageEncoder,
+)
 
-class AppointmentError(Exception):
-    """Custom exception for appointment-related errors"""
-    pass
+class AppointmentManagerEncoder(DatetimeEncoder):
+    def default(self, obj):
+        if isinstance(obj, AppointmentManager):
+            d = obj.__dict__.copy()
+            d["__class__"] = "AppointmentManager"
+            d["storage"] = FilePersistentStorage.def_json_encoder.default(obj.storage)
+            del d["logger"]
+            return d
+        return super().default(obj)
 
+class AppointmentManagerDecoder(DatetimeDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=AppointmentManagerDecoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        """
+        Create an instance from JSON. There is an ambiguity with what to do with appointments
+        that are already in the storage file and those encoded in the JSON. If the list of
+        appointments in the JSON is _not_ empty, we use that list of appointments and replace
+        any file contents with them.
+        """
+        if d.get("__class__") == "AppointmentManager":
+            storage = FilePersistentStorage.def_json_decoder.from_dict(d.get("storage"))
+            appointments = d.get("appointments")
+            for key, value in appointments.items():
+                # hack to fix up the date times.
+                for k, v in value.items():
+                    if isinstance(v, dict) and v.get("__class__") == "datetime":
+                        dt = datetime.fromisoformat(v.get("iso_str"))
+                        value[k] = dt
+            start_empty = True if appointments else False
+            am = AppointmentManager(appointments_file = storage.storage_file, start_empty = start_empty)
+            if appointments:
+                am.set_appointments(appointments.values())
+            return am
+        else:
+            return d
 
 class AppointmentManager:
     """
-    Tool for managing patient appointments.
+    A simple tool for managing patient appointments using a simple calendar
+    with local file storage.
     
-    Stores appointments in a JSONL file where each line is a JSON object
-    representing an appointment.
+    Appointments are stored in a JSONL file where each line is a JSON object
+    representing an appointment. The method return values are designed to work
+    with LLMs in an agent context.
     """
     
     # Common USA holidays (simplified list)
@@ -39,42 +86,48 @@ class AppointmentManager:
         (12, 25), # Christmas
         # Add more as needed
     ])
+
+    def_json_encoder = AppointmentManagerEncoder()
+    def_json_decoder = AppointmentManagerDecoder()
+
+    def encode_json(dct: dict[str,Any]) -> str:
+        """Create a JSON string from the input object."""
+        return def_json_encoder.encode(dct)
+
+    def decode_json(text: Any) -> dict[str,Any]:
+        """Parse a JSON string, returning a dictionary."""
+        return def_json_decoder.decode(text)
+
     
     def __init__(self,
         appointments_file: Path | str,
+        start_empty: bool = False,
         logger: Optional[logging.Logger] = None):
         """
         Initialize the appointment tool.
         
         Args:
             appointments_file: Path to the JSONL file storing appointments
+            start_empty: True if we should clear the file and start "empty" or False if we should just load whatever appointments the file contains already.
             logger: Optional logger instance
         """
-        self.appointments_file = Path(appointments_file)
         if logger:
             self.logger: logging.Logger = logger
         else:
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(logging.INFO)
 
-        self.storage = FilePersistentStorage(self.appointments_file, logger)
+        self.storage = FilePersistentStorage(Path(appointments_file), logger)
         self.appointments: dict[str, dict[str, Any]] = {}
-        self._load_appointments()
-    
-    def __create_file(self, path: Path, remove_old: bool = False):
-        """
-        Create the records file. If it already exists and remove_old is False,
-        then nothing is done.
-        """
-        if remove_old:
-            self.appointments_file.unlink(missing_ok=True)
-        if not self.appointments_file.exists():
-            self.appointments_file.parent.mkdir(parents=True, exist_ok=True)
-            self.appointments_file.touch()
+        if start_empty:
+            self.storage.clear()
+        else:
+            self._load_appointments()
+
 
     @classmethod
     def make_appointment_dict(cls,
-        appointment_time: datetime,
+        appointment_date_time: datetime,
         patient_name: str,
         reason: str,
         status: str = 'scheduled',
@@ -87,7 +140,7 @@ class AppointmentManager:
         return {
             'appointment_id': appointment_id,
             'patient_name': patient_name,
-            'appointment_time': appointment_time,
+            'appointment_date_time': appointment_date_time,
             'reason': reason,
             'status': 'scheduled',
             'created_at': datetime.now().isoformat()
@@ -96,7 +149,7 @@ class AppointmentManager:
     def clear(self):
         """Remove all appointments and clear the persistent records."""
         self.appointments.clear()
-        self.__create_file(self.appointments_file, remove_old = True)
+        self.storage.clear()
 
     def _load_appointments(self) -> None:
         """Load appointments from the JSONL file. The timestamps are parsed with datetime.fromisoformat()"""
@@ -110,33 +163,33 @@ class AppointmentManager:
             if appointment.get('status') != 'cancelled':
                 id = appointment.get('appointment_id')
                 if id:
-                    dt = appointment['appointment_time']
-                    if isinstance(dt, str): # shouldn't actually happen!!
-                        appointment['appointment_time'] = datetime.fromisoformat(dt)
+                    dt = appointment['appointment_date_time']
+                    if isinstance(dt, str): # Shouldn't actually happen!!
+                        appointment['appointment_date_time'] = datetime.fromisoformat(dt)
                     self.appointments[appointment['appointment_id']] = appointment
                 else:
-                    self.logger.error(f"appointment doesn't have an id! appointment = {appointment}")
+                    self.logger.error(f"appointment doesn't have an id! appointment = {appointment}.")
     
     def _save_appointments(self, appointments: list[dict[str, Any]]) -> int:
         """
-        Append an appointment to the JSONL file.
+        Append one or more appointments to the JSONL file.
         
         Args:
-            appointment: The appointment dictionary to save
+            appointments: The list of appointment dictionaries to save.
         """
         count = self.storage.save(appointments)
         lena = len(appointments)
         if count != lena:
             diff = lena - count
-            self.logger.error(f"Failed to save {diff} out of {lena} appointments to the storage file {self.appointments_file}. appointments = {appointments}")
+            self.logger.error(f"Failed to save {diff} out of {lena} appointments to the storage file {self.storage.storage_file}. appointments = {appointments}")
         return count
 
-    def _is_valid_time(self, appointment_time: datetime, in_the_past_allowed: bool = False) -> tuple[bool, str]:
+    def _is_valid_time(self, appointment_date_time: datetime, in_the_past_allowed: bool = False) -> tuple[bool, str]:
         """
         Check if the appointment time is valid.
         
         Args:
-            appointment_time: The proposed appointment time
+            appointment_date_time: The proposed appointment time
             in_the_past_allowed: If False (default), a time is invalid if it is in the past. 
             To facilitate some scenarios around "now", like tests, we actually require the
             time to be within one second of now. If the argument is True, then past datetimes 
@@ -147,66 +200,64 @@ class AppointmentManager:
         """
         one_second = timedelta(seconds=1)
         min_allowed_datetime = datetime.now() - one_second 
-        if not in_the_past_allowed and appointment_time < min_allowed_datetime:
+        if not in_the_past_allowed and appointment_date_time < min_allowed_datetime:
             return False, "Appointment time is in the past, which is not allowed."
         
         # Check if it's a weekday (Monday=0, Sunday=6)
-        if appointment_time.weekday() >= 5:
-            return False, "Appointments can only be scheduled on weekdays (Monday-Friday)"
+        if appointment_date_time.weekday() >= 5:
+            return False, "Appointments can only be scheduled on weekdays (Monday-Friday)."
         
         # Check if it's a holiday
-        if (appointment_time.month, appointment_time.day) in self.USA_HOLIDAYS:
-            return False, "Appointments cannot be scheduled on holidays"
+        if (appointment_date_time.month, appointment_date_time.day) in self.USA_HOLIDAYS:
+            return False, "Appointments cannot be scheduled on holidays."
 
-        # Check if it's between 8AM and 5PM, inclusive
-        if appointment_time.hour < 8 or appointment_time.hour >= 17:
-            return False, "Appointments must be scheduled between 8 AM and 5 PM (8:00-17:00)"
+        # Check if it's between 8AM, inclusive, and 5PM, exclusive
+        if appointment_date_time.hour < 8 or appointment_date_time.hour >= 17:
+            return False, "Appointments must be scheduled between 8 AM, inclusive, and 5 PM, exclusive (8:00-17:00)."
 
         # Check if it's on the hour
-        if appointment_time.minute != 0 or appointment_time.second != 0 or appointment_time.microsecond != 0:
-            return False, "Appointments must be scheduled on the hour (e.g., 10:00, 11:00)"
+        if appointment_date_time.minute != 0 or appointment_date_time.second != 0 or appointment_date_time.microsecond != 0:
+            return False, "Appointments must be scheduled on the hour (e.g., 10:00, 11:00)."
         
         # Check if the time slot is already booked. We do check if any
         # occupied times are within 1 second of the proposed time.
         for appt in self.appointments.values():
-            dt = appt.get('appointment_time')
+            dt = appt.get('appointment_date_time')
             dtm1 = dt - one_second 
             dtp1 = dt + one_second
-            if appt.get('status') != 'cancelled' and dtm1 < appointment_time and dtp1 > appointment_time:
-                return False, "This time slot is already booked"
+            if appt.get('status') != 'cancelled' and dtm1 < appointment_date_time and dtp1 > appointment_date_time:
+                return False, f"The time slot {appointment_date_time} is already booked."
         
         return True, ""
     
     def create_appointment(
         self,
         patient_name: str,
-        appointment_time: datetime,
+        appointment_date_time: datetime,
         reason: str
-    ) -> dict[str, Any]:
+    ) -> Tuple[str, str]:
         """
         Create a new appointment.
         
         Args:
             patient_name: Name of the patient
-            appointment_time: Desired appointment time
+            appointment_date_time: Desired appointment time
             reason: Reason for the appointment
             
         Returns:
-            Dictionary with appointment details
-            
-        Raises:
-            AppointmentError: If the appointment cannot be created, e.g., 
-            because the `datetime` is not valid.
+            Non-empty string with the id of the successfully-created appointment or '' and a failure message with reasons for the failure.
         """
         # Validate the time
-        is_valid, error_msg = self._is_valid_time(appointment_time)
+        is_valid, error_msg = self._is_valid_time(appointment_date_time)
         if not is_valid:
-            raise AppointmentError(error_msg)
+            error_msg = f"I could not create an appointment for {patient_name} at {appointment_date_time}. {error_msg}"
+            self.logger.error(error_msg)
+            return '', error_msg
         
         # Create the appointment
         appointment_id = str(uuid4())
         appointment = AppointmentManager.make_appointment_dict(
-            appointment_time = appointment_time,
+            appointment_date_time = appointment_date_time,
             patient_name = patient_name,
             reason = reason,
             status = 'scheduled',
@@ -215,13 +266,53 @@ class AppointmentManager:
         # Save to memory and file
         self.appointments[appointment_id] = appointment
         self._save_appointments([appointment])
-        self.logger.info(f"Created appointment {appointment_id} for {patient_name}")
+        success_msg = f"I successfully created an appointment for {patient_name} at {appointment_date_time}. The appointment ID is {appointment_id}."
+        self.logger.info(success_msg)
+        return appointment_id, success_msg
         
-        success = appointment.copy()
-        success['success'] = True
-        return success
-    
-    def cancel_appointment(self, appointment_id: str) -> dict[str, Any]:
+    def set_appointments(
+        self,
+        appointments: list[dict[str,Any]]
+    ) -> Tuple[int, str]:
+        """
+        Set the appointments, replacing the current list. Normally, create_appointment() should be used.
+        This method is primarily for "deserializing" from storage, like JSON.
+        
+        Args:
+            appointments: list of appointments to set. They will be validated for unique keys and date times
+            (with past date times allowed).
+            
+        Returns:
+            When successful, returns the count of appointments set, which will equal `len(appointments)`, 
+            and an empty message string, but if not successful, returns 0 and a non-empty error message string.
+        """
+        self.clear()
+        # Unique ids?
+        ids = [a['appointment_id'] for a in appointments]
+        unique = set(ids)
+        if len(unique) != len(ids):
+            return 0, f"{len(id) - len(unique)} out of {len(ids)} ids are not unique! {ids}"
+
+        # Validate the times
+        dt_errors = []
+        for appt in appointments:
+            dt = appt['appointment_date_time']
+            is_valid, error_msg = self._is_valid_time(dt, in_the_past_allowed=True)
+            if not is_valid:
+                dt_errors.append(f"{dt}: {error_msg}")
+        if dt_errors:
+            error_msg = f"{len(dt_errors)} invalid date times: [{", ".join(dt_errors)}]"
+            self.logger.error(error_msg)
+            return 0, error_msg
+        
+        # All good at this point!
+        # Save to memory and file
+        self.appointments = dict([(a['appointment_id'], a) for a in appointments])
+        self._save_appointments(appointments)
+        self.logger.info(f"Appointments replaced with {len(self.appointments)} new appointments.")
+        return len(self.appointments), ''
+        
+    def cancel_appointment(self, appointment_id: str) -> Tuple[bool, str]:
         """
         Cancel an existing appointment.
         
@@ -229,13 +320,12 @@ class AppointmentManager:
             appointment_id: ID of the appointment to cancel
             
         Returns:
-            Dictionary with cancellation details
-            
-        Raises:
-            AppointmentError: If the appointment doesn't exist
+            True with success message or False with a failure message with reasons for the failure.
         """
         if appointment_id not in self.appointments:
-            raise AppointmentError(f"Appointment {appointment_id} not found")
+            error_msg = f"There is no appointment with ID {appointment_id}."
+            self.logger.error(error_msg)
+            return False, error_msg
         
         appointment = self.appointments[appointment_id]
         appointment['status'] = 'cancelled'
@@ -247,55 +337,15 @@ class AppointmentManager:
         # Remove from active appointments
         del self.appointments[appointment_id]
         
-        self.logger.info(f"Cancelled appointment {appointment_id}")
-        
-        return {
-            'success': True,
-            'appointment_id': appointment_id,
-            'status': 'cancelled'
-        }
-    
-    def confirm_appointment(self, criteria: dict[str,Any]) -> list[dict[str, Any]]:
-        """
-        Confirm an existing appointment.
-        
-        Args:
-            criteria: a dictionary containing one or more of the id, timestamp, or patient name, which will be used for matching.
-            
-        Returns:
-            A list of dictionaries with zero or more appointment details that match the criteria.
-            If the criteria is empty, then _all_ appointments are returned!
-            Any returned dictionaries have key-values `status` set to 'confirmed'
-            and `confirmed_at` set to `datetime.now()`.
-        """
-        if not criteria:
-            return self.appointments
+        success_msg = f"Appointment {appointment_id} is now cancelled."
+        self.logger.info(success_msg)
+        return True, success_msg
 
-        def check(appointment: dict[str,Any]) -> bool:
-            for key, value in criteria.items():
-                if not value == appointment.get(key):
-                    return False
-            return True
-
-        found = []
-        for appointment in self.appointments.values():
-            if check(appointment):
-                appointment['status'] = 'confirmed'
-                appointment['confirmed_at'] = datetime.now()
-                found.append(appointment)        
-        
-        # Save the updated status
-        if found:
-            self._save_appointments(found)
-        self.logger.info(f"Confirmed appointments for criteria {criteria}: {found}")
-
-        return found
-    
     def change_appointment(
         self,
         appointment_id: str,
         new_time: datetime
-    ) -> dict[str, Any]:
+    ) -> Tuple[bool, str]:
         """
         Change an appointment to a new time.
         
@@ -304,46 +354,43 @@ class AppointmentManager:
             new_time: New appointment time
             
         Returns:
-            Dictionary with change details.
-            
-        Raises:
-            AppointmentError: If the appointment doesn't exist or new time is invalid
-            or collides with an existing appointment at the same time.
+            True with a success message or False a failure message with reasons for the failure.
         """
         if appointment_id not in self.appointments:
-            raise AppointmentError(f"Appointment {appointment_id} not found")
+            error_msg = f"No appointment with ID {appointment_id} was found."
+            self.logger.error(error_msg)
+            return False, error_msg
         
         # Validate the new time
         is_valid, error_msg = self._is_valid_time(new_time)
         if not is_valid:
-            raise AppointmentError(error_msg)
+            error_msg = f"I could not change the appointment {appointment_id}. {error_msg}"
+            self.logger.error(error_msg)
+            return False, error_msg
         
         appointment = self.appointments[appointment_id]
-        old_time = appointment['appointment_time']
-        appointment['appointment_time'] = new_time
+        old_time = appointment['appointment_date_time']
+        appointment['appointment_date_time'] = new_time
         appointment['changed_at'] = datetime.now()
         appointment['previous_time'] = old_time
         
         # Save the updated appointment
         self._save_appointments([appointment])
         
-        self.logger.info(f"Changed appointment {appointment_id} from {old_time.isoformat()} to {new_time.isoformat()}")
-        
-        d = appointment.copy()
-        d['success'] = True
-        return d
+        self.logger.info(f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_time.isoformat()}.")
+        return True, f"I changed appointment {appointment_id} from {old_time} to {new_time}."
     
     def list_appointments(
         self,
+        patient_name: str = '',
         after_datetime: datetime = datetime.min,
-        status_filter: str = ''
     ) -> list[dict[str, Any]]:
         """
         List all appointments.
         
         Args:
+            patient_name: Only return appointments for this patient (default: all patients)
             after_datetime: Don't include appointments before this value. Pass datetime.now() to only return future appointments.
-            status_filter: Optional status to filter by (e.g., 'scheduled', 'confirmed')
             
         Returns:
             List of appointment dictionaries
@@ -352,16 +399,16 @@ class AppointmentManager:
         appointments = []
         
         for appointment in self.appointments.values():
-            # Filter by status if specified
-            if status_filter and appointment.get('status') != status_filter:
+            # Filter by patient name, if specified
+            if patient_name and appointment.get('patient_name') != patient_name:
                 continue
             
             # Only include appointments before `after_datetime`.
-            if appointment['appointment_time'] >= after_datetime:
+            if appointment['appointment_date_time'] >= after_datetime:
                 appointments.append(appointment.copy())
         
         # Sort by appointment time
-        appointments.sort(key=lambda x: x['appointment_time'])
+        appointments.sort(key=lambda a: a['appointment_date_time'])
         
         return appointments
 
@@ -369,7 +416,7 @@ class AppointmentManager:
         """Return the number of appointments currently scheduled."""
         return len(self.appointments)
 
-    def get_appointment(self, appointment_id: str) -> dict[str, Any]:
+    def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
         """
         Get a specific appointment by ID.
         
@@ -377,9 +424,40 @@ class AppointmentManager:
             appointment_id: ID of the appointment
             
         Returns:
-            Appointment dictionary or None if not found
+            Appointment dictionary or {} if not found
         """
         return self.appointments.get(appointment_id, {})
 
 
-# Made with Bob
+    def get_appointment_id_for_name_and_date_time(self, 
+        patient_name: str,
+        appointment_date_time: datetime) -> str:
+        """
+        Retrieve the appointment ID for the specified patient and date time.
+        
+        Args:
+            patient_name: Name of the patient
+            appointment_date_time: Date time of the appointment
+            
+        Returns:
+            ID of the appointment or '' if there is no appointment for that patient at that date time.
+        """
+        for appointment in self.appointments.values():
+            if not appointment['status'] == 'cancelled' and \
+                    appointment['patient_name'] == patient_name and \
+                    appointment['appointment_date_time'] == appointment_date_time:
+                return appointment['appointment_id']
+        
+        return ''
+
+    def __str__(self) -> str:
+        return self.to_json()
+
+    def to_json(self) -> str:
+        """Create a JSON string from the object."""
+        return AppointmentManager.def_json_encoder.encode(self)
+
+    def from_json(text: Any) -> FilePersistentStorage:
+        """Attempt to parse a JSON object, returning an instance."""
+        return AppointmentManager.def_json_decoder.decode(text)
+

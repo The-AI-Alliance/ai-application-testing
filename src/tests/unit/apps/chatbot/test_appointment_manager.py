@@ -3,13 +3,13 @@ Unit tests for the appointment management tool.
 Uses Hypothesis.
 """
 from hypothesis import given, strategies as st
-import json, os, tempfile, unittest
+import json, logging, os, tempfile, unittest
 from collections.abc import Iterator
 from datetime import datetime, timedelta, date, time
 from pathlib import Path
 from typing import Any, Callable
 
-from apps.chatbot.tools.appointment_manager import AppointmentManager, AppointmentError
+from apps.chatbot.tools.appointment_manager import AppointmentManager
 from tests.common.utils import (
     is_work_hours,
     future_dates,
@@ -54,7 +54,7 @@ def appointment_dicts(
     reason_strategy = st.text):
     return st.tuples(datetime_strategy(), patient_name_strategy(), reason_strategy()).map(lambda t:
         AppointmentManager.make_appointment_dict(
-        appointment_time = t[0],
+        appointment_date_time = t[0],
         patient_name = t[1],
         reason = t[2],
         status = 'scheduled'))
@@ -68,7 +68,7 @@ def list_appointment_dicts(
             datetime_strategy = datetime_strategy,
             patient_name_strategy = patient_name_strategy,
             reason_strategy = reason_strategy),
-        unique_by=lambda dct: dct['appointment_time'])
+        unique_by=lambda dct: dct['appointment_date_time'])
 
 class TestAppointmentManager(unittest.TestCase):
     """Test cases for AppointmentManager"""
@@ -78,7 +78,9 @@ class TestAppointmentManager(unittest.TestCase):
     def _make_tool(self, file_name: str = '', clear: bool = True) -> AppointmentManager:
         if not file_name:
             file_name = self.temp_file.name
-        self.tool = AppointmentManager(file_name)
+        logger = logging.getLogger(self.__class__.__name__)
+        logger.setLevel(logging.CRITICAL) # suppress almost everything...
+        self.tool = AppointmentManager(file_name, logger=logger)
         if clear:
             self.tool.clear()
         return self.tool
@@ -100,13 +102,13 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertTrue(os.path.exists(self.temp_file.name))
 
     def _result_expected(self, expected: dict[str,Any], actual: dict[str,Any],
-        appointment_time: datetime | None = None,
+        appointment_date_time: datetime | None = None,
         changed_at: datetime | None = None,
         patient_name: str = '',
         reason: str = ''):
 
-        if not appointment_time:
-            appointment_time = expected.get('appointment_time')
+        if not appointment_date_time:
+            appointment_date_time = expected.get('appointment_date_time')
         if not changed_at:
             changed_at = expected.get('changed_at')
         if not patient_name:
@@ -117,35 +119,35 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertIn('appointment_id', actual, str(actual))
         self.assertTrue(actual.get('success', True), str(actual))
         
-        self.assertEqual(appointment_time, actual.get('appointment_time'), f"appointment_time expected: {appointment_time}, actual: {actual}")
+        self.assertEqual(appointment_date_time, actual.get('appointment_date_time'), f"appointment_date_time expected: {appointment_date_time}, actual: {actual}")
         if changed_at:
             self.assertIsNotNone(actual.get('changed_at')) 
             self.assertGreaterEqual(changed_at, actual.get('changed_at'), f"changed_at expected: {changed_at}, actual: {actual}")
         self.assertEqual(patient_name, actual.get('patient_name'), f"patient_name expected: {patient_name}, actual: {actual}")
         self.assertEqual(reason, actual.get('reason'), f"reason expected: {reason}, actual: {actual}")
 
-    def _check_success(self, appointment_dict: dict[str,Any]):
+    def _check_success(self, appointment_dict: dict[str,Any]) -> dict[str,Any]:
         before_count = self.tool.get_appointments_count()
-        try:
-            result = self.tool.create_appointment(
-                patient_name = appointment_dict['patient_name'],
-                appointment_time = appointment_dict['appointment_time'],
-                reason = appointment_dict['reason'])
-        except AppointmentError as ae:
-            self.fail(f"{ae}, patient_name = {appointment_dict['patient_name']}, appointment_time = {appointment_dict['appointment_time']}, reason = {appointment_dict['reason']}, appointments = {self.tool.appointments}")
-
+        id, msg = self.tool.create_appointment(
+            patient_name = appointment_dict['patient_name'],
+            appointment_date_time = appointment_dict['appointment_date_time'],
+            reason = appointment_dict['reason'])
+        self.assertNotEqual('', id, msg)
+        self.assertNotEqual('', msg)
         after_count = self.tool.get_appointments_count()
         self.assertEqual(before_count+1, after_count)
-        self._result_expected(appointment_dict, result)
-        return result
+        appt = self.tool.get_appointment_by_id(id)
+        self._result_expected(appointment_dict, appt)
+        return appt
 
     def _check_failure(self, appointment_dict: dict[str,Any]):
         before_count = self.tool.get_appointments_count()
-        with self.assertRaises(AppointmentError, msg=str(appointment_dict)):
-            self.tool.create_appointment(
-                patient_name = appointment_dict['patient_name'],
-                appointment_time = appointment_dict['appointment_time'],
-                reason = appointment_dict['reason'])
+        id, msg = self.tool.create_appointment(
+            patient_name = appointment_dict['patient_name'],
+            appointment_date_time = appointment_dict['appointment_date_time'],
+            reason = appointment_dict['reason'])
+        self.assertEqual('', id)
+        self.assertNotEqual('', msg)
         after_count = self.tool.get_appointments_count()
         self.assertEqual(before_count, after_count)
 
@@ -162,7 +164,7 @@ class TestAppointmentManager(unittest.TestCase):
         # sanity checks:
         self.tool.clear()
         self.assertEqual(0, len(get_list()), str(get_list()))
-        dt_set = set([d['appointment_time'] for d in list_appointment_dicts])
+        dt_set = set([d['appointment_date_time'] for d in list_appointment_dicts])
         self.assertEqual(len(list_appointment_dicts), len(dt_set), f"{list_appointment_dicts} != {dt_set}")
         
         created = {}
@@ -185,7 +187,7 @@ class TestAppointmentManager(unittest.TestCase):
             expected = created.get(appointment_id)
             self.assertEqual(appointment_id, appointment['appointment_id'])
             self.assertEqual(appointment_id, expected['appointment_id'])
-            self.assertEqual(expected['appointment_time'], appointment['appointment_time'])
+            self.assertEqual(expected['appointment_date_time'], appointment['appointment_date_time'])
             self.assertEqual(expected['patient_name'], appointment['patient_name'])
             self.assertEqual(expected['reason'], appointment['reason'])
 
@@ -242,46 +244,29 @@ class TestAppointmentManager(unittest.TestCase):
     def test_cancel_appointment_succeeds_if_it_exists(self, 
         appointment_dict: dict[str,Any]):
         """Test canceling an existing appointment"""
+        self.tool.clear()
         appointment = self._check_success(appointment_dict)
-
         id = appointment['appointment_id']
         
         before_count  = self.tool.get_appointments_count()
-        cancel_result = self.tool.cancel_appointment(id)
+        success, msg  = self.tool.cancel_appointment(id)
         after_count   = self.tool.get_appointments_count()
+        self.assertTrue(success, msg)
+        self.assertNotEqual('', msg)
         self.assertEqual(before_count-1, after_count)
-        self.assertTrue(cancel_result['success'])
-        self.assertEqual(cancel_result['status'], 'cancelled')
+        appt = self.tool.get_appointment_by_id(id)
+        self.assertEqual({}, appt)
 
     @given(st.uuids())
     def test_cancel_nonexistent_appointment_fails(self, uuid):
         """Test that canceling a non-existent appointment fails"""
-        before_count  = self.tool.get_appointments_count()
-        with self.assertRaises(AppointmentError) as context:
-            self.tool.cancel_appointment(str(uuid))
-        self.assertIn("not found", str(context.exception).lower())
-        after_count   = self.tool.get_appointments_count()
-        self.assertEqual(before_count, after_count)
-
-    @given(list_appointment_dicts())
-    def test_confirm_appointment_succeeds_if_it_exists(self, dicts: list[dict[str,Any]]):
-        """Test confirming an existing appointment"""
         self.tool.clear()
-        for d in dicts:
-            appt = self._check_success(d)
-            criteria = {
-                'appointment_id':   appt.get('appointment_id'),
-                'appointment_time': appt.get('appointment_time'),
-                'patient_name':     appt.get('patient_name'),
-            }
-            confirm = self.tool.confirm_appointment(criteria)
-            self.assertEqual(1, len(confirm), f"{criteria} in {self.tool.appointments}?")
-            for key, value in criteria.items():
-                self.assertEqual(value, confirm[0].get(key))
-
-    @given(st.uuids())
-    def test_confirm_appointment_returns_empty_if_it_does_not_exist(self, uuid):
-        self.assertEqual([], self.tool.confirm_appointment(str(uuid)))
+        before_count = self.tool.get_appointments_count()
+        success, msg = self.tool.cancel_appointment(str(uuid))
+        self.assertFalse(success, msg)
+        self.assertNotEqual('', msg)
+        after_count  = self.tool.get_appointments_count()
+        self.assertEqual(before_count, after_count)
 
     @given(appointment_dicts(), appointment_future_work_datetimes())
     def test_change_appointment_successful_if_it_exists(self, 
@@ -293,19 +278,19 @@ class TestAppointmentManager(unittest.TestCase):
         """
         self.tool.clear()
         appointment = self._check_success(appointment_dict)
-
-        if appointment['appointment_time'] == new_datetime:
+        if appointment['appointment_date_time'] == new_datetime:
             match new_datetime.hour:
                 case 16:
                     new_datetime = new_datetime - timedelta(hours=1)
                 case _:
                     new_datetime = new_datetime + timedelta(hours=1)
 
-        updated = self.tool.change_appointment(
-            appointment['appointment_id'],
-            new_datetime)
+        id = appointment['appointment_id']
+        success, msg = self.tool.change_appointment(id, new_datetime)
+        self.assertTrue(success, msg)
+        updated = self.tool.get_appointment_by_id(id)
         self._result_expected(appointment_dict, updated,
-            appointment_time = new_datetime,
+            appointment_date_time = new_datetime,
             changed_at = new_datetime)
 
     @given(appointment_dicts())
@@ -313,9 +298,7 @@ class TestAppointmentManager(unittest.TestCase):
         appointment_dict: dict[str,Any]):
         """Test that get_appointment returns existing appointments."""
         self.tool.clear()
-        appointment = self._check_success(appointment_dict)
-        id = appointment['appointment_id']
-        appointment2 = self.tool.get_appointment(id)
+        appointment2 = self._check_success(appointment_dict)
         self.assertNotEqual({}, appointment2)
         self._result_expected(appointment_dict, appointment2)
 
@@ -338,7 +321,7 @@ class TestAppointmentManager(unittest.TestCase):
             new_tool.list_appointments)
         self._check_appointments_list(list_appointment_dicts, 
             new_tool.list_appointments,
-            get_appointment = new_tool.get_appointment)
+            get_appointment = new_tool.get_appointment_by_id)
 
 
     @given(list_appointment_dicts())
