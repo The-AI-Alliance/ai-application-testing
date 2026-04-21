@@ -213,6 +213,7 @@ Furthermore, DoomArena serves as a laboratory for AI agent security research, re
   * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
 * [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
 * [Spec-Driven Development: 10 things you need to know about specs](https://tessl.io/blog/spec-driven-development-10-things-you-need-to-know-about-specs/){:target="10-things"}
+* [OpenSpec](https://github.com/Fission-AI/OpenSpec){:target="openspec"} is a form of SDD designed for use with coding agents.
 
 YouTube videos about SDD:
 

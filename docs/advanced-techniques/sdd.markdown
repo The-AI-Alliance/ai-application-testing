@@ -28,7 +28,7 @@ has_children: false
 > 1. The more we rely on LLMs to do our work, the more important good prompts become.
 > 1. LLMs do best when they are asked to do small increments of work, rather than larger amounts of work all at once. Separating different process &ldquo;phases&rdquo; is an example.
 > 1. Structured prompts and carefully-chosen support tools for each &ldquo;phase&rdquo; provide the best results.
-> 1. For software development having [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"} do all work as iteratively and incrementally as possible improves results. For example, using iterative prompting to build up complete requirements, one step at a time, results in better, more complete requirements than one-shot LLM generation or other approaches. Similarly, code should be implemented or modified one small [Unit]({{site.glossaryurl}}/#unit){:target="_glossary"} at a time with individual commits to `git`.
+> 1. For software development having [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"} do all work as iteratively and incrementally as possible improves results. For example, using iterative prompting to build up complete requirements, one step at a time, results in better, more complete requirements than one-shot LLM generation or other approaches. Similarly, code should be implemented or modified one small [Unit]({{site.glossaryurl}}/#unit){:target="_glossary"} at a time with individual commits to `git`. [OpenSpec](https://github.com/Fission-AI/OpenSpec){:target="openspec"} is a version of SDD for use with coding agents.
 > 1. Carl Annaberg's AI Coding Workflow has two phases, **planning** and **execution**, while GitHub's Spec Kit adds a first step **specify** to create the specification, splits planning into two, more-granular phases, **plan** and **tasks**, then finishes with an **implement** phase that is similar to Annaberg's **execution** phase.
 
 The more we rely on AI-powered [Coding Agents]({{site.glossaryurl}}/#coding-agent){:target="_glossary"}, the more crucial it becomes to write prompts that produce the results we need. Generative models are &ldquo;literal minded&rdquo; (just like all computing systems). We have to use very precise instructions to get the results we want.
@@ -124,6 +124,9 @@ Spec Kit's **implement** phase is similar to Annaberg's **execution** phase.
 Both approaches deliver similar benefits; see the list above for Annaberg's approach.
 
 Here is a summary of the blog post's description of the phases.
+
+{: .todo}
+> **TODO:** Work in concepts from [OpenSpec](https://github.com/Fission-AI/OpenSpec){:target="openspec"}.
 
 #### 1. Specify
 
