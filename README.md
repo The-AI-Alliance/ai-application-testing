@@ -427,7 +427,7 @@ For more details on running the OpenAI-compatible API server, see the [`src/apps
 
 ### Using the ChatBot with Open WebUI
 
-Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com). See the [user guide](https://the-ai-alliance.github.io/ai-application-testing/working-example/#using-the-chatbot-with-open-webui) for details.
+Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com). See the [user guide](https://the-ai-alliance.github.io/ai-application-testing/working-example/#using-the-chatbot-with-open-webui) for details. See also the [`src/apps/chatbot/open-webui/README.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/open-webui/README.md).
 
 ## Automated Testing: Practical Enhancements 
 

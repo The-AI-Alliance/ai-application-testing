@@ -169,7 +169,7 @@ We tried both system prompts with a number of user prompts (details below) using
 > 
 > 1. Most models are available in different sizes. [Table 1]({{site.baseurl}}/working-example/#table-1) discusses size and performance trade offs. When you choose models, consider smaller or larger versions depending on your hardware resources. Production deployments should lean towards larger versions with better performance.
 > 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of models instead.
-> 1. Sample results for all the examples in this guide and for some of the models tried can be found in the repo's [`src/data/examples/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
+> 1. Sample results for all the examples in this guide and for some of the models tried can be found in the repo's [`src/data/examples/`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="examples"} directory. Results from other models may be added to the repo from time to time. We won't discuss all of the models listed for all examples, but pick a few to highlight.
 
 With our system prompts and model choices, let's try some queries.
 
@@ -314,8 +314,8 @@ The `time` command returns how much system, user, and "wall clock" times were us
 
 The tool runs two experiments, each with these two templates files:
 
-* [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}
-* [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}
+* [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}
+* [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}
 
 The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same. 
 
@@ -363,7 +363,7 @@ In [Testing Strategies]({{site.baseurl}}/testing-strategies/) we will dive deepe
 
 * Try using different models, especially larger, more powerful LLMs. How do the results compare?
 * Add one or more additional _FAQs_. How would you modify the prompts? How would you change how the results are evaluated? 
-* Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}?
+* Experiment with the `system` prompts in the two template files and see how the changes affect the results. For example, when using a small model like `llama3.2:3B`, does the quality of the generated results improve as you add more and more examples to the template with examples, [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}, compared to the template without examples, [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"}? In other words, how can you make a small model work better by careful [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}?
 * How might you modify the example to handle a patient prompt that includes a refill request and other content that requires a response? We have assumed that a prompt with a refill request contains no other content that requires separate handling.
 * Try running the tool many times and look carefully at the actual vs. expected strings, especially for any cases where the differences are greater than the Levenshtein distance ratio threshold we use (0.95). Are the differences really significant? If not, what could you do in the comparison to automatically treat them as _close enough_?
 

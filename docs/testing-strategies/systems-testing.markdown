@@ -22,7 +22,7 @@ Quality assurance professionals have long dealt with the challenges of testing w
 {: .todo}
 > **TODO:** 
 > 
-> This chapter needs contributions from experts. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/26){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
+> This chapter needs contributions from experts. See [this issue]({{site.gh_edit_repository}}/issues/26){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 
 <a id="highlights"></a>

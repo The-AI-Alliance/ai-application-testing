@@ -21,11 +21,11 @@ So far in this guide, we have focused on testing AI-enabled applications in a ge
 
 ## An Agentic ChatBot
 
-This chapter introduces an agent-based ChatBot implementation, [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"},[^1] which uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, including [Agent Skills](#agent-skills), a modular way of defining agent behaviors. See [Run the ChatBot Example Application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) for details on running the application.
+This chapter introduces an agent-based ChatBot implementation, [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"},[^1] which uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, including [Agent Skills](#agent-skills), a modular way of defining agent behaviors. See [Run the ChatBot Example Application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) for details on running the application.
 
 We picked this toolkit for two reasons: LangChain is widely used and Deep Agents supports [Agent Skills](#agent-skills). We also switched to `gemma4:e4b` as our default, open-weights model, when we started this implementation, because we found it worked better for this implementation than the other models we have used.
 
-[^1]: The _simple_ [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} implementation, which just uses LLM inference, is still available and can be run with `make simple-chatbot`.
+[^1]: The _simple_ [`ChatBotSimple`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} implementation, which just uses LLM inference, is still available and can be run with `make simple-chatbot`.
 
 ## About Agents
 
@@ -83,7 +83,7 @@ The post ends with an appendix of evaluation frameworks, which we include in [Ot
 
 Agent capabilities can be implemented in many ways. We chose to use the concept of [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"}, which was recently introduced by [Anthropic](https://anthropic.com/){:target="anthropic"} as a way of specifying skills in a structured, modular format. 
 
-Skills are designed to teach agents new capabilities without invasive modifications like tuning the underlying models. Skills has the potential to become a widely-used, standard approach. It is already supported in [LangChain Deep Agents](https://www.langchain.com/deep-agents){:target="lcda"} , which is one reason we chose this framework for our [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} implementation.
+Skills are designed to teach agents new capabilities without invasive modifications like tuning the underlying models. Skills has the potential to become a widely-used, standard approach. It is already supported in [LangChain Deep Agents](https://www.langchain.com/deep-agents){:target="lcda"} , which is one reason we chose this framework for our [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} implementation.
 
 The [Agent Skills](https://agentskills.io/){:target="agent-skills"} website provides details, including a [specification](https://agentskills.io/specification){:target="agent-skills"} for skills. Example skills are in Anthropic's [`skills` GitHub repo](https://github.com/anthropics/skills){:target="anthropic-skills-gh"} and a catalog of skills can be found at [`skills.sh`](https://skills.sh/){:target="skills-sh"}. See also the [`agentskills`](https://github.com/agentskills/agentskills){:target="agent-skills-gh"} repo. 
 
@@ -107,7 +107,7 @@ Because of context size limitations, skill implementations should use _progressi
 > * **Activation:** When a task matches a skill’s description, the agent reads the full `SKILL.md` instructions into context.
 > * **Execution:** The agent follows the instructions, optionally loading referenced files or executing bundled code as needed.
 
-Appointment handling in [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} is implemented this way. The [`src/apps/chatbot/skills/appointments`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments){:target="cba-gh"} directory contains a [`SKILL.md`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/SKILL.md){:target="cba-gh"} file, which is effectively a system prompt explaining how to implement the skill, and a Python file, [`appointment_tools.py`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}, which implements the &ldquo;tools&rdquo; described in `SKILL.md`. These tools are Python functions with a `@tool` annotation and they delegate the work to a very simple class [`AppointmentManager`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/tools/appointments/appointment_manager.py){:target="cba-gh"}, which simulates managing a calendar of appointments for demonstration and test purposes.
+Appointment handling in [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} is implemented this way. The [`src/apps/chatbot/skills/appointments`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments){:target="cba-gh"} directory contains a [`SKILL.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/SKILL.md){:target="cba-gh"} file, which is effectively a system prompt explaining how to implement the skill, and a Python file, [`appointment_tools.py`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}, which implements the &ldquo;tools&rdquo; described in `SKILL.md`. These tools are Python functions with a `@tool` annotation and they delegate the work to a very simple class [`AppointmentManager`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/tools/appointments/appointment_manager.py){:target="cba-gh"}, which simulates managing a calendar of appointments for demonstration and test purposes.
 
 Here are parts of the `SKILL.md` file for appointments, with some sections elided (`...`):
 
@@ -185,7 +185,7 @@ Here are parts of the `SKILL.md` file for appointments, with some sections elide
 > ...
 > ```
 
-Most of this is self-explanatory. The `create_appointment` tool is implemented in the Python file, [`appointment_tools.py`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}. (We omit the comment block found in the definition):
+Most of this is self-explanatory. The `create_appointment` tool is implemented in the Python file, [`appointment_tools.py`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}. (We omit the comment block found in the definition):
 
 ```python
 @tool

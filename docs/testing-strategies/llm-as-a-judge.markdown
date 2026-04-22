@@ -92,7 +92,7 @@ The [project repo]({{site.gh_edit_repository}}/){:target="_blank"} contains a to
 
 In this case, we don't use a separate prompt for each unit benchmark. Instead, one prompt works for all cases, as it doesn't mention the benchmark details; it just asks the LLM to judge if the answer is suitable for the question in the Q&A pair. It returns a rating, 1-5, as discussed above, and its reasoning for the rating.
 
-The template file used is [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="_blank"}. The system prompt in the file is the following:
+The template file used is [`synthetic-q-and-a_patient-chatbot-data-validation.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/synthetic-q-and-a_patient-chatbot-data-validation.yaml){:target="_blank"}. The system prompt in the file is the following:
 
 ```text
 You are a teacher model that evaluates the quality of synthetic question and answer (Q&A) pairs
@@ -147,16 +147,16 @@ cd src && time uv run tools/unit-benchmark-data-validation.py \
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
 
 
-In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"} directory:
+In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"} directory:
 
 | Validation Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
-| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} |
-| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl` | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} | [example](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl` | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl` | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-non-prescription-refills-data-validation.jsonl){:target="_blank"} |
+| `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl` | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} |
 
 These files rate each Q&A pair from 1 (bad) to 5 (great) and provide reasoning for each rating.
-Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
+Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
 
 **`gpt-oss:20b`**
 
@@ -204,7 +204,7 @@ Nevertheless, as our data synthesis grows more sophisticated for more benchmarks
 
 So, our validation tool only considers the second question, whether or not the label shown in the answer the best label for the question, independent of which data file the Q&A pair appears.
 
-Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"}:
+Let's look at some poorly-rated Q&A pairs. Here are the nine (out of 36, so 25%) _emergency_ pairs for `llama3.2:3B` that were rated under four in the example [validation data file]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-emergency-data-validation.jsonl){:target="_blank"}:
 
 ```json
 {
@@ -303,7 +303,7 @@ The process is very similar to how we evaluated synthetic data, except this time
 
 We can use the same implementation in the production system, where the judge critiques each response before allowing downstream processing. Most likely, _human in the loop_ checking won't be feasible, although information should be logged for &ldquo;post mortem&rdquo; analysis. Since we have to rely on the judge to do a good job, thresholds for acceptable replies may need to be more stringent.
 
-TODO: Provide an example of using LLM as a Judge during test runs (see [issue #25](https://github.com/The-AI-Alliance/ai-application-testing/issues/25){:target="_blank"}). As always, [help is welcome]({{site.baseurl}}/contributing)!
+TODO: Provide an example of using LLM as a Judge during test runs (see [issue #25]({{site.gh_edit_repository}}/issues/25){:target="_blank"}). As always, [help is welcome]({{site.baseurl}}/contributing)!
 
 ## Issues We Have to Consider
 

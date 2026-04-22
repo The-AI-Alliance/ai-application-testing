@@ -345,8 +345,8 @@ This purpose of this application is to represent something closer to what you wo
 
 There are actually _two_ implementations of this application:
 
-* [`ChatBotSimple`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools. This is the first version of the ChatBot that we started with while developing the initial content of this guide.
-* [`ChatBotAgent`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A more advanced "agent" implementation that uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
+* [`ChatBotSimple`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools. This is the first version of the ChatBot that we started with while developing the initial content of this guide.
+* [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A more advanced "agent" implementation that uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
 
 A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. By default, the `Makefile` targets use `ChatBotAgent`, which is selected because the `Makefile` variable `WHICH_CHATBOT` is defined to be `agent`. This value is overridden by `*-`, but it can be overridden on the command line with the value `simple` to use the other implementation.
 
@@ -441,7 +441,7 @@ We will discuss the automated tests below, in [Automated Testing: Practical Enha
 
 ### Using the ChatBot with Open WebUI
 
-If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}.
+If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}. We use a separate project configuration in [`src/apps/chatbot/open-webui/`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/), rather than add the dependencies to the whole project. See [`src/apps/chatbot/open-webui/README.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/README.md).
 
 {: tip}
 > **TIP:**

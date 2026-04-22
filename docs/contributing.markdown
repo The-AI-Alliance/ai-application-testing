@@ -16,10 +16,10 @@ The following people and organizations have contributed to the creation and main
 
 We welcome your contributions! 
 
-* [GitHub repo](https://github.com/The-AI-Alliance/ai-application-testing/){:target="repo"}
-	* [Issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"}
-	* [Discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"} 
-	* [Pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="prs"}
+* [GitHub repo]({{site.gh_edit_repository}}/){:target="repo"}
+	* [Issues]({{site.gh_edit_repository}}/issues){:target="issues"}
+	* [Discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"} 
+	* [Pull requests]({{site.gh_edit_repository}}/pulls){:target="prs"}
 * Or give us your feedback through [email](mailto:contact@thealliance.ai,dwampler@thealliance.ai?subject=Feedback on Testing Generative AI Agent Applications)
 
 Here are some areas where help is most needed:
@@ -44,6 +44,6 @@ Check any of these boxes on the form that look interesting. In particular, _Eval
 
 ## Notes on Improving this User Guide
 
-The sources for this guide are in the GitHub repository's [`docs`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/docs){:target="repo-docs"} directory. 
+The sources for this guide are in the GitHub repository's [`docs`]({{site.gh_edit_repository}}/tree/main/docs){:target="repo-docs"} directory. 
 
 Notice that every page in this guide has an _Edit this page on GitHub_ link, which makes it easy to view a page's source, make edits, and submit a PR! This is the easiest way to help us fix typos and make other single-page improvements.

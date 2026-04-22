@@ -22,7 +22,7 @@ So far, we have explored various techniques for testing the [Stochastic]({{site.
 {: .todo}
 > **TODO:** 
 > 
-> This chapter needs contributions from experts in statistics. See [this issue](https://github.com/The-AI-Alliance/ai-application-testing/issues/27){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
+> This chapter needs contributions from experts in statistics. See [this issue]({{site.gh_edit_repository}}/issues/27){:target="_blank"} and [Contributing]({{site.baseurl}}/contributing) if you would like to help.
 
 In the [Unit Benchmark's Experiments to Try]({{site.baseurl}}/testing-strategies/unit-benchmarks/#experiments-to-try) and in various parts of [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge) chapter, we raised questions to begin thinking about these decisions. Now we will put the concepts on a more formal foundation. Specifically, we will apply [Statistical Analysis]({{site.glossaryurl}}/#statistical-analysis){:target="_glossary"} to test results and use that information to inform our thinking.
 

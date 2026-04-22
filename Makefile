@@ -49,6 +49,8 @@ DATA_DIR              ?= ${OUTPUT_DIR}/data
 TEST_DATA_DIR         ?= tests/data
 CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
 
+OPEN_WEBUI_DIR        ?= ${SRC_DIR}/apps/chatbot/open-webui
+
 # Some specific variables passed as env. vars. to the ChatBot.
 # CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
 # WHICH_CHATBOT: Which ChatBot implementation to use: 'agent' for ChatBotAgent or 'simple' for ChatBotSimple
@@ -91,6 +93,37 @@ CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 
 ## Override when running `make view-local` using e.g., `JEKYLL_PORT=8000 make view-local`
 JEKYLL_PORT           ?= 4000
+
+# Colors used to make some messages stand out more than others...
+RED          = \033[31m
+BOLD_RED     = \033[1;31m
+GREEN        = \033[32m
+BOLD_GREEN   = \033[1;32m
+YELLOW       = \033[33m
+BOLD_YELLOW  = \033[1;33m
+BLUE         = \033[34m
+BOLD_BLUE    = \033[1;34m
+PURPLE       = \033[35m
+BOLD_PURPLE  = \033[1;35m
+CYAN         = \033[36m
+BOLD_CYAN    = \033[1;36m
+
+ERROR        = ${BOLD_RED}ERROR:
+WARN         = ${BOLD_YELLOW}WARNING:
+NOTE         = ${BOLD_PURPLE}NOTE:
+INFO         = ${BOLD_PURPLE}
+TIP          = ${BOLD_BLUE}TIP:
+HIGHLIGHT    = ${BOLD_GREEN}
+_END         = \033[0m
+
+
+ifndef DOCS_DIR
+$(error ERROR: There is no ${DOCS_DIR} directory!)
+endif
+ifndef SRC_DIR
+$(error ERROR: There is no ${SRC_DIR} directory!)
+endif
+
 
 define help_message
 
@@ -294,12 +327,7 @@ inspector `@modelcontextprotocol/inspector`. Otherwise, node is not used in
 this project. See https://nodejs.org/en/download/ for installation instructions.
 endef
 
-ifndef DOCS_DIR
-$(error ERROR: There is no ${DOCS_DIR} directory!)
-endif
-ifndef SRC_DIR
-$(error ERROR: There is no ${SRC_DIR} directory!)
-endif
+open-url-message = Try ${HIGHLIGHT}⌘+click${_END} or ${HIGHLIGHT}^+click${_END} on the URL.
 
 define gem-error-message
 
@@ -370,7 +398,7 @@ help-command-jq::
 	@echo
 
 help-command-%::
-	@echo "Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'."
+	@echo "${GREEN}${RED}Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'.${_END}"
 
 help-tools-all help-code-all:: help-code help-terc help-ubds help-ubdv
 
@@ -383,43 +411,43 @@ clean-code:: clean-tools
 
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
-	@echo "For the GitHub Pages website:"
-	@echo "  GITHUB_PAGES_URL:        ${GITHUB_PAGES_URL}"
-	@echo "  PWD:                     ${PWD} ('print working directory')"
-	@echo "  DOCS_DIR:                ${DOCS_DIR}"
-	@echo "  SITE_DIR:                ${SITE_DIR}"
-	@echo "  JEKYLL_PORT:             ${JEKYLL_PORT}"
+	@echo "${GREEN}For the GitHub Pages website:${_END}"
+	@echo "  ${GREEN}GITHUB_PAGES_URL:${_END}        ${GITHUB_PAGES_URL}"
+	@echo "  ${GREEN}PWD:${_END}                     ${PWD} ('print working directory')"
+	@echo "  ${GREEN}DOCS_DIR:${_END}                ${DOCS_DIR}"
+	@echo "  ${GREEN}SITE_DIR:${_END}                ${SITE_DIR}"
+	@echo "  ${GREEN}JEKYLL_PORT:${_END}             ${JEKYLL_PORT}"
 	@echo
 
 print-info-tools:: print-info-code
 print-info-code::
-	@echo "For the example code and tools:"
-	@echo "  MODEL:                   ${MODEL} (the default)"
-	@echo "  MODELS: (all we use)     ${MODELS}"
-	@echo "  ALL_TOOLS:               ${ALL_TOOLS}"
-	@echo "  INFERENCE_SERVICE:       ${INFERENCE_SERVICE}"
-	@echo "  INFERENCE_URL:           ${INFERENCE_URL}"
-	@echo "  PROMPTS_TEMPLATES_DIR:   ${PROMPTS_TEMPLATES_DIR}"
-	@echo "  CHATBOT_TEMPLATES_DIR:   ${CHATBOT_TEMPLATES_DIR}"
-	@echo "  CHATBOT_OUTPUT_DIR:      ${CHATBOT_OUTPUT_DIR}"
-	@echo "  SRC_DIR:                 ${SRC_DIR}"
-	@echo "  APP_ARGS:                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
-	@echo "  The following depend on the value of MODEL:"
-	@echo "  OUTPUT_DIR:              ${OUTPUT_DIR}"
-	@echo "  OUTPUT_LOGS_DIR:         ${OUTPUT_LOGS_DIR}"
-	@echo "  TESTS_LOGS_DIR:          ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
-	@echo "  DATA_DIR:                ${DATA_DIR}"
-	@echo "  ACCUMULATE_TEST_ERRORS:  ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
+	@echo "${GREEN}For the example code and tools:${_END}"
+	@echo "  ${GREEN}MODEL:${_END}                   ${MODEL} (the default)"
+	@echo "  ${GREEN}MODELS:${_END} (all we use)     ${MODELS}"
+	@echo "  ${GREEN}ALL_TOOLS:${_END}               ${ALL_TOOLS}"
+	@echo "  ${GREEN}INFERENCE_SERVICE:${_END}       ${INFERENCE_SERVICE}"
+	@echo "  ${GREEN}INFERENCE_URL:${_END}           ${INFERENCE_URL}"
+	@echo "  ${GREEN}PROMPTS_TEMPLATES_DIR:${_END}   ${PROMPTS_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${_END}   ${CHATBOT_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${_END}      ${CHATBOT_OUTPUT_DIR}"
+	@echo "  ${GREEN}SRC_DIR:${_END}                 ${SRC_DIR}"
+	@echo "  ${GREEN}APP_ARGS:${_END}                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
+	@echo "  ${GREEN}The following depend on the value of MODEL:${_END}"
+	@echo "  ${GREEN}OUTPUT_DIR:${_END}              ${OUTPUT_DIR}"
+	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${_END}         ${OUTPUT_LOGS_DIR}"
+	@echo "  ${GREEN}TESTS_LOGS_DIR:${_END}          ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
+	@echo "  ${GREEN}DATA_DIR:${_END}                ${DATA_DIR}"
+	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${_END}  ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
-	@echo "The environment:"
-	@echo "  GIT_HASH:                ${GIT_HASH}"
-	@echo "  TIMESTAMP:               ${TIMESTAMP}"
-	@echo "  MAKEFLAGS:               ${MAKEFLAGS}"
-	@echo "  MAKEFLAGS_RECURSIVE:     ${MAKEFLAGS_RECURSIVE}"
-	@echo "  UNAME:                   ${UNAME}"
-	@echo "  ARCHITECTURE:            ${ARCHITECTURE}"
-	@echo "  GIT_HASH:                ${GIT_HASH}"
+	@echo "${GREEN}The environment:${_END}"
+	@echo "  ${GREEN}GIT_HASH:${_END}                ${GIT_HASH}"
+	@echo "  ${GREEN}TIMESTAMP:${_END}               ${TIMESTAMP}"
+	@echo "  ${GREEN}MAKEFLAGS:${_END}               ${MAKEFLAGS}"
+	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${_END}     ${MAKEFLAGS_RECURSIVE}"
+	@echo "  ${GREEN}UNAME:${_END}                   ${UNAME}"
+	@echo "  ${GREEN}ARCHITECTURE:${_END}            ${ARCHITECTURE}"
+	@echo "  ${GREEN}GIT_HASH:${_END}                ${GIT_HASH}"
 	@echo
 # Code Targets
 
@@ -457,19 +485,6 @@ run-tools run-code::
 clean-tools clean-code:: 
 	rm -rf ${CLEAN_CODE_DIRS}   
 
-define run-tdd-example-refill-chatbot-message
-*** Running the TDD example.
-endef
-define run-unit-benchmark-data-synthesis-message
-*** Running the unit benchmark data synthesis example.
-endef
-define run-unit-benchmark-data-validation-message
-*** Running the unit benchmark synthetic data validation example.
-endef
-define run-langflow-pipeline-message
-*** Running the Langflow unit benchmark pipeline (synthesis + validation).
-endef
-
 terc run-terc:: run-tdd-example-refill-chatbot
 ubds run-ubds:: run-unit-benchmark-data-synthesis
 ubdv run-ubdv:: run-unit-benchmark-data-validation
@@ -479,7 +494,7 @@ help-ubds:: help-unit-benchmark-data-synthesis
 help-ubdv:: help-unit-benchmark-data-validation
 
 ${ALL_TOOLS:%=help-%}::
-	@echo "Help on ${@:help-%=%}.py:"
+	@echo "${GREEN}Help on ${@help-%=%}.py:"
 	@echo
 	cd ${SRC_DIR} && uv run tools/${@:help-%=%}.py --help
 	@echo
@@ -491,7 +506,8 @@ ${ALL_TOOLS:%=help-%}::
 # just prints help.
 
 run-tdd-example-refill-chatbot:: before-run
-	$(info ${$@-message})
+	@echo "${INFO} *** Running the TDD example. ${_END}"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
@@ -500,11 +516,11 @@ run-tdd-example-refill-chatbot:: before-run
 		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis:: before-run
-	$(info ${$@-message})
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
+	@echo "${INFO} *** Running the unit benchmark data synthesis example. ${_END}"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
@@ -514,11 +530,11 @@ run-unit-benchmark-data-synthesis:: before-run
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation:: before-run
-	$(info ${$@-message})
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
+	@echo "${INFO} *** Running the unit benchmark synthetic data validation example. ${_END}"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 	  --model ${MODEL} \
@@ -528,16 +544,16 @@ run-unit-benchmark-data-validation:: before-run
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 	  ${JUST_STATS} ${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log\n"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 before-run:: silent-before-run
-	$(info NOTE: If errors occur, try 'make setup' or 'make clean-setup setup', then try again.)
+	@echo "${WARN}${_END} If errors occur, try ${HIGHLIGHT}make setup${_END} or ${HIGHLIGHT}make clean-setup setup${_END}, then try again."
 
-silent-before-run:: run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
+silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
 run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
-	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "ERROR: Ollama is not running!" || exit 1
+	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR}: Ollama is not running!${_END}" || exit 1
 
 # Langflow targets
 .PHONY: run-langflow-pipeline langflow-pipeline help-langflow-pipeline  
@@ -545,7 +561,8 @@ provider-server-check::
 
 run-langflow-pipeline:: langflow-pipeline
 langflow-pipeline:: 
-	$(info ${run-langflow-pipeline-message})
+	@echo "${INFO}Running the Langflow unit benchmark pipeline (synthesis + validation)...${_END}"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@}.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run python -m tools.langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
@@ -555,16 +572,16 @@ langflow-pipeline::
 	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
 	  ${JUST_STATS} ${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 help-lf help-langflow help-langflow-pipeline::
-	@echo "Help on the Langflow unit benchmark pipeline:"
+	@echo "${INFO}Help on the Langflow unit benchmark pipeline:${_END}"
 	@echo
 	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 	@echo
 
 all-tests-langflow unit-tests-langflow:: run-command-checks
-	@echo "Running langflow unit tests..."
+	@echo "${INFO}Running the langflow unit tests...${_END}"
 	cd ${SRC_DIR} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
@@ -574,10 +591,10 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	    --start-directory tests/unit/langflow \
 	    --top-level-directory .
 
-.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot before-chatbot 
+.PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot before-chatbot after-chatbot
 
 run-chatbot:: chatbot
-chatbot:: before-chatbot do-run-chatbot
+chatbot:: before-chatbot do-run-chatbot after-chatbot
 do-run-chatbot::
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main \
@@ -588,9 +605,8 @@ do-run-chatbot::
 		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
-		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
+		--log-file ${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log \
 		--verbose ${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
 
 agent-chatbot simple-chatbot:: 
 	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
@@ -604,10 +620,14 @@ help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
-	@echo "Running the \"${WHICH_CHATBOT}\" ChatBot..." && \
+	@echo "${INFO}Running the \"${WHICH_CHATBOT}\" ChatBot...${_END}" && \
+	echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}\n" && \
 		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
-		echo "ERROR! ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot! (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
+		echo "${ERROR} ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot!${_END} (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
 		echo ""
+
+after-chatbot::
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}\n"
 
 .PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
@@ -615,7 +635,7 @@ before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT
 # blank.
 run-mcp-server:: mcp-server
 mcp-server:: before-chatbot
-	@echo "Running the ChatBot MCP Server..."
+	@echo "${INFO}Running the ChatBot MCP Server...${_END}"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
 		--model ${MODEL} \
@@ -627,10 +647,10 @@ mcp-server:: before-chatbot
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 inspect-mcp-server:: command-check-node
-	@echo "Running the @modelcontextprotocol/inspector with the ChatBot MCP Server..."
+	@echo "${INFO}Running the @modelcontextprotocol/inspector with the ChatBot MCP Server...${_END}"
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
 help-mcp-server::
@@ -640,7 +660,8 @@ help-mcp-server::
 
 run-api-server:: api-server
 api-server:: before-chatbot
-	@echo "Running the ChatBot OpenAI-compatible API Server..."
+	@echo "${INFO}Running the ChatBot OpenAI-compatible API Server...${_END}"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server \
 		--host ${CHATBOT_API_SERVER_HOST} \
@@ -654,41 +675,51 @@ api-server:: before-chatbot
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output: ${OUTPUT_LOGS_DIR}/$@.log"
+	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 help-api-server::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
 
 check-api-server::
-	@echo "'Sanity check' that the OpenAI-compatible API server works:"
-	@echo "  Running the server in the background..."
+	@echo "${INFO}'Sanity check' that the OpenAI-compatible API server works:${_END}"
+	@echo "Running the server in the background..."
 	${MAKE} api-server & 
 	@echo
-	@echo "  Hit the 'return' key!"
+	@echo "  ${HIGHLIGHT}Hit the 'return' key!${_END}"
 	@echo
 	@echo "  Running 'apps/chatbot//api_server/example_client.py'..."
 	cd ${SRC_DIR} && uv run python apps/chatbot/api_server/example_client.py
-	@echo "  Hack: Find the process id for the server and kill it..." 
+	@echo "  ${INFO}Hack: Find the process id for the server and kill it...${_END}" 
 	kill %1
 
 view-api-server-docs view-api-server-redoc::
 	@echo
-	@echo "Opening http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
+	@echo "Opening ${INFO}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${_END}"
 	@echo
+	@echo "${open-url-message}"
 	@echo "If the URL isn't found, make sure the server is running! For example,"
-	@echo "run 'make api-server' in another terminal window, then rerun this target or" 
-	@echo "try ⌘-click or ^-click on the URL just printed."
-	@uv run python -m webbrowser "http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
+	@echo "run ${HIGHLIGHT}make api-server${_END} in another terminal window, then rerun this target." 
+	@uv run python -m webbrowser "http:${_END}//${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
 
-.PHONY: run-open-webui open-webui help-open-webui remove-open-webui
+.PHONY: run-open-webui open-webui open-webui-preamble open-webui-setup help-open-webui remove-open-webui
 
-run-open-webui open-webui:: 
-	@echo "Running Open WebUI (https://docs.openwebui.com/getting-started/)."
-	@echo "Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!"
-	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve
+run-open-webui open-webui:: open-webui-preamble open-webui-setup
+	cd ${OPEN_WEBUI_DIR} && DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve
+
+open-webui-preamble::
+	@echo "${INFO}Running Open WebUI (https://docs.openwebui.com/getting-started/) out of directory ${OPEN_WEBUI_DIR}.${_END}"
+	@echo "${INFO}Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!${_END}"
+	@echo "\nOpen ${RED}http://localhost:8080${_END} when it is up (it takes a few minutes)."
+	@echo "${open-url-message}"
+
+open-webui-setup::
+	@test -d ${OPEN_WEBUI_DIR}/.venv || (\
+		echo "Setting up Open WebUI in the ${HIGHLIGHT}${OPEN_WEBUI_DIR}${_END} directory." && \
+		cd ${OPEN_WEBUI_DIR} && uv venv && uv sync && uv tool install open-webui)
+	cd ${OPEN_WEBUI_DIR} && . .venv/bin/activate
 
 help-open-webui:: 
-	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 open-webui@latest serve --help
+	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 --with greenlet open-webui@latest serve --help
 
 remove-open-webui::
 	uv tool uninstall open-webui
@@ -697,15 +728,17 @@ remove-open-webui::
 ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
-.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
+.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai 
+.PHONY: unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
-all-tests:: note-all-tests integration-tests
+all-tests:: note-all-tests unit-tests-non-ai integration-tests
 note-all-tests::
-	@echo "NOTE:"
-	@echo "The 'all-tests' target does NOT run the unit tests, because the integration tests"
-	@echo "are a strict superset of the unit tests. They run the same suite, but with all Q&A"
-	@echo "examples sampled, etc., plus some other integration tests."
+	@echo "${NOTE} The 'all-tests' target does NOT run the AI-related unit tests!${_END}"
+	@echo 
+	@echo "The integration tests are a strict superset of the unit tests, they run"
+	@echo "the same suite, but with all Q&A examples sampled, etc., plus some other"
+	@echo "integration tests. Hence, we don't run those tests 'twice'."
 	@echo
 
 test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-tests-appointments
@@ -713,32 +746,32 @@ test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
 unit-tests-non-ai::
-	@echo "Running the non-AI unit tests..."
+	@echo "${INFO}Running the non-AI unit tests...${_END}"
 	cd ${SRC_DIR} && \
 	  uv run python -m unittest discover \
 	    --pattern 'test*.py' \
 	    --start-directory tests/unit \
 	    --top-level-directory .
 
-.PHONY: unit-tests-appointments
+.PHONY:${_END} unit-tests-appointments
 
 unit-tests-appointments::
-	@echo "Running the appointment tool unit tests..."
+	@echo "${INFO}Running the appointment tool unit tests...${_END}"
 	cd ${SRC_DIR} && \
 	  uv run python -m unittest discover \
 	    --pattern 'test_appointment*.py' \
 	    --start-directory tests/unit/apps/chatbot \
 	    --top-level-directory .
 
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple unit-tests-ai-preamble
 
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
-	@echo "Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot..."
-	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
+unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR} 
+	@echo "${INFO}Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${_END}"
+	@echo "${INFO}AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -759,14 +792,15 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	      ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs || \
 	    ! ${MAKE} TESTS_LOGS_FILE_GLOB=${TESTS_LOGS_FILE_GLOB} --directory .. post-proc-test-logs
 
+
 # A special target for running one of the AI tests. Invoke as follows:
 # make TEST=path/to/test.py one-test-ai
 
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
-	@echo "Running one AI unit test: TEST = ${TEST} ..."
-	@echo "TIP: use make list-unit-tests-ai to see the list of tests."
+	@echo "${INFO}Running one AI unit test: TEST = ${TEST} ...${_END}"
+	@echo "${TIP}${_END} Use ${BOLD_PURPLE}make list-unit-tests-ai${_END} to see the list of tests."
 	@echo
-	@echo "AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}"
+	@echo "${INFO}AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -792,15 +826,15 @@ list-unit-tests-ai::
 
 post-proc-test-logs:: 
 	@echo
-	@echo "Time-stamped JSONL log files were written to ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}. They may be empty!"
-	@echo "The corresponding '*.json' files (if any) were generated using 'jq' and target 'nice-ai-test-logs'. They are easier to read."
+	@echo "${INFO}Time-stamped JSONL log files were written to:\n  ${BOLD_PURPLE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${INFO}.\nThey may be empty!${_END}"
+	@echo "${INFO}The corresponding '*.json' files (if any) were generated using 'jq' and target 'nice-ai-test-logs'. They are easier to read.${_END}"
 	@echo
-	@${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs
+	@echo ${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs
 
 show-test-logs::
 	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 	@echo
-	@echo "TIP: Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
+	@echo "${TIP}${_END} Run ${HIGHLIGHT}make nice-ai-test-logs${_END} to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
 	@echo 
 
 .PHONY: nice-ai-test-logs
@@ -817,11 +851,11 @@ integ-tests integration-tests:: integration-tests-dedicated integration-tests-fr
 
 # This target runs all the unit-tests, the AI-related, but more exhaustively, as well as the non-AI unit tests.
 integration-tests-from-unit-tests:: run-command-checks
-	@echo "Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
+	@echo "${INFO}Running the unit tests as integration tests with 100% sampling and trying all test query examples...${_END}"
 	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} tests
 
 integration-tests-dedicated:: run-command-checks
-	@echo "Running the 'dedicated' integration tests..."
+	@echo "${INFO}Running the 'dedicated' integration tests...${_END}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -837,16 +871,16 @@ integration-tests-dedicated:: run-command-checks
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
-.PHONY: type-check type-check-watch
+.PHONY:${_END} type-check type-check-watch
 
 type-check::
-	@echo "Running 'ty' on the code."
+	@echo "${INFO}Running 'ty' on the code.${_END}"
 	uvx ty check ${SRC_DIR} 
 type-check-watch::
-	@echo "Running 'ty' on the code in 'watch' mode."
+	@echo "${INFO}Running 'ty' on the code in 'watch' mode.${_END}"
 	uvx ty check --watch ${SRC_DIR} 
 
-.PHONY: one-time-setup setup clean-setup 
+.PHONY:${_END} one-time-setup setup clean-setup 
 .PHONY: uninstall-uv 
 .PHONY: install-uv uv-venv install-jq
 
@@ -855,13 +889,13 @@ setup one-time-setup:: install-uv uv-venv install-jq
 clean-setup:: uninstall-uv
 
 uninstall-uv:: 
-	@echo "You have to uninstall ${@:clean-%=%} manually:"
+	@echo "${INFO}You have to uninstall ${@:uninstall-%=%} manually:${_END}"
 	@echo
-	$(info ${help_message_${@:clean-%=%}})
+	$(info ${help_message_${@:uninstall-%=%}})
 
 install-uv:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "$$cmd is already installed" || ${MAKE} help-$$cmd
+		echo "${INFO}$$cmd is already installed${_END}" || ${MAKE} help-$$cmd
 
 uv-venv:: command-check-uv 
 	uv venv
@@ -873,7 +907,8 @@ install-jq:: help-command-jq
 
 # Check if a command is on the path.
 command-check-%:
-	@cmd=${@:command-check-%=%} && ${MAKE} silent-$@ || ! echo "ERROR: ${command_check_message}" || exit 1
+	@cmd=${@:command-check-%=%} && ${MAKE} silent-$@ || \
+		! echo "${ERROR} ${command_check_message}${_END}" || exit 1
 
 silent-command-check-%:
 	@cmd=${@:silent-command-check-%=%} && command -v $$cmd > /dev/null
@@ -934,7 +969,7 @@ help-llm::
 
 clean-llm:: help-llm clean-llm-templates
 	@echo
-	@echo "** NOTE: ** clean-llm-templates was already executed to uninstall our templates."
+	@echo "${NOTE}${_END} ${HIGHLIGHT}make clean-llm-templates${_END} was already executed to uninstall our templates."
 	@echo
 
 clean-llm-templates::
@@ -945,12 +980,12 @@ clean-llm-templates::
 
 install-llm:: help-llm install-llm-templates
 	@echo
-	@echo "** NOTE: ** install-llm-templates was already executed to install our templates."
+	@echo "${NOTE}${_END} ${HIGHLIGHT}make install-llm-templates${_END} was already executed to install our templates."
 	@echo
 
 install-llm-templates:: command-check-llm
 	@llmdir="$$(llm templates path)" && \
-	echo "Installing the llm templates from ${PROMPTS_TEMPLATES_DIR} into $$llmdir" && \
+	echo "${INFO}${_END}Installing the llm templates from ${HIGHLIGHT}${PROMPTS_TEMPLATES_DIR}${_END} into ${HIGHLIGHT}$$llmdir${_END} ..." && \
 	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
@@ -958,14 +993,14 @@ install-llm-templates:: command-check-llm
 .PHONY: build install
 
 build::
-	@echo "Building a distribution..."
+	@echo "${INFO}Building a distribution...${_END}"
 	rm -rf dist
 	uv build
-	@echo "Contents of 'dist':"
+	@echo "${INFO}Contents of 'dist':${_END}${_END}"
 	@ls -l dist
 
 install::
-	@echo "Installing the code locally in development mode..."
+	@echo "${INFO}Installing the code locally in development mode...${_END}"
 	uv sync
 
 # Docs Targets - for the website.
@@ -973,7 +1008,7 @@ install::
 # Jekyll. The exception is "view-pages", which opens the published site in a browser.
 
 .PHONY: all-docs clean-docs
-.PHONY: view-pages view-local setup-jekyll run-jekyll
+.PHONY: view-pages view-local setup-jekyll run-jekyll run-jekyll-message
 
 all-docs:: clean-docs view-local
 
@@ -981,23 +1016,26 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@echo "Opening ${GITHUB_PAGES_URL} ..."
+	@echo "${GREEN}Opening ${GITHUB_PAGES_URL} ..."
 	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "ERROR: I could not open the GitHub Pages URL, ${GITHUB_PAGES_URL}. Try ⌘-click or ^-click on the URL." && \
+		(echo "${ERROR}${_END} I could not open the GitHub Pages URL:\n  ${HIGHLIGHT}${GITHUB_PAGES_URL}${_END}\n${_END}" && \
+		 echo "${open-url-message}" && \
 		 exit 1 )
 
 view-local:: setup-jekyll run-jekyll
 
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
 # `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
-run-jekyll: clean-docs
-	@echo
-	@echo "Once you see the http://127.0.0.1:${JEKYLL_PORT}/ URL printed, open it with command+click..."
-	@echo
+run-jekyll: clean-docs run-jekyll-message
 	cd ${DOCS_DIR} && bundle exec jekyll serve --port ${JEKYLL_PORT} --baseurl '' --incremental || ( echo "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'." && exit 1 )
 
+run-jekyll-message::
+	@echo
+	@echo "${NOTE}${_END}You will see the ${HIGHLIGHT}http://127.0.0.1:${JEKYLL_PORT}/${_END} URL printed when ready."
+	@echo "${open-url-message}"
+
 setup-jekyll:: ruby-installed-check command-check-ruby-bundle
-	@echo "Updating Ruby gems required for local viewing of the docs, including jekyll."
+	@echo "${INFO}Updating Ruby gems required for local viewing of the docs, including jekyll.${_END}"
 	gem install jekyll bundler jemoji || ${MAKE} gem-error
 	bundle install || ${MAKE} bundle-error
 	bundle update html-pipeline || ${MAKE} bundle-error
@@ -1005,11 +1043,29 @@ setup-jekyll:: ruby-installed-check command-check-ruby-bundle
 
 ruby-installed-check:
 	@command -v ruby > /dev/null || \
-		( echo "ERROR: ${ruby_and_gem_required_message}" && exit 1 )
+		( echo "${ERROR}${_END} ${ruby_and_gem_required_message}" && exit 1 )
 	@command -v gem  > /dev/null || \
-		( echo "ERROR: ${gem_required_message}" && exit 1 )
+		( echo "${ERROR}${_END} ${gem_required_message}" && exit 1 )
 
 command-check-ruby-%:
 	@command -v ${@:command-check-ruby-%=%} > /dev/null || \
-		( echo "ERROR: Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}" && \
+		( echo "${ERROR}${_END} Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}" && \
 			exit 1 )
+
+
+# NOTE: We call make to run these %-error targets, because if you try
+# some_command || $(error "didn't work"), the $(error ...) function is always
+# invoked, independent of the shell script logic. Hence, the only way to make
+# this invocation conditional is to use a make target invocation, as shown above.
+jekyll-error:
+	$(error "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'.")
+ruby-missing-error:
+	$(error "ERROR: 'ruby' is required. ${ruby_installation_message}")
+gem-missing-error:
+	$(error "ERROR: Ruby's 'gem' is required. ${ruby_installation_message}")
+gem-error:
+	$(error ${gem-error-message})
+bundle-error:
+	$(error ${bundle-error-message})
+bundle-missing-error:
+	$(error "ERROR: Ruby gem command 'bundle' is required. I tried 'gem install bundle', but it apparently didn't work!")

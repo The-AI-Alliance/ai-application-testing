@@ -103,9 +103,9 @@ Tools that perform a conventional web search about a topic provide the same util
 {: .todo}
 > **TODO:** 
 > 
-> We intend to provide a complete example of external tool use for creating and validating data sets for the ChatBot application. See issues [#30](https://github.com/The-AI-Alliance/ai-application-testing/issues/30){:target="_blank"} and [#24](https://github.com/The-AI-Alliance/ai-application-testing/issues/24){:target="_blank"}. Here we sketch a possible approach.
+> We intend to provide a complete example of external tool use for creating and validating data sets for the ChatBot application. See issues [#30]({{site.gh_edit_repository}}/issues/30){:target="_blank"} and [#24]({{site.gh_edit_repository}}/issues/24){:target="_blank"}. Here we sketch a possible approach.
 
-If you try some of the [generated example queries](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/){:target="examples"}, you will see that often the replies generated are quite good, suitable for sharing with a patient. Unfortunately, not all of them are satisfactory and there is potentially-high risk if a poor response is given to a patient. 
+If you try some of the [generated example queries]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="examples"}, you will see that often the replies generated are quite good, suitable for sharing with a patient. Unfortunately, not all of them are satisfactory and there is potentially-high risk if a poor response is given to a patient. 
 
 The AI Alliance project [Deep Research Agent for Applications](https://the-ai-alliance.github.io/deep-research-agent-for-applications/){:target="draa"} (DRAA) provides three example applications, one of which is a medical tool that accepts a user query about a medical condition or pharmaceutical, then queries reputable sources for up-to-date information. 
 

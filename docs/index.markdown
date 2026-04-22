@@ -44,7 +44,7 @@ The goals of this project are two fold:
 {: .attention}
 > **TODO:** 
 > 
-> This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
+> This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues]({{site.gh_edit_repository}}/issues){:target="issues"} and [discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
 
 ## Overview of This Site
 
@@ -96,7 +96,7 @@ See also [About Us]({{site.baseurl}}/about) for more details about this project 
 
 ## Additional Links
 
-* This project's [GitHub Repo](https://github.com/The-AI-Alliance/ai-application-testing){:target="repo"} (see also [issues](https://github.com/The-AI-Alliance/ai-application-testing/issues){:target="issues"} and the [discussion forum](https://github.com/The-AI-Alliance/ai-application-testing/discussions){:target="discussions"})
+* This project's [GitHub Repo]({{site.gh_edit_repository}}){:target="repo"} (see also [issues]({{site.gh_edit_repository}}/issues){:target="issues"} and the [discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"})
 * Related projects: 
 	* <a href="https://the-ai-alliance.github.io/trust-safety-user-guide/" target="ers">The AI Trust and Safety User Guide</a>: General guidance for evaluating AI applications for safety and trustworthiness. 
 	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>: Understanding _evaluation_ tools for benchmarks, such as how they work and how to use them, etc. 
