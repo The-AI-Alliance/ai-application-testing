@@ -76,9 +76,9 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
     Example:
         create_appointment("John Doe", "2026-04-15T10:00:00", "Annual checkup")
     """
-    appt_time = datetime.fromisoformat(appointment_date_time)
+    appt_dt = datetime.fromisoformat(appointment_date_time)
     tool = get_appointment_manager()
-    return tool.create_appointment(patient_name, appt_time, reason)
+    return tool.create_appointment(patient_name, appt_dt, reason)
 
 @tool
 def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
@@ -97,7 +97,7 @@ def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
         cancel_appointment("abc123-def456")
     """
     tool = get_appointment_manager()
-    return tool.cancel_appointment_by_id(appointment_id)
+    return tool.cancel_appointment(appointment_id)
 
 @tool
 def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, str]:
@@ -108,7 +108,7 @@ def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, s
     
     Args:
         appointment_id: ID of the appointment to change
-        new_time: New ISO format datetime string
+        new_date_time: New ISO format datetime string
         
     Returns:
         True with success message or False with a failure message with reasons for the failure.
@@ -116,39 +116,42 @@ def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, s
     Example:
         change_appointment("abc123-def456", "2026-04-16T14:00:00")
     """
-    new_datetime = datetime.fromisoformat(new_date_time)
+    new_dt = datetime.fromisoformat(new_date_time)
     tool = get_appointment_manager()
-    return tool.change_appointment(appointment_id, new_datetime)
+    return tool.change_appointment(appointment_id, new_dt)
 
 @tool
-def list_appointments(patient_name: str = '', after_datetime: datetime = datetime.min) -> dict[str, Any]:
+def list_appointments(patient_name: str = '', after_date_time: str = '') -> dict[str, Any]:
     """
     List all active appointments, with optional filtering.
     
     Args:
         patient_name: Only return appointments for this patient (default: all patients)
-        after_datetime: Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
+        after_date_time: Don't include appointments before this date time. If empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
         
     Returns:
         Dictionary with list of appointments
         
     Example:
         list_appointments()
-        list_appointments(include_past=True)
-        list_appointments(status_filter="confirmed")
+        list_appointments(after_date_time="2026-04-10 13:00:00")
+        list_appointments(patient_name="John Doe")
     """
     tool = get_appointment_manager()
-    return tool.list_appointments(include_past, status_filter)
+    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
+    return tool.list_appointments(patient_name = patient_name, after_datetime = after_dt)
 
 
 @tool
 def get_appointments_count() -> int:
-    """Return the number of appointments currently scheduled."""
+    """
+    Return the number of appointments currently scheduled for all patients.
+    """
     tool = get_appointment_manager()
-    return len(tool.get_appointments_count())
+    return tool.get_appointments_count()
 
 @tool
-def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
+def get_appointment(self, appointment_id: str) -> dict[str, Any]:
     """
     Return a specific appointment for the specified ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
@@ -161,7 +164,7 @@ def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
         Appointment dictionary or {} if not found
     """
     tool = get_appointment_manager()
-    return tool.get_appointment_by_id(appointment_id)
+    return tool.get_appointment(appointment_id)
 
 
 @tool
@@ -179,7 +182,8 @@ def get_appointment_id_for_name_and_date_time(self,
         ID of the appointment or '' if there is no appointment for that patient at that date time.
     """
     tool = get_appointment_manager()
-    return tool.get_appointment_id_for_name_and_date_time(patient_name, appointment_date_time)
+    appointment_dt = datetime.fromisoformat(appointment_date_time)
+    return tool.get_appointment_id_for_name_and_date_time(patient_name, appointment_dt)
 
 # Export all tools as a list for easy registration
 # Note that create_appointment_manager is not in this list. It is handled
@@ -190,6 +194,6 @@ APPOINTMENT_TOOLS = [
     change_appointment,
     list_appointments,
     get_appointments_count,
-    get_appointment_by_id,
+    get_appointment,
     get_appointment_id_for_name_and_date_time,
 ]

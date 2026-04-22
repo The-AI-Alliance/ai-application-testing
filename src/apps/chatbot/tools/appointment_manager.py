@@ -344,14 +344,14 @@ class AppointmentManager:
     def change_appointment(
         self,
         appointment_id: str,
-        new_time: datetime
+        new_date_time: datetime
     ) -> Tuple[bool, str]:
         """
         Change an appointment to a new time.
         
         Args:
             appointment_id: ID of the appointment to change
-            new_time: New appointment time
+            new_date_time: New appointment time
             
         Returns:
             True with a success message or False a failure message with reasons for the failure.
@@ -362,7 +362,7 @@ class AppointmentManager:
             return False, error_msg
         
         # Validate the new time
-        is_valid, error_msg = self._is_valid_time(new_time)
+        is_valid, error_msg = self._is_valid_time(new_date_time)
         if not is_valid:
             error_msg = f"I could not change the appointment {appointment_id}. {error_msg}"
             self.logger.error(error_msg)
@@ -370,27 +370,27 @@ class AppointmentManager:
         
         appointment = self.appointments[appointment_id]
         old_time = appointment['appointment_date_time']
-        appointment['appointment_date_time'] = new_time
+        appointment['appointment_date_time'] = new_date_time
         appointment['changed_at'] = datetime.now()
         appointment['previous_time'] = old_time
         
         # Save the updated appointment
         self._save_appointments([appointment])
         
-        self.logger.info(f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_time.isoformat()}.")
-        return True, f"I changed appointment {appointment_id} from {old_time} to {new_time}."
+        self.logger.info(f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}.")
+        return True, f"I changed appointment {appointment_id} from {old_time} to {new_date_time}."
     
     def list_appointments(
         self,
         patient_name: str = '',
-        after_datetime: datetime = datetime.min,
+        after_date_time: datetime = datetime.min,
     ) -> list[dict[str, Any]]:
         """
         List all appointments.
         
         Args:
             patient_name: Only return appointments for this patient (default: all patients)
-            after_datetime: Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
+            after_date_time: Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
             
         Returns:
             List of appointment dictionaries
@@ -404,7 +404,7 @@ class AppointmentManager:
                 continue
             
             # Only include appointments before `after_datetime`.
-            if appointment['appointment_date_time'] >= after_datetime:
+            if appointment['appointment_date_time'] >= after_date_time:
                 appointments.append(appointment.copy())
         
         # Sort by appointment time
@@ -416,7 +416,7 @@ class AppointmentManager:
         """Return the number of appointments currently scheduled."""
         return len(self.appointments)
 
-    def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
+    def get_appointment(self, appointment_id: str) -> dict[str, Any]:
         """
         Get a specific appointment by ID.
         

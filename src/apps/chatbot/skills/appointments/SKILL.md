@@ -144,7 +144,7 @@ Where:
 - The `text` value `T` is replaced with either a success message that contains the count, or an error message if a failure occurs.
 - The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
 
-### get_appointment_by_id
+### get_appointment
 Return a specific appointment for the specified ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
 
 **Parameters:**

@@ -145,7 +145,7 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertNotEqual('', msg)
         after_count = self.tool.get_appointments_count()
         self.assertEqual(before_count+1, after_count)
-        appt = self.tool.get_appointment_by_id(id)
+        appt = self.tool.get_appointment(id)
         self._result_expected(appointment_dict, appt)
         return appt
 
@@ -263,7 +263,7 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertTrue(success, msg)
         self.assertNotEqual('', msg)
         self.assertEqual(before_count-1, after_count)
-        appt = self.tool.get_appointment_by_id(id)
+        appt = self.tool.get_appointment(id)
         self.assertEqual({}, appt)
 
     @given(st.uuids())
@@ -279,28 +279,28 @@ class TestAppointmentManager(unittest.TestCase):
 
     @given(appointment_dicts(), appointment_future_work_datetimes())
     def test_change_appointment_successful_if_it_exists(self, 
-        appointment_dict: dict[str,Any], new_datetime: datetime):
+        appointment_dict: dict[str,Any], new_date_time: datetime):
         """
         Test changing an appointment to a new time.
-        There is a slight chance the randomly generated new_datetime
+        There is a slight chance the randomly generated new_date_time
         will equal the existing datetime, but we allow this.
         """
         self.tool.clear()
         appointment = self._check_success(appointment_dict)
-        if appointment['appointment_date_time'] == new_datetime:
-            match new_datetime.hour:
+        if appointment['appointment_date_time'] == new_date_time:
+            match new_date_time.hour:
                 case 16:
-                    new_datetime = new_datetime - timedelta(hours=1)
+                    new_date_time = new_date_time - timedelta(hours=1)
                 case _:
-                    new_datetime = new_datetime + timedelta(hours=1)
+                    new_date_time = new_date_time + timedelta(hours=1)
 
         id = appointment['appointment_id']
-        success, msg = self.tool.change_appointment(id, new_datetime)
+        success, msg = self.tool.change_appointment(id, new_date_time)
         self.assertTrue(success, msg)
-        updated = self.tool.get_appointment_by_id(id)
+        updated = self.tool.get_appointment(id)
         self._result_expected(appointment_dict, updated,
-            appointment_date_time = new_datetime,
-            changed_at = new_datetime)
+            appointment_date_time = new_date_time,
+            changed_at = new_date_time)
 
     @given(list_appointment_dicts())
     def test_list_appointments_with_no_filters_returns_all_appointments(self,
@@ -344,7 +344,7 @@ class TestAppointmentManager(unittest.TestCase):
         i = int(len(list_appointment_dicts)/2)
         date_time = list_appointment_dicts[i]['appointment_date_time']
         expected_list = list(filter(lambda a: a['appointment_date_time'] >= date_time, self.tool.list_appointments()))
-        appointments = self.tool.list_appointments(after_datetime = date_time)
+        appointments = self.tool.list_appointments(after_date_time = date_time)
         self._results_list_expected(expected_list, appointments)
 
     @given(list_appointment_dicts())
@@ -358,19 +358,19 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertEqual(len(list_appointment_dicts), self.tool.get_appointments_count())
 
     @given(appointment_dicts())
-    def test_get_appointment_by_id_returns_nonempty_dict_if_it_exists(self, 
+    def test_get_appointment_returns_nonempty_dict_if_it_exists(self, 
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id'])
+        appointment = self.tool.get_appointment(appointment2['appointment_id'])
         self._result_expected(appointment_dict, appointment)
 
     @given(appointment_dicts())
-    def test_get_appointment_by_id_returns_empty_dict_if_key_does_not_exist(self, 
+    def test_get_appointment_returns_empty_dict_if_key_does_not_exist(self, 
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id']+'bad')
+        appointment = self.tool.get_appointment(appointment2['appointment_id']+'bad')
         self.assertEqual({}, appointment)
 
     @given(appointment_dicts())
@@ -416,7 +416,7 @@ class TestAppointmentManager(unittest.TestCase):
             new_tool.list_appointments)
         self._check_appointments_list(list_appointment_dicts, 
             new_tool.list_appointments,
-            get_appointment = new_tool.get_appointment_by_id)
+            get_appointment = new_tool.get_appointment)
 
     @given(list_appointment_dicts().filter(lambda l: len(l) > 0))
     def test_clear_erases_appointments(self,

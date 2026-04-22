@@ -10,7 +10,7 @@ from .appointment_tools import (
     change_appointment,
     list_appointments,
     get_appointments_count,
-    get_appointment_by_id,
+    get_appointment,
     get_appointment_id_for_name_and_date_time,
     set_appointments_file,
 )
@@ -23,7 +23,7 @@ __all__ = [
     'change_appointment',
     'list_appointments',
     'get_appointments_count',
-    'get_appointment_by_id',
+    'get_appointment',
     'get_appointment_id_for_name_and_date_time',
     'set_appointments_file',
 ]
