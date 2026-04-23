@@ -34,20 +34,21 @@ Create a new appointment for a patient.
 - `reason` (str): Reason for the appointment
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `tuple[str,str]`. If the appointment was successfully created, the first tuple element is the non-empty `appointment_id` for the created appointment and the second tuple element is a success message. If the appointment was not successfully created, the first tuple element is the empty string '' and the second tuple element is an error message. 
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "appointment_id": appointment_id, 
+    "message": message
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message with the appointment_id and details, or an error message if the time slot is unavailable or invalid.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `appointment_id` value is the first tuple element returned.
+- The `message` value is the second tuple element returned.
 
 **Constraints:**
 - Appointments must be on the hour (10:00, 11:00, not 10:30)
@@ -62,20 +63,21 @@ Cancels an existing appointment, specified by the appointment ID. Use "get_appoi
 - `appointment_id` (str): ID of the appointment to cancel
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `tuple[bool,str]`. If the appointment was successfully cancelled, the first tuple element is `True` and the second tuple element is a success message. If the appointment was not successfully cancelled, the first tuple element is `False` and the second tuple element is an error message. 
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "success": True | False, 
+    "message": message
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message with the cancellation confirmation, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `success` value is the first tuple element returned, i.e., `True` or `False`.
+- The `message` value is the second tuple element returned.
 
 ### change_appointment
 Changes an appointment to a new time, specified by the appointment ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
@@ -85,20 +87,21 @@ Changes an appointment to a new time, specified by the appointment ID. Use "get_
 - `new_date_time` (str): New ISO format datetime string
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `tuple[bool,str]`. If the appointment was successfully changed, the first tuple element is `True` and the second tuple element is a success message. If the appointment was not successfully changed, the first tuple element is `False` and the second tuple element is an error message. 
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "success": True | False, 
+    "message": message
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message with the old and new time confirmation, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `success` value is the first tuple element returned, i.e., `True` or `False`.
+- The `message` value is the second tuple element returned.
 
 ### list_appointments
 Lists all active appointments, with optional filtering.
@@ -108,20 +111,19 @@ Lists all active appointments, with optional filtering.
 - `after_datetime` (str for a ISO format datetime string, optional): Only include appointments with date times equal to or after this value
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `list[dict[str,Any]]`, containing a dictionary for each appointment. The list will be empty if there are no appointments that match the filter criteria (if any).
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "appointments": appointment_list
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message that is a JSON array with all the appointments found, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `appointments` value is the list returned, which will be `[]`, if empty.
 
 ### get_appointments_count
 Return the number of appointments currently scheduled.
@@ -129,20 +131,19 @@ Return the number of appointments currently scheduled.
 **Parameters:**
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns an integer count of all the appointments, which may be zero.
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "count": count
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message that contains the count, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `count` is the number of appointments returned.
 
 ### get_appointment
 Return a specific appointment for the specified ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
@@ -151,20 +152,19 @@ Return a specific appointment for the specified ID. Use "get_appointment_id_for_
 - `appointment_id` (str): ID of the appointment to change
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `dict[str, Any]` with the appointment details, or `{}` if no appointment was found for the input `appointment_id`. 
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "appointment" : dictionary_as_json 
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message with the details for the appointment, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `dictionary_as_json` value is the appointment dictionary converted to JSON.
 
 ### get_appointment_id_for_name_and_date_time
 Retrieve the appointment ID for the specified patient name and date time.
@@ -174,20 +174,19 @@ Retrieve the appointment ID for the specified patient name and date time.
 - `appointment_date_time` (str for a ISO format datetime string): the date time for the appointment
 
 **Returns:**
-A JSON string using the format specified in the _system prompt_. It must include the following fields:
+The tool returns a `str` with the appointment ID or '' if no matching appointment was found.
+
+Return this information as JSON:
 
 ```json
 {
-    "label": "appointment", 
-    "text": "T",
-    "confidence": C
+    "appointment_id": appointment_id
 }
 ```
 
 Where:
 
-- The `text` value `T` is replaced with either a success message that is a string with the found appointment, or an error message if a failure occurs.
-- The `confidence` value `C` is replaced with your confidence in the success of the operation, a number between 0.0 and 1.0, inclusive, where 0.0 means no confidence and 1.0 means complete confidence.
+- The `appointment_id` value is the returned appointment ID, which may be ''.
 
 ## Example Interactions
 
