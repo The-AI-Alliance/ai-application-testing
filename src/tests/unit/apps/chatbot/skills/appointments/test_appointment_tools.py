@@ -3,11 +3,12 @@ Unit tests for the appointment skills tool.
 Uses Hypothesis.
 """
 from hypothesis import given, strategies as st
-import json, logging, os, tempfile, unittest
+import contextlib, io, json, logging, os, tempfile, unittest
 from collections.abc import Iterator
 from datetime import datetime, timedelta, date, time
 from pathlib import Path
 from typing import Any, Callable
+from langchain_core.tools.structured import StructuredTool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
 
@@ -50,7 +51,25 @@ from tests.common.hypothesis.appointments import (
 )
 
 class TestAppointmentTools(unittest.TestCase):
-    """Test cases for appointment_tools"""
+    """
+    Test cases for the _skills_ tools in `appointment_tools.py`.
+    A few noets about unit tests for these tools. Although the tool definitions look
+    like normal method definitions, the `@tool` annotation turns them into LangChain's
+    `StructuredTools`. Hence, you don't invoke, e.g., `create_appointment` as follows:
+    ```
+    create_appointment(patient_name, date_time_string)
+    ```
+
+    Instead, you invoke it as follows: 
+    ```
+    create_appointment.run({
+        'patient_name': patient_name, 
+        'appointment_date_time': date_time_string
+    })
+    ```
+
+    Also, it appears the tool writes to `sys.stderr` sometimes, so we capture that output.
+    """
 
     one_second = timedelta(seconds=1)
 
@@ -68,41 +87,36 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertEqual({}, self.tool.appointments)
 
     def setUp(self):
-        """Set up test fixtures"""
         # Create a temporary file for testing
         self.temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.jsonl')
         self.temp_file.close()
         self._make_manager()
 
     def tearDown(self):
-        """Clean up test fixtures"""
         if os.path.exists(self.temp_file.name):
             os.unlink(self.temp_file.name)
 
     def _check_file(self, file: Path | str = None):
         if not file:
             file = Path(self.temp_file.name)
-        # if isinstance(file, str):
-        #     file = Path(file)
         self.assertTrue(os.path.exists(file))
         self.assertEqual(str(file), str(self.tool.storage.storage_path))
 
     def test_get_appointment_manager_instantiates_a_manager(self):
         self._check_file()
 
-    def test_get_appointment_manager_does_instantiate_a_new_manager_when_make_new_is_true(self):
+    def test_get_appointment_manager_instantiates_a_new_manager_when_make_new_is_true(self):
         original_tool = self.tool
         new_tool = get_appointment_manager(self.tool.storage.storage_path, logger=self.tool.logger,
             make_new=True)
         self.assertIsNot(original_tool, new_tool)
 
-    def test_get_appointment_manager_does_not_re_instantiate_a_manager_even_with_diff_arguments(self):
+    def test_get_appointment_manager_does_not_instantiate_a_new_manager_even_with_diff_arguments(self):
         original_tool = self.tool
         same_tool = get_appointment_manager('toss.jsonl', logger=None)
         self.assertIs(original_tool, same_tool)
 
-    def test_get_appointment_manager_does_not_re_instantiate_a_manager_with_no_arguments(self):
-        """Test that initialization creates the appointments file if it doesn't exist"""
+    def test_get_appointment_manager_does_not_instantiate_a_new_manager_with_no_arguments(self):
         original_tool = self.tool
         same_tool = get_appointment_manager()
         self.assertIs(original_tool, same_tool)
@@ -145,6 +159,18 @@ class TestAppointmentTools(unittest.TestCase):
             a = actual2[i]
             self._result_expected(e, a)
 
+    def _capture_output(self, tool: StructuredTool, params: dict[str,Any]) -> Any:
+        with contextlib.redirect_stdout(io.StringIO()) as fout:
+            with contextlib.redirect_stderr(io.StringIO()) as ferr:
+                success, message = tool.run(params)
+                if success:
+                    self.assertEqual('', fout.getvalue())
+                    self.assertEqual('', ferr.getvalue())
+                else:
+                    self.assertEqual('', fout.getvalue())
+                    self.assertNotEqual('', ferr.getvalue())
+                return success, message
+
     def _check_success(self, 
         appointment_dict: dict[str,Any],
         all: list[dict[str,Any]] = []) -> dict[str,Any]:
@@ -152,7 +178,7 @@ class TestAppointmentTools(unittest.TestCase):
         patient_name = appointment_dict['patient_name']
         appointment_date_time = appointment_dict['appointment_date_time'].isoformat()
         reason = appointment_dict['reason']
-        id, msg = create_appointment.run({
+        id, msg = self._capture_output(create_appointment, {
             'patient_name': patient_name,
             'appointment_date_time': appointment_date_time,
             'reason': reason
@@ -175,7 +201,7 @@ class TestAppointmentTools(unittest.TestCase):
         patient_name = appointment_dict['patient_name']
         appointment_date_time = appointment_dict['appointment_date_time'].isoformat()
         reason = appointment_dict['reason']
-        id, msg = create_appointment.run({
+        id, msg = self._capture_output(create_appointment, {
             'patient_name': patient_name,
             'appointment_date_time': appointment_date_time,
             'reason': reason,
@@ -286,7 +312,7 @@ class TestAppointmentTools(unittest.TestCase):
         id = appointment['appointment_id']
         
         before_count  = get_appointments_count.run({})
-        success, msg  = cancel_appointment.run({'appointment_id':id})
+        success, msg = self._capture_output(cancel_appointment, {'appointment_id': id})
         after_count   = get_appointments_count.run({})
         self.assertTrue(success, msg)
         self.assertNotEqual('', msg)
@@ -299,7 +325,7 @@ class TestAppointmentTools(unittest.TestCase):
         """Test that canceling a non-existent appointment fails"""
         self._clear()
         before_count = get_appointments_count.run({})
-        success, msg = cancel_appointment.run({'appointment_id':str(uuid)})
+        success, msg = self._capture_output(cancel_appointment, {'appointment_id': str(uuid)})
         self.assertFalse(success, msg)
         self.assertNotEqual('', msg)
         after_count  = get_appointments_count.run({})
@@ -323,7 +349,7 @@ class TestAppointmentTools(unittest.TestCase):
                     new_date_time = new_date_time + timedelta(hours=1)
 
         id = appointment['appointment_id']
-        success, msg = change_appointment.run({
+        success, msg = self._capture_output(change_appointment, {
             'appointment_id': id,
             'new_date_time': new_date_time.isoformat()
         })
@@ -448,7 +474,9 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertEqual(len(list_appointment_dicts), len(self.tool.appointments))
         
         # Create new instance and verify appointments exist.
+        old_tool = self.tool
         new_tool = self._make_manager()
+        self.assertIsNot(old_tool, new_tool)
         appointments = new_tool.list_appointments()
         # check with both the default way of getting an appointment and
         # passing new_tool.get_appointment

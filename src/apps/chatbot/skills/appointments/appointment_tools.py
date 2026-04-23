@@ -36,7 +36,7 @@ def get_appointment_manager(
           The logger. If `None`, then `_def_appointment_manager_logger` is used.
     """
     global _appointment_manager
-    
+
     if _appointment_manager and not make_new:
         return _appointment_manager
 
