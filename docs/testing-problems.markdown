@@ -86,7 +86,7 @@ The standard deviation of model scores tells you how much variability there is a
 
 Recently, [one of us]({{site.referencesurl}}/#dean-wampler) posted a link on [Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} to the slides for a talk, [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"}. In a private conversation afterwards, [Adrian Cockcroft]({{site.referencesurl}}/#adrian-cockcroft) said that Netflix encountered similar problems around 2008 with their content recommendation systems: &ldquo;The content inventory (movies or products) changes constantly, and the recommendations are personalized so that everyone sees a different result. We had to build some novel practices and tools for our QA engineers.&rdquo; 
 
-The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/arch-design/component-design/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-tests/#the-use-of-statistics-at-netflix).
+The specific tools and practices he mentioned are discussed in [Test Doubles at Netflix]({{site.baseurl}}/arch-design/component-design/#test-doubles-at-netflix) and [The Use of Statistics at Netflix]({{site.baseurl}}/testing-strategies/statistical-evaluation/#the-use-of-statistics-at-netflix).
 
 --- 
 

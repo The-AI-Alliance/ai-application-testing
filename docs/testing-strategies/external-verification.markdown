@@ -124,6 +124,6 @@ Also, this approach isn't useful for all possible Q&A pairs. The companion ChatB
 
 ## What's Next?
 
-Review the [highlights](#highlights) summarized above, then proceed to [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/).
+Review the [highlights](#highlights) summarized above, then proceed to [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/).
 
 ---

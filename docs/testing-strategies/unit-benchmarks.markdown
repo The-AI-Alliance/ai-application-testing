@@ -245,7 +245,7 @@ One of the best techniques is to rely on a [Teacher Model]({{site.glossaryurl}}/
 * Is the question relevant to the purpose of this test?
 * If the question is relevant, is the supplied answer correct?
 
-We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). Other techniques we will explore include [External Tool Verification]({{site.baseurl}}/external-verification/), and [Statistical Evaluation]({{site.baseurl}}/statistical-tests/).
+We examine this process in [LLM as a Judge]({{site.baseurl}}/testing-strategies/LLM-as-a-Judge). Other techniques we will explore include [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/), and [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/).
 
 ## Adapting Third-Party, Public, Domain-Specific Benchmarks
 

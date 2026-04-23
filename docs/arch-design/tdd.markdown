@@ -257,7 +257,7 @@ In [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks), we wi
 
 To automatically check the quality of synthetic Q&A test pairs, including how well each answer aligns with its question, we will explore techniques like [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification/).
 
-Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-tests/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other insignificant differences. This convenient certainty won't happen very often, especially when we explore edge cases.
+Finally, [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/) will help us decide what &ldquo;pass/fail&rdquo; means. We got _lucky_ in our example above; for our hand-written Q&A pairs, we were able to achieve a 100% pass rate, at least _most of the time_, as long as it was okay to ignore capitalization of some words and some other insignificant differences. This convenient certainty won't happen very often, especially when we explore edge cases.
 
 ## Try This Yourself!
 
