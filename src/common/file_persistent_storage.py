@@ -15,7 +15,7 @@ from common.utils import decode_json, encode_json
 class FilePersistentStorageEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, FilePersistentStorage):
-            return {"__class__": "FilePersistentStorage", "path": str(obj.storage_file)}
+            return {"__class__": "FilePersistentStorage", "path": str(obj.storage_path)}
         return super().default(obj)
 
 class FilePersistentStorageDecoder(json.JSONDecoder):
@@ -49,16 +49,16 @@ class FilePersistentStorage:
         return FilePersistentStorage.def_json_decoder.decode(text)
 
     def __init__(self,
-        storage_file: Path | str,
+        storage_path: Path | str,
         logger: Optional[logging.Logger] = None):
         """
         Initialize the appointment tool.
         
         Args:
-        - storage_file: Path to the JSONL file for storing data
+        - storage_path: Path to the JSONL file for storing data
         - logger: Optional logger instance
         """
-        self.storage_file = Path(storage_file)
+        self.storage_path = Path(storage_path)
         if logger:
             self.logger: logging.Logger = logger
         else:
@@ -74,10 +74,10 @@ class FilePersistentStorage:
         then nothing is done.
         """
         if remove_old:
-            self.storage_file.unlink(missing_ok=True)
-        if not self.storage_file.exists():
-            self.storage_file.parent.mkdir(parents=True, exist_ok=True)
-            self.storage_file.touch()
+            self.storage_path.unlink(missing_ok=True)
+        if not self.storage_path.exists():
+            self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+            self.storage_path.touch()
 
     def clear(self):
         """Clear the storage file of all records."""
@@ -98,8 +98,8 @@ class FilePersistentStorage:
         """
         dicts = []
         errors = []
-        if self.storage_file.exists():
-            with open(self.storage_file, 'r') as f:
+        if self.storage_path.exists():
+            with open(self.storage_path, 'r') as f:
                 for line in f:
                     line = line.strip()
                     if line:
@@ -123,7 +123,7 @@ class FilePersistentStorage:
         The count of the number of records written, which should be equal to len(records).
         """
         count = 0
-        with open(self.storage_file, 'a') as f:
+        with open(self.storage_path, 'a') as f:
             for record in records:
                 f.write(encode_json(record) + '\n')
                 count += 1

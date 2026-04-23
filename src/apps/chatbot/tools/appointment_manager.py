@@ -62,7 +62,7 @@ class AppointmentManagerDecoder(DatetimeDecoder):
                         dt = datetime.fromisoformat(v.get("iso_str"))
                         value[k] = dt
             start_empty = True if appointments else False
-            am = AppointmentManager(appointments_file = storage.storage_file, start_empty = start_empty)
+            am = AppointmentManager(appointments_file = storage.storage_path, start_empty = start_empty)
             if appointments:
                 am.set_appointments(appointments.values())
             return am
@@ -181,7 +181,7 @@ class AppointmentManager:
         lena = len(appointments)
         if count != lena:
             diff = lena - count
-            self.logger.error(f"Failed to save {diff} out of {lena} appointments to the storage file {self.storage.storage_file}. appointments = {appointments}")
+            self.logger.error(f"Failed to save {diff} out of {lena} appointments to the storage file {self.storage.storage_path}. appointments = {appointments}")
         return count
 
     def _is_valid_time(self, appointment_date_time: datetime, in_the_past_allowed: bool = False) -> tuple[bool, str]:

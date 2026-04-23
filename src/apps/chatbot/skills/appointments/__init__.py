@@ -12,7 +12,6 @@ from .appointment_tools import (
     get_appointments_count,
     get_appointment,
     get_appointment_id_for_name_and_date_time,
-    set_appointments_file,
 )
 
 __all__ = [
@@ -25,5 +24,4 @@ __all__ = [
     'get_appointments_count',
     'get_appointment',
     'get_appointment_id_for_name_and_date_time',
-    'set_appointments_file',
 ]

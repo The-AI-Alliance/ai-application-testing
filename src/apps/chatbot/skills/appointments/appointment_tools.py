@@ -14,54 +14,49 @@ from apps.chatbot.tools.appointment_manager import AppointmentManager
 
 # Initialize the appointment tool with a default file location
 # This will be overridden when integrated with the ChatBot
-_appointments_file = Path("../output/appointments.jsonl")
-_appointment_manager_logger = logging.getLogger('AppointmentManager')
-_appointment_manager_logger.setLevel(logging.INFO)
+_def_appointments_file = Path("../output/appointments.jsonl")
+_def_appointment_manager_logger = logging.getLogger('AppointmentManager')
+_def_appointment_manager_logger.setLevel(logging.INFO)
 _appointment_manager: Optional[AppointmentManager] = None
 
 def get_appointment_manager(
-    file_path: Path | str = _appointments_file, 
-    logger: logging.Logger = _appointment_manager_logger) -> AppointmentManager:
+    file_path: Path | str = None, 
+    logger: logging.Logger = None,
+    make_new: bool = False) -> AppointmentManager:
     """
-    Idempotent: Creates and returns a tool if:
+    Idempotent: Creates and an instance only if one of the following is true:
     1. It doesn't already exist.
-    2. It exists but the input `file_path` is different than the value in the current instance.
-    3. It exists but the input `logger` is not `None` and it is different than the value in the current instance.
-    Otherwise, the existing tool is returned.
+    2. `make_new` is True.
+    Otherwise, the existing instance is returned. 
+
+    Args:
+        - file_path (Path): Ignored unless a new manager is to be created.
+          The storage location. If `None`, then `_def_appointments_file` is used.
+        - logger (logging.Logger): Ignored unless a new manager is to be created.
+          The logger. If `None`, then `_def_appointment_manager_logger` is used.
     """
-    global _appointments_file
     global _appointment_manager
-    global _appointment_manager_logger
     
-    create = False
-    if not logger and not _appointment_manager_logger == logger:
-        _appointment_manager_logger = logger
-        create = True
+    if _appointment_manager and not make_new:
+        return _appointment_manager
 
-    fp = Path(file_path)
-    if _appointments_file != fp:
-        _appointments_file = fp
-        create = True
+    # Determine the correct file path value:
+    fp: Path | None = None
+    if file_path:
+        fp = Path(file_path)
+    else:
+        fp = _def_appointments_file
 
-    if create or not _appointment_manager:
-        _appointment_manager = AppointmentManager(_appointments_file, _appointment_manager_logger)
-
+    # Determine the logger value
+    if not logger:
+        logger = _def_appointment_manager_logger  # assign the default logger
+    
+    _appointment_manager = AppointmentManager(fp, logger)
+    logger.info(f"Created a new AppointmentManager({fp}, logger).")
     return _appointment_manager
 
-def set_appointments_file(file_path: Path | str) -> None:
-    """
-    Set the appointments file path and reinitialize the tool, unless
-    the tool already exists and already has the same file!.
-    If the tool already exists, but the file path is new, we reuse the logger.
-    
-    Args:
-        file_path: Path to the appointments JSONL file
-    """
-    logger = _appointment_manager.logger if _appointment_manager else _appointment_manager_logger
-    get_appointment_manager(file_path = file_path, logger = logger)
-
 @tool
-def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[bool, str]:
+def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[str, str]:
     """
     Create a new appointment for a patient.
     
@@ -71,14 +66,14 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
         reason: Reason for the appointment
         
     Returns:
-        True with success message or False with a failure message with reasons for the failure.
+        A tuple with the ID for the newly-created appointment and a success message, or a tuple with '' and a failure message with reasons for the failure.
         
     Example:
         create_appointment("John Doe", "2026-04-15T10:00:00", "Annual checkup")
     """
     appt_dt = datetime.fromisoformat(appointment_date_time)
-    tool = get_appointment_manager()
-    return tool.create_appointment(patient_name, appt_dt, reason)
+    am = get_appointment_manager()
+    return am.create_appointment(patient_name, appt_dt, reason)
 
 @tool
 def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
@@ -96,8 +91,8 @@ def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
     Example:
         cancel_appointment("abc123-def456")
     """
-    tool = get_appointment_manager()
-    return tool.cancel_appointment(appointment_id)
+    am = get_appointment_manager()
+    return am.cancel_appointment(appointment_id)
 
 @tool
 def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, str]:
@@ -117,11 +112,11 @@ def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, s
         change_appointment("abc123-def456", "2026-04-16T14:00:00")
     """
     new_dt = datetime.fromisoformat(new_date_time)
-    tool = get_appointment_manager()
-    return tool.change_appointment(appointment_id, new_dt)
+    am = get_appointment_manager()
+    return am.change_appointment(appointment_id, new_dt)
 
 @tool
-def list_appointments(patient_name: str = '', after_date_time: str = '') -> dict[str, Any]:
+def list_appointments(patient_name: str = '', after_date_time: str = '') -> list[dict[str, Any]]:
     """
     List all active appointments, with optional filtering.
     
@@ -130,16 +125,16 @@ def list_appointments(patient_name: str = '', after_date_time: str = '') -> dict
         after_date_time: Don't include appointments before this date time. If empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
         
     Returns:
-        Dictionary with list of appointments
+        List of dictionaries for the located appointments
         
     Example:
         list_appointments()
         list_appointments(after_date_time="2026-04-10 13:00:00")
         list_appointments(patient_name="John Doe")
     """
-    tool = get_appointment_manager()
+    am = get_appointment_manager()
     after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
-    return tool.list_appointments(patient_name = patient_name, after_datetime = after_dt)
+    return am.list_appointments(patient_name = patient_name, after_date_time = after_dt)
 
 
 @tool
@@ -147,11 +142,11 @@ def get_appointments_count() -> int:
     """
     Return the number of appointments currently scheduled for all patients.
     """
-    tool = get_appointment_manager()
-    return tool.get_appointments_count()
+    am = get_appointment_manager()
+    return am.get_appointments_count()
 
 @tool
-def get_appointment(self, appointment_id: str) -> dict[str, Any]:
+def get_appointment(appointment_id: str) -> dict[str, Any]:
     """
     Return a specific appointment for the specified ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
@@ -161,33 +156,33 @@ def get_appointment(self, appointment_id: str) -> dict[str, Any]:
         appointment_id: ID of the appointment
         
     Returns:
-        Appointment dictionary or {} if not found
+        Appointment dictionary for the input ID or {} if a matching appointment was not found
     """
-    tool = get_appointment_manager()
-    return tool.get_appointment(appointment_id)
-
+    am = get_appointment_manager()
+    return am.get_appointment(appointment_id)
 
 @tool
-def get_appointment_id_for_name_and_date_time(self, 
+def get_appointment_id_for_name_and_date_time( 
     patient_name: str,
-    appointment_date_time: datetime) -> str:
+    appointment_date_time: str) -> str:
     """
     Retrieve the appointment ID for the specified patient and date time.
     
     Args:
         patient_name: Name of the patient
         appointment_date_time: Date time of the appointment
+        appointment_date_time: ISO format datetime string (e.g., "2026-04-15T10:00:00")
         
     Returns:
         ID of the appointment or '' if there is no appointment for that patient at that date time.
     """
-    tool = get_appointment_manager()
+    am = get_appointment_manager()
     appointment_dt = datetime.fromisoformat(appointment_date_time)
-    return tool.get_appointment_id_for_name_and_date_time(patient_name, appointment_dt)
+    return am.get_appointment_id_for_name_and_date_time(patient_name, appointment_dt)
 
 # Export all tools as a list for easy registration
-# Note that create_appointment_manager is not in this list. It is handled
-# internally and not exposed as a tool.
+# Note that get_appointment_manager is not a tool and so it is not in this list. 
+# It is used internally.
 APPOINTMENT_TOOLS = [
     create_appointment,
     cancel_appointment,
