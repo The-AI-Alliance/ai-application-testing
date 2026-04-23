@@ -31,7 +31,7 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
-    "ty>=0.0.31",
+    "ty>=0.0.32",
 ]
 
 [tool.ty.src]
