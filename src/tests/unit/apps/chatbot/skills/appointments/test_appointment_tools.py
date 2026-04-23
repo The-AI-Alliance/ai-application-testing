@@ -53,7 +53,7 @@ from tests.common.hypothesis.appointments import (
 class TestAppointmentTools(unittest.TestCase):
     """
     Test cases for the _skills_ tools in `appointment_tools.py`.
-    A few noets about unit tests for these tools. Although the tool definitions look
+    A few notes about unit tests for these tools. Although the tool definitions look
     like normal method definitions, the `@tool` annotation turns them into LangChain's
     `StructuredTools`. Hence, you don't invoke, e.g., `create_appointment` as follows:
     ```
@@ -70,8 +70,6 @@ class TestAppointmentTools(unittest.TestCase):
 
     Also, it appears the tool writes to `sys.stderr` sometimes, so we capture that output.
     """
-
-    one_second = timedelta(seconds=1)
 
     def _make_manager(self) -> AppointmentManager:
         file_path = Path(self.temp_file.name)
