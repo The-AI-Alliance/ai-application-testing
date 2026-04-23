@@ -28,45 +28,45 @@ A Python `datetime.datetime` object with the current date and time.
 Does the input `datetime.datetime` object correspond to a week day (Monday through Friday) or not?
 
 **Parameters:**
-- `a_datetime`: A Python `datetime.datetime` object.
+- `a_date_time`: A Python `datetime.datetime` object.
 
 **Returns:**
-`True` if the input `a_datetime` corresponds to a weekday (Monday through Friday) or `False`, otherwise.
+`True` if the input `a_date_time` corresponds to a weekday (Monday through Friday) or `False`, otherwise.
 
 ### datetime_to_str
 Format a `datetime.datetime` as a string.
 
 **Parameters:**
-- `a_datetime`: A Python `datetime.datetime` object.
-- `output_format`: An optional format `str` to use to format a string from the input `a_datetime`. If not provided, the default value of `"%A, %B %d %Y, at %I:%m %p"` is used, corresponding to "day of the week, month day year, at hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock.
+- `a_date_time`: A Python `datetime.datetime` object.
+- `output_format`: An optional format `str` to use to format a string from the input `a_date_time`. If not provided, the default value of `"%A, %B %d %Y, at %I:%m %p"` is used, corresponding to "day of the week, month day year, at hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock.
 
 **Returns:**
-A string representing the input `a_datetime`, formatted using the `output_format` string.
+A string representing the input `a_date_time`, formatted using the `output_format` string.
 
 ### date_to_str
 
 **Parameters:**
-- `a_datetime`: A Python `datetime.datetime` object.
-- `output_format`: An optional format `str` to use to format a string from the date part of the input `a_datetime`. If not provided, the default value of `"%A, %B %d %Y"` is used, corresponding to "day of the week, month day year".
+- `a_date`: A Python `datetime.date` object.
+- `output_format`: An optional format `str` to use to format a string from the date part of the input `a_date_time`. If not provided, the default value of `"%A, %B %d %Y"` is used, corresponding to "day of the week, month day year".
 
 **Returns:**
-A string representing the `datetime.date` object from the input `datetime.datetime` object, formatted using the `output_format` string.
+A string representing the input `datetime.date` object, formatted using the `output_format` string.
 
 ### time_to_str
 
 **Parameters:**
-- `a_datetime`: A Python `datetime.datetime` object.
-- `output_format`: An optional format `str` to use to format a string from the time part of the input `a_datetime`. If not provided, the default value of `"%I:%m %p"` is used, corresponding to "hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock.
+- `a_time`: A Python `datetime.time` object.
+- `output_format`: An optional format `str` to use to format a string from the time part of the input `a_time`. If not provided, the default value of `"%I:%m %p"` is used, corresponding to "hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock.
 
 **Returns:**
-A string representing the `datetime.time` object from the input `datetime.datetime` object, formatted using the `output_format` string.
+A string representing the input `datetime.time` object, formatted using the `output_format` string.
 
 ### str_to_datetime
 Parse the input string using the specified format and return the corresponding Python `datetime.datetime` object.
 
 **Parameters:**
-- `a_datetime_str`: A string representing a date-time.
-- `input_format`: An optional format `str` to use to parse the input `a_datetime_str` string to create and return Python `datetime.datetime` object. If not provided, different formats are tried, including `"%A, %B %d %Y, at %I:%m %p"`, corresponding to "day of the week, month day year, at hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock, as well as variations of that format that remove some of the parts.
+- `a_date_time_str`: A string representing a date-time.
+- `input_format`: An optional format `str` to use to parse the input `a_date_time_str` string to create and return Python `datetime.datetime` object. If not provided, different formats are tried, including `"%A, %B %d %Y, at %I:%m %p"`, corresponding to "day of the week, month day year, at hour time:minutes AM/PM", where the "hour" is based on a 12-hour clock, as well as variations of that format that remove some of the parts.
 
 **Returns:**
 A Python `datetime.datetime` object parsed from the input string.
@@ -75,7 +75,7 @@ A Python `datetime.datetime` object parsed from the input string.
 Parse the input string that uses the ISO format and return the corresponding Python `datetime.datetime` object.
 
 **Parameters:**
-- `a_datetime_str`: A string representing a date-time in ISO format.
+- `a_date_time_str`: A string representing a date-time in ISO format.
 
 **Returns:**
 A Python `datetime.datetime` object with the corresponding date and time.

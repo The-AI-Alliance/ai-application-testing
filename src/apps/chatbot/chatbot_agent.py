@@ -6,7 +6,7 @@ from .chatbot import ChatBot
 from .response_handler import ResponseHandler
 from .response_parser import DeepAgentResponseParser
 from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_manager
-from .skills.date_time import DATE_TIME_TOOLS
+from .skills.date_times import DATE_TIME_TOOLS
 
 from deepagents import create_deep_agent
 

@@ -94,6 +94,64 @@ def past_dates(
         min_value = max_value
     return date_strategy(min_value = min_value, max_value = max_value)
 
+def non_weekend_dates(
+    date_strategy                 = future_dates,
+    min_value: date               = date.min,
+    max_value: date               = date.max,
+    holidays: set[tuple[int,int]] = set()):
+    """
+    A Hypothesis strategy for generating dates that fall on Monday through Friday.
+
+    Args:
+
+    - date_strategy: the strategy to use to generate candidate dates (defaults to future dates).
+    - min_value: the earliest date. See the documentation for the passed-in date_strategy.
+    - max_value: the latest date. See the documentation for the passed-in date_strategy.
+    - holidays: A set of tuples with month-day integers that are holidays to exclude.
+
+    Returns:
+
+    A strategy for generating of valid week dates.
+    """    
+    def allowed(dt: date) -> bool:
+        if dt.weekday() >= 5:
+            return False
+        if holidays and (dt.month, dt.day) in holidays:
+            return False
+        return True
+
+    return date_strategy(min_value=min_value, max_value=max_value).filter(
+        lambda dt: allowed(dt))
+
+def weekend_dates(
+    date_strategy                 = future_dates,
+    min_value: date               = date.min,
+    max_value: date               = date.max,
+    holidays: set[tuple[int,int]] = set()):
+    """
+    A Hypothesis strategy for generating dates that fall on Saturday or Sunday.
+
+    Args:
+
+    - date_strategy: the strategy to use to generate candidate dates (defaults to future dates).
+    - min_value: the earliest date. See the documentation for the passed-in date_strategy.
+    - max_value: the latest date. See the documentation for the passed-in date_strategy.
+    - holidays: A set of tuples with month-day integers that are holidays to exclude.
+
+    Returns:
+
+    A strategy for generating of valid weekend dates.
+    """    
+    def allowed(dt: date) -> bool:
+        if dt.weekday() < 5:
+            return False
+        if holidays and (dt.month, dt.day) in holidays:
+            return False
+        return True
+
+    return date_strategy(min_value=min_value, max_value=max_value).filter(
+        lambda dt: allowed(dt))
+
 def work_dates(
     date_strategy                 = future_dates,
     min_value: date               = date.min,

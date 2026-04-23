@@ -14,8 +14,8 @@ friendly_date_formats = [
     friendly_date_format,
 ]
 
-friendly_time_format_mins_secs_pm      = "%I:%m %p"
-friendly_time_format_mins_secs         = "%I:%m"
+friendly_time_format_mins_secs_pm      = "%I:%M %p"
+friendly_time_format_mins_secs         = "%I:%M"
 friendly_time_format_mins_pm           = "%I %p"
 friendly_time_format_mins              = "%I"
 friendly_time_formats = [
@@ -76,20 +76,20 @@ def datetime_to_str(a_date_time: datetime, output_format: str = def_friendly_dat
     return a_date_time.strftime(output_format)
 
 @tool
-def date_to_str(a_date_time: datetime, output_format: str = def_friendly_date_format) -> str:
+def date_to_str(a_date: date, output_format: str = def_friendly_date_format) -> str:
     """
     Return the date part of the input `datetime` object formatted as
     a string using the input `format`.
     """
-    return a_date_time.date().strftime(output_format)
+    return a_date.strftime(output_format)
 
 @tool
-def time_to_str(a_date_time: datetime, output_format: str = def_friendly_time_format) -> str:
+def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> str:
     """
     Return the time part of the input `datetime` object formatted as
     a string using the input `format`.
     """
-    return a_date_time.time().strftime(output_format)
+    return a_time.strftime(output_format)
 
 @tool
 def str_to_datetime(a_date_time_str: str, input_format: str = '') -> datetime:
