@@ -9,8 +9,10 @@ from .date_time_tools import (
     datetime_to_str,
     date_to_str,
     time_to_str,
-    str_to_datetime,
     iso_format_str_to_datetime,
+    str_to_datetime,
+    str_to_date,
+    str_to_time,
 )
 
 __all__ = [
@@ -20,6 +22,8 @@ __all__ = [
     'datetime_to_str',
     'date_to_str',
     'time_to_str',
-    'str_to_datetime',
     'iso_format_str_to_datetime',
+    'str_to_datetime',
+    "str_to_date",
+    "str_to_time",
 ]

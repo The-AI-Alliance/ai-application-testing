@@ -15,8 +15,10 @@ from apps.chatbot.skills.date_times.date_time_tools import (
     datetime_to_str,
     date_to_str,
     time_to_str,
-    str_to_datetime,
     iso_format_str_to_datetime,
+    str_to_datetime,
+    str_to_date,
+    str_to_time,
     friendly_date_time_formats,
     friendly_date_formats,
     friendly_time_formats,
@@ -107,7 +109,6 @@ class TestDateTimeTools(unittest.TestCase):
         actual = datetime_to_str.run({'a_date_time': dt})
         self.assertEqual(expected, actual, f"dt: {dt}, fmt: {def_friendly_date_time_format}")
 
-
     @given(st.dates())
     def test_date_to_str_returns_properly_formatted_string_based_on_desired_format(self, d):
         for fmt in friendly_date_formats:
@@ -120,7 +121,6 @@ class TestDateTimeTools(unittest.TestCase):
         expected = d.strftime(def_friendly_date_format)
         actual = date_to_str.run({'a_date': d})
         self.assertEqual(expected, actual, f"d: {d}, fmt: {def_friendly_date_format}")
-
 
     @given(st.times())
     def test_time_to_str_returns_properly_formatted_string_based_on_desired_format(self, t):
@@ -135,6 +135,58 @@ class TestDateTimeTools(unittest.TestCase):
         actual = time_to_str.run({'a_time': t})
         self.assertEqual(expected, actual, f"t: {t}, fmt: {def_friendly_time_format}")
 
+    @given(st.datetimes())
+    def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(self, dt):
+        import locale
+        current_locale = locale.getlocale()
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') 
+        for fmt in friendly_date_time_formats:
+            dt_str = dt.strftime(fmt)
+            actual, error = str_to_datetime.run({'a_date_time_str': dt_str, 'input_format': fmt})
+            # We actually need to compare strings, not dts, because a returned datetime might have "missing"
+            # hours, minutes, seconds, etc., depending on fmt.
+            actual_str = actual.strftime(fmt)
+            self.assertEqual(dt_str, actual_str, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}")
+            self.assertEqual('', error)
+        locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}") 
 
+    @given(st.datetimes())
+    def test_str_to_datetime_can_parse_iso_formatted_strings(self, dt):
+        dt_iso = dt.isoformat()
+        actual, error = str_to_datetime.run({'a_date_time_str': dt_iso})
+        self.assertEqual(dt, actual, f"dt: {dt}")
+        self.assertEqual('', error)
+
+    def test_str_to_datetime_returns_an_error_string_for_invalid_date_time_strings(self):
+        for s in ['', 'bad', 'hello!']:
+            actual, error = str_to_datetime.run({'a_date_time_str': s})
+            self.assertEqual(None, actual)
+            self.assertNotEqual('', error)
+
+
+    @given(st.dates())
+    def test_str_to_date_can_parse_friendly_formatted_date_strings(self, d):
+        import locale
+        current_locale = locale.getlocale()
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') 
+        for fmt in friendly_date_formats:
+            d_str = d.strftime(fmt)
+            actual, error = str_to_date.run({'a_date_str': d_str, 'input_format': fmt})
+            # We actually need to compare strings, not ds, because a returned datetime might have "missing"
+            # hours, minutes, seconds, etc., depending on fmt.
+            actual_str = actual.strftime(fmt)
+            self.assertEqual(d_str, actual_str, f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}")
+            self.assertEqual('', error)
+        locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}") 
+
+    @given(st.dates())
+    def test_str_to_datetime_can_parse_iso_formatted_strings(self, d):
+        d_iso = d.isoformat()
+        actual, error = str_to_date.run({'a_date_str': d_iso})
+        self.assertEqual(d, actual, f"d: {d}")
+        self.assertEqual('', error)
+
+    # friendly_date_formats,
+    # friendly_time_formats,
 if __name__ == '__main__':
     unittest.main()

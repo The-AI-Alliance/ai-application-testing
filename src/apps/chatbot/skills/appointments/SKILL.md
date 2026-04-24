@@ -20,7 +20,7 @@ Use this skill when the patient wants to:
 ## General Tips:
 
 - If you don't know the patient's name, start by asking for the name. Don't ask for the appointment ID. The patient won't know what that is.
-- When the patient specifies a partial date, for example, April 10th, assume they mean the next possible matching date. For example, if a patient says "April 10th", then assume the patient means this year or, if we are already past April 10th of this year, then the patient means next year.
+- When the patient specifies a partial date, for example, April 10th, assume they mean the next possible matching date. For example, if a patient says "April 10th", then assume the patient means this year, unless we are already past April 10th of this year, then assume the patient means next year.
 - Similarly, if the patient says a day of the week, for example, "Thursday", assume the patient means the next Thursday in the calendar.
 
 ## Available Tools

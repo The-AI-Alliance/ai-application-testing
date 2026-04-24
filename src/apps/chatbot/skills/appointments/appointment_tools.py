@@ -34,6 +34,9 @@ def get_appointment_manager(
           The storage location. If `None`, then `_def_appointments_file` is used.
         - logger (logging.Logger): Ignored unless a new manager is to be created.
           The logger. If `None`, then `_def_appointment_manager_logger` is used.
+        
+    Returns:
+        The appointment manager.
     """
     global _appointment_manager
 
