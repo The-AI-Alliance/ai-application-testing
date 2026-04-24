@@ -35,7 +35,7 @@ The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"
 
 ## Anthropic
 
-Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, but also general guidance on evaluation concepts. Highly recommended.
+Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, but also general guidance on evaluation concepts. Highly recommended. See the summary in [Agents: What Is Different?]({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/).
 
 [Petri](https://www.anthropic.com/research/petri-open-source-auditing){:target="petri"} is an open-source auditing tool aimed at safety researchers.
 
@@ -79,7 +79,7 @@ The main project is [Every Eval Ever](https://github.com/evaleval/every_eval_eve
 
 ## Google
 
-Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents. See the discussion in the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter.
+Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents. See the discussion in the [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter.
 
 ## Hamel Husain
 
@@ -96,9 +96,6 @@ This IBM blog post, [What is retrieval-augmented generation?](https://research.i
 For the following tool, see the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details:
 
 * [EvalAssist](https://ibm.github.io/eval-assist/){:target="eval-assist"} ([paper](https://arxiv.org/abs/2410.00873v2){:target="_blank"}) is designed to make LLM as a Judge evaluations of data easier for users, including incremental refinement of the evaluation criteria using a web-based user experience. EvalAssist supports direct assessment (scoring) of data individually, which we used in our [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter, or pair-wise comparisons, where the best of two answers is chosen. 
-
-For the following tool, see the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details:
-
 * [AssetOpsBench](https://github.com/IBM/AssetOpsBench){:target="ibm-aob"} is a unified framework for developing, orchestrating, and evaluating domain-specific AI agents in industrial asset operations and maintenance. It is designed for maintenance engineers, reliability specialists, and facility planners, it allows reproducible evaluation of multi-step workflows in simulated industrial environments.
 
 For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter for more details:
@@ -129,7 +126,7 @@ The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offer
 
 ## LastMile AI
 
-[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details.
+[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details.
 
 
 ## Merriam-Webster Dictionary
@@ -194,7 +191,15 @@ The analyst firm [RedMonk](https://redmonk.com/){:target="redmonk"} posted [this
 
 DoomArena enables detailed threat modeling, adaptive testing, and fine-grained security evaluations through real-world case studies, such as τ-Bench and BrowserGym. These case studies showcase how DoomArena evaluates vulnerabilities in AI agents interacting in airline customer service and e-commerce contexts.
 
-Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/) chapter for more details.
+Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions. 
+
+ServiceNow is also leading several new AI Alliance projects under the _CUBE_ (Common Unified Benchmark Environment) umbrella. CUBE meets a common necessity, to standardize benchmark wrapping so the community can integrate otherwise-incompatible benchmarks uniformly and use them everywhere. The three projects include:
+
+* [CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="_cube"} - A collaboration to define the necessary set of standards.
+* [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness/){:target="_cube"} - A framework and research initiative for building and evaluating AI agents.
+* [CUBE Registry](https://github.com/The-AI-Alliance/cube-registry/){:target="_cube"} - A community-maintained index of benchmarks that implement the CUBE standard. Any CUBE-compliant evaluation platform or training harness can discover and run registered benchmarks without custom integration.
+
+See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details on these projects.
 
 ## Specification-Driven Development
 
