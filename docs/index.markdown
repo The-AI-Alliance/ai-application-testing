@@ -71,7 +71,7 @@ With this background, we move to the main focus of this guide, [Testing Strategi
 * [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge): Using a &ldquo;smarter&rdquo; LLM to judge generative responses, including evaluating the quality of synthetic data.
 * [External Tool Verification]({{site.baseurl}}/testing-strategies/external-verification): Cases where non-LLM tools can test our LLM responses.
 * [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation): Understanding the basics of statistical analysis and how to use it assess test and benchmark results.
-* [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents): Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. This chapter explores the requirements and available approaches.
+* [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/): Agents are inherently more complex than application patterns that use &ldquo;conventional&rdquo; code wrapping invocations of LLMs. Agents are evolving to be more and more autonomous in their capabilities, requiring special approaches to testing. The chapters in this section explore the requirements and available approaches.
 * [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing): Testing at the scale of large, complex systems is also less deterministic than in the context of [Unit Tests]({{site.glossaryurl}}/#unit-test){:target="_glossary"}, etc. What lessons can we learn here?
 
 The next section covers more advanced topics, some of which may become mainstream:

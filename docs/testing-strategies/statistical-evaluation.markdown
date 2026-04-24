@@ -92,6 +92,7 @@ For simplicity, we will continue to ignore the possibility of a prompt containin
 The paper [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} by [Evan Miller]({{site.referencesurl}}/#evan-miller) discusses the use of _error bars_, a standard technique in statistical analysis to quantify the uncertainty of a result. For example, in science experiments, no measurement exists with infinite precision and potential false signals (i.e., _noise_) must be accounted for.
 
 ## What's Next?
-Review the [highlights](#highlights) summarized above, then proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).
+
+Review the [highlights](#highlights) summarized above, then proceed to [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/) section.
 
 ---
