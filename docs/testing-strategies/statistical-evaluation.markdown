@@ -43,7 +43,7 @@ The section, _How to think about non-determinism in evaluations for agents_, in 
 
 **_pass@k_** measures the probability that at least one correct solution occurs in _k_ attempts. As _k_ increases, the _pass@k_ score rises, which makes sense because the more attempts you make, the higher the likelihood that at least one of them will succeed. For example, a score of 50% _pass@1_ means that a test successfully completes on half the tasks on the first try. This metric is most useful for scenarios where multiple attempts are okay as long as one attempt is highly likely to succeed.
 
-**_pass^k_** measures the probability that all _k_ trials succeed. As _k_ increases, _pass^k_ falls since demanding consistency across more trials is harder than for fewer trials. So, if there is a 75% per-trial success rate and you run 3 trials, the probability of passing all three is (0.75)³ ≈ 42%. This metric is important for applications where reliable behavior is expected every time, like ChatBots.
+**_pass^k_** measures the probability that all _k_ trials succeed. As _k_ increases, _pass^k_ falls since demanding consistency across more trials is harder than for fewer trials. So, if there is a 75% per-trial success rate and you run 3 trials, the probability of passing all three is (0.75)³ ≈ 42%. This metric is important for applications where reliable behavior is expected every time.
 
 More content is TODO...
 
