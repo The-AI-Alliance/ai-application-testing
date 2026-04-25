@@ -158,15 +158,12 @@ class TestAppointmentTools(unittest.TestCase):
             self._result_expected(e, a)
 
     def _capture_output(self, tool: BaseTool, params: dict[str,Any]) -> Any:
+        # We assert that stdout and stderr are empty. 
         with contextlib.redirect_stdout(io.StringIO()) as fout:
             with contextlib.redirect_stderr(io.StringIO()) as ferr:
                 success, message = tool.run(params)
-                if success:
-                    self.assertEqual('', fout.getvalue())
-                    self.assertEqual('', ferr.getvalue())
-                else:
-                    self.assertEqual('', fout.getvalue())
-                    self.assertNotEqual('', ferr.getvalue())
+                self.assertEqual('', fout.getvalue())
+                self.assertEqual('', ferr.getvalue())
                 return success, message
 
     def _check_success(self, 

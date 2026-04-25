@@ -253,9 +253,9 @@ class AppointmentManager:
         # Validate the time
         is_valid, error_msg = self._is_valid_time(appointment_date_time)
         if not is_valid:
-            error_msg = f"I could not create an appointment for {patient_name} at {appointment_date_time}. {error_msg}"
-            self.logger.error(error_msg)
-            return '', error_msg
+            error_msg2 = f"I could not create an appointment for {patient_name} at {appointment_date_time}. {error_msg}"
+            self.logger.error(error_msg2)
+            return '', error_msg2
         
         # Create the appointment
         appointment_id = str(uuid4())
