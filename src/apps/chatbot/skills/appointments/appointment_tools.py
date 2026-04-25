@@ -69,7 +69,8 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
         reason: Reason for the appointment
         
     Returns:
-        A tuple with the ID for the newly-created appointment and a success message, or a tuple with '' and a failure message with reasons for the failure.
+        A tuple with the ID for the newly-created appointment and a success message, 
+        or a tuple with '' and a failure message with reasons for the failure.
         
     Example:
         create_appointment("John Doe", "2026-04-15T10:00:00", "Annual checkup")
