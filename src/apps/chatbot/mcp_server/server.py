@@ -20,6 +20,7 @@ def create_mcp_server(
     service_url: str,
     template_dir: str,
     data_dir: str,
+    output_dir: str,
     confidence_level_threshold: float,
     logger: logging.Logger,
     which_chatbot: str = 'agent',
@@ -28,13 +29,14 @@ def create_mcp_server(
     Create and configure an MCP server for the chatbot using FastMCP.
     
     Args:
-        model: The LLM model to use
-        service_url: The URL of the inference service
-        template_dir: Directory containing prompt templates
-        data_dir: Directory containing data files
-        confidence_level_threshold: Minimum confidence level for responses
-        logger: Optional logger for debugging
-        which_chatbot: Which ChatBot implementation to use ('agent' or 'simple')
+        model (str): The LLM model to use
+        service_url (str): The URL of the inference service
+        template_dir (str): Directory containing prompt templates
+        data_dir (str): Directory containing data files
+        output_dir (str): Directory for writing some output (may not be used)
+        confidence_level_threshold (float): Minimum confidence level for responses
+        logger (logging.Logger): Optional logger for debugging
+        which_chatbot (str): Which ChatBot implementation to use ('agent' or 'simple')
         
     Returns:
         A tuple of (mcp, chatbot)
@@ -49,6 +51,7 @@ def create_mcp_server(
         service_url=service_url,
         template_dir=template_dir,
         data_dir=data_dir,
+        output_dir=output_dir,
         confidence_level_threshold=confidence_level_threshold,
         response_handler = ChatBotResponseHandler(
             confidence_level_threshold=confidence_level_threshold,
@@ -249,6 +252,7 @@ def main():
             service_url=args.service_url,
             template_dir=args.template_dir,
             data_dir=args.data_dir,
+            output_dir=args.output_dir,
             confidence_level_threshold=args.confidence_threshold,
             logger=logger,
             which_chatbot=args.which_chatbot

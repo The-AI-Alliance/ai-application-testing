@@ -13,10 +13,10 @@ from typing import Any, Callable, Optional
 from common.utils import decode_json, encode_json
 
 class FilePersistentStorageEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, FilePersistentStorage):
-            return {"__class__": "FilePersistentStorage", "path": str(obj.storage_path)}
-        return super().default(obj)
+    def default(self, o: Any) -> Any:
+        if isinstance(o, FilePersistentStorage):
+            return {"__class__": "FilePersistentStorage", "path": str(o.storage_path)}
+        return super().default(o)
 
 class FilePersistentStorageDecoder(json.JSONDecoder):
     def __init__(self):

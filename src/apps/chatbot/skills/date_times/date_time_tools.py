@@ -4,6 +4,7 @@ These tools are used by the Deep Agent's appointment skill.
 """
 
 from datetime import datetime, date, time
+from typing import Callable, Optional, TypeVar
 
 from langchain_core.tools import tool
 
@@ -118,8 +119,40 @@ def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> 
     """
     return a_time.strftime(output_format)
 
+DT = TypeVar("DT")
+
+def _str_to_object[DT](
+    a_date_time_str: str,
+    input_format: str,
+    friendly_formats: list[str],
+    extract: Callable[[datetime], DT]) -> tuple[Optional[DT], str]:
+    fmts = [input_format] + friendly_formats
+    for fmt in fmts:
+        if not fmt: # skip empties...
+            continue
+        try:
+            dt = datetime.strptime(a_date_time_str, fmt)
+            if dt:
+                return extract(dt), ''
+        except ValueError as ve:
+            pass
+
+    # If here, none of our "friendly formats" worked. Try ISO...
+    def err_msg():
+        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
+        return f"""I could not parse string "{a_date_time_str}" with {input_format_msg}formats, {friendly_formats}, nor using fromisoformat()."""
+
+    try:
+        dt = datetime.fromisoformat(a_date_time_str)
+        if dt:
+            return extract(dt), ''
+        else:
+            return None, err_msg()
+    except ValueError as ve:
+        return None, err_msg()
+
 @tool
-def str_to_datetime(a_date_time_str: str, input_format: str = '') -> tuple[datetime, str]:
+def str_to_datetime(a_date_time_str: str, input_format: str = '') -> tuple[Optional[datetime], str]:
     """
     Using the input `a_date_time_str` string, format and return a `datetime` parsed 
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -134,21 +167,11 @@ def str_to_datetime(a_date_time_str: str, input_format: str = '') -> tuple[datet
     Returns:
         a tuple with the constructed `datetime` and an empty string or `None` and an error message.
     """
-    fmts = [input_format] + friendly_date_time_formats if input_format else friendly_date_time_formats
-    for fmt in fmts:
-        try:
-            return datetime.strptime(a_date_time_str, fmt), ''
-        except ValueError as ve:
-            pass
-    try:
-        return datetime.fromisoformat(a_date_time_str), ''
-    except ValueError as ve:
-        # If here, we failed...
-        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
-        return None, f"""I could not parse date time string "{a_date_time_str}" with {input_format_msg}formats: {friendly_date_time_formats}"""
+    return _str_to_object(
+        a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt)
 
 @tool
-def str_to_date(a_date_str: str, input_format: str = '') -> tuple[date, str]:
+def str_to_date(a_date_str: str, input_format: str = '') -> tuple[Optional[date], str]:
     """
     Using the input `a_date_str` string, format and return a `date` parsed 
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -163,25 +186,11 @@ def str_to_date(a_date_str: str, input_format: str = '') -> tuple[date, str]:
     Returns:
         a tuple with the constructed `date` and an empty string or `None` and an error message.
     """
-    fmts = [input_format] + friendly_date_formats if input_format else friendly_date_formats
-    for fmt in fmts:
-        try:
-            dt = datetime.strptime(a_date_str, fmt)
-            if dt:
-                return dt.date(), ''
-        except ValueError as ve:
-            pass
-    try:
-        dt = datetime.fromisoformat(a_date_str)
-        if dt:
-            return dt.date(), ''
-    except ValueError as ve:
-        # If here, we failed...
-        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
-        return None, f"""I could not parse date string "{a_date_str}" with {input_format_msg}formats: {friendly_date_formats}"""
+    return _str_to_object(
+        a_date_str, input_format, friendly_date_formats, lambda dt: dt.date())
 
 @tool
-def str_to_time(a_time_str: str, input_format: str = '') -> tuple[time, str]:
+def str_to_time(a_time_str: str, input_format: str = '') -> tuple[Optional[time], str]:
     """
     Using the input `a_time_str` string, format and return a `time` parsed 
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -196,22 +205,8 @@ def str_to_time(a_time_str: str, input_format: str = '') -> tuple[time, str]:
     Returns:
         a tuple with the constructed `time` and an empty string or `None` and an error message.
     """
-    fmts = [input_format] + friendly_time_formats if input_format else friendly_time_formats
-    for fmt in fmts:
-        try:
-            dt = datetime.strptime(a_time_str, fmt)
-            if dt:
-                return dt.time(), ''
-        except ValueError as ve:
-            pass
-    try:
-        dt = datetime.fromisoformat(a_time_str)
-        if dt:
-            return dt.time(), ''
-    except ValueError as ve:
-        # If here, we failed...
-        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
-        return None, f"""I could not parse time string "{a_time_str}" with {input_format_msg}formats: {friendly_time_formats}"""
+    return _str_to_object(
+        a_time_str, input_format, friendly_time_formats, lambda dt: dt.time())
 
 @tool
 def iso_format_str_to_datetime(a_date_time_str: str) -> datetime:

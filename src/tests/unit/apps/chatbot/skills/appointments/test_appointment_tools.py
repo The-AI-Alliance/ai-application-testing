@@ -8,7 +8,7 @@ from collections.abc import Iterator
 from datetime import datetime, timedelta, date, time
 from pathlib import Path
 from typing import Any, Callable
-from langchain_core.tools.structured import StructuredTool
+from langchain_core.tools.structured import BaseTool, StructuredTool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
 
@@ -94,7 +94,7 @@ class TestAppointmentTools(unittest.TestCase):
         if os.path.exists(self.temp_file.name):
             os.unlink(self.temp_file.name)
 
-    def _check_file(self, file: Path | str = None):
+    def _check_file(self, file: Path | str = ''):
         if not file:
             file = Path(self.temp_file.name)
         self.assertTrue(os.path.exists(file))
@@ -130,21 +130,21 @@ class TestAppointmentTools(unittest.TestCase):
         reason: str = ''):
 
         if not appointment_date_time:
-            appointment_date_time = expected.get('appointment_date_time')
+            appointment_date_time = expected.get('appointment_date_time', datetime.now())
         if not changed_at:
-            changed_at = expected.get('changed_at')
+            changed_at = expected.get('changed_at', datetime.now())
         if not patient_name:
-            patient_name = expected.get('patient_name')
+            patient_name = expected.get('patient_name', '')
         if not reason:
-            reason = expected.get('reason')
+            reason = expected.get('reason', '')
 
         self.assertIn('appointment_id', actual, str(actual))
         self.assertTrue(actual.get('success', True), str(actual))
         
         self.assertEqual(appointment_date_time, actual.get('appointment_date_time'), f"appointment_date_time expected: {appointment_date_time}, actual: {actual}")
         if changed_at:
-            self.assertIsNotNone(actual.get('changed_at')) 
-            self.assertGreaterEqual(changed_at, actual.get('changed_at'), f"changed_at expected: {changed_at}, actual: {actual}")
+            actual_changed_at = actual.get('changed_at', datetime(1970, 1, 1))
+            self.assertTrue(changed_at >= actual_changed_at, f"changed_at expected: {changed_at}, actual: {actual}")
         self.assertEqual(patient_name, actual.get('patient_name'), f"patient_name expected: {patient_name}, actual: {actual}")
         self.assertEqual(reason, actual.get('reason'), f"reason expected: {reason}, actual: {actual}")
 
@@ -157,7 +157,7 @@ class TestAppointmentTools(unittest.TestCase):
             a = actual2[i]
             self._result_expected(e, a)
 
-    def _capture_output(self, tool: StructuredTool, params: dict[str,Any]) -> Any:
+    def _capture_output(self, tool: BaseTool, params: dict[str,Any]) -> Any:
         with contextlib.redirect_stdout(io.StringIO()) as fout:
             with contextlib.redirect_stderr(io.StringIO()) as ferr:
                 success, message = tool.run(params)
@@ -210,7 +210,7 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertEqual(before_count, after_count)
 
     def _check_appointments_list(self, 
-        list_appointment_dicts: Iterator[dict[str,Any]],
+        list_appointment_dicts: list[dict[str,Any]],
         get_list: Callable[[], list[dict[str,Any]]],
         get_appointment: Callable[[str], dict[str,Any]] | None = None):
         """
@@ -233,7 +233,7 @@ class TestAppointmentTools(unittest.TestCase):
         appointments = get_list()
         self.assertEqual(len(appointments), len(created))
         for appointment_id in created:
-            appointment = None
+            appointment = {}
             if get_appointment:
                 appointment = get_appointment(appointment_id) 
             else:
@@ -243,11 +243,13 @@ class TestAppointmentTools(unittest.TestCase):
                         break
             self.assertIsNotNone(appointment)
             expected = created.get(appointment_id)
-            self.assertEqual(appointment_id, appointment['appointment_id'])
-            self.assertEqual(appointment_id, expected['appointment_id'])
-            self.assertEqual(expected['appointment_date_time'], appointment['appointment_date_time'])
-            self.assertEqual(expected['patient_name'], appointment['patient_name'])
-            self.assertEqual(expected['reason'], appointment['reason'])
+            self.assertIsNotNone(expected)
+            if expected and appointment: # redundant with previous lines, but enables proper typing.
+                self.assertEqual(appointment_id, appointment['appointment_id'])
+                self.assertEqual(appointment_id, expected['appointment_id'])
+                self.assertEqual(expected['appointment_date_time'], appointment['appointment_date_time'])
+                self.assertEqual(expected['patient_name'], appointment['patient_name'])
+                self.assertEqual(expected['reason'], appointment['reason'])
 
     @given(appointment_dicts())
     def test_create_appointment_succeeds_if_datetime_in_the_future_on_the_hour_and_slot_is_open(self, 

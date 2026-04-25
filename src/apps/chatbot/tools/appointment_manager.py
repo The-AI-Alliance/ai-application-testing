@@ -31,14 +31,14 @@ from common.file_persistent_storage import (
 )
 
 class AppointmentManagerEncoder(DatetimeEncoder):
-    def default(self, obj):
-        if isinstance(obj, AppointmentManager):
-            d = obj.__dict__.copy()
+    def default(self, o: Any) -> Any:
+        if isinstance(o, AppointmentManager):
+            d = o.__dict__.copy()
             d["__class__"] = "AppointmentManager"
-            d["storage"] = FilePersistentStorage.def_json_encoder.default(obj.storage)
+            d["storage"] = FilePersistentStorage.def_json_encoder.default(o.storage)
             del d["logger"]
             return d
-        return super().default(obj)
+        return super().default(o)
 
 class AppointmentManagerDecoder(DatetimeDecoder):
     def __init__(self):
@@ -92,11 +92,11 @@ class AppointmentManager:
 
     def encode_json(dct: dict[str,Any]) -> str:
         """Create a JSON string from the input object."""
-        return def_json_encoder.encode(dct)
+        return AppointmentManager.def_json_encoder.encode(dct)
 
     def decode_json(text: Any) -> dict[str,Any]:
         """Parse a JSON string, returning a dictionary."""
-        return def_json_decoder.decode(text)
+        return AppointmentManager.def_json_decoder.decode(text)
 
     
     def __init__(self,
@@ -166,7 +166,7 @@ class AppointmentManager:
                     dt = appointment['appointment_date_time']
                     if isinstance(dt, str): # Shouldn't actually happen!!
                         appointment['appointment_date_time'] = datetime.fromisoformat(dt)
-                    self.appointments[appointment['appointment_id']] = appointment
+                    self.appointments[id] = appointment
                 else:
                     self.logger.error(f"appointment doesn't have an id! appointment = {appointment}.")
     
@@ -223,10 +223,13 @@ class AppointmentManager:
         # occupied times are within 1 second of the proposed time.
         for appt in self.appointments.values():
             dt = appt.get('appointment_date_time')
-            dtm1 = dt - one_second 
-            dtp1 = dt + one_second
-            if appt.get('status') != 'cancelled' and dtm1 < appointment_date_time and dtp1 > appointment_date_time:
-                return False, f"The time slot {appointment_date_time} is already booked."
+            if not dt:
+                self.logger.error(f"_is_valid_time(): Appointment found without a datetime! {appt}")
+            else:
+                dtm1 = dt - one_second 
+                dtp1 = dt + one_second
+                if appt.get('status') != 'cancelled' and dtm1 < appointment_date_time and dtp1 > appointment_date_time:
+                    return False, f"The time slot {appointment_date_time} is already booked."
         
         return True, ""
     
@@ -291,7 +294,7 @@ class AppointmentManager:
         ids = [a['appointment_id'] for a in appointments]
         unique = set(ids)
         if len(unique) != len(ids):
-            return 0, f"{len(id) - len(unique)} out of {len(ids)} ids are not unique! {ids}"
+            return 0, f"{len(ids) - len(unique)} out of {len(ids)} ids are not unique! {ids}"
 
         # Validate the times
         dt_errors = []
@@ -457,7 +460,7 @@ class AppointmentManager:
         """Create a JSON string from the object."""
         return AppointmentManager.def_json_encoder.encode(self)
 
-    def from_json(text: Any) -> FilePersistentStorage:
+    def from_json(text: Any) -> AppointmentManager:
         """Attempt to parse a JSON object, returning an instance."""
         return AppointmentManager.def_json_decoder.decode(text)
 

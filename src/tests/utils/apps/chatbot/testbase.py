@@ -7,21 +7,21 @@ import json, logging, os, random, re, sys, time, unittest
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping, Sequence
 
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler, ChatBotShell
-from common.utils import dict_pop, encode_json
+from common.utils import dict_pop, decode_json
 from common.collections import dict_permutations
 
 class TestPrompt():
     """Class to hold a benchmark datum: a prompt and expected labels, actions, and rating."""
     def __init__(self,
         query: str,
-        labels: list[str],
-        actions: list[str],
+        labels: Sequence[str],
+        actions: Sequence[str],
         rating: int,
         reason: str = '',
-        keywords: dict[str,str] = {}):
+        keywords: Mapping[str,str] = {}):
         self.query = query
         self.labels = labels
         self.actions = actions
@@ -113,6 +113,7 @@ class TestBase(unittest.TestCase):
             service_url = self.service_url,
             template_dir = self.template_dir,
             data_dir = self.data_dir,
+            output_dir = self.output_dir,
             confidence_level_threshold = self.confidence_threshold,
             response_handler = ChatBotResponseHandler(
                 confidence_level_threshold = self.confidence_threshold,
@@ -132,6 +133,7 @@ class TestBase(unittest.TestCase):
         self.service_url                   = os.environ.get('INFERENCE_URL', 'http://localhost:11434')
         self.template_dir                  = os.environ.get('CHATBOT_TEMPLATES_DIR', 'apps/chatbot/prompts/templates')
         self.data_dir                      = os.environ.get('DATA_DIR', 'data')
+        self.output_dir                    = os.environ.get('OUTPUT_DIR', '../output/tests')
         self.accumulate_test_results: bool = bool(os.environ.get('ACCUMULATE_TEST_ERRORS', False))
         self.sample_rate: float            = float(os.environ.get('DATA_SAMPLE_RATE', 1.0))
         self.rating_threshold: int         = int(os.environ.get('RATING_THRESHOLD', TestBase.default_rating_threshold))
@@ -258,7 +260,7 @@ class TestBaseRunner(TestBase):
                 ls = line.strip()
                 if ls:
                     try:
-                        obj     = encode_json(ls)
+                        obj     = decode_json(ls)
                         query   = dict_pop(obj, 'query')
                         labels  = dict_pop(obj, 'labels')
                         actions = dict_pop(obj, 'actions')
@@ -460,7 +462,7 @@ class TestBaseRunner(TestBase):
             # Show we aren't dead by printing counts...
             print(f"({self.samples_count},{lcr_count},{warning_count},{error_count}) ", end='')  
 
-    def _sample(self, collection: list[Any], sample_rate: float) -> list[Any]:
+    def _sample(self, collection: Sequence[Any], sample_rate: float) -> Sequence[Any]:
         """
         The sample_rate (between 0.0 and 1.0) is a pragmatic compromise due to relatively slow local inference
         and expensive inference services. Use a low value for unit tests that are run frequently and need to be fast.
@@ -481,5 +483,5 @@ class TestBaseRunner(TestBase):
             samples = random.sample(collection, k=k)
         return samples
 
-    def _check_label(self, expected: list[str], actual: str) -> str:
+    def _check_label(self, expected: Sequence[str], actual: str) -> str:
         return "" if actual in expected else f"""label '{actual}' not in expected: {expected}."""

@@ -13,7 +13,7 @@ import os.path
 try:
     import readline
 except ImportError:
-    readline = None
+    readline = None # ty: ignore
 
 class ChatBotShell(cmd.Cmd):
     """Interactive shell for the ChatBot."""

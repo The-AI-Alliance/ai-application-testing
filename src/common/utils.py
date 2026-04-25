@@ -10,7 +10,7 @@ from importlib import metadata
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from pprint import pprint
-from typing import Any, Callable
+from typing import Any, Callable, Mapping, MutableMapping
 
 from litellm.types.utils import ModelResponse
 
@@ -131,16 +131,16 @@ def now() -> datetime:
 def now_str(fmt: str = timestamp_str_fmt) -> str:
     return now().strftime(fmt)
 
-def load_yaml(path: Path) -> dict:
+def load_yaml(path: Path) -> Mapping[str,Any]:
     return yaml.safe_load(path.read_text())
 
 def model_dir_name(model: str) -> str:
     """Replace colon with underscore in the model name."""
     return model.replace(":", "_")
 
-def all_use_cases() -> dict:
+def all_use_cases() -> Mapping[str,Any]:
     """
-    Return a dictionary with the use case names as keys 
+    Return a Mapping with the use case names as keys 
     and the corresponding expected labels as values.
     NOTE: This list must be kept consistent with the available prompt templates, etc.!
     """
@@ -186,7 +186,10 @@ def ensure_dirs_exist(*dirs):
     if len(missing_dirs) > 0:
         raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
 
-def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str,str]] = []) -> str:
+def make_full_prompt(
+    prompt: str,
+    system_prompt: Any,
+    session: list[tuple[str,str]] = []) -> str:
     ss = ["SESSION:"]
     for query, reply in session:
         ss.append(f"query: {query}")
@@ -204,10 +207,10 @@ USER PROMPT:
 """
 
 class DatetimeEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return {"__class__": "datetime", "iso_str": obj.isoformat()}
-        return super().default(obj)
+    def default(self, o: Any) -> Any:
+        if isinstance(o, datetime):
+            return {"__class__": "datetime", "iso_str": o.isoformat()}
+        return super().default(o)
 
 class DatetimeDecoder(json.JSONDecoder):
     def __init__(self):
@@ -222,11 +225,11 @@ class DatetimeDecoder(json.JSONDecoder):
 def_datetime_encoder = DatetimeEncoder()
 def_datetime_decoder = DatetimeDecoder()
 
-def encode_json(dct: dict[str,Any]) -> str:
+def encode_json(dct: Mapping[str,Any]) -> str:
     """Create a JSON string from the input object."""
     return def_datetime_encoder.encode(dct)
 
-def decode_json(text: Any) -> dict[str,Any]:
+def decode_json(text: Any) -> MutableMapping[str,Any]:
     """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
     try:
         obj = def_datetime_decoder.decode(text)
@@ -262,7 +265,7 @@ def extract_jsonl_list(text: str) -> tuple[list[str],list[str]]:
     errors = []
     for s in fixed:
         try:
-            jsonl = encode_json(s)
+            jsonl = decode_json(s)
             # It parsed! Use s
             jsonls.append(s)
         except ValueError as err:
@@ -279,7 +282,7 @@ def extract_content(litellm_response: ModelResponse) -> str:
     # print(f"content (type = {type(content)}: {content})")
     return content
 
-def dict_pop(dictionary: dict[str,Any], key: str) -> Any:
+def dict_pop(dictionary: MutableMapping[str,Any], key: str) -> Any:
     """
     Works like dict.pop() should work; rather than raise an exception, 
     just return None and don't modify the dictionary.

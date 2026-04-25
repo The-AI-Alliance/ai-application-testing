@@ -8,7 +8,7 @@ import sys
 import json
 import logging
 from pathlib import Path
-from typing import Any, MutableMapping
+from typing import Any, Mapping, MutableMapping
 
 from litellm import completion
 from openai import OpenAIError
@@ -112,7 +112,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
             self.logger.error(f"Data file {data_file} not found.")
             sys.exit(1)
 
-    def do_generate(self, data_file: str, template: dict[str,str], expected_label: str) -> int:
+    def do_generate(self, data_file: str, template: Mapping[str,str], expected_label: str) -> int:
         try:
             content = template['prompt']
             if len(content) == 0:
@@ -247,7 +247,10 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 verbose = False,
                 # format = "json",
             )
-            for line in extract_jsonl_list(extract_content(response)):
+            lines, errors = extract_jsonl_list(extract_content(response))
+            if errors:
+                self.logger.error(f"Some lines couldn't be parsed in response <{response}>, errors = {errors}")
+            for line in lines:
                 validation_file.write(f"{line}\n")
 
         except OpenAIError as e:
@@ -276,8 +279,11 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             if not self.just_stats:
                 with open(validation_file, 'w') as vfile:
                     with open(data_file, 'r') as synthetic_data_file:
-                        for line in synthetic_data_file.readlines():
-                            for line2 in extract_jsonl_list(line):
+                        for line_number, line in enumerate(synthetic_data_file):
+                            lines2, errors = extract_jsonl_list(line)
+                            if errors:
+                                self.logger.error(f"""Some substrings from line {line_number}, <{line}> in data file <{data_file}> didn't parse as JSONL. errors = {errors}""")
+                            for line2 in lines2:
                                 line3 = line2.strip()
                                 if len(line3) == 0:
                                     continue

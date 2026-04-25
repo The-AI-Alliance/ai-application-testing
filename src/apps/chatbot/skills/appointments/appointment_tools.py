@@ -20,8 +20,8 @@ _def_appointment_manager_logger.setLevel(logging.INFO)
 _appointment_manager: Optional[AppointmentManager] = None
 
 def get_appointment_manager(
-    file_path: Path | str = None, 
-    logger: logging.Logger = None,
+    file_path: Path | str = '', 
+    logger: logging.Logger | None = None,
     make_new: bool = False) -> AppointmentManager:
     """
     Idempotent: Creates and an instance only if one of the following is true:
@@ -31,7 +31,7 @@ def get_appointment_manager(
 
     Args:
         - file_path (Path): Ignored unless a new manager is to be created.
-          The storage location. If `None`, then `_def_appointments_file` is used.
+          The storage location. If empty, then `_def_appointments_file` is used.
         - logger (logging.Logger): Ignored unless a new manager is to be created.
           The logger. If `None`, then `_def_appointment_manager_logger` is used.
         
@@ -54,7 +54,7 @@ def get_appointment_manager(
     if not logger:
         logger = _def_appointment_manager_logger  # assign the default logger
     
-    _appointment_manager = AppointmentManager(fp, logger)
+    _appointment_manager = AppointmentManager(fp, logger=logger)
     logger.info(f"Created a new AppointmentManager({fp}, logger).")
     return _appointment_manager
 
