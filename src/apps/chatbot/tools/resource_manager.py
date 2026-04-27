@@ -145,6 +145,8 @@ class ResourceManager:
         """
         one_second = timedelta(seconds=1)
         min_allowed_datetime = datetime.now() - one_second 
+        if not a_date_time:
+            return False, "The input date time can't be None"
         if not in_the_past_allowed and a_date_time < min_allowed_datetime:
             return False, "The date-time is in the past, which is not allowed."
         
@@ -292,7 +294,18 @@ class ResourceManager:
         """
         return self.resources.get(resource_id, {})
 
-    def get_resources_by_criteria(self, 
+    def resource_matches_criteria(self,
+        resource: dict[str,Any],
+        criteria: dict[str,Callable[[Any],bool]]) -> bool:
+        if self._ignore(resource):
+            return False
+        for key, matcher in criteria.items():
+            if matcher and not matcher(resource[key]):
+                return False
+        # If here, we have a match!
+        return True
+
+    def get_resources_by_criteria(self,
         criteria: dict[str,Callable[[Any],bool]],
         sort_by_key: str = '') -> list[dict[str,Any]]:
         """
@@ -316,21 +329,11 @@ class ResourceManager:
             list[dict[str,Any]] with resources that match the criteria, or [] if no matches are found.
         """
         found = []
-        for resource in self.resources.values():
-            if self._ignore(resource):
-                continue
-            for key, matcher in criteria.items():
-                if matcher and not matcher(resource[key]):
-                    continue
-            # If here, we have a match!
-            found.append(resource)
-        
+        for res in self.resources.values():
+            if self.resource_matches_criteria(res, criteria):
+                found.append(res)
         if sort_by_key:
-            try:
-                found.sort(key = lambda res: res[sort_by_key])
-            except KeyError as ke:
-                self.logger.error(f"KeyError thrown '{ke}'' for missing sort_by_key value, '{sort_by_key}' in found resources: {found}")
-
+            found.sort(key = lambda res: res[sort_by_key])
         return found
 
     def get_resource_ids_by_criteria(self, criteria: dict[str,Any]) -> list[str]:

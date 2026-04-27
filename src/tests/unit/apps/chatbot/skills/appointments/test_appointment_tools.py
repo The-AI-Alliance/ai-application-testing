@@ -420,7 +420,7 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertEqual({}, appointment)
 
     @given(appointment_dicts())
-    def test_get_appointment_id_for_name_and_date_time_returns_nonempty_if_match_exists(self, 
+    def test_get_appointment_id_for_name_and_date_time_returns_nonempty_id_if_match_exists(self, 
         appointment_dict: dict[str,Any]):
         self._clear()
         appointment2 = self._check_success(appointment_dict)
@@ -431,21 +431,63 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertEqual(appointment2['id'], id)
 
     @given(appointment_dicts())
-    def test_get_appointment_id_for_name_and_date_time_returns_empty_if_match_does_not_exist(self, 
+    def test_get_appointment_id_for_name_and_date_time_returns_empty_id_if_match_does_not_exist(self, 
         appointment_dict: dict[str,Any]):
         self._clear()
-        appointment2 = self._check_success(appointment_dict)
+        appointment = self._check_success(appointment_dict)
+        name = appointment_dict['patient_name']
+        dt = appointment_dict['appointment_date_time']
+
         id = get_appointment_id_for_name_and_date_time.run({
-            'patient_name': appointment_dict['patient_name']+'bad',
-            'appointment_date_time': appointment_dict['appointment_date_time'].isoformat()
+            'patient_name': name+'bad',
+            'appointment_date_time': dt.isoformat()
         })
-        self.assertEqual('', id, appointment2)
-        bad_dt = (appointment_dict['appointment_date_time']+timedelta(seconds=1)).isoformat()
+        self.assertEqual('', id, f"{name+'bad'}, {appointment_dict}")
+        
+        bad_dt = dt+timedelta(seconds=10)
         id = get_appointment_id_for_name_and_date_time.run({
-            'patient_name': appointment_dict['patient_name'],
-            'appointment_date_time': bad_dt
+            'patient_name': name,
+            'appointment_date_time': bad_dt.isoformat()
         })
-        self.assertEqual('', id, appointment2)
+        self.assertEqual('', id, f"{bad_dt}, {appointment_dict}")
+
+    @given(appointment_dicts())
+    def test_get_appointment_id_for_name_and_date_time_returns_matching_values(self,
+        appointment_dict: dict[str,Any]):
+        """Test that get_appointment returns existing appointments."""
+        self.tool.clear()
+        appointment = self._check_success(appointment_dict)
+        expected_id = appointment['id']
+        name = appointment['patient_name']
+        dt = appointment['appointment_date_time']
+        id = self.tool.get_appointment_id_for_name_and_date_time(name, dt)
+        self.assertEqual(expected_id, id)
+
+    @given(appointment_dicts())
+    def test_get_appointment_id_for_name_and_date_time_returns_empty_for_nonmatching_values(self,
+        appointment_dict: dict[str,Any]):
+        """Test that get_appointment returns existing appointments."""
+        self.tool.clear()
+        appointment = self._check_success(appointment_dict)
+        name = appointment['patient_name']
+        dt = appointment['appointment_date_time']
+        id1 = self.tool.get_appointment_id_for_name_and_date_time(
+            name+'bad', dt)
+        self.assertEqual('', id1)
+        id2 = self.tool.get_appointment_id_for_name_and_date_time(
+            name, dt+timedelta(seconds=10))
+        self.assertEqual('', id2)
+    def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(self):
+        with self.assertRaises(ValueError):
+            get_appointment_id_for_name_and_date_time.run({
+                'patient_name': '',
+                'appointment_date_time': datetime.now().isoformat(),
+            })
+        with self.assertRaises(ValueError):
+            get_appointment_id_for_name_and_date_time.run({
+                'patient_name': 'John Doe',
+                'appointment_date_time': '',
+            })
 
     @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(self,
