@@ -71,7 +71,7 @@ class TestAppointmentManager(unittest.TestCase):
         if not reason:
             reason = expected.get('reason', '')
 
-        self.assertIn('appointment_id', actual, str(actual))
+        self.assertIn('id', actual, str(actual))
         self.assertTrue(actual.get('success', True), str(actual))
         
         self.assertEqual(appointment_date_time, actual.get('appointment_date_time'), f"appointment_date_time expected: {appointment_date_time}, actual: {actual}")
@@ -140,7 +140,7 @@ class TestAppointmentManager(unittest.TestCase):
         created = {}
         for appointment_dict in appointment_dicts_lists:
             appointment = self._check_success(appointment_dict)
-            created[appointment['appointment_id']] = appointment
+            created[appointment['id']] = appointment
 
         appointments = get_list()
         self.assertEqual(len(appointments), len(created))
@@ -150,15 +150,15 @@ class TestAppointmentManager(unittest.TestCase):
                 appointment = get_appointment(appointment_id) 
             else:
                 for appt in appointments:
-                    if appt['appointment_id'] == appointment_id:
+                    if appt['id'] == appointment_id:
                         appointment = appt
                         break
             self.assertIsNotNone(appointment)
             expected = created.get(appointment_id, {})
             self.assertIsNotNone(expected)
             if expected and appointment: # redundant with previous lines, but enables proper typing.
-                self.assertEqual(appointment_id, appointment['appointment_id'])
-                self.assertEqual(appointment_id, expected['appointment_id'])
+                self.assertEqual(appointment_id, appointment['id'])
+                self.assertEqual(appointment_id, expected['id'])
                 self.assertEqual(expected['appointment_date_time'], appointment['appointment_date_time'])
                 self.assertEqual(expected['patient_name'], appointment['patient_name'])
                 self.assertEqual(expected['reason'], appointment['reason'])
@@ -218,7 +218,7 @@ class TestAppointmentManager(unittest.TestCase):
         """Test canceling an existing appointment"""
         self.tool.clear()
         appointment = self._check_success(appointment_dict)
-        id = appointment['appointment_id']
+        id = appointment['id']
         
         before_count  = self.tool.get_appointments_count()
         success, msg  = self.tool.cancel_appointment(id)
@@ -257,7 +257,7 @@ class TestAppointmentManager(unittest.TestCase):
                 case _:
                     new_date_time = new_date_time + timedelta(hours=1)
 
-        id = appointment['appointment_id']
+        id = appointment['id']
         success, msg = self.tool.change_appointment(id, new_date_time)
         self.assertTrue(success, msg)
         updated = self.tool.get_appointment_by_id(id)
@@ -273,7 +273,7 @@ class TestAppointmentManager(unittest.TestCase):
         ids = []
         for d in appointment_dicts_lists:
             appointment = self._check_success(d)
-            ids.append(appointment['appointment_id'])
+            ids.append(appointment['id'])
         
         appointments = self.tool.get_appointments()
         self._results_list_expected(appointment_dicts_lists, appointments)
@@ -286,7 +286,7 @@ class TestAppointmentManager(unittest.TestCase):
         ids = []
         for d in appointment_dicts_lists:
             appointment = self._check_success(d)
-            ids.append(appointment['appointment_id'])
+            ids.append(appointment['id'])
         
         patient_name = appointment_dicts_lists[0]['patient_name']
         expected_list = list(filter(lambda a: a['patient_name'] == patient_name, self.tool.get_appointments()))
@@ -301,7 +301,7 @@ class TestAppointmentManager(unittest.TestCase):
         ids = []
         for d in appointment_dicts_lists:
             appointment = self._check_success(d)
-            ids.append(appointment['appointment_id'])
+            ids.append(appointment['id'])
         
         # Pick an entry in the middle:
         i = int(len(appointment_dicts_lists)/2)
@@ -317,7 +317,7 @@ class TestAppointmentManager(unittest.TestCase):
         ids = []
         for d in appointment_dicts_lists:
             appointment = self._check_success(d)
-            ids.append(appointment['appointment_id'])
+            ids.append(appointment['id'])
         self.assertEqual(len(appointment_dicts_lists), self.tool.get_appointments_count())
 
     @given(appointment_dicts())
@@ -325,7 +325,7 @@ class TestAppointmentManager(unittest.TestCase):
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id'])
+        appointment = self.tool.get_appointment_by_id(appointment2['id'])
         self._result_expected(appointment_dict, appointment)
 
     @given(appointment_dicts())
@@ -333,7 +333,7 @@ class TestAppointmentManager(unittest.TestCase):
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id']+'bad')
+        appointment = self.tool.get_appointment_by_id(appointment2['id']+'bad')
         self.assertEqual({}, appointment)
 
     @given(appointment_dicts())
@@ -344,21 +344,24 @@ class TestAppointmentManager(unittest.TestCase):
         id = self.tool.get_appointment_id_for_name_and_date_time(
             appointment_dict['patient_name'],
             appointment_dict['appointment_date_time'])
-        self.assertEqual(appointment2['appointment_id'], id)
+        self.assertEqual(appointment2['id'], id)
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_empty_if_match_does_not_exist(self, 
         appointment_dict: dict[str,Any]):
         self.tool.clear()
-        appointment2 = self._check_success(appointment_dict)
+        appointment = self._check_success(appointment_dict)
+        name = appointment_dict['patient_name']
+        dt = appointment_dict['appointment_date_time']
+
         id = self.tool.get_appointment_id_for_name_and_date_time(
-            appointment_dict['patient_name']+'bad',
-            appointment_dict['appointment_date_time'])
-        self.assertEqual('', id)
+            name+'bad', dt)
+        self.assertEqual('', id, f"{name+'bad'}, {appointment_dict}")
+        
+        bad_dt = dt+timedelta(seconds=10)
         id = self.tool.get_appointment_id_for_name_and_date_time(
-            appointment_dict['patient_name'],
-            appointment_dict['appointment_date_time']+timedelta(seconds=1))
-        self.assertEqual('', id)
+            name, bad_dt)
+        self.assertEqual('', id, f"{bad_dt}, {appointment_dict}")
 
     @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(self,
@@ -368,7 +371,7 @@ class TestAppointmentManager(unittest.TestCase):
         ids = []
         for d in appointment_dicts_lists:
             appointment = self._check_success(d)
-            ids.append(appointment['appointment_id'])
+            ids.append(appointment['id'])
         
         # Create new instance and verify appointment exists
         new_tool = self._make_tool(clear = False)
@@ -393,7 +396,6 @@ class TestAppointmentManager(unittest.TestCase):
         new_tool = self._make_tool(clear = False)
         self.assertEqual(0, new_tool.get_appointments_count())
 
-
     @given(appointment_dicts_lists().filter(lambda l: len(l) > 0))
     def test_to_json_from_json_are_reversible(self, 
         appointment_dicts_lists: list[dict[str,Any]]):
@@ -401,7 +403,8 @@ class TestAppointmentManager(unittest.TestCase):
         apmts = [self._check_success(d) for d in appointment_dicts_lists]
         am_json = self.tool.to_json()
         am2 = AppointmentManager.from_json(am_json)
-        self.assertEqual(self.tool.storage.storage_path, am2.storage.storage_path, am_json)
+        self.assertIsNotNone(am2, am_json)
+        self.assertEqual(self.tool.storage.storage_path, am2.storage.storage_path, f"{am_json} -> {am2}")
         self.assertEqual(self.tool.appointments, am2.appointments, am_json)
         
 if __name__ == '__main__':

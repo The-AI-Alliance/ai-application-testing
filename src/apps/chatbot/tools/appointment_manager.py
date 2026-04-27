@@ -39,10 +39,11 @@ class AppointmentManagerEncoder(json.JSONEncoder):
         """
         if isinstance(o, AppointmentManager):
             d = {}
-            d['__class__'] = type(self).__name__
-            d['storage_path'] = o.storage.storage_path
+            d['__class__'] = 'AppointmentManager'
+            d['storage_path'] = str(o.storage.storage_path)
             return d
-        return super().default(o)
+        else:
+            return super().default(o)
 
 class AppointmentManagerDecoder(json.JSONDecoder):
     def __init__(self):
@@ -56,7 +57,7 @@ class AppointmentManagerDecoder(json.JSONDecoder):
         resources in the JSON is _not_ empty, we use that list of resources and replace
         any file contents with them. See `AppointmentManager.make()` for details.
         """
-        if d.get('__class__') == cls.__name__:
+        if d.get('__class__') == 'AppointmentManager':
             storage_path = d.get('storage_path', '')
             return AppointmentManager(storage_path)
         else:
@@ -128,7 +129,7 @@ class AppointmentManager(ResourceManager):
             'appointment_date_time': appointment_date_time,
             'reason': reason,
             'status': 'scheduled',
-            'created_at': datetime.now().isoformat()
+            'created_at': datetime.now()
         }
     
     def _further_date_time_validation(self, a_date_time: datetime) -> tuple[bool,str]:
@@ -388,13 +389,11 @@ class AppointmentManager(ResourceManager):
             raise ValueError(' '.join(errors))
 
         criteria = {}
-        if patient_name:
-            criteria['patient_name'] = lambda pn: pn == patient_name
-        if appointment_date_time:
-            # Check within one second:
-            one_second = timedelta(seconds = 1)
-            dt_eq = lambda dt: dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
-            criteria['appointment_date_time'] = dt_eq
+        criteria['patient_name'] = lambda pn: pn == patient_name
+        # Check within one second:
+        one_second = timedelta(seconds = 1)
+        dt_eq = lambda dt: dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
+        criteria['appointment_date_time'] = dt_eq
         
         found = self.get_resource_ids_by_criteria(criteria)
         match len(found):
@@ -414,5 +413,6 @@ class AppointmentManager(ResourceManager):
 
     def from_json(text: Any) -> AppointmentManager:
         """Attempt to parse a JSON object, returning an instance."""
-        return AppointmentManager.def_json_decoder.decode(text)
-
+        am = AppointmentManager.def_json_decoder.decode(text)
+        assert isinstance(am, AppointmentManager), f"Not an AppointmentManager! am = {am}"
+        return am

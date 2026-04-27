@@ -176,8 +176,8 @@ Where:
 - The `success` value is the first tuple element returned, i.e., `True` or `False`.
 - The `message` value is the second tuple element returned.
 
-### list_appointments
-Lists all active appointments, with optional filtering.
+### get_appointments
+Get all active appointments, with optional filtering.
 
 **Parameters:**
 - `patient_name` (str, optional): Whether to include past appointments (default: False)
@@ -218,7 +218,7 @@ Where:
 
 - The `count` is the number of appointments returned.
 
-### get_appointment
+### get_appointment_by_id
 Return a specific appointment for the specified ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
 
 **Parameters:**
@@ -270,7 +270,7 @@ Where:
 **Action:** Show the patient several available times, ask the patient to pick one and use `create_appointment` with the appropriate parameters.
 
 **Patient:** "Can I cancel my appointment?"
-**Action:** First use `list_appointments` to find their appointment, then `cancel_appointment`
+**Action:** First use `gett_appointments` to find their appointment, then `cancel_appointment`
 
 **Patient:** "I need to reschedule my appointment to Wednesday"
 **Action:** Use `change_appointment` with the new time
