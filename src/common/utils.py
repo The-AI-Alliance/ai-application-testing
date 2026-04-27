@@ -1,3 +1,6 @@
+# Allow types to self-reference during their definitions.
+from __future__ import annotations
+
 import argparse
 import json
 import logging
@@ -214,12 +217,14 @@ class DatetimeEncoder(json.JSONEncoder):
 
 class DatetimeDecoder(json.JSONDecoder):
     def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=DatetimeDecoder.from_dict)
+        super().__init__(object_hook = DatetimeDecoder.from_dict)
 
     @staticmethod
-    def from_dict(d):
+    def from_dict(d: dict[str,Any]) -> Any:
         if d.get("__class__") == "datetime":
-            return datetime.fromisoformat(d.get("iso_str"))
+            iso_str = d.get("iso_str", '')
+            if iso_str:
+                return datetime.fromisoformat(iso_str)
         return d
 
 def_datetime_encoder = DatetimeEncoder()

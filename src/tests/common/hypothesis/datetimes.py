@@ -330,39 +330,3 @@ def past_work_datetimes(
     """
     return date_hour_minute_datetimes(
         date_strategy, hour_strategy, minute_strategy, False)
-
-
-def person_names(
-    text_strategy       = st.text,
-    min_name_parts_size =  1,
-    max_name_parts_size =  3,
-    min_part_length     =  1,
-    max_part_length     = 20):
-
-    """
-    A Hypothesis strategy for generating peoples names.
-
-    Args:
-
-    - text_strategy: The text generator used
-    - min_name_parts_size: The minimum number of parts in the name, e.g., 3 for "First Middle Last"
-    - max_name_parts_size: The maximum number of parts in the name, e.g., 3 for "First Middle Last"
-    - min_part_length: The minimum length for every part of a name
-    - max_part_length: The maximum length for every part of a name
-
-    Returns:
-
-    A strategy of names.
-    """
-    if min_name_parts_size < 1:
-        min_name_parts_size = 1
-    if max_name_parts_size < min_name_parts_size or max_name_parts_size < 1:
-        max_name_parts_size = min_name_parts_size + 1
-    if min_part_length < 1:
-        min_part_length = 1
-    if max_part_length < min_part_length or max_part_length < 1:
-        max_part_length = min_part_length + 1
-    return st.lists(text_strategy(
-            min_size=min_part_length, max_size=max_part_length),
-        min_size=min_name_parts_size, max_size=max_name_parts_size
-    ).map(lambda l: ' '.join(l))

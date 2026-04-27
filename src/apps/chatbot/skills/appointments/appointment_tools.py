@@ -64,9 +64,9 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
     Create a new appointment for a patient.
     
     Args:
-        patient_name: Name of the patient
-        appointment_date_time: ISO format datetime string (e.g., "2026-04-15T10:00:00")
-        reason: Reason for the appointment
+        - patient_name (str): Name of the patient
+        - appointment_date_time (str): ISO format datetime string (e.g., "2026-04-15T10:00:00")
+        - reason (str): Reason for the appointment
         
     Returns:
         A tuple with the ID for the newly-created appointment and a success message, 
@@ -80,14 +80,14 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
     return am.create_appointment(patient_name, appt_dt, reason)
 
 @tool
-def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
+def cancel_appointment(id: str) -> Tuple[bool, str]:
     """
     Cancel an existing appointment, specified by the appointment ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
     
     Args:
-        appointment_id: ID of the appointment to cancel
+        - id (str): ID of the appointment to cancel
         
     Returns:
         True with success message or False with a failure message with reasons for the failure.
@@ -96,18 +96,18 @@ def cancel_appointment(appointment_id: str) -> Tuple[bool, str]:
         cancel_appointment("abc123-def456")
     """
     am = get_appointment_manager()
-    return am.cancel_appointment(appointment_id)
+    return am.cancel_appointment(id)
 
 @tool
-def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, str]:
+def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
     """
     Change an appointment to a new time.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
     
     Args:
-        appointment_id: ID of the appointment to change
-        new_date_time: New ISO format datetime string
+        - id (str): ID of the appointment to change
+        - new_date_time (str): New ISO format datetime string
         
     Returns:
         True with success message or False with a failure message with reasons for the failure.
@@ -117,28 +117,28 @@ def change_appointment(appointment_id: str, new_date_time: str) -> Tuple[bool, s
     """
     new_dt = datetime.fromisoformat(new_date_time)
     am = get_appointment_manager()
-    return am.change_appointment(appointment_id, new_dt)
+    return am.change_appointment(id, new_dt)
 
 @tool
-def list_appointments(patient_name: str = '', after_date_time: str = '') -> list[dict[str, Any]]:
+def get_appointments(patient_name: str = '', after_date_time: str = '') -> list[dict[str, Any]]:
     """
     List all active appointments, with optional filtering.
     
     Args:
-        patient_name: Only return appointments for this patient (default: all patients)
-        after_date_time: Don't include appointments before this date time. If empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
+        - patient_name (str): Only return appointments for this patient (default (str): all patients)
+        - after_date_time (str): Don't include appointments before this date time. I (str)f empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
         
     Returns:
         List of dictionaries for the located appointments
         
     Example:
-        list_appointments()
-        list_appointments(after_date_time="2026-04-10 13:00:00")
-        list_appointments(patient_name="John Doe")
+        get_appointments()
+        get_appointments(after_date_time="2026-04-10 13:00:00")
+        get_appointments(patient_name="John Doe")
     """
     am = get_appointment_manager()
     after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
-    return am.list_appointments(patient_name = patient_name, after_date_time = after_dt)
+    return am.get_appointments(patient_name = patient_name, after_date_time = after_dt)
 
 
 @tool
@@ -150,20 +150,20 @@ def get_appointments_count() -> int:
     return am.get_appointments_count()
 
 @tool
-def get_appointment(appointment_id: str) -> dict[str, Any]:
+def get_appointment_by_id(id: str) -> dict[str, Any]:
     """
     Return a specific appointment for the specified ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
     
     Args:
-        appointment_id: ID of the appointment
+        - id (str): ID of the appointment
         
     Returns:
         Appointment dictionary for the input ID or {} if a matching appointment was not found
     """
     am = get_appointment_manager()
-    return am.get_appointment(appointment_id)
+    return am.get_appointment_by_id(id)
 
 @tool
 def get_appointment_id_for_name_and_date_time( 
@@ -173,9 +173,8 @@ def get_appointment_id_for_name_and_date_time(
     Retrieve the appointment ID for the specified patient and date time.
     
     Args:
-        patient_name: Name of the patient
-        appointment_date_time: Date time of the appointment
-        appointment_date_time: ISO format datetime string (e.g., "2026-04-15T10:00:00")
+        - patient_name (str): Name of the patient
+        - appointment_date_time (str): ISO format datetime string (e.g., "2026-04-15T10:00:00")
         
     Returns:
         ID of the appointment or '' if there is no appointment for that patient at that date time.
@@ -191,8 +190,8 @@ APPOINTMENT_TOOLS = [
     create_appointment,
     cancel_appointment,
     change_appointment,
-    list_appointments,
+    get_appointment_by_id,
+    get_appointments,
     get_appointments_count,
-    get_appointment,
     get_appointment_id_for_name_and_date_time,
 ]

@@ -12,42 +12,11 @@ from typing import Any, Callable, Optional
 
 from common.utils import decode_json, encode_json
 
-class FilePersistentStorageEncoder(json.JSONEncoder):
-    def default(self, o: Any) -> Any:
-        if isinstance(o, FilePersistentStorage):
-            return {"__class__": "FilePersistentStorage", "path": str(o.storage_path)}
-        return super().default(o)
-
-class FilePersistentStorageDecoder(json.JSONDecoder):
-    def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=FilePersistentStorageDecoder.from_dict)
-
-    @staticmethod
-    def from_dict(d):
-        if d.get("__class__") == "FilePersistentStorage":
-            return FilePersistentStorage(d.get("path"))
-        return d
-
 class FilePersistentStorageError(Exception):
     """Custom exception for storage-related errors"""
     pass
 
 class FilePersistentStorage:
-    """
-    Tool for managing JSONL records in a local file.
-    """
-
-    def_json_encoder = FilePersistentStorageEncoder()
-    def_json_decoder = FilePersistentStorageDecoder()
-
-    def encode_json(dct: dict[str,Any]) -> str:
-        """Create a JSON string from the input object."""
-        return FilePersistentStorage.def_json_encoder.encode(dct)
-
-    def decode_json(text: Any) -> dict[str,Any]:
-        """Parse a JSON string, returning a dictionary."""
-        return FilePersistentStorage.def_json_decoder.decode(text)
-
     def __init__(self,
         storage_path: Path | str,
         logger: Optional[logging.Logger] = None):
@@ -55,8 +24,8 @@ class FilePersistentStorage:
         Initialize the appointment tool.
         
         Args:
-        - storage_path: Path to the JSONL file for storing data
-        - logger: Optional logger instance
+            - storage_path: Path to the JSONL file for storing data
+            - logger: Optional logger instance
         """
         self.storage_path = Path(storage_path)
         if logger:
@@ -85,16 +54,14 @@ class FilePersistentStorage:
 
     def load(self) -> tuple[list[dict[str, Any]], list[str]]:
         """
-        Load records from the JSONL storage file.
-        Any timestamps are parsed with datetime.fromisoformat().
+        Load records from the JSONL storage file and parses them using `decode_json(line)`.
 
         Returns:
-
-        A tuple of lists. The first list has dictionaries successfully parsed
-        from the JSONL records. The list reflects the same order found in the file, so when
-        later records are intended to override earlier records, that can be 
-        inferred by code using this module and the list ordering. The second list
-        contains any JSONL records that failed to parse.
+            A tuple of lists. The first list has dictionaries successfully parsed
+            from the JSONL records. The list reflects the same order found in the file, so when
+            later records are intended to override earlier records, that can be 
+            inferred by code using this module and the list ordering. The second list
+            contains any JSONL records that failed to parse.
         """
         dicts = []
         errors = []
@@ -113,14 +80,16 @@ class FilePersistentStorage:
 
     def save(self, records: list[dict[str, Any]]) -> int:
         """
-        Append the list of records to the JSONL file. To overwrite the
-        existing records file, call clear(), then save().
+        Append the list of records to the JSONL file, encoding them
+        using `encode_json(record)`. To overwrite the
+        existing records in the storage file, call `clear()`, then
+        `save()` with _all_ the records.
         
         Args:
-        - records: list of dictionaries to convert to JSONL and write.
+            - records: list of dictionaries to convert to JSONL and write.
 
         Returns:
-        The count of the number of records written, which should be equal to len(records).
+            The count of the number of records written, which should be equal to len(records).
         """
         count = 0
         with open(self.storage_path, 'a') as f:
@@ -134,8 +103,12 @@ class FilePersistentStorage:
 
     def to_json(self) -> str:
         """Create a JSON string from the object."""
-        return FilePersistentStorage.def_json_encoder.encode(self)
+        return json.dumps({
+            '__class__':    'FilePersistentStorage', 
+            'storage_path': self.storage_path,
+        })
 
     def from_json(text: Any) -> FilePersistentStorage:
         """Attempt to parse a JSON object, returning an instance."""
-        return FilePersistentStorage.def_json_decoder.decode(text)
+        d = json.loads(text)
+        return FilePersistentStorage(d.get('storage_path', ''))

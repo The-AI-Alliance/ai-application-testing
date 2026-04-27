@@ -10,21 +10,10 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
-from tests.common.hypothesis.datetimes import (
-    is_work_hours,
-    future_dates,
-    past_dates,
-    work_dates,
-    work_hours,
-    non_work_hours,
-    on_the_hour_minutes,
-    off_the_hour_minutes,
-    future_work_datetimes,
-    past_work_datetimes,
-)
 
-from tests.common.hypothesis.persons import (
-    person_names,
+from tests.common.hypothesis.datetimes import (
+    off_the_hour_minutes,
+    past_work_datetimes,
 )
 
 from tests.common.hypothesis.appointments import (
@@ -33,7 +22,7 @@ from tests.common.hypothesis.appointments import (
     appointment_future_work_datetimes,
     appointment_future_non_work_datetimes,
     appointment_dicts,
-    list_appointment_dicts,
+    appointment_dicts_lists,
 )
 
 class TestAppointmentManager(unittest.TestCase):
@@ -114,7 +103,7 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertNotEqual('', msg)
         after_count = self.tool.get_appointments_count()
         self.assertEqual(before_count+1, after_count)
-        appt = self.tool.get_appointment(id)
+        appt = self.tool.get_appointment_by_id(id)
         self._result_expected(appointment_dict, appt)
         return appt
 
@@ -133,7 +122,7 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertEqual(before_count, after_count)
 
     def _check_appointments_list(self, 
-        list_appointment_dicts: Sequence[Mapping[str,Any]],
+        appointment_dicts_lists: Sequence[Mapping[str,Any]],
         get_list: Callable[[], Sequence[Mapping[str,Any]]],
         get_appointment: Callable[[str], Mapping[str,Any]] | None = None):
         """
@@ -145,11 +134,11 @@ class TestAppointmentManager(unittest.TestCase):
         # sanity checks:
         self.tool.clear()
         self.assertEqual(0, len(get_list()), str(get_list()))
-        dt_set = set([d['appointment_date_time'] for d in list_appointment_dicts])
-        self.assertEqual(len(list_appointment_dicts), len(dt_set), f"{list_appointment_dicts} != {dt_set}")
+        dt_set = set([d['appointment_date_time'] for d in appointment_dicts_lists])
+        self.assertEqual(len(appointment_dicts_lists), len(dt_set), f"{appointment_dicts_lists} != {dt_set}")
         
         created = {}
-        for appointment_dict in list_appointment_dicts:
+        for appointment_dict in appointment_dicts_lists:
             appointment = self._check_success(appointment_dict)
             created[appointment['appointment_id']] = appointment
 
@@ -237,7 +226,7 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertTrue(success, msg)
         self.assertNotEqual('', msg)
         self.assertEqual(before_count-1, after_count)
-        appt = self.tool.get_appointment(id)
+        appt = self.tool.get_appointment_by_id(id)
         self.assertEqual({}, appt)
 
     @given(st.uuids())
@@ -271,72 +260,72 @@ class TestAppointmentManager(unittest.TestCase):
         id = appointment['appointment_id']
         success, msg = self.tool.change_appointment(id, new_date_time)
         self.assertTrue(success, msg)
-        updated = self.tool.get_appointment(id)
+        updated = self.tool.get_appointment_by_id(id)
         self._result_expected(appointment_dict, updated,
             appointment_date_time = new_date_time,
             changed_at = new_date_time)
 
-    @given(list_appointment_dicts())
-    def test_list_appointments_with_no_filters_returns_all_appointments(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+    @given(appointment_dicts_lists())
+    def test_get_appointments_with_no_filters_returns_all_appointments(self,
+        appointment_dicts_lists: list[dict[str,Any]]):
         """Test that appointments persist across tool instances"""
         self.tool.clear()
         ids = []
-        for d in list_appointment_dicts:
+        for d in appointment_dicts_lists:
             appointment = self._check_success(d)
             ids.append(appointment['appointment_id'])
         
-        appointments = self.tool.list_appointments()
-        self._results_list_expected(list_appointment_dicts, appointments)
+        appointments = self.tool.get_appointments()
+        self._results_list_expected(appointment_dicts_lists, appointments)
 
-    @given(list_appointment_dicts().filter(lambda l: len(l) > 0))
-    def test_list_appointments_with_patient_name_filter_returns_appointments_for_that_patient(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+    @given(appointment_dicts_lists().filter(lambda l: len(l) > 0))
+    def test_get_appointments_with_patient_name_filter_returns_appointments_for_that_patient(self,
+        appointment_dicts_lists: list[dict[str,Any]]):
         """Test that appointments persist across tool instances"""
         self.tool.clear()
         ids = []
-        for d in list_appointment_dicts:
+        for d in appointment_dicts_lists:
             appointment = self._check_success(d)
             ids.append(appointment['appointment_id'])
         
-        patient_name = list_appointment_dicts[0]['patient_name']
-        expected_list = list(filter(lambda a: a['patient_name'] == patient_name, self.tool.list_appointments()))
-        appointments = self.tool.list_appointments(patient_name = patient_name)
+        patient_name = appointment_dicts_lists[0]['patient_name']
+        expected_list = list(filter(lambda a: a['patient_name'] == patient_name, self.tool.get_appointments()))
+        appointments = self.tool.get_appointments(patient_name = patient_name)
         self._results_list_expected(expected_list, appointments)
 
-    @given(list_appointment_dicts().filter(lambda l: len(l) > 0))
-    def test_list_appointments_with_date_time_lower_bound_returns_appointments_later_than_that_date_time(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+    @given(appointment_dicts_lists().filter(lambda l: len(l) > 0))
+    def test_get_appointments_with_date_time_lower_bound_returns_appointments_later_than_that_date_time(self,
+        appointment_dicts_lists: list[dict[str,Any]]):
         """Test that appointments persist across tool instances"""
         self.tool.clear()
         ids = []
-        for d in list_appointment_dicts:
+        for d in appointment_dicts_lists:
             appointment = self._check_success(d)
             ids.append(appointment['appointment_id'])
         
         # Pick an entry in the middle:
-        i = int(len(list_appointment_dicts)/2)
-        date_time = list_appointment_dicts[i]['appointment_date_time']
-        expected_list = list(filter(lambda a: a['appointment_date_time'] >= date_time, self.tool.list_appointments()))
-        appointments = self.tool.list_appointments(after_date_time = date_time)
+        i = int(len(appointment_dicts_lists)/2)
+        date_time = appointment_dicts_lists[i]['appointment_date_time']
+        expected_list = list(filter(lambda a: a['appointment_date_time'] >= date_time, self.tool.get_appointments()))
+        appointments = self.tool.get_appointments(after_date_time = date_time)
         self._results_list_expected(expected_list, appointments)
 
-    @given(list_appointment_dicts())
+    @given(appointment_dicts_lists())
     def test_get_appointments_count_returns_the_number_of_appointments(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+        appointment_dicts_lists: list[dict[str,Any]]):
         self.tool.clear()
         ids = []
-        for d in list_appointment_dicts:
+        for d in appointment_dicts_lists:
             appointment = self._check_success(d)
             ids.append(appointment['appointment_id'])
-        self.assertEqual(len(list_appointment_dicts), self.tool.get_appointments_count())
+        self.assertEqual(len(appointment_dicts_lists), self.tool.get_appointments_count())
 
     @given(appointment_dicts())
     def test_get_appointment_returns_nonempty_dict_if_it_exists(self, 
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment(appointment2['appointment_id'])
+        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id'])
         self._result_expected(appointment_dict, appointment)
 
     @given(appointment_dicts())
@@ -344,7 +333,7 @@ class TestAppointmentManager(unittest.TestCase):
         appointment_dict: dict[str,Any]):
         self.tool.clear()
         appointment2 = self._check_success(appointment_dict)
-        appointment = self.tool.get_appointment(appointment2['appointment_id']+'bad')
+        appointment = self.tool.get_appointment_by_id(appointment2['appointment_id']+'bad')
         self.assertEqual({}, appointment)
 
     @given(appointment_dicts())
@@ -371,33 +360,33 @@ class TestAppointmentManager(unittest.TestCase):
             appointment_dict['appointment_date_time']+timedelta(seconds=1))
         self.assertEqual('', id)
 
-    @given(list_appointment_dicts())
+    @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+        appointment_dicts_lists: list[dict[str,Any]]):
         """Test that appointments persist across tool instances"""
         self.tool.clear()
         ids = []
-        for d in list_appointment_dicts:
+        for d in appointment_dicts_lists:
             appointment = self._check_success(d)
             ids.append(appointment['appointment_id'])
         
         # Create new instance and verify appointment exists
         new_tool = self._make_tool(clear = False)
-        appointments = new_tool.list_appointments()
+        appointments = new_tool.get_appointments()
         # check with both the default way of getting an appointment and
         # passing new_tool.get_appointment
-        self._check_appointments_list(list_appointment_dicts, 
-            new_tool.list_appointments)
-        self._check_appointments_list(list_appointment_dicts, 
-            new_tool.list_appointments,
-            get_appointment = new_tool.get_appointment)
+        self._check_appointments_list(appointment_dicts_lists, 
+            new_tool.get_appointments)
+        self._check_appointments_list(appointment_dicts_lists, 
+            new_tool.get_appointments,
+            get_appointment = new_tool.get_appointment_by_id)
 
-    @given(list_appointment_dicts().filter(lambda l: len(l) > 0))
+    @given(appointment_dicts_lists().filter(lambda l: len(l) > 0))
     def test_clear_erases_appointments(self,
-        list_appointment_dicts: list[dict[str,Any]]):
+        appointment_dicts_lists: list[dict[str,Any]]):
         """Test that appointments persist across tool instances"""
         self.tool.clear()
-        apmts = [self._check_success(d) for d in list_appointment_dicts]
+        apmts = [self._check_success(d) for d in appointment_dicts_lists]
         self.assertEqual(len(apmts), self.tool.get_appointments_count())
         self.tool.clear()
         self.assertEqual(0, self.tool.get_appointments_count())
@@ -405,11 +394,11 @@ class TestAppointmentManager(unittest.TestCase):
         self.assertEqual(0, new_tool.get_appointments_count())
 
 
-    @given(list_appointment_dicts().filter(lambda l: len(l) > 0))
+    @given(appointment_dicts_lists().filter(lambda l: len(l) > 0))
     def test_to_json_from_json_are_reversible(self, 
-        list_appointment_dicts: list[dict[str,Any]]):
+        appointment_dicts_lists: list[dict[str,Any]]):
         self.tool.clear()
-        apmts = [self._check_success(d) for d in list_appointment_dicts]
+        apmts = [self._check_success(d) for d in appointment_dicts_lists]
         am_json = self.tool.to_json()
         am2 = AppointmentManager.from_json(am_json)
         self.assertEqual(self.tool.storage.storage_path, am2.storage.storage_path, am_json)

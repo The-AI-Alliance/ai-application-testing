@@ -8,9 +8,9 @@ from .appointment_tools import (
     create_appointment,
     cancel_appointment,
     change_appointment,
-    list_appointments,
+    get_appointment_by_id,
+    get_appointments,
     get_appointments_count,
-    get_appointment,
     get_appointment_id_for_name_and_date_time,
 )
 
@@ -20,8 +20,8 @@ __all__ = [
     'create_appointment',
     'cancel_appointment',
     'change_appointment',
-    'list_appointments',
+    'get_appointment_by_id',
+    'get_appointments',
     'get_appointments_count',
-    'get_appointment',
     'get_appointment_id_for_name_and_date_time',
 ]

@@ -2,309 +2,62 @@
 Test utilities, e.g., strategy generators for Hypothesis.
 """
 from hypothesis import given, strategies as st
-from datetime import datetime, timedelta, date, time
 
-one_day   = timedelta(days=1)
-today     = date.today()
-yesterday = today - one_day
-tomorrow  = today + one_day
+def_person_name_part_regex_format = r"['\w][-'\w]{%d,%d}"
 
-def is_work_hours(
-    dt: datetime, 
-    weekdays_only: bool           = True,
-    start_hour_inclusive: int     = 8,
-    end_hour_inclusive: int       = 17,
-    holidays: set[tuple[int,int]] = set()) -> bool:
+def person_name_parts(
+    regex_format: str = def_person_name_part_regex_format,
+    min_size: int     =  1,
+    max_size: int     = 10):
+
     """
-    Returns True if the input datetime is falls within work hours,
-    including if it is a weekday (when weekdays_only is True), the hours
-    fall within start_hour_inclusive and end_hour_inclusive, and the date
-    isn't a holiday.
-    """
-    if (dt.month, dt.day) in holidays:
-        return False
-    elif weekdays_only and dt.weekday() > 4:
-        return False
-    elif dt.hour < start_hour_inclusive or dt.hour > end_hour_inclusive:
-        return False
-    return True
-
-def future_dates(
-    date_strategy   = st.dates,
-    min_value: date = date.min,
-    max_value: date = date.max):
-    """
-    A Hypothesis strategy for generating dates in the future, using the
-    input date_strategy (default st.dates) and min_value and max_value.
-
-    We don't return today's date, because when constructing datetimes, we
-    have to handle rejecting today's date when the hour and minutes are
-    actually in the past. This often results in too much filtering of examples.
+    A Hypothesis strategy for generating parts of a person's name.
 
     Args:
-
-    - date_strategy: the "generic" strategy to use to generate dates.
-    - min_value: the earliest date. 
-      If the value is < tomorrow, then tomorrow is used.
-    - max_value: the latest date. 
-      If the value is < min_value (after adjusting the min_value as required),
-      then min_value is used.
-    
-    Returns:
-
-    A strategy for generating dates that occur in the future, possibly
-    including today, between the min_value and max_value, inclusive.
-    """
-    if min_value < tomorrow:
-        min_value = tomorrow
-    if max_value < min_value:
-        max_value = min_value
-    return date_strategy(min_value = min_value, max_value = max_value)
-
-def past_dates(
-    date_strategy   = st.dates,
-    min_value: date = date.min,
-    max_value: date = date.max):
-    """
-    A Hypothesis strategy for generating dates in the past, meaning 
-    yesterday or earlier, using the input date_strategy (default st.dates)
-    and min_value and max_value.
-
-    We don't return today's date, because when constructing datetimes, we
-    have to handle rejecting today's date when the hour and minutes are
-    actually in the future. This often results in too much filtering of examples.
-
-    Args:
-
-    - date_strategy: the "generic" strategy to use to generate dates.
-    - min_value: the earliest date. 
-      If the value is > max_value (after adjusting it as discussed next),
-      then max_value is used.
-    - max_value: the latest date. 
-      If the value is > yesterday, then yesterday is used.
-    
-    Returns:
-
-    A strategy for generating dates that occur in the past, possibly 
-    including today, between the min_value and max_value, inclusive.
-    """
-    if max_value > yesterday:
-        max_value = yesterday
-    if min_value > max_value:
-        min_value = max_value
-    return date_strategy(min_value = min_value, max_value = max_value)
-
-def work_dates(
-    date_strategy                 = future_dates,
-    min_value: date               = date.min,
-    max_value: date               = date.max,
-    weekdays_only: bool           = True,
-    holidays: set[tuple[int,int]] = set()):
-    """
-    A Hypothesis strategy for generating work dates.
-
-    Args:
-
-    - date_strategy: the strategy to use to generate candidate dates (defaults to future dates).
-    - min_value: the earliest date. See the documentation for the passed-in date_strategy.
-    - max_value: the latest date. See the documentation for the passed-in date_strategy.
-    - weekdays_only: Only return dates that fall on M-F.
-    - holidays: A set of tuples with month-day integers that are holidays to exclude.
+        - regex_format (str): The allowed format for name parts. It is a `printf`-style 
+          format string that takes two integer arguments (i.e., `%d`) provided by
+          `min_size`, for the minimum length, and `max_size`, for the maximum length.
+          The regex will be used for a full match, even if it doesn't start with "^" nor
+          end with "$".
+        - min_size (int): The minimum length for the name part; >= 1
+        - max_size (int): The maximum length for the name part; >= min_size
 
     Returns:
-
-    A strategy for generating of valid work dates.
-    """    
-    def allowed(dt: date) -> bool:
-        if weekdays_only and dt.weekday() >= 5:
-            return False
-        if holidays and (dt.month, dt.day) in holidays:
-            return False
-        return True
-
-    return date_strategy(min_value=min_value, max_value=max_value).filter(
-        lambda dt: allowed(dt))
-
-def work_hours(
-    start_hour_inclusive: int = 8,
-    end_hour_inclusive: int   = 17):
+        A strategy for parts of a person's name.
     """
-    A Hypothesis strategy for generating valid work hours as integers between 0 and 23.
-
-    Args:
-
-    - start_hour_inclusive: The hour work starts; if < 0, 0 is used.
-    - end_hour_inclusive: The hour work ends (or some other end-of-day limit, such as the last time slot for an appointment); if > 23, 23 is used.
-
-    Returns:
-
-    A strategy of integer hours.
-    """
-    if start_hour_inclusive < 0:
-        start_hour_inclusive = 0
-    if end_hour_inclusive > 23:
-        end_hour_inclusive = 23
-    return st.integers(min_value = start_hour_inclusive, max_value = end_hour_inclusive)
-
-def non_work_hours(
-    last_morning_hour_inclusive: int  = 7,
-    first_evening_hour_inclusive: int = 18):
-    """
-    A Hypothesis strategy for generating hours outside of the work hours.
-
-    Args:
-
-    last_morning_hour_inclusive: Hours between 0 (midnight) and this value, inclusive, can be returned; reset to 0 if < 0.
-    end_hour_inclusive:  Hours between this value and 23 (11 PM), inclusive, can be returned; reset to min_value if < min_value or 23 if > 23.
-
-    Returns:
-
-    A strategy of integer hours.
-    """
-    if last_morning_hour_inclusive < 0:
-        last_morning_hour_inclusive = 0
-    if first_evening_hour_inclusive > 23:
-        first_evening_hour_inclusive = 23
-    if first_evening_hour_inclusive < last_morning_hour_inclusive:
-        first_evening_hour_inclusive = last_morning_hour_inclusive
-    return st.one_of(
-        st.integers(min_value = 0, max_value = last_morning_hour_inclusive),
-        st.integers(min_value = first_evening_hour_inclusive, max_value = 23))
-
-def on_the_hour_minutes():
-    """
-    A Hypothesis strategy for generating minutes that always returns 0 minutes.
-
-    Returns:
-
-    A strategy of integer minutes.
-    """ 
-    return st.just(0)
-
-def off_the_hour_minutes():
-    """
-    A Hypothesis strategy for generating minutes that always returns 
-    a minutes value between 1 and 59, but never 0.
-
-    Returns:
-
-    A strategy of integer minutes.
-    """
-    return st.integers(min_value=1, max_value=59)
-
-def date_hour_minute_datetimes(
-    date_strategy,
-    hour_strategy,
-    minute_strategy,
-    future: bool):
-    """
-    A Hypothesis strategy for generating future or datetimes, with the dates, hours, and minutes generated
-    by the input strategies. This method could be called directly, but it is important to pass consistent
-    date_strategy and future arguments (either both for the past or the future). Instead, try to use
-    future_work_datetimes or past_work_datetimes, which are implemented with this method.
-
-    Args:
-
-    - date_strategy: for generating dates. If you pass a future date strategy, pass True for
-      the future flag. If you pass a past date strategy, pass False for the future flag.
-    - hour_strategy: for generating hours (defaults to work hours)
-    - minute_strategy: for generating minutes (defaults to on the hour minutes - 0)
-    - future: True if we should only allow the combined datetime to be >= datetime.now().
-      False if only past datetimes (< datetime.now()) should be returned. (Note that == is 
-      considered a future time.) This flag is useful because date_strategy can return today,
-      and combined with the hour and minute, the resulting datetime could be outside the
-      desired past or future constraint, contrary to goals of the date_strategy used.
-
-    Returns:
-
-    A strategy for datetime generation.
-    """
-    def tuple_to_datetime(t: tuple[date,int,int]) -> datetime:
-        (dte, hour, minute) = t
-        return datetime.combine(dte, time(hour, minute))
-    def is_future_or_past(dt: datetime) -> bool:
-        now = datetime.now()
-        return dt >= now if future else dt < now
-    return st.tuples(date_strategy(), hour_strategy(), minute_strategy()).map(
-        lambda  t: tuple_to_datetime(t)).filter(
-        lambda dt: is_future_or_past(dt))
-
-def future_work_datetimes(
-    date_strategy   = lambda: work_dates(date_strategy = future_dates),
-    hour_strategy   = work_hours,
-    minute_strategy = on_the_hour_minutes):
-    """
-    A Hypothesis strategy for generating future datetimes, with the dates, hours, and minutes generated
-    by the input strategies.
-
-    Args:
-
-    - date_strategy: for generating dates. Defaults to future work dates.
-      DO NOT pass a past dates strategy, as the filtering logic will fail for today's date!
-    - hour_strategy: for generating hours (defaults to work hours)
-    - minute_strategy: for generating minutes (defaults to on the hour minutes - 0)
-
-    Returns:
-
-    A strategy for future datetime generation.
-    """
-    return date_hour_minute_datetimes(
-        date_strategy, hour_strategy, minute_strategy, True)
-
-def past_work_datetimes(
-    date_strategy   = lambda: work_dates(date_strategy = past_dates),
-    hour_strategy   = work_hours,
-    minute_strategy = on_the_hour_minutes):
-    """
-    A Hypothesis strategy for generating past datetimes, with the dates, hours, and minutes generated
-    by the input strategies.
-
-    Args:
-
-    - date_strategy: for generating dates. Defaults to past work dates.
-      DO NOT pass a future dates strategy, as the filtering logic will fail for today's date!
-    - hour_strategy: for generating hours (defaults to work hours)
-    - minute_strategy: for generating minutes (defaults to on the hour minutes - 0)
-
-    Returns:
-
-    A strategy for past datetime generation.
-    """
-    return date_hour_minute_datetimes(
-        date_strategy, hour_strategy, minute_strategy, False)
-
+    if min_size < 1:
+        min_size = 1
+    if max_size < min_size:
+        max_size = min_size
+    # We subtract one, because we already capture the opening character separately.
+    regex_str = regex_format % (min_size-1, max_size-1)
+    return st.from_regex(regex_str, fullmatch=True)
 
 def person_names(
-    text_strategy       = st.text,
-    min_name_parts_size =  1,
-    max_name_parts_size =  3,
-    min_part_length     =  1,
-    max_part_length     = 20):
+    regex_format: str     = def_person_name_part_regex_format,
+    min_size: int         =  1,
+    max_size: int         =  3,
+    min_part_length: int  =  1,
+    max_part_length: int  = 10):
 
     """
-    A Hypothesis strategy for generating peoples names.
+    A Hypothesis strategy for generating peoples names, consisting of
+    one or more name parts, returned as a list of strings.
 
     Args:
-
-    - text_strategy: The text generator used
-    - min_name_parts_size: The minimum number of parts in the name, e.g., 3 for "First Middle Last"
-    - max_name_parts_size: The maximum number of parts in the name, e.g., 3 for "First Middle Last"
-    - min_part_length: The minimum length for every part of a name
-    - max_part_length: The maximum length for every part of a name
+        - regex_format (str): The allowed format for name parts. See documentation for it in `person_name_parts()`.
+        - min_size (int): The minimum number of parts in the name, e.g., 3 for "First Middle Last"; >= 1
+        - max_size (int): The maximum number of parts in the name, e.g., 3 for "First Middle Last"; >= min_size
+        - min_part_length (int): The minimum length for every part of a name; >= 1
+        - max_part_length (int): The maximum length for every part of a name; >= min_part_length
 
     Returns:
-
-    A strategy of names.
+        A strategy for names, which will be returned as a list of parts.
     """
-    if min_name_parts_size < 1:
-        min_name_parts_size = 1
-    if max_name_parts_size < min_name_parts_size or max_name_parts_size < 1:
-        max_name_parts_size = min_name_parts_size + 1
-    if min_part_length < 1:
-        min_part_length = 1
-    if max_part_length < min_part_length or max_part_length < 1:
-        max_part_length = min_part_length + 1
-    return st.lists(text_strategy(
+    if min_size < 1:
+        min_size = 1
+    if max_size < min_size:
+        max_size = min_size
+    return st.lists(person_name_parts(regex_format,
             min_size=min_part_length, max_size=max_part_length),
-        min_size=min_name_parts_size, max_size=max_name_parts_size
-    ).map(lambda l: ' '.join(l))
+        min_size=min_size, max_size=max_size)

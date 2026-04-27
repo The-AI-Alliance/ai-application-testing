@@ -17,6 +17,7 @@ from tests.common.hypothesis.datetimes import (
 )
 
 from tests.common.hypothesis.persons import (
+    person_name_parts,
     person_names,
 )
 
@@ -52,12 +53,12 @@ def appointment_dicts(
     reason_strategy = st.text):
     return st.tuples(datetime_strategy(), patient_name_strategy(), reason_strategy()).map(lambda t:
         AppointmentManager.make_appointment_dict(
-        appointment_date_time = t[0],
-        patient_name = t[1],
-        reason = t[2],
-        status = 'scheduled'))
+            appointment_date_time = t[0],
+            patient_name = t[1], 
+            reason = t[2],
+            status = 'scheduled'))
 
-def list_appointment_dicts(
+def appointment_dicts_lists(
     datetime_strategy = appointment_future_work_datetimes,
     patient_name_strategy = person_names,
     reason_strategy = st.text):
