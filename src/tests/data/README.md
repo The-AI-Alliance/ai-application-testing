@@ -1,6 +1,15 @@
 # README for AI Test's Data Directory
 
-The JSONL files in this directory, one per _use case_, are adapted from the outputs of the data synthesis and validation tools discussed in the guide. However, quite a few changes have been made reflecting experience working with these data sets, adding additional uses, etc. Hence, this README discusses some important details.
+The JSONL files in this directory, one per _use case_, fall into two categories:
+
+* _Simple_: Q&A pairs used with `ChatBotSimple` and sometimes `ChatBotAgent`.
+* _Agent_: More complex JSON files used with the _agent skills_ implemented in `ChatBotAgent`.
+
+When there are two JSONL files for a use case, for example, `appointments-simple.jsonl` and `appointments-agent.jsonl`, they used with `ChatBotSimple` and `ChatBotAgent`, respectively. If there is only one file, like `others.jsonl`, it is used to for testing both implementations.
+
+## Format for the &ldquo;Simple&rdquo; JSONL Files 
+
+The _simple_ files are adapted from the outputs of the data synthesis and validation tools discussed in the guide. However, quite a few changes have been made reflecting experience working with these data sets, adding additional uses, etc. Hence, this README discusses some important details.
 
 The format used is illustrated with this example from `appointments.jsonl` (nicely formatted...):
 
@@ -47,3 +56,8 @@ The `label` returned by the ChatBot should correspond to the use case file name!
 ```
 
 You can see from the query that it is reasonable to interpret the query as an appointment or prescription query. It is really both, but at this time we ask the ChatBot to return only one `label`.
+
+## Format for the &ldquo;Agent&rdquo; JSONL Files
+
+TODO
+
