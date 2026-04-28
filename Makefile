@@ -763,7 +763,7 @@ unit-tests-appointments::
 	    --start-directory tests/unit/apps/chatbot \
 	    --top-level-directory .
 
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple unit-tests-ai-preamble
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
