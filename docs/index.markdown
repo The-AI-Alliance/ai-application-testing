@@ -27,8 +27,9 @@ Problems arise when we introduce [Generative AI Models]({{site.glossaryurl}}/#ge
 
 In contrast, our AI-expert colleagues (researchers and data scientists) use the tools of [Probability and Statistics]({{site.glossaryurl}}/#probability-and-statistics){:target="_glossary"} to analyze stochastic model responses and to assess how well the models perform against particular objectives. For example, a model might score 85% on a [Benchmark]({{site.glossaryurl}}/#benchmark){:target="_glossary"} for high school-level mathematical knowledge. Is that good enough? It depends on the application in mind! Rarely are simple _pass/fail_ answers available.
 
-![Developer to AI Expert Spectrum]({{site.baseurl}}/assets/images/developer-to-AI-expert-spectrum.png "Developer to AI Expert Spectrum")
+![Developer to AI Expert Spectrum]({{site.baseurl}}/assets/images/developer-to-AI-expert-spectrum.png "Developer to AI Expert Spectrum"){: .spectrum-image .center}
 
+{: .center}
 **Figure 1:** The spectrum between deterministic and stochastic behavior, and the people accustomed to them!
 
 _**We have to bridge this divide.**_ As developers, we need to understand and adapt these data science tools for our needs. This will mean learning some probability and statistics concepts, but we shouldn't need to become experts. Similarly, our AI-expert colleagues need to better understand our needs, so they can help us take their work and use it to deliver reliable, trustworthy, AI-enabled products.
