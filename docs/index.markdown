@@ -45,7 +45,7 @@ The goals of this project are two fold:
 {: .attention}
 > **TODO:** 
 > 
-> This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues]({{site.gh_edit_repository}}/issues){:target="issues"} and [discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
+> This user guide is a work in progress. You will find a number of ideas we are exploring and planned additions indicated as **TODO** items. See also the project [issues]({{site.gh_edit_repository}}/issues){:target="issues"}, [dashboard](https://github.com/orgs/The-AI-Alliance/projects/31){:target="dashboard"}, and [discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"}. [We welcome your feedback and contributions]({{site.baseurl}}/contributing).
 
 ## Overview of This Site
 
