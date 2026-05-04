@@ -1,45 +1,121 @@
 # Unit tests for the "collections" module using Hypothesis for property-based testing.
 # https://hypothesis.readthedocs.io/en/latest/
 
-import json, os, re, sys, shutil
 import unittest
 from hypothesis import given, strategies as st
-from pathlib import Path
 from typing import Any
 
-from common.collections import dict_permutations, mult
+from common.collections import chain, dict_permutations, get, mult
+
 
 class TestCollections(unittest.TestCase):
     """
     Test the collections utilities.
     """
 
-    def _check(self, dictionary: dict[str,Any], n:int = -1):
+    def _check(self, dictionary: dict[str, Any], n: int = -1):
         actual = dict_permutations(dictionary, max_size=n)
+
         # Check the size of the returned array.
         def _length(col):
             lc = len(col)
             return lc if n < 0 or lc <= n else n
+
         lens = [_length(col) for col in dictionary.values()]
         expected_len = mult(lens, skip_zeros=True)
-        self.assertEqual(expected_len, len(actual), f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}")
+        self.assertEqual(
+            expected_len,
+            len(actual),
+            f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}",
+        )
         # Check other expected sizes:
         expected_dict_len = sum([1 for col in dictionary.values() if len(col) > 0])
         for i in range(expected_len):
-            for j in range(i+1, expected_len):
+            for j in range(i + 1, expected_len):
                 leni = len(actual[i])
                 lenj = len(actual[j])
-                self.assertEqual(expected_dict_len, leni, f"i={i}: {expected_dict_len} != {leni}, {actual[i]}")
-                self.assertEqual(expected_dict_len, lenj, f"j={j}: {expected_dict_len} != {lenj}, {actual[j]}")
-                self.assertNotEqual(actual[i], actual[j], f"{i}, {j}: {actual[i]}, d = {dictionary}")
+                self.assertEqual(
+                    expected_dict_len,
+                    leni,
+                    f"i={i}: {expected_dict_len} != {leni}, {actual[i]}",
+                )
+                self.assertEqual(
+                    expected_dict_len,
+                    lenj,
+                    f"j={j}: {expected_dict_len} != {lenj}, {actual[j]}",
+                )
+                self.assertNotEqual(
+                    actual[i], actual[j], f"{i}, {j}: {actual[i]}, d = {dictionary}"
+                )
 
         # Adding one or more keys with empty values doesn't add to the permutations:
-        actual2 = dict_permutations(dictionary | {'empty-1': [], 'empty-2': []}, max_size=n)
+        actual2 = dict_permutations(
+            dictionary | {"empty-1": [], "empty-2": []}, max_size=n
+        )
         self.assertEqual(expected_len, len(actual2))
 
+    @given(st.integers(min_value=0, max_value=10))
+    def test_chain_returns_value_at_end_of_chain(self, depth: int):
+        keys = [str(i) for i in range(depth)]
+        dict = {}
+        d = dict
+        for k in keys:
+            d[k] = {}
+            d = d[k]
+        d[str(depth)] = depth
+        keys.append(str(depth))
+        self.assertEqual(depth, chain(dict, keys), f"{depth}: {keys}, {dict}")
+
+    @given(st.integers(min_value=0, max_value=10))
+    def test_chain_ends_early_and_returns_None_at_first_None_value(self, depth: int):
+        keys = [str(i) for i in range(depth)]
+        keys2 = [str(i) for i in range(2 * depth)]
+        dict = {}
+        d = dict
+        for k in keys:
+            d[k] = {}
+            d = d[k]
+        d[str(depth)] = None
+        self.assertIsNone(chain(dict, keys2), f"{depth}: {keys2}, {dict}")
+
     @given(
-        st.dictionaries(st.text(min_size=1, max_size=10), st.sets(st.text(max_size=10), max_size=4), max_size=4))
-    def test_dict_permutations(self, dictionary: dict[str,Any]):
+        st.dictionaries(
+            st.text(min_size=1, max_size=10), st.text(max_size=10), max_size=4
+        )
+    )
+    def test_get_returns_value_for_the_key(self, dictionary: dict[str, str]):
+        for key in dictionary:
+            self.assertIsNotNone(get(dictionary, key))
+
+    @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key(
+        self, set: set[str]
+    ):
+        dictionary = {}
+        for key in set:
+            with self.assertRaises(ValueError):
+                get(dictionary, key)
+
+    @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored(
+        self, set: set[str]
+    ):
+        dictionary = {}
+        for key in set:
+            dictionary[key] = None
+            with self.assertRaises(ValueError):
+                get(dictionary, key)
+            with self.assertRaises(ValueError):
+                get(dictionary, key, "hello!")
+
+    @given(
+        st.dictionaries(
+            st.text(min_size=1, max_size=5),
+            st.sets(st.text(max_size=10), max_size=4),
+            max_size=4,
+        )
+    )
+    def test_dict_permutations(self, dictionary: dict[str, Any]):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values
         We use a set for the values because we want to assume uniqueness, which is how
@@ -48,9 +124,12 @@ class TestCollections(unittest.TestCase):
         self._check(dictionary)
 
     @given(
-        st.dictionaries(st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4),
-        st.integers(min_value=0, max_value=4))
-    def test_dict_permutations_limit_n(self, dictionary: dict[str,Any], n: int):
+        st.dictionaries(
+            st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4
+        ),
+        st.integers(min_value=0, max_value=4),
+    )
+    def test_dict_permutations_limit_n(self, dictionary: dict[str, Any], n: int):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values,
         but truncating the input collections to size n.
@@ -61,23 +140,23 @@ class TestCollections(unittest.TestCase):
 
     def test_dict_permutations_limit_n_special_cases(self):
         """
-        Check that dict_permutations returns a list of dicts with all permutations of 
+        Check that dict_permutations returns a list of dicts with all permutations of
         the single key-values, but truncating the input collections to size n.
         We use a set for the values because we want to assume uniqueness, which is how
         this feature will be used.
         Manually check a few cases.
         """
-        dictionary = {'k1': ['v11', 'v12'], 'k2': ['v21', 'v22']}
+        dictionary = {"k1": ["v11", "v12"], "k2": ["v21", "v22"]}
         actualm1 = dict_permutations(dictionary, max_size=-1)
         # Note the ordering in expectedm1; this is how the dictionaries happen to be
         # constructed. There is no requirement for this ordering, so this assumption
         # could be break! If so, just verify the two lists are equal in length and and
         # they contain the same dictionary elements.
         expectedm1 = [
-            {'k1': 'v12', 'k2': 'v22'},
-            {'k1': 'v12', 'k2': 'v21'},
-            {'k1': 'v11', 'k2': 'v22'},
-            {'k1': 'v11', 'k2': 'v21'},
+            {"k1": "v12", "k2": "v22"},
+            {"k1": "v12", "k2": "v21"},
+            {"k1": "v11", "k2": "v22"},
+            {"k1": "v11", "k2": "v21"},
         ]
         self.assertEqual(expectedm1, actualm1)
 
@@ -86,7 +165,7 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected0, actual0)
 
         actual1 = dict_permutations(dictionary, max_size=1)
-        expected1 = [{'k1': 'v11', 'k2': 'v21'}]
+        expected1 = [{"k1": "v11", "k2": "v21"}]
         self.assertEqual(expected1, actual1)
 
     @given(st.lists(st.integers(), max_size=5))
@@ -109,6 +188,7 @@ class TestCollections(unittest.TestCase):
                 expected *= n
 
         self.assertEqual(expected, mult(ints, skip_zeros=True))
+
 
 if __name__ == "__main__":
     unittest.main()

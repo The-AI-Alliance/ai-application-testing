@@ -1,20 +1,31 @@
 # Common code for tests of the "ChatBot" module using Hypothesis for property-based testing.
 # https://hypothesis.readthedocs.io/en/latest/
 
-from hypothesis import given, strategies as st
 
-import json, logging, os, random, re, sys, time, unittest
+import json
+import logging
+import os
+import random
+import re
+import time
+import unittest
 from datetime import datetime
-from io import StringIO
+from io import StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler, ChatBotShell
-from common.utils import dict_pop, decode_json
-from common.collections import dict_permutations
+from apps.chatbot.tools import ResourceManager
+from common.utils import chain, dict_pop, decode_json, get
 
-class TestPrompt():
-    """Class to hold a benchmark datum: a prompt and expected labels, actions, and rating."""
+class BaseTest():
+    """Base class for `QnATest` and `ScenarioTest`."""
+
+class QnATest(BaseTest):
+    """
+    Class to hold a benchmark Q&A pair: a query 
+    and expected results: labels, actions, and rating.
+    """
     def __init__(self,
         query: str,
         labels: Sequence[str],
@@ -22,6 +33,7 @@ class TestPrompt():
         rating: int,
         reason: str = '',
         keywords: Mapping[str,str] = {}):
+        super().__init__()
         self.query = query
         self.labels = labels
         self.actions = actions
@@ -39,12 +51,265 @@ class TestPrompt():
             raise ValueError(f"Invalid inputs: {', '.join(errors)}")
 
     def __repr__(self) -> str:
-        return f"""TestPrompt(query='{self.query}',labels='{self.labels}',actions='{self.actions}',rating={self.rating},reason={self.reason},keywords={self.keywords})"""
+        return self.json()
 
     def dict(self) -> dict[str,Any]:
-        d = {
-            'name': 'TestPrompt',
+        d = { 'name': 'QnATest' }
+        d.update(vars(self))
+        return d
+
+    def json(self) -> str:
+        return json.dumps(self.dict())
+
+
+class ScenarioTest(BaseTest):
+    """
+    Class to hold the test data for a "scenario" test, where one or more
+    round trip interactions between the user (or AI surrogate) and the system
+    are expected to occur.
+    """
+
+    class Inputs:
+        def __init__(self,
+            required_information: list[dict[str,str]],
+            pre_conditions: list[str]):
+            self.required_information = required_information
+            self.pre_conditions = pre_conditions
+
+    class Success:
+        def __init__(self,
+            success_text: str,
+            success_post_conditions: list[str]):
+            self.success_text = success_text
+            self.success_post_conditions = success_post_conditions
+
+    class Failure:
+        def __init__(self,
+            failure_text: str,
+            failure_post_conditions: list[str]):
+            self.failure_text = failure_text
+            self.failure_post_conditions = failure_post_conditions
+
+    def __init__(self,
+        scenario: str,
+        inputs: Inputs,
+        successes: list[Success],
+        failures: list[Failure],
+        initial_queries: list[str]):
+
+        self.scenario = scenario,
+        self.inputs = inputs
+        self.successes = successes
+        self.failures = failures
+        self.initial_queries = initial_queries
+        self.start_data = {}
+        self.end_data = {}
+        self.errors = {
+            'required-information': [],
+            'pre-conditions': [],
+            'post-conditions': [],
         }
+
+    def start(self, chatbot: ChatBotAgent) -> dict[str,Any]:
+        """
+        Called at the start of the test. Captures the data needed 
+        for the pre- and post-condition checks. Note that pre-conditions
+        can't be checked now, because we don't yet know information like
+        the patient name and one or more date times that might be needed.
+        However, we save the appointments list before the scenario and we
+        get the required information at the end, so we can check the pre-
+        conditions _then_.
+        """
+        # TODO: hard-codes awareness of particular scenarios, which
+        # should be abstracted away eventually.
+        am = chatbot.appointment_manager
+        self.start_appointments = am.appointments.copy()
+
+    def end(self, chatbot: ChatBotAgent, result: dict[str,Any]) -> tuple[bool, dict[str,Any]]:
+        """
+        Called after the test has finished. Captures the data needed 
+        for the post-condition checks. Then performs all checks.
+        """
+        # TODO: hard-codes awareness of particular scenarios, which
+        # should be abstracted away eventually.
+        am = chatbot.appointment_manager
+        self.end_appointments = am.appointments.copy()
+        self.check_required_information(chatbot, result)
+        self.check_conditions(chatbot, result)
+        success = \
+            self.errors['required-information'] == [] and \
+            self.errors['pre-conditions'] == [] and \
+            self.errors['post-conditions'] == []
+        return success, self.errors
+
+    def check_required_information(self, chatbot: ChatBotAgent, result: dict[str,Any]):
+        """
+        Analyze the results for required information and atempt to convert string values to the
+        correct types. Add any errors to `self.errors['required-information']`. If successful,
+        the string value for a label is replaced with the parsed object.
+        """
+        captures = get(result, 'captured_values')
+        for info in self.inputs.required_information:
+            label= get(info, 'label')
+            value_str: str = captures.get('label') 
+            if not value_str:
+                self.errors['required-information'].append(f"{label}: value not captured")
+            else:
+                value, err_msg = self.parse_value(label, value_str)
+                if err_msg:
+                    self.errors['required-information'].append(f"{label}: value type error: {err_msg}")
+                else:
+                    captures[label] = value
+
+    def check_appointment_at_date_time_for_patient(self,
+        should_find: bool,
+        include_patient_name: bool,
+        which_conditions: str,
+        result: dict[str,Any]):
+        appointments = self.start_appointments \
+            if which_conditions == 'pre-conditions' else self.end_appointments
+        run_criteria = True
+        criteria = {}
+        if include_patient_name:
+            pn = chain(result.captures, ['patient_name', 'value'])
+            errors = chain(result.captures, ['patient_name', 'errors'])
+            if errors:
+                self.errors[which_conditions].append(f'patient-name: {errors}')
+                run_criteria = False
+            elif pn:
+                criteria['patient-name'] = pn
+            else:
+                self.errors[which_conditions].append('patient-name is empty')
+                run_criteria = False
+            
+            adt    = chain(result.captures, ['appointment-date-time', 'value'])
+            errors = chain(result.captures, ['appointment-date-time', 'errors'])
+            if errors:
+                self.errors[which_conditions].append(f'appointment-date-time: {errors}')
+                run_criteria = False
+            elif adt:
+                criteria['appointment-date-time'] = adt
+            else:
+                self.errors[which_conditions].append('appointment-date-time is empty')
+                run_criteria = False
+
+            if run_criteria:
+                found = ResourceManager.get_resources_by_criteria_from(
+                    appointments, criteria)
+                if found and not should_find:
+                    self.errors[which_conditions].append(f"Found appointment, but not expected for criteria {criteria}")
+                if not found and should_find:
+                    self.errors[which_conditions].append(f"No appointment found for criteria {criteria}")
+            
+    def check_appointments_count(self,
+        delta: int,
+        result: dict[str,Any]):
+        len_start = len(self.start_appointments)
+        len_end = len(self.end_appointments)
+        if len_start + delta != len_end:
+            self.errors['post-conditions'].append(f"After vs. before appointments counts {len_start + delta} != {len_end}")
+
+    def appointments_unchanged(self, result: dict[str,Any]):
+        if not self.start_appointments == self.end_appointments:
+            self.errors['post-conditions'].append(f"Start and end appointments differ: {self.start_appointments} != {self.end_appointments}")
+
+    def check_conditions(self, chatbot: ChatBotAgent, result: dict[str,Any]) -> dict[str,Any]:
+        for pc in self.inputs.pre_conditions:
+            match pc:
+                case "appointment-at-date-time-for-patient":
+                    self.check_appointment_at_date_time_for_patient(
+                        True, True, 'pre-conditions', result)
+                case "no-appointment-at-date-time-for-patient":
+                    self.check_appointment_at_date_time_for_patient(
+                        False, True, 'pre-conditions', result)
+                case "no-appointment-at-date-time":
+                    self.check_appointment_at_date_time_for_patient(
+                        False, False, 'pre-conditions', result)
+        
+        s_or_f = self.successes if result['succeeded'] else self.failures
+        for pc in s_or_f.post_conditions:
+            match pc:
+                case "appointment-at-date-time-for-patient" | "appointment-at-new-date-time-for-patient":
+                    self.check_appointment_at_date_time_for_patient(
+                        True, True, 'post-conditions', result, self.end_appointments)
+                case "no-appointment-at-date-time-for-patient":
+                    self.check_appointment_at_date_time_for_patient(
+                        False, True, 'post-conditions', result)
+                case "no-appointment-at-date-time":
+                    self.check_appointment_at_date_time_for_patient(
+                        False, False, 'post-conditions', result)
+                case "appointments-unchanged":
+                    self.appointments_unchanged(result)
+                case "before-appointments-count":
+                    self.check_appointments_count(0, result)
+                case "before-appointments-count-minus-one":
+                    self.check_appointments_count(-1, result)
+                case "before-appointments-count-plus-one":
+                    self.check_appointments_count(1, result)
+
+    def parse_value(self, label: str, value: str) -> tuple[Any,str]:
+        """
+        Assume a JSON string for a single value or a list of values. 
+        Parse with json.loads(), then convert any datetimes found.
+        """
+        try:
+            obj = json.loads(value)
+            if isinstance(obj, list):
+                lst = []
+                for x in obj:
+                    try:
+                        x2 = datetime.fromisoformat(x)
+                        lst.append(x2)
+                    except ValueError:
+                        lst.append(x)
+                return lst, ''
+            else:
+                return obj, ''
+        except json.decoder.JSONDecodeError as e:
+            return value, f"Label {label} value {value} is not valid JSON: {e}"
+
+    @classmethod
+    def from_dict(obj: dict[str,Any]):
+        """
+        Parse a nested dictionary loaded from a scenario test data file
+        and construct a ScenarioTest instance from it.
+        """
+        scenario = get(obj, 'scenario')
+        inputs = get(obj, 'inputs')        
+        outputs = get(obj, 'outputs')
+        successes = [(s.get('text'), s.get('post_conditions'))
+            for s in get(outputs, 'successes')]
+        failures = [(f.get('text'), f.get('post_conditions'))
+            for f in get(outputs, 'failures')]
+        
+        inputs = ScenarioTest.Inputs(
+            required_information = get(inputs, 'required-information'),
+            pre_conditions = get(inputs, 'pre-conditions'))
+        successes = [
+            ScenarioTest.Success(
+                success_text = get(s, 'text'),
+                success_post_conditions = get(s, 'post_conditions')) 
+            for s in get(outputs, 'successes')]
+        failures = [
+            ScenarioTest.Failure(
+                failure_text = get(f, 'text'),
+                failure_post_conditions = get(f, 'post_conditions')) 
+            for f in get(outputs, 'failures')]
+
+        initial_queries = get(obj, 'initial-queries')
+
+        return ScenarioTest(
+            scenario = scenario,
+            inputs = inputs,
+            successes = successes,
+            failures = failures,
+            initial_queries = initial_queries)
+
+    def __repr__(self) -> str:
+        return self.json()
+
+    def dict(self) -> dict[str,Any]:
+        d = { 'name': 'ScenarioTest' }
         d.update(vars(self))
         return d
 
@@ -61,7 +326,7 @@ class LowConfidenceResult():
         query: str, 
         reasons: str,
         reply: dict[str,Any], 
-        test_prompt: TestPrompt, 
+        test_prompt: QnATest, 
         rating_threshold: int, 
         confidence_threshold: float):
         self.query = query
@@ -75,7 +340,7 @@ class LowConfidenceResult():
         return f"""LowConfidenceResult(query='{self.query}',reasons='{self.reasons}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
     def dict(self) -> dict[str,Any]:
-        # We don't use __dict__ here because we need to turn the TestPrompt instance into a dictionary.
+        # We don't use __dict__ here because we need to turn the QnATest instance into a dictionary.
         # TODO: Is there a more standard way to make any class recursively convertible to a dictionary?
         return {
             'name':                  'LowConfidenceResult',
@@ -95,18 +360,20 @@ class TestBase(unittest.TestCase):
     Base class for tests that need to instantiate a ChatBot, but not necessarily run inference with it.
     Use `TestBaseRunner`, a derived class of this class, for those tests.
     """
-    default_confidence_threshold = ChatBot.default_confidence_threshold
-    default_rating_threshold = 4
-    log_file_name = ''
-    log_file = None
-
+    default_confidence_threshold: float = ChatBot.default_confidence_threshold
+    default_rating_threshold: int = 4
+    log_file_name: str = ''
+    log_file: TextIOWrapper = None
+    which_chatbot_choice: str = ''
+    which_chatbot: ChatBot | None = None
+    
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
         
         # Determine which ChatBot implementation to use based on environment variable
-        which_chatbot = os.environ.get('WHICH_CHATBOT', 'agent').lower()
-        chatbot_class = ChatBotAgent if which_chatbot == 'agent' else ChatBotSimple
+        self.assertNotEqual('', TestBase.which_chatbot_choice)
+        chatbot_class = ChatBotAgent if TestBase.which_chatbot_choice == 'agent' else ChatBotSimple
         
         self.chatbot = chatbot_class(
             model = self.model,
@@ -198,6 +465,27 @@ class TestBaseRunner(TestBase):
         TestBaseRunner.total_error_count   += error_count
         self._dump_key_results(lcr_count, warning_count, error_count)
 
+    def _get_data_file(self, 
+        use_case_name: str, 
+        require_simple_or_agent: bool = False) -> Path:
+        """
+        Look for a "{use_case_name}-simple.jsonl" or a
+        "{use_case_name}-scenario.json" file first, depending on which
+        ChatBot we are testing, and if not found, then look for a
+        "{use_case_name}.jsonl" file. However, only look for the second
+        file if `require_simple_or_agent` is False. If it is true, we
+        require that the `*-simple.jsonl` or `*-scenario.json` be found.
+        Fail the test if a data file can't be found.
+        """
+        ss = [f"-{TestBase.which_chatbot_choice}"]
+        if not require_simple_or_agent:
+            ss.append('')
+        files = [TestBaseRunner.benchmark_data_dir / f"{use_case_name}{s}.jsonl" for s in ss]
+        for file in files:
+            if file.exists():
+                return file
+        self.fail(f"Data files {files} don't exist for use case {use_case_name}!")
+
     def _dump_key_results(self, lcr_count: int, warning_count: int, error_count: int):
         lcrs = [lcr.dict() for lcr in self.key_results['low_confidence_results']]
         d = {
@@ -220,26 +508,29 @@ class TestBaseRunner(TestBase):
         js  = re.sub(r'\n', r'\\n', js1)  # Try to print true JSONL records
         print(js, file=TestBaseRunner.log_file)
         if not self.samples_count:
-            raise ValueError(f"No samples were loaded!")            
+            raise ValueError("No samples were loaded!")            
 
     @classmethod
     def setUpClass(cls):
+        # Determine which ChatBot implementation to use based on environment variable
+        TestBase.which_chatbot_choice = os.environ.get('WHICH_CHATBOT', 'agent').lower()
+        TestBase.which_chatbot = "ChatBotAgent" if TestBase.which_chatbot_choice == 'agent' else "ChatBotSimple"
+
         def_log_dir = "tests/logs"
         log_file_template = os.environ.get('TESTS_LOGS_FILE_TEMPLATE')
-        which_chatbot_choice = os.environ.get('WHICH_CHATBOT', 'agent').lower()
-        which_chatbot = "ChatBotAgent" if which_chatbot_choice == 'agent' else "ChatBotSimple"
         if not log_file_template:
             print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
             log_file_template = f"{def_log_dir}/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
-        log_file_path = Path(log_file_template.format(class_name=cls.__name__, which_chatbot=which_chatbot))
+        log_file_path = Path(log_file_template.format(class_name=cls.__name__, which_chatbot=TestBase.which_chatbot))
         print(f"\n  ** Logging to {log_file_path} ** \n")
         os.makedirs(log_file_path.parent, exist_ok=True)
         TestBaseRunner.log_file = log_file_path.open('a', buffering=1) # append mode, because we _may_ share it across tests.
 
     @classmethod
     def tearDownClass(cls):
-        print(f"\nTotals:")
+        print("\nTotals:")
+        print(f"Which ChatBot:          {TestBase.which_chatbot_choice}")
         print(f"Samples count:          {TestBaseRunner.total_samples_count}")
         print(f"Low-confidence results: {TestBaseRunner.total_lcr_count}")
         print(f"Warning count:          {TestBaseRunner.total_warning_count}")
@@ -250,11 +541,11 @@ class TestBaseRunner(TestBase):
         if TestBaseRunner.total_error_count:
             raise AssertionError(f"{TestBaseRunner.total_error_count} errors reported!")
 
-    def load_test_data(self, path: Path) -> list[TestPrompt]:
+    def __load_qna_test_data(self, path: Path) -> list[QnATest]:
         if not path.exists():
             raise FileNotFoundError(path)
 
-        prompts = []
+        tests = []
         with path.open('r') as file:
             for line in file:
                 ls = line.strip()
@@ -268,23 +559,38 @@ class TestBaseRunner(TestBase):
                         reason  = dict_pop(obj, 'reason') # Not all records have this, so None will be returned.
                         # What's left in obj at this point are "substitution" keywords, if any,
                         # that we expect to find in the inference results.
-                        tp = TestPrompt(query, labels, actions, rating, reason, keywords=obj)
-                        prompts.append(tp)
+                        qnat = QnATest(query, labels, actions, rating, reason, keywords=obj)
+                        tests.append(qnat)
                     except ValueError as err:
-                        raise ValueError(f"From file <{file}>, error parsing line: <{line}>") from err
-        if not len(prompts):
-            raise ValueError(f"No prompts were loaded from {file}!")
-        return prompts
+                        raise ValueError(f"From file {path}, error parsing line: <{line}>") from err
+        if not len(tests):
+            raise ValueError(f"No Q&A pairs were loaded from {path}!")
+        return tests
 
-    def try_query(self, 
-        test_prompt: TestPrompt,
+
+    def __load_session_test_data(self, path: Path) -> list[ScenarioTest]:
+        if not path.exists():
+            raise FileNotFoundError(path)
+
+        with path.open('r') as file:
+            lines = file.readlines()
+            try:
+                objs = decode_json(''.join(lines))
+                tests = [ScenarioTest.from_dict(obj) for obj in objs]
+                return tests
+            except ValueError as err:
+                raise ValueError(f"Error parsing JSON in file {path}") from err
+        if not len(tests):
+            raise ValueError(f"No scenario tests were loaded from {path}!")
+
+    def __try_qna_query(self, 
+        test_prompt: QnATest,
         rating_threshold: int = TestBase.default_rating_threshold,
         confidence_threshold: float = TestBase.default_confidence_threshold):
         """
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum, 
         we run all the examples and accumulate error messages, then report the results.
-        Compare to `try_query()`.
         """
         exp_query    = test_prompt.query
         exp_labels   = test_prompt.labels
@@ -409,22 +715,25 @@ class TestBaseRunner(TestBase):
             if self.verbose:
                 print(mw)
 
-    def try_queries(self, 
-        file_name: Path | str, 
-        sample_rate: float = 0.0, 
-        rating_threshold: int = TestBase.default_rating_threshold,
-        confidence_threshold: float = TestBase.default_confidence_threshold):
-        """
-        Loop through the sampled test queries and try them.
-        If the environment variable `ACCUMULATE_TEST_ERRORS` is true (any value non-empty),
-        then accumulate errors and report them at the end. Otherwise, fail on the first prompt
-        where we detect errors in the result.
-        """ 
+    def __try_all(self, 
+        method: str,
+        use_case_name: str, 
+        require_simple_or_agent: bool,
+        test_data_loader: Callable[[Path],list[BaseTest]],
+        try_query: Callable[[BaseTest,int,float],None],
+        sample_rate: float, 
+        rating_threshold: int,
+        confidence_threshold: float):
+        """Template method supporting `try_qna_queries` and `try_sessions`."""
+        file_name = self._get_data_file(use_case_name, 
+            require_simple_or_agent=require_simple_or_agent)
+
         if not sample_rate > 0.0:
             sample_rate = self.sample_rate
 
         d = {
-            'step':                    'try_queries',
+            'step':                    method,
+            'which_chatbot':           TestBase.which_chatbot_choice,
             'file_name':               str(file_name),
             'sample_rate':             sample_rate,
             'rating_threshold':        rating_threshold,
@@ -433,16 +742,15 @@ class TestBaseRunner(TestBase):
         }
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
-        test_prompts = self.load_test_data(Path(file_name))
+        test_prompts = test_data_loader(file_name)
         samples = self._sample(test_prompts, sample_rate) if sample_rate < 1.0 else test_prompts
 
         last_time = time.time()
-        slow_count = 0
         allowed_time_delta = 120 # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
 
         for test_prompt in samples:
             self.samples_count += 1
-            self.try_query(test_prompt,
+            try_query(test_prompt,
                 rating_threshold=rating_threshold,
                 confidence_threshold=confidence_threshold)
             
@@ -461,6 +769,51 @@ class TestBaseRunner(TestBase):
 
             # Show we aren't dead by printing counts...
             print(f"({self.samples_count},{lcr_count},{warning_count},{error_count}) ", end='')  
+
+    def try_qna_queries(self, 
+        use_case_name: str, 
+        sample_rate: float = 0.0, 
+        rating_threshold: int = TestBase.default_rating_threshold,
+        confidence_threshold: float = TestBase.default_confidence_threshold):
+        """
+        Loop through the sampled test Q&A pairs and try them, i.e., the _simple_
+        test data set, as described in `src/tests/data/README.md`.
+        If the environment variable `ACCUMULATE_TEST_ERRORS` is true (any value non-empty),
+        then accumulate errors and report them at the end. Otherwise, fail on the first prompt
+        where we detect errors in the result.
+        """ 
+        self.__try_all(
+            method                  = 'try_qna_queries',
+            use_case_name           = use_case_name, 
+            require_simple_or_agent = False,
+            test_data_loader        = self.__load_qna_test_data,
+            try_query               = self.__try_qna_query,
+            sample_rate             = sample_rate, 
+            rating_threshold        = rating_threshold,
+            confidence_threshold    = confidence_threshold)
+
+
+    def try_sessions(self, 
+        use_case_name: str, 
+        sample_rate: float = 0.0, 
+        rating_threshold: int = TestBase.default_rating_threshold,
+        confidence_threshold: float = TestBase.default_confidence_threshold):
+        """
+        Loop through the "session" test data for testing _agent skills_.
+        The test data set is described in `src/tests/data/README.md`.
+        If the environment variable `ACCUMULATE_TEST_ERRORS` is true (any value non-empty),
+        then accumulate errors and report them at the end. Otherwise, fail on the first prompt
+        where we detect errors in the result.
+        """ 
+        self.__try_all(
+            method                  = 'try_sessions',
+            use_case_name           = use_case_name, 
+            require_simple_or_agent = True,
+            test_data_loader        = self.__load_session_test_data,
+            try_query               = self.__try_session_query,
+            sample_rate             = sample_rate, 
+            rating_threshold        = rating_threshold,
+            confidence_threshold    = confidence_threshold)
 
     def _sample(self, collection: Sequence[Any], sample_rate: float) -> Sequence[Any]:
         """

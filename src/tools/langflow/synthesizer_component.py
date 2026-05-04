@@ -1,8 +1,8 @@
 """Langflow component for UnitBenchmarkDataSynthesizer."""
+
 import logging
-from typing import Optional
 from lfx.custom.custom_component.component import Component
-from lfx.io import MessageTextInput, IntInput, Output, MultiselectInput, StrInput
+from lfx.io import Output, StrInput
 from lfx.schema.data import Data
 
 import sys
@@ -16,12 +16,14 @@ from tools.langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
 
 class UnitBenchmarkDataSynthesizerComponent(Component):
     """Langflow component wrapper for UnitBenchmarkFlowOrchestrator."""
-    
+
     display_name = "Unit Benchmark Data Synthesis"
-    description = "Synthesize and validate Q&A benchmark data for testing a healthcare ChatBot."
+    description = (
+        "Synthesize and validate Q&A benchmark data for testing a healthcare ChatBot."
+    )
     name = "UnitBenchmarkDataSynthesizerValidator"
     icon = "code"
-    
+
     inputs = [
         StrInput(
             name="model_name",
@@ -62,17 +64,17 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
         #     value=["Data synthesis", "Data validation", "Validation statistics"],
         # )
     ]
-    
+
     outputs = [
         Output(display_name="Results", name="results", method="synthesize_data"),
     ]
-    
+
     def synthesize_data(self) -> Data:
         """Execute the data synthesis."""
         # Setup logger
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
-        
+
         # Create the orchestrator instance.
 
         orchestrator = UnitBenchmarkFlowOrchestrator(
@@ -84,26 +86,29 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
             just_synthesis=False,
             just_validation=False,
             just_stats=False,
-            logger=logger
+            logger=logger,
         )
 
         # Run the pipeline
         results = orchestrator.run_full_pipeline()
-        
+
         logger.info(f"Pipeline completed with status: {results['status']}")
-        
-        if results.get('status') == 'success':
+
+        if results.get("status") == "success":
             logger.info("Pipeline execution successful!")
         else:
             logger.error(f"Pipeline failed: {results.get('message', 'Unknown error')}")
-            sys.exit(1)    
-        
+            sys.exit(1)
+
         return Data(
             data={
-                "status": results.get('status', "'status' unknown!"),
-                "message": results.get('message', "'message' unknown!"),
-                "synthesis_results": results.get('synthesis_results', "No synthesis results available!"),
-                "validation_results": results.get('validation_results', "No validation results available!"),
+                "status": results.get("status", "'status' unknown!"),
+                "message": results.get("message", "'message' unknown!"),
+                "synthesis_results": results.get(
+                    "synthesis_results", "No synthesis results available!"
+                ),
+                "validation_results": results.get(
+                    "validation_results", "No validation results available!"
+                ),
             }
         )
-

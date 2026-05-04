@@ -210,7 +210,10 @@ make integration-tests-dedicated
 make all-tests          # Run the unit and integration tests.
 make all-tests-langflow # Run all the tests for the Langflow integration.
 
-make type-check         # Run the "ty" type checker on the code.
+make format             # Format the Python code with 'black'.
+make lint               # Lint the Python code with 'ruff' and 'pylint.
+make type-check         # Type check the Python code with 'ty'.
+make type-check-watch   # Type check the Python code with 'ty' in "watch" mode, so you can fix mistakes and keep it updating.
 
 make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
 make clean-code         # Synonym for "clean-tools".
@@ -753,7 +756,7 @@ unit-tests-non-ai::
 	    --start-directory tests/unit \
 	    --top-level-directory .
 
-.PHONY:${_END} unit-tests-appointments
+.PHONY: unit-tests-appointments
 
 unit-tests-appointments::
 	@echo "${INFO}Running the appointment tool unit tests...${_END}"
@@ -871,20 +874,29 @@ integration-tests-dedicated:: run-command-checks
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
-.PHONY:${_END} type-check type-check-watch
+.PHONY: format lint type-check type-check-watch
+
+format::
+	@echo "${INFO}$@: Running 'black' on the code.${_END}"
+	uv run black ${SRC_DIR}
+
+lint::
+	@echo "${INFO}$@: Running 'ruff' and 'pylint' on the code.${_END}"
+	uv run ruff check --fix ${SRC_DIR}
+	uv run pylint ${SRC_DIR}
 
 type-check::
 	@echo "${INFO}Running 'ty' on the code.${_END}"
-	uvx ty check ${SRC_DIR} 
+	uv run ty check ${SRC_DIR} 
 type-check-watch::
 	@echo "${INFO}Running 'ty' on the code in 'watch' mode.${_END}"
-	uvx ty check --watch ${SRC_DIR} 
+	uv run ty check --watch ${SRC_DIR} 
 
-.PHONY:${_END} one-time-setup setup clean-setup 
+.PHONY: one-time-setup setup clean-setup 
 .PHONY: uninstall-uv 
-.PHONY: install-uv uv-venv install-jq
+.PHONY: install-uv uv-venv install-dev-dependencies install-jq
 
-setup one-time-setup:: install-uv uv-venv install-jq
+setup one-time-setup:: install-uv uv-venv install-dev-dependencies install-jq
 
 clean-setup:: uninstall-uv
 
@@ -895,10 +907,14 @@ uninstall-uv::
 
 install-uv:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "${INFO}$$cmd is already installed${_END}" || ${MAKE} help-$$cmd
+		echo "${INFO}$$cmd is already installed${_END}" || ${MAKE} help-command-$$cmd
 
 uv-venv:: command-check-uv 
-	uv venv
+	@test -d .venv && echo "'.venv' already exists; not running 'uv venv'." || uv venv
+	@echo "run: 'source .venv/bin/activate' if subsequent commands fail!"
+
+install-dev-dependencies::
+	uv pip install -e ".[dev]"
 
 install-jq:: help-command-jq
 

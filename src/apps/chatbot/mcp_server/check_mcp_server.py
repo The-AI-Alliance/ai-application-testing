@@ -17,18 +17,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from apps.chatbot import ChatBot, ChatBotResponseHandler
 from apps.chatbot.mcp_server.server import create_mcp_server
 
-def test_imports():
-    """Test that all modules can be imported."""
-    print("Testing imports...")
-    try:
-        from apps.chatbot.mcp_server.server import create_mcp_server
-        print("✓ Successfully imported MCP server modules")
-        return True
-    except ImportError as e:
-        print(f"✗ Import error: {e}")
-        return False
-
-
 def test_chatbot_creation():
     """Test that ChatBot can be created."""
     print("\nTesting ChatBot creation...")
@@ -36,7 +24,7 @@ def test_chatbot_creation():
         # Create a simple logger
         logger = logging.getLogger("test")
         logger.setLevel(logging.INFO)
-        
+
         chatbot = ChatBot(
             model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
@@ -44,10 +32,10 @@ def test_chatbot_creation():
             data_dir="src/data",
             output_dir="output/chatbot",
             confidence_level_threshold=0.9,
-            response_handler = ChatBotResponseHandler(
-                confidence_level_threshold=0.9, 
-                logger=logger),
-            logger=logger
+            response_handler=ChatBotResponseHandler(
+                confidence_level_threshold=0.9, logger=logger
+            ),
+            logger=logger,
         )
         print("✓ Successfully created ChatBot instance")
         print(f"  - Model: {chatbot.model}")
@@ -68,7 +56,7 @@ def test_mcp_server_creation():
     try:
         logger = logging.getLogger("test")
         logger.setLevel(logging.INFO)
-        
+
         result = create_mcp_server(
             model="ollama_chat/gemma4:e4b",
             service_url="http://localhost:11434",
@@ -76,14 +64,14 @@ def test_mcp_server_creation():
             data_dir="src/data",
             output_dir="output/chatbot",
             confidence_level_threshold=0.9,
-            logger=logger
+            logger=logger,
         )
-        
+
         if result is None:
             print("⚠ MCP SDK not available (this is expected if not installed)")
             print("  Install with: pip install mcp")
             return True  # Not a failure, just not installed
-        
+
         server, chatbot = result
         print("✓ Successfully created MCP server")
         print(f"  - Server type: {type(server).__name__}")
@@ -99,28 +87,27 @@ def main():
     print("=" * 60)
     print("MCP Server Test Suite")
     print("=" * 60)
-    
+
     results = []
-    
+
     # Run tests
-    results.append(("Imports", test_imports()))
     results.append(("ChatBot Creation", test_chatbot_creation()))
     results.append(("MCP Server Creation", test_mcp_server_creation()))
-    
+
     # Print summary
     print("\n" + "=" * 60)
     print("Test Summary")
     print("=" * 60)
-    
+
     passed = sum(1 for _, result in results if result)
     total = len(results)
-    
+
     for test_name, result in results:
         status = "✓ PASS" if result else "✗ FAIL"
         print(f"{status}: {test_name}")
-    
+
     print(f"\nTotal: {passed}/{total} tests passed")
-    
+
     if passed == total:
         print("\n✓ All tests passed!")
         return 0
@@ -131,4 +118,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

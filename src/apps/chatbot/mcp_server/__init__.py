@@ -7,5 +7,4 @@ the chatbot functionality as tools that can be used by MCP clients.
 The server is built using FastMCP for simplified MCP server creation.
 """
 
-__all__ = ['create_mcp_server']
-
+__all__ = ["create_mcp_server"]

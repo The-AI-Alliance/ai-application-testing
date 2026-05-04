@@ -9,13 +9,97 @@ This skill provides capabilities for managing patient appointments in the health
 
 ## When to Use This Skill
 
-Use this skill when the patient wants to:
+Use this skill when the patient asks about doing one of the following _scenarios_:
+
 - Schedule a new appointment
-- Cancel an existing appointment
-- Confirm an appointment
 - Change/reschedule an appointment
-- List their appointments
-- Check available appointment times
+- Cancel an appointment
+- Get information about one or more upcoming appointments
+- Ask about available times for a new appointment
+- Ask about scheduling an appointment for a health issue or getting a referral
+
+The details for each of these scenarios is discussed next.
+
+### Schedule a new appointment
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Patient name** - The name of the patient for the appointment.
+* **Appointment date and time** - The date and time when the patient can come in for an appointment and which is open in the schedule.
+    * **Possible dates and times** - To determine the **Appointment date and time**, discuss with the user the dates and times that work for the patient and are also available in the schedule.
+* **Reason** - Purpose of the appointment.
+
+#### Success outcome
+
+A new appointment is created for the patient at the date-time.
+
+### Change/reschedule an appointment
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Patient name** - The name of the patient for the appointment.
+* **Appointment date and time** - The current date-time for the appointment.
+* **New appointment date and time** - A new date-time for the appointment that works for the patient and is open in the schedule.
+    * **Possible dates and times** - To determine the **New appointment date and time**, discuss with the user the dates and times that work for the patient and are also available in the schedule.
+
+#### Success outcome
+
+The existing appointment is changed to the new date-time.
+
+### Cancel an appointment
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Patient name** - The name of the patient for the appointment.
+* **Appointment date and time** - The current date-time for the appointment.
+
+#### Success outcome
+
+The existing appointment is canceled and the appointment's date-time
+is made free in the schedule.
+
+### Get information about one or more upcoming appointments
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Patient name** - The name of the patient for the appointment.
+
+#### Success outcome
+
+Zero or more appointments for the patient are shown to the patient.
+
+### Ask about available times for a new appointment
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Appointment dates and times** - discuss with the user the dates and times that work for the patient and are also available in the schedule.
+
+#### Success outcome
+
+Zero or more dates and times available for appointments that also work for the patient.
+
+### Ask about scheduling an appointment for a health issue or getting a referral
+
+#### Information you need
+
+Obtain the following information from the user if you don't already have it, i.e., it was part of the user query: 
+
+* **Patient name** - The name of the patient for the appointment.
+* **Problem** - The issue the patient is experiencing.
+
+#### Success outcome
+
+A healthcare provider will respond as soon as possible. Do not create a new appointment.
 
 ## General Tips:
 
@@ -24,6 +108,8 @@ Use this skill when the patient wants to:
 - Similarly, if the patient says a day of the week, for example, "Thursday", assume the patient means the next Thursday in the calendar.
 
 ## Available Tools
+
+Use the following tools to implement the scenarios described above.
 
 ### create_appointment
 Create a new appointment for a patient.
@@ -108,7 +194,7 @@ Get all active appointments, with optional filtering.
 
 **Parameters:**
 - `patient_name` (str, optional): Whether to include past appointments (default: False)
-- `after_datetime` (str for a ISO format datetime string, optional): Only include appointments with date times equal to or after this value
+- `after_datetime` (str for a ISO format datetime string, optional): Only include appointments with date-times equal to or after this value
 
 **Returns:**
 The tool returns a `list[dict[str,Any]]`, containing a dictionary for each appointment. The list will be empty if there are no appointments that match the filter criteria (if any).
@@ -167,11 +253,11 @@ Where:
 - The `dictionary_as_json` value is the appointment dictionary converted to JSON.
 
 ### get_appointment_id_for_name_and_date_time
-Retrieve the appointment ID for the specified patient name and date time.
+Retrieve the appointment ID for the specified patient name and date-time.
 
 **Parameters:**
 - `patient_name` (str): The patient name for the appointment
-- `appointment_date_time` (str for a ISO format datetime string): the date time for the appointment
+- `appointment_date_time` (str for a ISO format datetime string): the date-time for the appointment
 
 **Returns:**
 The tool returns a `str` with the appointment ID or '' if no matching appointment was found.

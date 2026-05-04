@@ -33,7 +33,12 @@ make one-time-setup
 If `make` won't work on your machine, do the following steps yourself:
 
 * Install [`uv`](https://docs.astral.sh/uv/), a Python package manager. 
-* Run the setup command `uv env` to install dependencies.
+* Run the `uv` setup commands to install dependencies, etc.:
+```shell
+uv venv
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+```
 * Install [`ollama`](https://ollama.com) for local model inference (optional).
 
 > [!TIP]
@@ -441,6 +446,8 @@ We welcome contributions as PRs, either to our code examples or our user guide. 
 
 In particular, see the AI Alliance [CONTRIBUTING](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md) instructions. You will need to agree with the AI Alliance [Code of Conduct](https://github.com/The-AI-Alliance/community/blob/main/CODE_OF_CONDUCT.md).
 
+### Licenses
+
 All _code_ contributions are licensed under the [Apache 2.0 LICENSE](https://github.com/The-AI-Alliance/community/blob/main/LICENSE.Apache-2.0) (which is also in this repo, [LICENSE.Apache-2.0](LICENSE.Apache-2.0)).
 
 All _documentation_ contributions are licensed under the [Creative Commons Attribution 4.0 International](https://github.com/The-AI-Alliance/community/blob/main/LICENSE.CC-BY-4.0) (which is also in this repo, [LICENSE.CC-BY-4.0](LICENSE.CC-BY-4.0)).
@@ -456,7 +463,7 @@ See the Alliance contributing guide [section on DCO](https://github.com/The-AI-A
 
 ## The Website
 
-The documentation for this repo is published using [GitHub Pages](https://pages.github.com/). See [GITHUB_PAGES.md](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/GITHUB_PAGES.md) for details.
+The website for this repo is found in the `docs` directory. It is published using [GitHub Pages](https://pages.github.com/). See [GITHUB_PAGES.md](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/GITHUB_PAGES.md) for details.
 
 ## Appendix: The `llm` and `jq` CLI Tools
 

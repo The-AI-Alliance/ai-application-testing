@@ -1,20 +1,22 @@
 """
 Test utilities, e.g., strategy generators for Hypothesis.
 """
-from hypothesis import given, strategies as st
+
+from hypothesis import strategies as st
 
 def_person_name_part_regex_format = r"['\w][-'\w]{%d,%d}"
 
+
 def person_name_parts(
     regex_format: str = def_person_name_part_regex_format,
-    min_size: int     =  1,
-    max_size: int     = 10):
-
+    min_size: int = 1,
+    max_size: int = 10,
+):
     """
     A Hypothesis strategy for generating parts of a person's name.
 
     Args:
-        - regex_format (str): The allowed format for name parts. It is a `printf`-style 
+        - regex_format (str): The allowed format for name parts. It is a `printf`-style
           format string that takes two integer arguments (i.e., `%d`) provided by
           `min_size`, for the minimum length, and `max_size`, for the maximum length.
           The regex will be used for a full match, even if it doesn't start with "^" nor
@@ -30,16 +32,17 @@ def person_name_parts(
     if max_size < min_size:
         max_size = min_size
     # We subtract one, because we already capture the opening character separately.
-    regex_str = regex_format % (min_size-1, max_size-1)
+    regex_str = regex_format % (min_size - 1, max_size - 1)
     return st.from_regex(regex_str, fullmatch=True)
 
-def person_names(
-    regex_format: str     = def_person_name_part_regex_format,
-    min_size: int         =  1,
-    max_size: int         =  3,
-    min_part_length: int  =  1,
-    max_part_length: int  = 10):
 
+def person_names(
+    regex_format: str = def_person_name_part_regex_format,
+    min_size: int = 1,
+    max_size: int = 3,
+    min_part_length: int = 1,
+    max_part_length: int = 10,
+):
     """
     A Hypothesis strategy for generating peoples names, consisting of
     one or more name parts, returned as a list of strings.
@@ -58,6 +61,10 @@ def person_names(
         min_size = 1
     if max_size < min_size:
         max_size = min_size
-    return st.lists(person_name_parts(regex_format,
-            min_size=min_part_length, max_size=max_part_length),
-        min_size=min_size, max_size=max_size)
+    return st.lists(
+        person_name_parts(
+            regex_format, min_size=min_part_length, max_size=max_part_length
+        ),
+        min_size=min_size,
+        max_size=max_size,
+    )

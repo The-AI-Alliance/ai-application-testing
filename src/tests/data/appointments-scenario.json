@@ -1,0 +1,499 @@
+[
+	{ 
+		"scenario": "Schedule a new appointment",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "patient-name",
+					"name": "Patient name",
+					"description": "Name of the patient for the appointment.",
+					"type": "str"
+				},
+				{
+					"label": "appointment-date-time",
+					"name": "Appointment date and time",
+					"description": "A new date-time for the appointment that works for the patient and is open in the schedule.",
+					"type": "datetime.datetime"
+				},
+				{
+					"label": "reason",
+					"name": "Reason",
+					"description": "Purpose of the appointment.",
+					"type": "str"
+				}
+			],
+			"pre-conditions": [
+				"no-appointment-at-date-time-for-patient"
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "A new appointment is created for the patient at the date-time.",
+					"post-conditions": [
+						"before-appointments-count-plus-one",
+						"appointment-at-date-time-for-patient"
+					]
+				}
+			],
+			"failures": [
+				{
+					"text": "The proposed date-time is invalid.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				},
+				{
+					"text": "An appointment could not be created for the patient at the date-time.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "I need to schedule my next appointment.",
+				"labels": ["appointment"],
+				"actions": ["schedule"], 
+				"rating": 5
+			},
+			{
+				"query": "I need to schedule an appointment.",
+				"labels": ["appointment"],
+				"actions": ["schedule"],
+				"rating": 5
+			},
+			{
+				"query": "I need to schedule an appointment for a flu vaccine.",
+				"labels": ["appointment"],
+				"actions": ["schedule"], 
+				"vaccines": ["flu"],
+				"rating": 5
+			},
+			{
+				"query": "I need to schedule an appointment for a COVID vaccine.",
+				"labels": ["appointment"],
+				"actions": ["schedule"],
+				"vaccines": ["COVID"],
+				"rating": 5
+			}
+		]
+	},
+	{ 
+		"scenario": "Change/reschedule an appointment",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "patient-name",
+					"name": "Patient name",
+					"description": "Name of the patient for the appointment.",
+					"type": "str"
+				},
+				{
+					"label": "appointment-date-time",
+					"name": "Appointment date and time",
+					"description": "The current date-time for the patient's appointment.",
+					"type": "datetime.datetime"
+				},
+				{
+					"label": "new-appointment-date-time",
+					"name": "New appointment date and time",
+					"description": "A new date-time for the appointment that works for the patient and is open in the schedule.",
+					"type": "datetime.datetime"
+				}
+			],
+			"pre-conditions": [
+				"appointment-at-date-time-for-patient"
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "The existing appointment is changed to the new date-time.",
+					"post-conditions": [
+						"before-appointments-count",
+						"no-appointment-at-date-time",
+						"appointment-at-new-date-time-for-patient"
+					]
+				}
+			],
+			"failures": [
+				{
+					"text": "The proposed date-time is invalid.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				},
+				{
+					"text": "The appointment could not be changed for the patient at the new date-time.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "I need to reschedule my next appointment.",
+				"labels": ["appointment"],
+				"actions": ["reschedule"], 
+				"rating": 5
+			},
+			{
+				"query": "I need to reschedule an appointment.",
+				"labels": ["appointment"],
+				"actions": ["reschedule"],
+				"rating": 5
+			},
+			{
+				"query": "I need to reschedule my appointment for a flu vaccine.",
+				"labels": ["appointment"],
+				"actions": ["reschedule"], 
+				"vaccines": ["flu"],
+				"rating": 5
+			},
+			{
+				"query": "I need to reschedule my appointment for a COVID vaccine.",
+				"labels": ["appointment"],
+				"actions": ["reschedule"],
+				"vaccines": ["COVID"],
+				"rating": 5
+			}
+		]
+	},
+	{ 
+		"scenario": "Cancel an appointment",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "patient-name",
+					"name": "Patient name",
+					"description": "Name of the patient for the appointment.",
+					"type": "str"
+				},
+				{
+					"label": "appointment-date-time",
+					"name": "Appointment date and time",
+					"description": "The current date-time for the patient's appointment.",
+					"type": "datetime.datetime"
+				}
+			],
+			"pre-conditions": [
+				"appointment-at-date-time-for-patient"
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "The existing appointment is canceled and the appointment's date-time is made free in the schedule.",
+					"post-conditions": [
+						"before-appointments-count-minus-one",
+						"no-appointment-at-date-time"
+					]
+				}
+			],
+			"failures": [
+				{
+					"text": "There is no appointment for the patient to cancel.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				},
+				{
+					"text": "The appointment could not be canceled for the patient at the date-time.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "I need to cancel my next appointment.",
+				"labels": ["appointment"],
+				"actions": ["cancel"], 
+				"rating": 5
+			},
+			{
+				"query": "I need to cancel my appointment.",
+				"labels": ["appointment"],
+				"actions": ["cancel"], 
+				"rating": 5
+			},
+			{
+				"query": "I need to cancel an appointment.",
+				"labels": ["appointment"],
+				"actions": ["cancel"],
+				"rating": 5
+			},
+			{
+				"query": "I need to cancel my appointment for a flu vaccine.",
+				"labels": ["appointment"],
+				"actions": ["cancel"], 
+				"vaccines": ["flu"],
+				"rating": 5
+			},
+			{
+				"query": "I need to cancel my appointment for a COVID vaccine.",
+				"labels": ["appointment"],
+				"actions": ["cancel"],
+				"vaccines": ["COVID"],
+				"rating": 5
+			}
+		]
+	},
+	{ 
+		"scenario": "Get information about one or more upcoming appointments",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "patient-name",
+					"name": "Patient name",
+					"description": "Name of the patient for the appointment.",
+					"type": "str"
+				}
+			],
+			"pre-conditions": [
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "Here are you upcoming appointments.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			],
+			"failures": [
+				{
+					"text": "I could not get your list of upcoming appointments.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "When is my next appointment?",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			},
+			{
+				"query": "I forgot when my next appointment is. Can you tell me?",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			},
+
+			{
+				"query": "I need to confirm my next appointment.",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			},
+			{
+				"query": "When are my scheduled appointments.",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			}
+		]
+	},
+	{ 
+		"scenario": "Ask about available times for a new appointment",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "appointment-dates-times",
+					"name": "Appointment dates and times",
+					"description": "dates and times that work for the patient and are also available in the schedule.",
+					"type": "list[datetime.datetime]"
+				}
+			],
+			"pre-conditions": [
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "Here are the available dates and times for new appointments.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			],
+			"failures": [
+				{
+					"text": "I could not get a list of available date and times for appointments.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "What times are available in the next week for an appointment?",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			},
+			{
+				"query": "What times are available in the next month for an appointment?",
+				"labels": ["appointment"],
+				"actions": ["inquiry"],
+				"rating": 5
+			}
+		]
+	},
+	{ 
+		"scenario": "Ask about scheduling an appointment for a health issue or getting a referral",
+		"inputs": {
+			"required-information": [
+				{
+					"label": "patient-name",
+					"name": "Patient name",
+					"description": "Name of the patient for the appointment.",
+					"type": "str"
+				},
+				{
+
+					"label": "problem",
+					"name": "Problem",
+					"description": "The issue the patient is experiencing.",
+					"type": "str"
+				}
+			],
+			"pre-conditions": [
+			]
+		},
+		"outputs": {
+			"successes": [
+				{
+					"text": "A healthcare provider will respond as soon as possible. A new appointment is not created.",
+					"post-conditions": [
+						"appointments-unchanged"
+					]
+				}
+			]
+		},
+		"initial-queries": [
+			{
+				"query": "I am having pain in my neck. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["neck"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my leg. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["leg"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my foot. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["foot"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my arm. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["arm"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my hand. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["hand"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my groin. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["groin"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my stomach. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["stomach"],
+				"rating": 5
+			},
+			{
+				"query": "I am having pain in my face. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["face"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my neck. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["neck"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my leg. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["leg"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my foot. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["foot"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my arm. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["arm"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my hand. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["hand"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my groin. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["groin"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my stomach. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["stomach"],
+				"rating": 5
+			},
+			{
+				"query": "I am having some swelling in my face. I think I need a referral to a specialist.",
+				"labels": ["appointment","other"],
+				"actions": ["inquiry"],
+				"body_parts": ["face"],
+				"rating": 5
+			}
+		]
+	}
+]

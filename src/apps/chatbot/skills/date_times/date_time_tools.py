@@ -21,7 +21,6 @@ friendly_date_formats = [
     "%b %d, %Y",
     "%B %d %Y",
     "%b %d %Y",
-
     "%A, %Y-%m-%d",
     "%A %Y-%m-%d",
     "%Y-%m-%d",
@@ -41,22 +40,23 @@ for d in friendly_date_formats:
         friendly_date_time_formats.append(f"{d}T{t}")
         friendly_date_time_formats.append(f"{d}, at {t}")
 
-friendly_date_formats.append("%x") # add this AFTER the previous loop.
-friendly_time_formats.append("%X") # add this AFTER the previous loop.
+friendly_date_formats.append("%x")  # add this AFTER the previous loop.
+friendly_time_formats.append("%X")  # add this AFTER the previous loop.
 def_friendly_date_time_format = friendly_date_time_formats[0]
-def_friendly_date_format      = friendly_date_formats[0]
-def_friendly_time_format      = friendly_time_formats[0]
+def_friendly_date_format = friendly_date_formats[0]
+def_friendly_time_format = friendly_time_formats[0]
+
 
 @tool
 def now() -> datetime:
     """
     Return the `datetime.datetime` for right now.
-    
+
     Args:
-        
+
     Returns:
         The current `datetime.datetime`
-        
+
     Example:
         now()
     """
@@ -67,41 +67,47 @@ def now() -> datetime:
 def today() -> date:
     """
     Return the `datetime.date` for today's date.
-    
+
     Args:
-        
+
     Returns:
         Today's `datetime.date`
-        
+
     Example:
         today()
     """
     return datetime.now().date()
 
+
 @tool
 def is_week_day(a_date_time: datetime) -> bool:
     """
     Return `True` if the input date is a week day, or return `False`.
-    
+
     Args:
-        
+
     Returns:
         a_date_time: `datetime.datetime`
-        
+
     Example:
         is_week_day()
     """
-    weekday = a_date_time.weekday() 
+    weekday = a_date_time.weekday()
     return weekday >= 0 and weekday < 5
+
 
 # Tools to convert to and from strings.
 
+
 @tool
-def datetime_to_str(a_date_time: datetime, output_format: str = def_friendly_date_time_format) -> str:
+def datetime_to_str(
+    a_date_time: datetime, output_format: str = def_friendly_date_time_format
+) -> str:
     """
     Format the input `a_date_time` as a string using the input `format`.
     """
     return a_date_time.strftime(output_format)
+
 
 @tool
 def date_to_str(a_date: date, output_format: str = def_friendly_date_format) -> str:
@@ -111,6 +117,7 @@ def date_to_str(a_date: date, output_format: str = def_friendly_date_format) -> 
     """
     return a_date.strftime(output_format)
 
+
 @tool
 def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> str:
     """
@@ -119,94 +126,108 @@ def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> 
     """
     return a_time.strftime(output_format)
 
+
 DT = TypeVar("DT")
+
 
 def _str_to_object[DT](
     a_date_time_str: str,
     input_format: str,
     friendly_formats: list[str],
-    extract: Callable[[datetime], DT]) -> tuple[Optional[DT], str]:
+    extract: Callable[[datetime], DT],
+) -> tuple[Optional[DT], str]:
     fmts = [input_format] + friendly_formats
     for fmt in fmts:
-        if not fmt: # skip empties...
+        if not fmt:  # skip empties...
             continue
         try:
             dt = datetime.strptime(a_date_time_str, fmt)
             if dt:
-                return extract(dt), ''
-        except ValueError as ve:
+                return extract(dt), ""
+        except ValueError:
             pass
 
     # If here, none of our "friendly formats" worked. Try ISO...
     def err_msg():
-        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
+        input_format_msg = (
+            "" if not format else f"""input format "{input_format}", nor other """
+        )
         return f"""I could not parse string "{a_date_time_str}" with {input_format_msg}formats, {friendly_formats}, nor using fromisoformat()."""
 
     try:
         dt = datetime.fromisoformat(a_date_time_str)
         if dt:
-            return extract(dt), ''
+            return extract(dt), ""
         else:
             return None, err_msg()
-    except ValueError as ve:
+    except ValueError:
         return None, err_msg()
 
+
 @tool
-def str_to_datetime(a_date_time_str: str, input_format: str = '') -> tuple[Optional[datetime], str]:
+def str_to_datetime(
+    a_date_time_str: str, input_format: str = ""
+) -> tuple[Optional[datetime], str]:
     """
-    Using the input `a_date_time_str` string, format and return a `datetime` parsed 
+    Using the input `a_date_time_str` string, format and return a `datetime` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
-    it fails, we try a list of "friendly" formats and hope one of them works. If none works, 
+    it fails, we try a list of "friendly" formats and hope one of them works. If none works,
     we try passing the string to `datetime.fromisoformat()`. If that fails, we return an
     error message.
 
     Args:
         - a_date_time_str (str): The string to parse.
-        - input_format (str): The format that should be tried first, if not empty. 
+        - input_format (str): The format that should be tried first, if not empty.
 
     Returns:
         a tuple with the constructed `datetime` and an empty string or `None` and an error message.
     """
     return _str_to_object(
-        a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt)
+        a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt
+    )
+
 
 @tool
-def str_to_date(a_date_str: str, input_format: str = '') -> tuple[Optional[date], str]:
+def str_to_date(a_date_str: str, input_format: str = "") -> tuple[Optional[date], str]:
     """
-    Using the input `a_date_str` string, format and return a `date` parsed 
+    Using the input `a_date_str` string, format and return a `date` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
-    it fails, we try a list of "friendly" formats and hope one of them works. If none works, 
+    it fails, we try a list of "friendly" formats and hope one of them works. If none works,
     we try passing the string to `datetime.fromisoformat()`. If that fails, we return an
     error message.
 
     Args:
         - a_date_str (str): The string to parse.
-        - input_format (str): The format that should be tried first, if not empty. 
+        - input_format (str): The format that should be tried first, if not empty.
 
     Returns:
         a tuple with the constructed `date` and an empty string or `None` and an error message.
     """
     return _str_to_object(
-        a_date_str, input_format, friendly_date_formats, lambda dt: dt.date())
+        a_date_str, input_format, friendly_date_formats, lambda dt: dt.date()
+    )
+
 
 @tool
-def str_to_time(a_time_str: str, input_format: str = '') -> tuple[Optional[time], str]:
+def str_to_time(a_time_str: str, input_format: str = "") -> tuple[Optional[time], str]:
     """
-    Using the input `a_time_str` string, format and return a `time` parsed 
+    Using the input `a_time_str` string, format and return a `time` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
-    it fails, we try a list of "friendly" formats and hope one of them works. If none works, 
+    it fails, we try a list of "friendly" formats and hope one of them works. If none works,
     we try passing the string to `datetime.fromisoformat().time()`. If that fails, we return an
     error message.
 
     Args:
         - a_time_str (str): The string to parse.
-        - input_format (str): The format that should be tried first, if not empty. 
+        - input_format (str): The format that should be tried first, if not empty.
 
     Returns:
         a tuple with the constructed `time` and an empty string or `None` and an error message.
     """
     return _str_to_object(
-        a_time_str, input_format, friendly_time_formats, lambda dt: dt.time())
+        a_time_str, input_format, friendly_time_formats, lambda dt: dt.time()
+    )
+
 
 @tool
 def iso_format_str_to_datetime(a_date_time_str: str) -> datetime:
@@ -214,6 +235,7 @@ def iso_format_str_to_datetime(a_date_time_str: str) -> datetime:
     Return a `datetime` parsed from the ISO format-compatible input string.
     """
     return datetime.fromisoformat(a_date_time_str)
+
 
 # Export all tools as a list for easy registration
 # Note that create_appointment_manager is not in this list. It is handled

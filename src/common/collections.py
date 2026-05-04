@@ -1,9 +1,44 @@
 from typing import Any
 
-def dict_permutations(dictionary: dict[str,Any], max_size: int = -1) -> list[dict[str,Any]]:
+
+def get(dictionary: dict[str, Any], key: str, default: Any | None = None) -> Any:
+    """
+    Instead of returning None, raise a `ValueError` if `None`
+    would be returned.
+    """
+    value = dictionary.get(key, default)
+    if value is None:
+        raise ValueError(
+            f"No value for key {key} and default value is None in {dictionary}."
+        )
+    else:
+        return value
+
+
+def chain(dictionary: dict[str, Any], keys: list[str]) -> Any | None:
+    """
+    'Chain' calls to get on `dictionary` and nested dictionaries, stopping
+    at the first `None` value returned. This eliminates the tedium of
+    doing this one call at a time and checking for None each time.
+    If `keys` is empty, `None` is returned.
+    """
+    value = None
+    d = dictionary
+    for key in keys:
+        value = d.get(key)
+        if value is None:
+            return value
+        else:
+            d = value
+    return value
+
+
+def dict_permutations(
+    dictionary: dict[str, Any], max_size: int = -1
+) -> list[dict[str, Any]]:
     """
     From an input dictionary, where the values are collections, return an array of dictionaries
-    with all permutations of the same keys and individual values from the value collections. 
+    with all permutations of the same keys and individual values from the value collections.
     For example, for this input dictionary:
     ```
     d = {
@@ -20,13 +55,14 @@ def dict_permutations(dictionary: dict[str,Any], max_size: int = -1) -> list[dic
      {'k2': 'v21', 'k1': 'v11'}]
     ```
 
-    If `max_size` >= 0, the value arrays are effectively truncated to that size, e.g., for 
+    If `max_size` >= 0, the value arrays are effectively truncated to that size, e.g., for
     `max_size == 0`, `[]` will be returned, for `max_size == 1`, `[{'k1': 'v11', 'k2': 'v21'}]`
     will be returned.
 
     If any key has an empty values collection, no entries for that key will appear in the output.
     For example, with `d` above, `dict_permutations(d) == dict_permutations(d | {'empty':[]})`.
     """
+
     def perm(array, d):
         if len(d) == 0:
             return array
@@ -48,7 +84,7 @@ def dict_permutations(dictionary: dict[str,Any], max_size: int = -1) -> list[dic
             return perm(array2, d)
 
     dcopy = dictionary.copy()
-    return list(reversed(perm([], dcopy))) # return in input order!
+    return list(reversed(perm([], dcopy)))  # return in input order!
 
 
 def mult(collection: list[int], skip_zeros: bool = False) -> int:

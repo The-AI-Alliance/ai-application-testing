@@ -4,11 +4,10 @@ MCP Server implementation for the Patient ChatBot using FastMCP.
 This module creates and configures the MCP server that exposes
 chatbot functionality through the Model Context Protocol.
 """
+
 import logging
 import os
 import sys
-from pathlib import Path
-from typing import Optional
 
 from fastmcp import FastMCP
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
@@ -23,11 +22,11 @@ def create_mcp_server(
     output_dir: str,
     confidence_level_threshold: float,
     logger: logging.Logger,
-    which_chatbot: str = 'agent',
+    which_chatbot: str = "agent",
 ) -> tuple[FastMCP, ChatBot]:
     """
     Create and configure an MCP server for the chatbot using FastMCP.
-    
+
     Args:
         model (str): The LLM model to use
         service_url (str): The URL of the inference service
@@ -37,14 +36,14 @@ def create_mcp_server(
         confidence_level_threshold (float): Minimum confidence level for responses
         logger (logging.Logger): Optional logger for debugging
         which_chatbot (str): Which ChatBot implementation to use ('agent' or 'simple')
-        
+
     Returns:
         A tuple of (mcp, chatbot)
     """
-    
+
     # Determine which ChatBot implementation to use
-    chatbot_class = ChatBotAgent if which_chatbot == 'agent' else ChatBotSimple
-    
+    chatbot_class = ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
+
     # Create the chatbot instance
     chatbot = chatbot_class(
         model=model,
@@ -53,30 +52,30 @@ def create_mcp_server(
         data_dir=data_dir,
         output_dir=output_dir,
         confidence_level_threshold=confidence_level_threshold,
-        response_handler = ChatBotResponseHandler(
-            confidence_level_threshold=confidence_level_threshold,
-            logger=logger),
-        logger=logger
+        response_handler=ChatBotResponseHandler(
+            confidence_level_threshold=confidence_level_threshold, logger=logger
+        ),
+        logger=logger,
     )
-    
+
     # Create the FastMCP server
     mcp = FastMCP("patient-chatbot")
-    
+
     # Register tools using the chatbot instance
     @mcp.tool()
     async def query_chatbot(query: str) -> str:
         """
         Query the patient chatbot with a user message.
-        
+
         This tool allows you to interact with a healthcare chatbot that can handle:
         - Prescription refill requests
         - Emergency situations
         - Appointment scheduling
         - General healthcare inquiries
-        
+
         Args:
             query: The user's question or request to the chatbot
-            
+
         Returns:
             A response containing the chatbot's reply and metadata about the interaction
         """
@@ -84,99 +83,101 @@ def create_mcp_server(
             error_msg = "Error: No query provided"
             logger.error(error_msg)
             return error_msg
-        
+
         logger.info(f"MCP tool query_chatbot called with: {query}")
-        
+
         try:
             response = chatbot.query(query)
-            
+
             if isinstance(response, str):
                 # Error occurred
                 error_msg = f"Error: response is a string! response = {response}"
                 logger.error(error_msg)
                 return error_msg
-            
+
             # Extract the reply to user
-            reply_to_user = response.get('reply_to_user', 'No reply generated')
-            content = response.get('content', {})
-            reply_info = content.get('reply', {})
-            label = reply_info.get('label', 'unknown')
-            confidence = reply_info.get('confidence', 0.0)
-            
+            reply_to_user = response.get("reply_to_user", "No reply generated")
+            content = response.get("content", {})
+            reply_info = content.get("reply", {})
+            label = reply_info.get("label", "unknown")
+            confidence = reply_info.get("confidence", 0.0)
+
             # Format the response
             result = f"Reply: {reply_to_user}\n\nMetadata:\n- Label: {label}\n- Confidence: {confidence:.2f}"
-            
+
             logger.info(f"MCP tool query_chatbot response: {result}")
-            
+
             return result
-            
+
         except Exception as e:
             error_msg = f"Error processing chatbot query: {str(e)}"
             logger.error(error_msg)
             return error_msg
-    
+
     @mcp.tool()
     async def get_chatbot_session_history() -> str:
         """
         Get the current session history from the chatbot.
-        
+
         This tool retrieves the conversation history for the current chatbot session,
         showing all previous queries and responses.
-        
+
         Returns:
             A formatted list of all queries and responses in the current session
         """
         # TODO: This needs rework, based on changes to query/response handling.
 
         logger.info("MCP tool get_chatbot_session_history called")
-        
+
         try:
             responses = chatbot.response_handler.responses
-            
+
             if not responses:
                 error_msg = "No session history available. The chatbot has not processed any queries yet."
                 logger.error(error_msg)
                 return error_msg
-            
+
             history_lines = ["Session History:", "=" * 50]
-            
+
             for idx, response in enumerate(responses, 1):
-                query = response.get('query', 'N/A')
-                reply = response.get('reply_to_user', 'N/A')
-                content = response.get('content', {})
-                reply_info = content.get('reply', {})
-                label = reply_info.get('label', 'unknown')
-                confidence = reply_info.get('confidence', 0.0)
-                
-                history_lines.extend([
-                    f"\n#{idx}",
-                    f"Query: {query}",
-                    f"Reply: {reply}",
-                    f"Label: {label}",
-                    f"Confidence: {confidence:.2f}",
-                    "-" * 50
-                ])
-            
+                query = response.get("query", "N/A")
+                reply = response.get("reply_to_user", "N/A")
+                content = response.get("content", {})
+                reply_info = content.get("reply", {})
+                label = reply_info.get("label", "unknown")
+                confidence = reply_info.get("confidence", 0.0)
+
+                history_lines.extend(
+                    [
+                        f"\n#{idx}",
+                        f"Query: {query}",
+                        f"Reply: {reply}",
+                        f"Label: {label}",
+                        f"Confidence: {confidence:.2f}",
+                        "-" * 50,
+                    ]
+                )
+
             return "\n".join(history_lines)
-            
+
         except Exception as e:
             error_msg = f"Error retrieving session history: {str(e)}"
             logger.error(error_msg)
             return error_msg
-    
+
     @mcp.tool()
     async def get_chatbot_info() -> str:
         """
         Get information about the chatbot configuration.
-        
+
         This tool returns details about the chatbot's current configuration,
         including the model being used, service URL, and confidence threshold.
-        
+
         Returns:
             Configuration details of the chatbot
         """
         logger.info("MCP tool get_chatbot_info called")
-        
+
         try:
             info = {
                 "model": chatbot.model,
@@ -184,9 +185,9 @@ def create_mcp_server(
                 "template_dir": chatbot.template_dir,
                 "confidence_threshold": chatbot.confidence_level_threshold,
                 "template_file": str(chatbot.template_file),
-                "session_length": len(chatbot.response_handler.responses)
+                "session_length": len(chatbot.response_handler.responses),
             }
-            
+
             info_lines = [
                 "Chatbot Configuration:",
                 "=" * 50,
@@ -195,18 +196,18 @@ def create_mcp_server(
                 f"Template Directory: {info['template_dir']}",
                 f"Template File: {info['template_file']}",
                 f"Confidence Threshold: {info['confidence_threshold']:.2f}",
-                f"Current Session Length: {info['session_length']} queries"
+                f"Current Session Length: {info['session_length']} queries",
             ]
-            
+
             return "\n".join(info_lines)
-            
+
         except Exception as e:
             error_msg = f"Error retrieving chatbot info: {str(e)}"
             logger.error(error_msg)
             return error_msg
-    
+
     logger.info(f"FastMCP server created with model: {model}")
-    
+
     return mcp, chatbot
 
 
@@ -216,36 +217,38 @@ def main():
     """
     tool = os.path.basename(__file__)
     description = "FastMCP Server for Patient ChatBot"
-    
+
     def add_args(parser):
         parser.add_argument(
-            "-c", "--confidence-threshold",
+            "-c",
+            "--confidence-threshold",
             type=float,
             default=0.9,
-            help="Confidence threshold level threshold (0.0-1.0). Default: 0.9"
+            help="Confidence threshold level threshold (0.0-1.0). Default: 0.9",
         )
         parser.add_argument(
-            "-w", "--which-chatbot",
+            "-w",
+            "--which-chatbot",
             type=str,
-            choices=['agent', 'simple'],
-            default='agent',
-            help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent"
+            choices=["agent", "simple"],
+            default="agent",
+            help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent",
         )
-    
+
     args, logger = setup(
         tool,
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
-        omit_arguments={'use-cases'},
-        add_arguments=add_args
+        omit_arguments={"use-cases"},
+        add_arguments=add_args,
     )
-    
+
     if args.verbose:
         print(f"{description}")
         for key, value in vars(args).items():
             k = key + ":"
             print(f"  {k:20s} {value}")
-    
+
     try:
         result = create_mcp_server(
             model=args.model,
@@ -255,20 +258,20 @@ def main():
             output_dir=args.output_dir,
             confidence_level_threshold=args.confidence_threshold,
             logger=logger,
-            which_chatbot=args.which_chatbot
+            which_chatbot=args.which_chatbot,
         )
-        
+
         if result is None:
             sys.exit(1)
-        
+
         mcp, chatbot = result
-        
+
         if logger:
             logger.info("Starting FastMCP server...")
-        
+
         # Run the FastMCP server
         mcp.run()
-        
+
     except KeyboardInterrupt:
         if logger:
             logger.info("MCP server stopped by user")
@@ -283,4 +286,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
