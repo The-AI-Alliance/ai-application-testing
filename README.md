@@ -446,6 +446,12 @@ We welcome contributions as PRs, either to our code examples or our user guide. 
 
 In particular, see the AI Alliance [CONTRIBUTING](https://github.com/The-AI-Alliance/community/blob/main/CONTRIBUTING.md) instructions. You will need to agree with the AI Alliance [Code of Conduct](https://github.com/The-AI-Alliance/community/blob/main/CODE_OF_CONDUCT.md).
 
+> [!TIP]
+> Before submitting a PR, build the `make` target `before-pr`:
+> ```shell
+> make before-pr   # Equivalent to 'make tests format lint type-check'
+> ```
+
 ### Licenses
 
 All _code_ contributions are licensed under the [Apache 2.0 LICENSE](https://github.com/The-AI-Alliance/community/blob/main/LICENSE.Apache-2.0) (which is also in this repo, [LICENSE.Apache-2.0](LICENSE.Apache-2.0)).

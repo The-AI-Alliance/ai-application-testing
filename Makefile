@@ -214,6 +214,7 @@ make format             # Format the Python code with 'black'.
 make lint               # Lint the Python code with 'ruff' and 'pylint.
 make type-check         # Type check the Python code with 'ty'.
 make type-check-watch   # Type check the Python code with 'ty' in "watch" mode, so you can fix mistakes and keep it updating.
+make before-pr          # Make tests, format, lint, and type-check. Do this before submitting a PR!
 
 make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
 make clean-code         # Synonym for "clean-tools".
@@ -874,7 +875,9 @@ integration-tests-dedicated:: run-command-checks
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
-.PHONY: format lint type-check type-check-watch
+.PHONY: before-pr format lint type-check type-check-watch
+
+before-pr:: tests format lint type-check
 
 format::
 	@echo "${INFO}$@: Running 'black' on the code.${_END}"
