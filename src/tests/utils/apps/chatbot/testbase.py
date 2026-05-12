@@ -22,7 +22,8 @@ from apps.chatbot import (
     ChatBotShell,
 )
 from apps.chatbot.tools import ResourceManager
-from common.utils import chain, dict_pop, decode_json, get
+from common.collections import chain, dict_pop, get
+from common.json_yaml import decode_json
 
 
 class BaseTest:

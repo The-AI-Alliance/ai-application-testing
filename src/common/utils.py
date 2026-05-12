@@ -2,16 +2,13 @@
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import os
 import re
-import yaml
 from datetime import datetime
 from importlib import metadata
-from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Callable, Mapping, MutableMapping
+from typing import Any, Callable, Mapping
 
 from litellm.types.utils import ModelResponse
 
@@ -178,10 +175,6 @@ def now_str(fmt: str = timestamp_str_fmt) -> str:
     return now().strftime(fmt)
 
 
-def load_yaml(path: Path) -> Mapping[str, Any]:
-    return yaml.safe_load(path.read_text())
-
-
 def model_dir_name(model: str) -> str:
     """Replace colon with underscore in the model name."""
     return model.replace(":", "_")
@@ -263,80 +256,6 @@ USER PROMPT:
 """
 
 
-class DatetimeEncoder(json.JSONEncoder):
-    def default(self, o: Any) -> Any:
-        if isinstance(o, datetime):
-            return {"__class__": "datetime", "iso_str": o.isoformat()}
-        return super().default(o)
-
-
-class DatetimeDecoder(json.JSONDecoder):
-    def __init__(self):
-        super().__init__(object_hook=DatetimeDecoder.from_dict)
-
-    @staticmethod
-    def from_dict(d: dict[str, Any]) -> Any:
-        if d.get("__class__") == "datetime":
-            iso_str = d.get("iso_str", "")
-            if iso_str:
-                return datetime.fromisoformat(iso_str)
-        return d
-
-
-def_datetime_encoder = DatetimeEncoder()
-def_datetime_decoder = DatetimeDecoder()
-
-
-def encode_json(dct: Mapping[str, Any]) -> str:
-    """Create a JSON string from the input object."""
-    return def_datetime_encoder.encode(dct)
-
-
-def decode_json(text: Any) -> MutableMapping[str, Any]:
-    """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
-    try:
-        obj = def_datetime_decoder.decode(text)
-        return obj
-    except (JSONDecodeError, TypeError) as err:
-        raise ValueError(
-            f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})"
-        ) from err
-
-
-def extract_jsonl_list(text: str) -> tuple[list[str], list[str]]:
-    """
-    Parse the input text and return a list of JSONL strings.
-
-    Sometimes the JSONL we ask for comes back without line feeds between the JSONL docs.
-    We also don't want commas between the JSONL records.
-    Try to detect and fix these cases, then split the string into JSONL lines.
-
-    Args:
-        - text to parse into a list of JSONL records
-
-    Return
-        Tuple of two lists of strings. The first list is the successfully
-        parsed JSONL strings. The second list are any "substrings" of the
-        input text that didn't parse. Hopefully, this list is empty.
-        If the input string is empty, striped for leading and trailing whitespace,
-        ([],[]) is returned.
-    """
-    if not text.strip():
-        return [], []
-    split = re.sub(r"\}[,\s]*\{", "}\x00{", text)  # Use an unlikely delimiter...
-    fixed = re.split("\x00", split)
-    jsonls = []
-    errors = []
-    for s in fixed:
-        try:
-            decode_json(s)
-            # It parsed! Use s
-            jsonls.append(s)
-        except ValueError:
-            errors.append(s)
-    return jsonls, errors
-
-
 # TODO: This is duplicated now in the ModelResponseParser class, which is used by
 # the ChatBot app, but not by the "tools".
 def extract_content(litellm_response: ModelResponse) -> str:
@@ -348,14 +267,3 @@ def extract_content(litellm_response: ModelResponse) -> str:
     ]  # ty: ignore[not-subscriptable]
     # print(f"content (type = {type(content)}: {content})")
     return content
-
-
-def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
-    """
-    Works like dict.pop() should work; rather than raise an exception,
-    just return None and don't modify the dictionary.
-    """
-    try:
-        return dictionary.pop(key)
-    except KeyError:
-        return None

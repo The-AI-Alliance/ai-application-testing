@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 from typing import Any, Optional
 
-from common.utils import decode_json, encode_json
+from common.json_yaml import decode_json, encode_json
 
 
 class FilePersistentStorageError(Exception):

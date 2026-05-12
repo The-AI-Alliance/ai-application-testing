@@ -104,7 +104,7 @@ class AppointmentManager(ResourceManager):
     def _ignore(self, resource: dict[str, Any]) -> bool:
         """
         Implement this hook to ignore appointment records for
-        "cancelled" appointments.
+        "cancelled" appointments. Used by `ResourceManager` methods.
         """
         return resource.get("status") == "cancelled"
 
@@ -416,7 +416,7 @@ class AppointmentManager(ResourceManager):
         one_second = timedelta(seconds=1)
 
         def dt_eq(dt: datetime) -> bool:
-            dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
+            return dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
 
         criteria["appointment_date_time"] = dt_eq
 

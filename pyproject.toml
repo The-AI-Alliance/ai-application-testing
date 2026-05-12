@@ -36,3 +36,24 @@ dev = [
 [tool.ty.src]
 include = ["src"]
 exclude = ["src/tools/langflow"]
+
+[tool.pylint.main]
+# Tip: use the following command to generate a complete 
+# example .toml file. The [tool.pylint.*] sections were
+# edited to include only overrides.
+# cd src && uv run pylint --disable=bare-except,invalid-name --class-rgx='[A-Z][a-z]+' --generate-toml-config 
+
+[tool.pylint.design]
+# Maximum number of positional arguments for function / method.
+max-positional-arguments = 8
+
+[tool.pylint.format]
+# Maximum number of characters on a single line. Pylint's default of 100 is based
+# on PEP 8's guidance that teams may choose line lengths up to 99 characters.
+# However, we use some long lines for error messages that normally are not of interest to read.
+max-line-length = 150
+
+[tool.pylint.variables]
+# Tells whether unused global variables should be treated as a violation.
+allow-global-unused-variables = false
+

@@ -165,7 +165,7 @@ class ResourceManager:
 
         # Check if the time slot is already "used". We check if any
         # occupied times are within 1 second of the proposed time, but
-        # ignore resources if `ignore_filter(resource)` returns `True`.
+        # ignore resources if `self._ignore(resource)` returns `True`.
         if unique_datetime_key:
             for resource in self.resources.values():
                 dt = resource.get(unique_datetime_key)
@@ -312,40 +312,41 @@ class ResourceManager:
         """
         return self.resources.get(resource_id, {})
 
-    @classmethod
-    def resource_matches_criteria_ignorable(
-        cls,
-        resource: dict[str, Any],
-        criteria: dict[str, Callable[[Any], bool]],
-        ignorable: Callable[[dict[str, Any]], bool],
+    def resource_matches_criteria(
+        self, resource: dict[str, Any], criteria: dict[str, Callable[[Any], bool]]
     ) -> bool:
-        if ignorable(resource):
-            return False
+        """
+        Return True if the resource matches the input criteria and
+        `self._ignore(resource)` return False.
+        """
+        success = ResourceManager.resource_matches_criteria(
+            resource, criteria
+        )
+        return success and not self._ignore(resource)
+
+    @classmethod
+    def resource_matches_criteria(
+        cls,
+        resource:  dict[str, Any],
+        criteria:  dict[str, Callable[[Any], bool]],
+    ) -> bool:
         for key, matcher in criteria.items():
             if matcher and not matcher(resource[key]):
                 return False
         # If here, we have a match!
         return True
 
-    def resource_matches_criteria(
-        self, resource: dict[str, Any], criteria: dict[str, Callable[[Any], bool]]
-    ) -> bool:
-        return ResourceManager.resource_matches_criteria_ignorable(
-            resource, criteria, self._ignore
-        )
-
     @classmethod
     def get_resources_by_criteria_from(
         cls,
         resources: list[dict[str, Any]],
         criteria: dict[str, Callable[[Any], bool]],
-        ignorable: Callable[[dict[str, Any]], bool],
         sort_by_key: str = "",
     ) -> list[dict[str, Any]]:
-        """Support `get_resources_by_criteria()` and some tests."""
+        """Support `self.get_resources_by_criteria()` and some tests."""
         found = []
         for res in resources:
-            if ResourceManager.resource_matches_criteria_ignorable(
+            if ResourceManager.resource_matches_criteria(
                 res,
                 criteria,
             ):
@@ -377,12 +378,12 @@ class ResourceManager:
         Returns:
             list[dict[str,Any]] with resources that match the criteria, or [] if no matches are found.
         """
-        return ResourceManager.get_resources_by_criteria_from(
+        found = ResourceManager.get_resources_by_criteria_from(
             list(self.resources.values()),
             criteria,
             sort_by_key,
-            lambda res, crit: self.resource_matches_criteria(res, crit),
         )
+        return list(filter(lambda res: self._ignore(res) == False, found))
 
     def get_resource_ids_by_criteria(self, criteria: dict[str, Any]) -> list[str]:
         """

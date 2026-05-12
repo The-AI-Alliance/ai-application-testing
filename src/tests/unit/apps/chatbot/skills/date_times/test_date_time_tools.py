@@ -87,14 +87,13 @@ class TestDateTimeTools(unittest.TestCase):
     def test_is_weekday_returns_false_for_weekend_days(self, weekend_day):
         self.assertFalse(is_week_day.run({"a_date_time": weekend_day}))
 
-    @given(st.datetimes())
+    @given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
     def test_datetime_to_str_returns_properly_formatted_string_based_on_desired_format(
-        self, dt
+        self, dt, fmt
     ):
-        for fmt in friendly_date_time_formats:
-            expected = dt.strftime(fmt)
-            actual = datetime_to_str.run({"a_date_time": dt, "output_format": fmt})
-            self.assertEqual(expected, actual, f"dt: {dt}, fmt: {fmt}")
+        expected = dt.strftime(fmt)
+        actual = datetime_to_str.run({"a_date_time": dt, "output_format": fmt})
+        self.assertEqual(expected, actual, f"dt: {dt}, fmt: {fmt}")
 
     @given(st.datetimes())
     def test_datetime_to_str_uses_a_default_format(self, dt):
@@ -104,14 +103,13 @@ class TestDateTimeTools(unittest.TestCase):
             expected, actual, f"dt: {dt}, fmt: {def_friendly_date_time_format}"
         )
 
-    @given(st.dates())
+    @given(st.dates(), st.sampled_from(friendly_date_formats))
     def test_date_to_str_returns_properly_formatted_string_based_on_desired_format(
-        self, d
+        self, d, fmt
     ):
-        for fmt in friendly_date_formats:
-            expected = d.strftime(fmt)
-            actual = date_to_str.run({"a_date": d, "output_format": fmt})
-            self.assertEqual(expected, actual, f"d: {d}, fmt: {fmt}")
+        expected = d.strftime(fmt)
+        actual = date_to_str.run({"a_date": d, "output_format": fmt})
+        self.assertEqual(expected, actual, f"d: {d}, fmt: {fmt}")
 
     @given(st.dates())
     def test_date_to_str_uses_a_default_format(self, d):
@@ -119,14 +117,13 @@ class TestDateTimeTools(unittest.TestCase):
         actual = date_to_str.run({"a_date": d})
         self.assertEqual(expected, actual, f"d: {d}, fmt: {def_friendly_date_format}")
 
-    @given(st.times())
+    @given(st.times(), st.sampled_from(friendly_time_formats))
     def test_time_to_str_returns_properly_formatted_string_based_on_desired_format(
-        self, t
+        self, t, fmt
     ):
-        for fmt in friendly_time_formats:
-            expected = t.strftime(fmt)
-            actual = time_to_str.run({"a_time": t, "output_format": fmt})
-            self.assertEqual(expected, actual, f"t: {t}, fmt: {fmt}")
+        expected = t.strftime(fmt)
+        actual = time_to_str.run({"a_time": t, "output_format": fmt})
+        self.assertEqual(expected, actual, f"t: {t}, fmt: {fmt}")
 
     @given(st.times())
     def test_time_to_str_uses_a_default_format(self, t):
@@ -134,26 +131,25 @@ class TestDateTimeTools(unittest.TestCase):
         actual = time_to_str.run({"a_time": t})
         self.assertEqual(expected, actual, f"t: {t}, fmt: {def_friendly_time_format}")
 
-    @given(st.datetimes())
-    def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(self, dt):
+    @given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
+    def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(self, dt, fmt):
         import locale
 
         current_locale = locale.getlocale()
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-        for fmt in friendly_date_time_formats:
-            dt_str = dt.strftime(fmt)
-            actual, error = str_to_datetime.run(
-                {"a_date_time_str": dt_str, "input_format": fmt}
-            )
-            # We actually need to compare strings, not dts, because a returned datetime might have "missing"
-            # hours, minutes, seconds, etc., depending on fmt.
-            actual_str = actual.strftime(fmt)
-            self.assertEqual(
-                dt_str,
-                actual_str,
-                f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}",
-            )
-            self.assertEqual("", error)
+        dt_str = dt.strftime(fmt)
+        actual, error = str_to_datetime.run(
+            {"a_date_time_str": dt_str, "input_format": fmt}
+        )
+        # We actually need to compare strings, not dts, because a returned datetime might have "missing"
+        # hours, minutes, seconds, etc., depending on fmt.
+        actual_str = actual.strftime(fmt)
+        self.assertEqual(
+            dt_str,
+            actual_str,
+            f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}",
+        )
+        self.assertEqual("", error)
         locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
 
     @given(st.datetimes())

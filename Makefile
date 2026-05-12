@@ -877,15 +877,20 @@ integration-tests-dedicated:: run-command-checks
 
 .PHONY: before-pr format lint type-check type-check-watch
 
-before-pr:: tests format lint type-check
+before-pr:: tests format lint ruff pylint type-check
 
 format::
 	@echo "${INFO}$@: Running 'black' on the code.${_END}"
 	uv run black ${SRC_DIR}
 
-lint::
-	@echo "${INFO}$@: Running 'ruff' and 'pylint' on the code.${_END}"
+lint:: ruff pylint
+
+ruff::
+	@echo "${INFO}$@: Running 'ruff' to lint the code.${_END}"
 	uv run ruff check --fix ${SRC_DIR}
+
+pylint::
+	@echo "${INFO}$@: Running 'pylint' on the code.${_END}"
 	uv run pylint ${SRC_DIR}
 
 type-check::

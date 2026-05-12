@@ -6,10 +6,10 @@ from pathlib import Path
 from litellm import completion
 
 from openai import OpenAIError
+from common.json_yaml import load_yaml
 from common.utils import (
     setup,
     common_defaults,
-    load_yaml,
     make_full_prompt,
     extract_content,
 )

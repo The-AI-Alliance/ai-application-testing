@@ -3,10 +3,15 @@
 
 import unittest
 from hypothesis import given, strategies as st
-from typing import Any
+from typing import Any, MutableMapping
 
-from common.collections import chain, dict_permutations, get, mult
-
+from common.collections import (
+    chain,
+    dict_permutations,
+    dict_pop,
+    get,
+    mult,
+)
 
 class TestCollections(unittest.TestCase):
     """
@@ -188,6 +193,32 @@ class TestCollections(unittest.TestCase):
                 expected *= n
 
         self.assertEqual(expected, mult(ints, skip_zeros=True))
+
+
+    @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
+    def test_dict_pop_returns_key_and_deletes_from_dict(self, dictionary):
+        dlen = len(dictionary)
+        keys = dictionary.keys()
+        for key in list(keys):
+            expected_value = dictionary[key]
+            actual_value = dict_pop(dictionary, key)
+            self.assertEqual(expected_value, actual_value)
+            self.assertTrue(key not in dictionary)
+            dlen -= 1
+            self.assertEqual(dlen, len(dictionary))
+
+    @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
+    def test_dict_pop_returns_None_for_nonexistent_key(self, dictionary):
+        dlen = len(dictionary)
+        keys = dictionary.keys()
+        for key in list(keys):
+            key2 = key + key
+            if key2 in dictionary:  # just in case...
+                key2 = key2 + key2
+            actual_value = dict_pop(dictionary, key2)
+            self.assertEqual(None, actual_value)
+            self.assertTrue(key2 not in dictionary)
+            self.assertEqual(dlen, len(dictionary))
 
 
 if __name__ == "__main__":

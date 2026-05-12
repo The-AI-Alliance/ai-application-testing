@@ -3,10 +3,10 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
+from common.json_yaml import load_yaml
 from common.utils import (
     ensure_dirs_exist,
     get_package_version,
-    load_yaml,
 )
 
 from .response_handler import ResponseHandler, ChatBotResponseHandler

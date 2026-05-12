@@ -1,5 +1,6 @@
-from typing import Any
+"""Miscellaneous utilities for working with collections."""
 
+from typing import Any, MutableMapping
 
 def get(dictionary: dict[str, Any], key: str, default: Any | None = None) -> Any:
     """
@@ -97,3 +98,13 @@ def mult(collection: list[int], skip_zeros: bool = False) -> int:
         return result
     else:
         return 0
+
+def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
+    """
+    Works like dict.pop() should work; rather than raise an exception,
+    just return None and don't modify the dictionary.
+    """
+    try:
+        return dictionary.pop(key)
+    except KeyError:
+        return None

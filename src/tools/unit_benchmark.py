@@ -1,3 +1,4 @@
+"""The Unit Benchmark synthesizer and validator."""
 import glob
 import io
 import os
@@ -11,18 +12,24 @@ from typing import Any, Mapping, MutableMapping
 
 from litellm import completion
 from openai import OpenAIError
+from common.json_yaml import (
+    extract_jsonl_list,
+    from_json,
+    load_yaml,
+)
 from common.utils import (
     all_use_cases,
     ensure_dirs_exist,
     extract_content,
-    extract_jsonl_list,
-    load_yaml,
     make_full_prompt,
 )
 
-
 class UnitBenchmarkDataParent:
-
+    """
+    Common base class for UnitBenchmarkDataSynthesizer and
+    UnitBenchmarkDataValidator, mostly for handling common 
+    attributes.
+    """
     template_prefix = "synthetic-q-and-a_patient-chatbot"
 
     def __init__(
@@ -58,6 +65,41 @@ class UnitBenchmarkDataParent:
 
         ensure_dirs_exist(self.template_dir)
 
+    def template_name(self, which_one: str) -> str:
+        """Return a valid name for a template, based on the prefix and input `which_one`."""
+        return f"{self.template_prefix}-{which_one}"
+
+    def check_label(self, json_line: str, expected_label: str) -> bool:
+        """
+        Parse the input line as JSON and return whether or not the expected label
+        is found. 
+        Raises exceptions for invalid JSON, the label isn't found, etc.
+        """
+        try:
+            label = from_json(json_line, ["answer", "label"])
+            return expected_label == label
+        except KeyError as ke:
+            self.logger.warning(
+                f" check_label(): input JSON doesn't have a label field (exception: {ke}): {json_line}"
+            )
+        except json.decoder.JSONDecodeError | TypeError as ex:
+            self.logger.warning(f" check_label(): JSON parsing failed (exception: {ex}): {json_line}")
+        
+        return False
+
+    def get_rating(self, json_line: str, line_number: int) -> int:
+        try:
+            return from_json(json_line, ["rating"])
+        except KeyError as ke:
+            self.logger.warning(
+                f" get_rating(): JSON doesn't have a rating field (exception: {ke}):  line #{line_number} = {line}"
+            )
+        except json.decoder.JSONDecodeError | TypeError as ex:
+            self.logger.warning(
+                f" get_rating(): JSON parsing failed (exception: {ex}): line #{line_number} = {line}"
+            )
+        return -1
+
 
 class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
 
@@ -76,26 +118,6 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
 
         # Create the data directory
         os.makedirs(self.data_dir, exist_ok=True)
-
-    def template_name(self, which_one: str) -> str:
-        return f"{self.template_prefix}-{which_one}"
-
-    def check_label(self, json_line: str, expected_label: str) -> bool:
-        try:
-            js = json.loads(json_line)
-            label = js["answer"]["label"]
-            return expected_label == label
-        except KeyError as ke:
-            self.logger.warning(
-                f" JSON doesn't have a label field (exception: {ke}): {json_line}"
-            )
-        except json.decoder.JSONDecodeError as je:
-            self.logger.warning(f" JSON parsing failed (exception: {je}): {json_line}")
-        except Exception as e:
-            self.logger.warning(
-                f" JSON malformed? (Other exception thrown: {e}): {json_line}"
-            )
-        return False
 
     def expected_lines(self, expected_label: str, data_file: str) -> int:
         """Check if all lines in the data file have the expected label."""
@@ -218,20 +240,6 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         self.logger.info(f"Using template file: {template_file}")
         self.template = load_yaml(template_file)
 
-    def get_rating(self, line: str, line_number: int) -> int:
-        try:
-            js = json.loads(line)
-            return js["rating"]
-        except KeyError as ke:
-            self.logger.warning(
-                f" JSON doesn't have a rating field (exception: {ke}):  line #{line_number} = {line}"
-            )
-        except json.decoder.JSONDecodeError as je:
-            self.logger.warning(
-                f" JSON parsing failed (exception: {je}): line #{line_number} = {line}"
-            )
-        return -1
-
     def return_stats(
         self, data_file: str, validation_file: str
     ) -> MutableMapping[str, Any]:
@@ -309,6 +317,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             ):
                 data_file_names.append(files)
         self.logger.info(f"Validating data files: {data_file_names}")
+        parse_err_fmt = """Some substrings from line {}, <{}> in data file <{}> didn't parse as JSONL. errors = {}"""
         print(f"Validating data files: {data_file_names}")
         for data_file_name in data_file_names:
             data_file = os.path.join(self.data_dir, data_file_name)
@@ -319,9 +328,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                         for line_number, line in enumerate(synthetic_data_file):
                             lines2, errors = extract_jsonl_list(line)
                             if errors:
-                                self.logger.error(
-                                    f"""Some substrings from line {line_number}, <{line}> in data file <{data_file}> didn't parse as JSONL. errors = {errors}"""
-                                )
+                                self.logger.error(parse_err_fmt.format(line_number, line, data_file, errors))
                             for line2 in lines2:
                                 line3 = line2.strip()
                                 if len(line3) == 0:

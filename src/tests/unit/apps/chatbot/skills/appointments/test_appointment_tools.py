@@ -12,7 +12,7 @@ import tempfile
 import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping, Sequence
 from langchain_core.tools.structured import BaseTool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
@@ -63,12 +63,12 @@ class TestAppointmentTools(unittest.TestCase):
     Also, it appears the tool writes to `sys.stderr` sometimes, so we capture that output.
     """
 
-    def _make_manager(self) -> AppointmentManager:
+    def _make_manager(self, make_new=True) -> AppointmentManager:
         file_path = Path(self.temp_file.name)
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.CRITICAL)  # suppress almost everything...
 
-        self.tool = get_appointment_manager(file_path, logger=logger, make_new=True)
+        self.tool = get_appointment_manager(file_path, logger=logger, make_new=make_new)
         self.assertEqual(file_path, self.tool.storage.storage_path)
         return self.tool
 
@@ -240,60 +240,25 @@ class TestAppointmentTools(unittest.TestCase):
         after_count = get_appointments_count.run({})
         self.assertEqual(before_count, after_count)
 
-    def _check_appointments_list(
+    def _check_appointments_lists(
         self,
-        appointment_dicts_lists: list[dict[str, Any]],
-        get_list: Callable[[], list[dict[str, Any]]],
-        get_appointment: Callable[[str], dict[str, Any]] | None = None,
+        expected_appointments: Sequence[Mapping[str, Any]],
+        actual_appointments: Sequence[Mapping[str, Any]],
     ):
         """
-        Test a list of appointments. The get_list lambda returns the list to
-        check. The get_appointment lambda returns an appointment by id. The
-        default value of None means, just get the appointment from the list
-        returned by get_appointments.
+        Test that two lists of appointments are identical.
         """
-        # sanity checks:
-        self._clear()
-        self.assertEqual(0, len(get_list()), str(get_list()))
-        dt_set = set([d["appointment_date_time"] for d in appointment_dicts_lists])
-        self.assertEqual(
-            len(appointment_dicts_lists),
-            len(dt_set),
-            f"{appointment_dicts_lists} != {dt_set}",
-        )
-
-        created = {}
-        for appointment_dict in appointment_dicts_lists:
-            appointment = self._check_success(
-                appointment_dict, all=appointment_dicts_lists
+        self.assertEqual(len(expected_appointments), len(actual_appointments))
+        for i in range(len(expected_appointments)):
+            ea = expected_appointments[i]
+            aa = actual_appointments[i]
+            self.assertEqual(ea["id"], aa["id"])
+            self.assertEqual(
+                ea["appointment_date_time"],
+                aa["appointment_date_time"],
             )
-            created[appointment["id"]] = appointment
-
-        appointments = get_list()
-        self.assertEqual(len(appointments), len(created))
-        for appointment_id in created:
-            appointment = {}
-            if get_appointment:
-                appointment = get_appointment(appointment_id)
-            else:
-                for appt in appointments:
-                    if appt["id"] == appointment_id:
-                        appointment = appt
-                        break
-            self.assertIsNotNone(appointment)
-            expected = created.get(appointment_id)
-            self.assertIsNotNone(expected)
-            if (
-                expected and appointment
-            ):  # redundant with previous lines, but enables proper typing.
-                self.assertEqual(appointment_id, appointment["id"])
-                self.assertEqual(appointment_id, expected["id"])
-                self.assertEqual(
-                    expected["appointment_date_time"],
-                    appointment["appointment_date_time"],
-                )
-                self.assertEqual(expected["patient_name"], appointment["patient_name"])
-                self.assertEqual(expected["reason"], appointment["reason"])
+            self.assertEqual(ea["patient_name"], aa["patient_name"])
+            self.assertEqual(ea["reason"], aa["reason"])
 
     @given(appointment_dicts())
     def test_create_appointment_succeeds_if_datetime_in_the_future_on_the_hour_and_slot_is_open(
@@ -598,17 +563,15 @@ class TestAppointmentTools(unittest.TestCase):
 
         # Create new instance and verify appointments exist.
         old_tool = self.tool
+        first_appointments = old_tool.get_appointments()
+        
+        # Create new instance and verify appointments exist.
         new_tool = self._make_manager()
         self.assertIsNot(old_tool, new_tool)
-        appointments = new_tool.get_appointments()
-        # check with both the default way of getting an appointment and
-        # passing new_tool.get_appointment
-        self._check_appointments_list(appointment_dicts_lists, appointments)
-        self._check_appointments_list(
-            appointment_dicts_lists,
-            appointments,
-            get_appointment=new_tool.get_appointment_by_id,
-        )
+        second_appointments = new_tool.get_appointments()
+        
+        # Check that they both have the same list of appointments.
+        self._check_appointments_lists(first_appointments, second_appointments)
 
     @given(appointment_dicts_lists().filter(lambda lst: len(lst) > 0))
     def test_clear_erases_appointments(
