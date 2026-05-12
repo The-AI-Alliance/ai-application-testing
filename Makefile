@@ -45,9 +45,11 @@ OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
 # DATA_DIR: Where the tools write and later read data.
 # TEST_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
+# TEST_OUTPUT_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
 DATA_DIR              ?= ${OUTPUT_DIR}/data
 TEST_DATA_DIR         ?= tests/data
-CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR}
+TEST_OUTPUT_DIR       ?= output/tests
+CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR} ${TEST_OUTPUT_DIR}
 
 OPEN_WEBUI_DIR        ?= ${SRC_DIR}/apps/chatbot/open-webui
 
@@ -729,7 +731,7 @@ remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
 
-${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${TEST_OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai 
@@ -767,7 +769,7 @@ unit-tests-appointments::
 	    --start-directory tests/unit/apps/chatbot \
 	    --top-level-directory .
 
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+unit-tests-ai:: ${TEST_OUTPUT_DIR} unit-tests-ai-agent unit-tests-ai-simple
 
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
@@ -830,7 +832,7 @@ list-unit-tests-ai::
 
 post-proc-test-logs:: 
 	@echo
-	@echo "${INFO}Time-stamped JSONL log files were written to:\n  ${BOLD_PURPLE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${INFO}.\nThey may be empty!${_END}"
+	@echo "${INFO}Time-stamped JSONL log files were written to:\n  ${BOLD_PURPLE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${INFO}\nThey may be empty!${_END}"
 	@echo "${INFO}The corresponding '*.json' files (if any) were generated using 'jq' and target 'nice-ai-test-logs'. They are easier to read.${_END}"
 	@echo
 	@echo ${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs

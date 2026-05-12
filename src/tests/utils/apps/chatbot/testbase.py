@@ -717,10 +717,13 @@ class TestBaseRunner(TestBase):
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
             actual_content = answer.get("content", {})
-            actual_reply = actual_content.get("reply")
-            self.assertIsNotNone(actual_reply, str(answer))
+
+            # Sigh, sometimes what we want is in 'reply', other times at the top level.
+            actual_reply = actual_content.get("reply", answer)
+
             actual_label = actual_reply.get("label")
             actual_actions = actual_reply.get("actions", "")
+
             if isinstance(actual_actions, str):
                 actual_actions = re.split(r"\s*,\s*", actual_reply.get("actions", ""))
             actual_keywords = dict(
@@ -730,7 +733,7 @@ class TestBaseRunner(TestBase):
             actual_confidence = actual_reply.get(
                 "confidence", actual_content.get("confidence", 1.0)
             )
-            # actual_text          = actual_reply.get('text', '')
+            # actual_text = actual_reply.get('text', '')
 
             # We have seen subtle punctuation changes in prompts...
             p2 = re.sub(r"\W", " ", prompt)
