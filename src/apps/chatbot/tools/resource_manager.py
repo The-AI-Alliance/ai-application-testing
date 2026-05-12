@@ -313,10 +313,11 @@ class ResourceManager:
         return self.resources.get(resource_id, {})
 
     @classmethod
-    def resource_matches_criteria_ignorable(cls,
+    def resource_matches_criteria_ignorable(
+        cls,
         resource: dict[str, Any],
         criteria: dict[str, Callable[[Any], bool]],
-        ignorable: Callable[[dict[str, Any]], bool]
+        ignorable: Callable[[dict[str, Any]], bool],
     ) -> bool:
         if ignorable(resource):
             return False
@@ -326,15 +327,16 @@ class ResourceManager:
         # If here, we have a match!
         return True
 
-    def resource_matches_criteria(self,
-        resource: dict[str, Any],
-        criteria: dict[str, Callable[[Any], bool]]
+    def resource_matches_criteria(
+        self, resource: dict[str, Any], criteria: dict[str, Callable[[Any], bool]]
     ) -> bool:
         return ResourceManager.resource_matches_criteria_ignorable(
-            resource, criteria, self._ignore)
+            resource, criteria, self._ignore
+        )
 
     @classmethod
-    def get_resources_by_criteria_from(cls,
+    def get_resources_by_criteria_from(
+        cls,
         resources: list[dict[str, Any]],
         criteria: dict[str, Callable[[Any], bool]],
         ignorable: Callable[[dict[str, Any]], bool],
@@ -344,14 +346,16 @@ class ResourceManager:
         found = []
         for res in resources:
             if ResourceManager.resource_matches_criteria_ignorable(
-                res, criteria, ):
+                res,
+                criteria,
+            ):
                 found.append(res)
         if sort_by_key:
             found.sort(key=lambda res: res[sort_by_key])
         return found
 
-    def get_resources_by_criteria(self, 
-        criteria: dict[str, Callable[[Any], bool]], sort_by_key: str = ""
+    def get_resources_by_criteria(
+        self, criteria: dict[str, Callable[[Any], bool]], sort_by_key: str = ""
     ) -> list[dict[str, Any]]:
         """
         Retrieve the resources for the specified criteria. First, locate
@@ -374,12 +378,13 @@ class ResourceManager:
             list[dict[str,Any]] with resources that match the criteria, or [] if no matches are found.
         """
         return ResourceManager.get_resources_by_criteria_from(
-            list(self.resources.values()), criteria, sort_by_key,
-            lambda res, crit: self.resource_matches_criteria(res, crit)
+            list(self.resources.values()),
+            criteria,
+            sort_by_key,
+            lambda res, crit: self.resource_matches_criteria(res, crit),
         )
 
-    def get_resource_ids_by_criteria(self, 
-        criteria: dict[str, Any]) -> list[str]:
+    def get_resource_ids_by_criteria(self, criteria: dict[str, Any]) -> list[str]:
         """
         Calls `get_resources_by_criteria` to get resources for the specified criteria,
         i.e., where keys in `criteria` are found in the resources and the values found

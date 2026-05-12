@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from apps.chatbot import ChatBot, ChatBotResponseHandler
 from apps.chatbot.mcp_server.server import create_mcp_server
 
+
 def test_chatbot_creation():
     """Test that ChatBot can be created."""
     print("\nTesting ChatBot creation...")

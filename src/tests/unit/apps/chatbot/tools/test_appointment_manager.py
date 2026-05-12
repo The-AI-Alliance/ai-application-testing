@@ -447,9 +447,7 @@ class TestAppointmentManager(unittest.TestCase):
         appointments = new_tool.get_appointments()
         # check with both the default way of getting an appointment and
         # passing new_tool.get_appointment
-        self._check_appointments_list(
-            appointment_dicts_lists, appointments
-        )
+        self._check_appointments_list(appointment_dicts_lists, appointments)
         self._check_appointments_list(
             appointment_dicts_lists,
             appointments,

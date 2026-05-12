@@ -147,4 +147,3 @@ class ChatBot(ABC):
     @abstractmethod
     def _do_query(self, query: str) -> dict[str, Any]:
         pass
-

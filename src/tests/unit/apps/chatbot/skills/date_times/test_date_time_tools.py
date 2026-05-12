@@ -77,9 +77,7 @@ class TestDateTimeTools(unittest.TestCase):
     def test_now_returns_current_datetime(self):
         now_dt = now.run({})
         expected_dt = datetime.now()
-        self.assertAlmostEqual(
-            expected_dt, now_dt, delta=TestDateTimeTools.one_second
-        )
+        self.assertAlmostEqual(expected_dt, now_dt, delta=TestDateTimeTools.one_second)
 
     @given(non_weekend_dates())
     def test_is_weekday_returns_true_for_week_days(self, week_day):
@@ -199,6 +197,7 @@ class TestDateTimeTools(unittest.TestCase):
         actual, error = str_to_date.run({"a_date_str": d_iso})
         self.assertEqual(d, actual, f"d: {d}")
         self.assertEqual("", error)
+
 
 if __name__ == "__main__":
     unittest.main()

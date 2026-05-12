@@ -414,10 +414,10 @@ class AppointmentManager(ResourceManager):
         criteria["patient_name"] = lambda pn: pn == patient_name
         # Check within one second:
         one_second = timedelta(seconds=1)
+
         def dt_eq(dt: datetime) -> bool:
-            dt >= appointment_date_time - one_second and \
-            dt <= appointment_date_time + one_second
-        
+            dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
+
         criteria["appointment_date_time"] = dt_eq
 
         found = self.get_resource_ids_by_criteria(criteria)
