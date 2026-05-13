@@ -2,6 +2,7 @@
 
 from typing import Any, MutableMapping
 
+
 def get(dictionary: dict[str, Any], key: str, default: Any | None = None) -> Any:
     """
     Instead of returning None, raise a `ValueError` if `None`
@@ -16,16 +17,33 @@ def get(dictionary: dict[str, Any], key: str, default: Any | None = None) -> Any
         return value
 
 
-def chain(dictionary: dict[str, Any], keys: list[str]) -> Any | None:
+def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
     """
-    'Chain' calls to get on `dictionary` and nested dictionaries, stopping
+    Works like dict.pop() should work; rather than raise an exception,
+    just return None and don't modify the dictionary.
+    """
+    try:
+        return dictionary.pop(key)
+    except KeyError:
+        return None
+
+
+def get_chain(dictionary: dict[str, Any], keys: list[str]) -> Any | None:
+    """
+    'Chain' calls to `get` on the input `dictionary` and nested dictionaries, stopping
     at the first `None` value returned. This eliminates the tedium of
     doing this one call at a time and checking for None each time.
     If `keys` is empty, `None` is returned.
+    Raises a `TypeError` if there are keys left, but we the previously-retrieved
+    object is not a dictionary.
     """
     value = None
     d = dictionary
     for key in keys:
+        if not isinstance(d, dict):
+            raise ValueError(
+                f"object '{d}' is not a dictionary. Input dict = {dictionary}, keys = {keys}"
+            )
         value = d.get(key)
         if value is None:
             return value
@@ -95,16 +113,8 @@ def mult(collection: list[int], skip_zeros: bool = False) -> int:
         result = 1
         for v in values:
             result *= v
+            if not result:
+                break
         return result
     else:
         return 0
-
-def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
-    """
-    Works like dict.pop() should work; rather than raise an exception,
-    just return None and don't modify the dictionary.
-    """
-    try:
-        return dictionary.pop(key)
-    except KeyError:
-        return None

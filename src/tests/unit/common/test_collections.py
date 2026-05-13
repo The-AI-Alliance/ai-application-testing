@@ -3,15 +3,16 @@
 
 import unittest
 from hypothesis import given, strategies as st
-from typing import Any, MutableMapping
+from typing import Any
 
 from common.collections import (
-    chain,
+    get_chain,
     dict_permutations,
     dict_pop,
     get,
     mult,
 )
+
 
 class TestCollections(unittest.TestCase):
     """
@@ -60,28 +61,30 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected_len, len(actual2))
 
     @given(st.integers(min_value=0, max_value=10))
-    def test_chain_returns_value_at_end_of_chain(self, depth: int):
+    def test_get_chain_returns_value_at_end_of_chain(self, depth: int):
         keys = [str(i) for i in range(depth)]
-        dict = {}
-        d = dict
+        root = {}
+        d = root
         for k in keys:
             d[k] = {}
             d = d[k]
         d[str(depth)] = depth
         keys.append(str(depth))
-        self.assertEqual(depth, chain(dict, keys), f"{depth}: {keys}, {dict}")
+        self.assertEqual(depth, get_chain(root, keys), f"{depth}: {keys}, {d}")
 
     @given(st.integers(min_value=0, max_value=10))
-    def test_chain_ends_early_and_returns_None_at_first_None_value(self, depth: int):
+    def test_get_chain_ends_early_and_returns_None_at_first_None_value(
+        self, depth: int
+    ):
         keys = [str(i) for i in range(depth)]
         keys2 = [str(i) for i in range(2 * depth)]
-        dict = {}
-        d = dict
+        root = {}
+        d = root
         for k in keys:
             d[k] = {}
             d = d[k]
         d[str(depth)] = None
-        self.assertIsNone(chain(dict, keys2), f"{depth}: {keys2}, {dict}")
+        self.assertIsNone(get_chain(root, keys2), f"{depth}: {keys2}, {d}")
 
     @given(
         st.dictionaries(
@@ -193,7 +196,6 @@ class TestCollections(unittest.TestCase):
                 expected *= n
 
         self.assertEqual(expected, mult(ints, skip_zeros=True))
-
 
     @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
     def test_dict_pop_returns_key_and_deletes_from_dict(self, dictionary):

@@ -1,5 +1,5 @@
 # Allow types to self-reference during their definitions.
-#from __future__ import annotations
+# from __future__ import annotations
 
 import json
 import re
@@ -7,12 +7,12 @@ import yaml
 from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Callable, Mapping, MutableMapping
+from typing import Any, Mapping, MutableMapping
+
 
 def load_yaml(path: Path) -> Mapping[str, Any]:
     """Parse a YAML file and return the corresponding Mapping."""
     return yaml.safe_load(path.read_text())
-
 
 
 class DatetimeEncoder(json.JSONEncoder):
@@ -92,7 +92,7 @@ def extract_jsonl_list(text: str) -> tuple[list[str], list[str]]:
 def from_json(json_str: str, keys_indices: list[Any]) -> Any:
     """
     Parse the input JSON string and return the value found by
-    using the list of keys_indices _or_ list indices, one at a time. 
+    using the list of keys_indices _or_ list indices, one at a time.
     When more than one key is specified, all of them except the
     last must return either a dictionary or a list, depending on
     what the next "key" is.
@@ -119,4 +119,3 @@ def from_json(json_str: str, keys_indices: list[Any]) -> Any:
     for key_index in keys_indices:
         value = value[key_index]
     return value
-

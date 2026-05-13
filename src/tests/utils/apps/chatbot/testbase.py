@@ -1,6 +1,7 @@
-# Common code for tests of the "ChatBot" module using Hypothesis for property-based testing.
-# https://hypothesis.readthedocs.io/en/latest/
-
+"""
+Common code for tests of the "ChatBot" module using Hypothesis
+for property-based testing. https://hypothesis.readthedocs.io/en/latest/
+"""
 
 import json
 import logging
@@ -9,10 +10,11 @@ import random
 import re
 import time
 import unittest
+from abc import ABC, abstractmethod
 from datetime import datetime
 from io import StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Sequence, Type
 
 from apps.chatbot import (
     ChatBot,
@@ -21,350 +23,12 @@ from apps.chatbot import (
     ChatBotResponseHandler,
     ChatBotShell,
 )
-from apps.chatbot.tools import ResourceManager
-from common.collections import chain, dict_pop, get
+from common.collections import dict_pop
 from common.json_yaml import decode_json
 
-
-class BaseTest:
-    """Base class for `QnATest` and `ScenarioTest`."""
-
-
-class QnATest(BaseTest):
-    """
-    Class to hold a benchmark Q&A pair: a query
-    and expected results: labels, actions, and rating.
-    """
-
-    def __init__(
-        self,
-        query: str,
-        labels: Sequence[str],
-        actions: Sequence[str],
-        rating: int,
-        reason: str = "",
-        keywords: Mapping[str, str] = {},
-    ):
-        super().__init__()
-        self.query = query
-        self.labels = labels
-        self.actions = actions
-        self.rating = rating
-        self.reason = reason if reason else ""
-        self.keywords = keywords
-        errors = []
-        if not self.query:
-            errors.append("empty query")
-        if not self.labels:
-            errors.append("empty labels")
-        if rating < 0 or rating > 5:
-            errors.append(
-                f"invalid rating {self.rating} (not between 0 and 5, inclusive)"
-            )
-        if errors:
-            raise ValueError(f"Invalid inputs: {', '.join(errors)}")
-
-    def __repr__(self) -> str:
-        return self.json()
-
-    def dict(self) -> dict[str, Any]:
-        d = {"name": "QnATest"}
-        d.update(vars(self))
-        return d
-
-    def json(self) -> str:
-        return json.dumps(self.dict())
-
-
-class ScenarioTest(BaseTest):
-    """
-    Class to hold the test data for a "scenario" test, where one or more
-    round trip interactions between the user (or AI surrogate) and the system
-    are expected to occur.
-    """
-
-    class Inputs:
-        def __init__(
-            self, required_information: list[dict[str, str]], pre_conditions: list[str]
-        ):
-            self.required_information = required_information
-            self.pre_conditions = pre_conditions
-
-    class Success:
-        def __init__(self, success_text: str, success_post_conditions: list[str]):
-            self.success_text = success_text
-            self.success_post_conditions = success_post_conditions
-
-    class Failure:
-        def __init__(self, failure_text: str, failure_post_conditions: list[str]):
-            self.failure_text = failure_text
-            self.failure_post_conditions = failure_post_conditions
-
-    def __init__(
-        self,
-        scenario: str,
-        inputs: Inputs,
-        successes: list[Success],
-        failures: list[Failure],
-        initial_queries: list[str],
-    ):
-
-        self.scenario = (scenario,)
-        self.inputs = inputs
-        self.successes = successes
-        self.failures = failures
-        self.initial_queries = initial_queries
-        self.start_data = {}
-        self.end_data = {}
-        self.errors = {
-            "required-information": [],
-            "pre-conditions": [],
-            "post-conditions": [],
-        }
-
-    def start(self, chatbot: ChatBotAgent) -> dict[str, Any]:
-        """
-        Called at the start of the test. Captures the data needed
-        for the pre- and post-condition checks. Note that pre-conditions
-        can't be checked now, because we don't yet know information like
-        the patient name and one or more date times that might be needed.
-        However, we save the appointments list before the scenario and we
-        get the required information at the end, so we can check the pre-
-        conditions _then_.
-        """
-        # TODO: hard-codes awareness of particular scenarios, which
-        # should be abstracted away eventually.
-        am = chatbot.appointment_manager
-        self.start_appointments = am.appointments.copy()
-
-    def end(
-        self, chatbot: ChatBotAgent, result: dict[str, Any]
-    ) -> tuple[bool, dict[str, Any]]:
-        """
-        Called after the test has finished. Captures the data needed
-        for the post-condition checks. Then performs all checks.
-        """
-        # TODO: hard-codes awareness of particular scenarios, which
-        # should be abstracted away eventually.
-        am = chatbot.appointment_manager
-        self.end_appointments = am.appointments.copy()
-        self.check_required_information(chatbot, result)
-        self.check_conditions(chatbot, result)
-        success = (
-            self.errors["required-information"] == []
-            and self.errors["pre-conditions"] == []
-            and self.errors["post-conditions"] == []
-        )
-        return success, self.errors
-
-    def check_required_information(self, chatbot: ChatBotAgent, result: dict[str, Any]):
-        """
-        Analyze the results for required information and atempt to convert string values to the
-        correct types. Add any errors to `self.errors['required-information']`. If successful,
-        the string value for a label is replaced with the parsed object.
-        """
-        captures = get(result, "captured_values")
-        for info in self.inputs.required_information:
-            label = get(info, "label")
-            value_str: str = captures.get("label")
-            if not value_str:
-                self.errors["required-information"].append(
-                    f"{label}: value not captured"
-                )
-            else:
-                value, err_msg = self.parse_value(label, value_str)
-                if err_msg:
-                    self.errors["required-information"].append(
-                        f"{label}: value type error: {err_msg}"
-                    )
-                else:
-                    captures[label] = value
-
-    def check_appointment_at_date_time_for_patient(
-        self,
-        should_find: bool,
-        include_patient_name: bool,
-        which_conditions: str,
-        result: dict[str, Any],
-    ):
-        appointments = (
-            self.start_appointments
-            if which_conditions == "pre-conditions"
-            else self.end_appointments
-        )
-        run_criteria = True
-        criteria = {}
-        if include_patient_name:
-            pn = chain(result.captures, ["patient_name", "value"])
-            errors = chain(result.captures, ["patient_name", "errors"])
-            if errors:
-                self.errors[which_conditions].append(f"patient-name: {errors}")
-                run_criteria = False
-            elif pn:
-                criteria["patient-name"] = pn
-            else:
-                self.errors[which_conditions].append("patient-name is empty")
-                run_criteria = False
-
-            adt = chain(result.captures, ["appointment-date-time", "value"])
-            errors = chain(result.captures, ["appointment-date-time", "errors"])
-            if errors:
-                self.errors[which_conditions].append(f"appointment-date-time: {errors}")
-                run_criteria = False
-            elif adt:
-                criteria["appointment-date-time"] = adt
-            else:
-                self.errors[which_conditions].append("appointment-date-time is empty")
-                run_criteria = False
-
-            if run_criteria:
-                found = ResourceManager.get_resources_by_criteria_from(
-                    appointments, criteria
-                )
-                if found and not should_find:
-                    self.errors[which_conditions].append(
-                        f"Found appointment, but not expected for criteria {criteria}"
-                    )
-                if not found and should_find:
-                    self.errors[which_conditions].append(
-                        f"No appointment found for criteria {criteria}"
-                    )
-
-    def check_appointments_count(self, delta: int, result: dict[str, Any]):
-        len_start = len(self.start_appointments)
-        len_end = len(self.end_appointments)
-        if len_start + delta != len_end:
-            self.errors["post-conditions"].append(
-                f"After vs. before appointments counts {len_start + delta} != {len_end}"
-            )
-
-    def appointments_unchanged(self, result: dict[str, Any]):
-        if not self.start_appointments == self.end_appointments:
-            self.errors["post-conditions"].append(
-                f"Start and end appointments differ: {self.start_appointments} != {self.end_appointments}"
-            )
-
-    def check_conditions(
-        self, chatbot: ChatBotAgent, result: dict[str, Any]
-    ) -> dict[str, Any]:
-        for pc in self.inputs.pre_conditions:
-            match pc:
-                case "appointment-at-date-time-for-patient":
-                    self.check_appointment_at_date_time_for_patient(
-                        True, True, "pre-conditions", result
-                    )
-                case "no-appointment-at-date-time-for-patient":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, True, "pre-conditions", result
-                    )
-                case "no-appointment-at-date-time":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, False, "pre-conditions", result
-                    )
-
-        s_or_f = self.successes if result["succeeded"] else self.failures
-        for pc in s_or_f.post_conditions:
-            match pc:
-                case (
-                    "appointment-at-date-time-for-patient"
-                    | "appointment-at-new-date-time-for-patient"
-                ):
-                    self.check_appointment_at_date_time_for_patient(
-                        True, True, "post-conditions", result, self.end_appointments
-                    )
-                case "no-appointment-at-date-time-for-patient":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, True, "post-conditions", result
-                    )
-                case "no-appointment-at-date-time":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, False, "post-conditions", result
-                    )
-                case "appointments-unchanged":
-                    self.appointments_unchanged(result)
-                case "before-appointments-count":
-                    self.check_appointments_count(0, result)
-                case "before-appointments-count-minus-one":
-                    self.check_appointments_count(-1, result)
-                case "before-appointments-count-plus-one":
-                    self.check_appointments_count(1, result)
-
-    def parse_value(self, label: str, value: str) -> tuple[Any, str]:
-        """
-        Assume a JSON string for a single value or a list of values.
-        Parse with json.loads(), then convert any datetimes found.
-        """
-        try:
-            obj = json.loads(value)
-            if isinstance(obj, list):
-                lst = []
-                for x in obj:
-                    try:
-                        x2 = datetime.fromisoformat(x)
-                        lst.append(x2)
-                    except ValueError:
-                        lst.append(x)
-                return lst, ""
-            else:
-                return obj, ""
-        except json.decoder.JSONDecodeError as e:
-            return value, f"Label {label} value {value} is not valid JSON: {e}"
-
-    @classmethod
-    def from_dict(obj: dict[str, Any]):
-        """
-        Parse a nested dictionary loaded from a scenario test data file
-        and construct a ScenarioTest instance from it.
-        """
-        scenario = get(obj, "scenario")
-        inputs = get(obj, "inputs")
-        outputs = get(obj, "outputs")
-        successes = [
-            (s.get("text"), s.get("post_conditions")) for s in get(outputs, "successes")
-        ]
-        failures = [
-            (f.get("text"), f.get("post_conditions")) for f in get(outputs, "failures")
-        ]
-
-        inputs = ScenarioTest.Inputs(
-            required_information=get(inputs, "required-information"),
-            pre_conditions=get(inputs, "pre-conditions"),
-        )
-        successes = [
-            ScenarioTest.Success(
-                success_text=get(s, "text"),
-                success_post_conditions=get(s, "post_conditions"),
-            )
-            for s in get(outputs, "successes")
-        ]
-        failures = [
-            ScenarioTest.Failure(
-                failure_text=get(f, "text"),
-                failure_post_conditions=get(f, "post_conditions"),
-            )
-            for f in get(outputs, "failures")
-        ]
-
-        initial_queries = get(obj, "initial-queries")
-
-        return ScenarioTest(
-            scenario=scenario,
-            inputs=inputs,
-            successes=successes,
-            failures=failures,
-            initial_queries=initial_queries,
-        )
-
-    def __repr__(self) -> str:
-        return self.json()
-
-    def dict(self) -> dict[str, Any]:
-        d = {"name": "ScenarioTest"}
-        d.update(vars(self))
-        return d
-
-    def json(self) -> str:
-        return json.dumps(self.dict())
+import BaseAITest
+import QnATest
+import ScenarioTest
 
 
 class LowConfidenceResult:
@@ -379,7 +43,7 @@ class LowConfidenceResult:
         query: str,
         reasons: str,
         reply: dict[str, Any],
-        test_prompt: QnATest,
+        test_prompt: BaseAITest,
         rating_threshold: int,
         confidence_threshold: float,
     ):
@@ -410,6 +74,300 @@ class LowConfidenceResult:
         return json.dumps(self.dict())
 
 
+class QnADataLoader:
+    def load_data(self, path: Path) -> list[QnATest]:
+        if not path.exists():
+            raise FileNotFoundError(path)
+
+        tests = []
+        with path.open("r") as file:
+            for line in file:
+                ls = line.strip()
+                if ls:
+                    try:
+                        obj = decode_json(ls)
+                        query = dict_pop(obj, "query")
+                        labels = dict_pop(obj, "labels")
+                        actions = dict_pop(obj, "actions")
+                        rating = dict_pop(obj, "rating")
+                        reason = dict_pop(
+                            obj, "reason"
+                        )  # Not all records have this, so None will be returned.
+                        # What's left in obj at this point are "substitution" keywords, if any,
+                        # that we expect to find in the inference results.
+                        qnat = QnATest(
+                            query, labels, actions, rating, reason, keywords=obj
+                        )
+                        tests.append(qnat)
+                    except ValueError as err:
+                        raise ValueError(
+                            f"From file {path}, error parsing line: <{line}>"
+                        ) from err
+        if not len(tests):
+            raise ValueError(f"No Q&A pairs were loaded from {path}!")
+        return tests
+
+
+class ScenarioDataLoader:
+    def load_data(self, path: Path) -> list[ScenarioTest]:
+        if not path.exists():
+            raise FileNotFoundError(path)
+
+        # The file has to be for a scenario kind we understand...
+        kind = None
+        known_kinds = ScenarioTest.get_known_scenario_kinds()
+        for name, k in known_kinds.items():
+            if path.name.find(name) >= 0:
+                kind = k
+                break
+        if not kind:
+            raise ValueError(
+                f"Input data file {path} doesn't correspond to one of the known scenario types: {known_kinds}"
+            )
+
+        with path.open("r") as file:
+            lines = file.readlines()
+            try:
+                objs = decode_json("".join(lines))
+                tests = [kind.from_dict(obj) for obj in objs]
+                return tests
+            except ValueError as err:
+                raise ValueError(f"Error parsing JSON in file {path}") from err
+        if not len(tests):
+            raise ValueError(f"No scenario tests were loaded from {path}!")
+
+
+class QueryRunner(ABC):
+    def __init__(
+        self,
+        chatbot: ChatBot,
+        rating_threshold: int,
+        confidence_threshold: float,
+    ):
+        self.chatbot = chatbot
+        self.rating_threshold = rating_threshold
+        self.confidence_threshold = confidence_threshold
+
+    @abstractmethod
+    def run_query(
+        self,
+        test_prompt: Type[BaseAITest],
+    ):
+        pass
+
+    def _check_label(self, expected: Sequence[str], actual: str) -> str:
+        return (
+            ""
+            if actual in expected
+            else f"""label '{actual}' not in expected: {expected}."""
+        )
+
+
+class QnAQueryRunner(QueryRunner):
+    def __init__(
+        self,
+        chatbot: ChatBot,
+        rating_threshold: int,
+        confidence_threshold: float,
+    ):
+        super().__init__(chatbot, rating_threshold, confidence_threshold)
+
+    def run_query(
+        self,
+        test_prompt: QnATest,
+    ) -> tuple[
+        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
+    ]:
+        """
+        See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
+        Rather than follow the usual approach for failing fast on the first wrong datum,
+        we run all the examples and accumulate error messages, then report the results.
+        """
+        exp_query = test_prompt.query
+        exp_labels = test_prompt.labels
+        exp_actions = test_prompt.actions
+        exp_rating = test_prompt.rating
+        exp_keywords = test_prompt.keywords
+        prompt = exp_query  # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
+
+        metadata = {
+            "prompt": prompt,
+            "test_prompt": test_prompt.dict(),
+            "rating_threshold": self.rating_threshold,
+            "confidence_threshold": self.confidence_threshold,
+        }
+        # On success this will be returned as empty.
+        errors = {}
+        warnings = {}
+
+        answer = self.chatbot.query(prompt)
+        try:
+            if isinstance(answer, str) or answer.get("error"):
+                qf = {
+                    "query_failure": f"unexpected message returned: {answer}",
+                    "metadata": metadata,
+                    "error": answer.get("error", ""),
+                }
+                self.key_results["errors"].append(qf)
+                if self.verbose:
+                    print(qf)
+                return qf
+
+            metadata["answer"] = answer
+
+            actual_query = str(answer.get("query"))
+            actual_rtu = answer.get("reply_to_user")
+            actual_content = answer.get("content", {})
+
+            # Sigh, sometimes what we want is in 'reply', other times at the top level.
+            actual_reply = actual_content.get("reply", answer)
+
+            actual_label = actual_reply.get("label")
+            actual_actions = actual_reply.get("actions", "")
+
+            if isinstance(actual_actions, str):
+                actual_actions = re.split(r"\s*,\s*", actual_reply.get("actions", ""))
+            actual_keywords = dict(
+                [(key, actual_reply.get(key, "")) for key in exp_keywords]
+            )
+            # We have seen the occasional confidence scores at the content level, rather than inside the reply.
+            actual_confidence = actual_reply.get(
+                "confidence", actual_content.get("confidence", 1.0)
+            )
+            # actual_text = actual_reply.get('text', '')
+
+            # We have seen subtle punctuation changes in prompts...
+            p2 = re.sub(r"\W", " ", prompt)
+            aq = re.sub(r"\W", " ", actual_query)
+            if p2 != aq:
+                errors["unexpected answer.query"] = f"{prompt} != {actual_query}"
+
+            low_confidence_reasons = []
+            if actual_confidence < self.confidence_threshold:
+                low_confidence_reasons.append(
+                    f"Actual confidence ({actual_confidence}) < confidence threshold ({self.confidence_threshold})."
+                )
+            if exp_rating < self.rating_threshold:
+                low_confidence_reasons.append(
+                    f"Expected rating ({exp_rating}) < rating threshold ({self.rating_threshold})."
+                )
+
+            lowConfidenceResults = []
+            if low_confidence_reasons:
+                reasons = " ".join(low_confidence_reasons)
+                lowConfidenceResults.append(
+                    LowConfidenceResult(
+                        prompt,
+                        reasons,
+                        actual_reply,
+                        test_prompt,
+                        self.rating_threshold,
+                        self.confidence_threshold,
+                    )
+                )
+            else:
+                err_msg = self._check_label(exp_labels, actual_label)
+                if len(err_msg) > 0:
+                    errors["unexpected label"] = err_msg
+                elif actual_label == "emergency" or actual_label == "other":
+                    # Ignore the action if we detect an emergency or other prompt, but check
+                    # the returned user response, since we always return with the same reply for
+                    # these labels!
+                    exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
+                    if exp_rtu != actual_rtu:
+                        errors["unexpected reply_to_user"] = (
+                            f"<{exp_rtu}> != <{actual_rtu}>"
+                        )
+                else:
+                    # For the other label cases, IF there are expected actions, do the actual actions contain
+                    # at least one item in the expected actions? This is not a rigorous requirement, but should
+                    # be adequate. The ChatBot can return more than one actions in a comma-separated list, so
+                    # we check at least one of the actual actions is in the set of the expected actions. This
+                    # is done by computing the intersection of the sets and expecting it to be non-empty.
+                    # Right now, we treat these as warnings, not errors.
+                    if exp_actions:
+                        exp_set = set(exp_actions)
+                        actual_set = set(actual_actions)
+                        if not len(actual_set.intersection(exp_set)):
+                            warnings["unexpected actions"] = (
+                                f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
+                            )
+
+                # For the "keywords", ignore case, since sometimes proper names,
+                # can occur with different cases. Also, we check that _expected_
+                # values, if any, are present, but also allow for additional actual
+                # values. This is because some of the test queries hard-code potential
+                # keywords, but we don't "care" if they appear.
+                # Right now, we treat these as warnings, not errors.
+                missing_kvs = {}
+                for key, value in exp_keywords.items():
+                    if len(value) == 0:
+                        warnings["unexpected keywords"] = (
+                            f"BUG: keyword {key} has zero-length value array!"
+                        )
+                        continue
+                    if len(value) > 1:
+                        warnings["unexpected keywords"] = (
+                            f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!"
+                        )
+                    expected = value[0].lower()
+                    actual = actual_keywords.get(key, "").lower()
+                    if not actual.find(expected) >= 0:
+                        missing_kvs[key] = f"{expected} vs. {actual}"
+                if missing_kvs:
+                    warnings["missing keywords"] = missing_kvs
+        except TypeError as te:
+            print(f"TypeError while parsing answer: {answer}")
+            raise te
+
+        return metadata, errors, warnings, lowConfidenceResults
+
+
+class ScenarioQueryRunner(QueryRunner):
+    def __init__(
+        self,
+        chatbot: ChatBot,
+        rating_threshold: int,
+        confidence_threshold: float,
+    ):
+        super().__init__(chatbot, rating_threshold, confidence_threshold)
+
+    def run_query(
+        self,
+        test_prompt: ScenarioTest,
+    ) -> tuple[
+        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
+    ]:
+        """
+        run a scenario session.
+        """
+        # test_prompt.scenario
+        # test_prompt.inputs
+        # test_prompt.successes
+        # test_prompt.failures
+        # test_prompt.initial_queries
+        # test_prompt.start_data
+        # test_prompt.end_data
+        # test_prompt.errors = {
+        #     "required-information": [],
+        #     "pre-conditions": [],
+        #     "post-conditions": [],
+        # }
+
+        metadata = {
+            "test_prompt": test_prompt.dict(),
+            "rating_threshold": self.rating_threshold,
+            "confidence_threshold": self.confidence_threshold,
+        }
+        # On success these will be returned as empty.
+        errors = {}
+        warnings = {}
+        lowConfidenceResults = []
+        raise ValueError("Not yet implemented")
+
+        return metadata, errors, warnings, lowConfidenceResults
+
+
 class TestBase(unittest.TestCase):
     """
     Base class for tests that need to instantiate a ChatBot, but not necessarily run inference with it.
@@ -419,20 +377,17 @@ class TestBase(unittest.TestCase):
     default_confidence_threshold: float = ChatBot.default_confidence_threshold
     default_rating_threshold: int = 4
     log_file_name: str = ""
-    log_file: TextIOWrapper = None
+    log_file: TextIOWrapper | None = None
     which_chatbot_choice: str = ""
-    which_chatbot: ChatBot | None = None
+    which_chatbot_name: str = ""
 
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
 
-        # Determine which ChatBot implementation to use based on environment variable
-        self.assertNotEqual("", TestBase.which_chatbot_choice)
         chatbot_class = (
             ChatBotAgent if TestBase.which_chatbot_choice == "agent" else ChatBotSimple
         )
-
         self.chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
@@ -535,28 +490,22 @@ class TestBaseRunner(TestBase):
         TestBaseRunner.total_error_count += error_count
         self._dump_key_results(lcr_count, warning_count, error_count)
 
-    def _get_data_file(
-        self, use_case_name: str, require_simple_or_agent: bool = False
-    ) -> Path:
+    def _get_data_file(self, use_case_name: str, kind_label: str) -> Path:
         """
-        Look for a "{use_case_name}-simple.jsonl" or a
-        "{use_case_name}-scenario.json" file first, depending on which
-        ChatBot we are testing, and if not found, then look for a
-        "{use_case_name}.jsonl" file. However, only look for the second
-        file if `require_simple_or_agent` is False. If it is true, we
-        require that the `*-simple.jsonl` or `*-scenario.json` be found.
-        Fail the test if a data file can't be found.
+        Look for a "{use_case_name}-{kind_label}.jsonl" or "...json" file.
+        If not found, then look for a "{use_case_name}.jsonl" file.
+        However, only look for the second
         """
-        ss = [f"-{TestBase.which_chatbot_choice}"]
-        if not require_simple_or_agent:
-            ss.append("")
         files = [
-            TestBaseRunner.benchmark_data_dir / f"{use_case_name}{s}.jsonl" for s in ss
+            TestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.jsonl",
+            TestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.json",
         ]
         for file in files:
             if file.exists():
                 return file
-        self.fail(f"Data files {files} don't exist for use case {use_case_name}!")
+        self.fail(
+            f"Data files {files} don't exist for use case {use_case_name} and {kind_label} tests!"
+        )
 
     def _dump_key_results(self, lcr_count: int, warning_count: int, error_count: int):
         lcrs = [lcr.dict() for lcr in self.key_results["low_confidence_results"]]
@@ -586,21 +535,20 @@ class TestBaseRunner(TestBase):
     def setUpClass(cls):
         # Determine which ChatBot implementation to use based on environment variable
         TestBase.which_chatbot_choice = os.environ.get("WHICH_CHATBOT", "agent").lower()
-        TestBase.which_chatbot = (
+        TestBase.which_chatbot_name = (
             "ChatBotAgent"
             if TestBase.which_chatbot_choice == "agent"
             else "ChatBotSimple"
         )
-
         def_log_dir = "tests/logs"
         log_file_template = os.environ.get("TESTS_LOGS_FILE_TEMPLATE")
         if not log_file_template:
             print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
-            log_file_template = f"{def_log_dir}/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+            log_file_template = f"{def_log_dir}/{{TestBase.which_chatbot_name}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
         log_file_path = Path(
             log_file_template.format(
-                class_name=cls.__name__, which_chatbot=TestBase.which_chatbot
+                class_name=cls.__name__, which_chatbot=TestBase.which_chatbot_name
             )
         )
         print(f"\n  ** Logging to {log_file_path} ** \n")
@@ -623,236 +571,26 @@ class TestBaseRunner(TestBase):
         if TestBaseRunner.total_error_count:
             raise AssertionError(f"{TestBaseRunner.total_error_count} errors reported!")
 
-    def __load_qna_test_data(self, path: Path) -> list[QnATest]:
-        if not path.exists():
-            raise FileNotFoundError(path)
-
-        tests = []
-        with path.open("r") as file:
-            for line in file:
-                ls = line.strip()
-                if ls:
-                    try:
-                        obj = decode_json(ls)
-                        query = dict_pop(obj, "query")
-                        labels = dict_pop(obj, "labels")
-                        actions = dict_pop(obj, "actions")
-                        rating = dict_pop(obj, "rating")
-                        reason = dict_pop(
-                            obj, "reason"
-                        )  # Not all records have this, so None will be returned.
-                        # What's left in obj at this point are "substitution" keywords, if any,
-                        # that we expect to find in the inference results.
-                        qnat = QnATest(
-                            query, labels, actions, rating, reason, keywords=obj
-                        )
-                        tests.append(qnat)
-                    except ValueError as err:
-                        raise ValueError(
-                            f"From file {path}, error parsing line: <{line}>"
-                        ) from err
-        if not len(tests):
-            raise ValueError(f"No Q&A pairs were loaded from {path}!")
-        return tests
-
-    def __load_session_test_data(self, path: Path) -> list[ScenarioTest]:
-        if not path.exists():
-            raise FileNotFoundError(path)
-
-        with path.open("r") as file:
-            lines = file.readlines()
-            try:
-                objs = decode_json("".join(lines))
-                tests = [ScenarioTest.from_dict(obj) for obj in objs]
-                return tests
-            except ValueError as err:
-                raise ValueError(f"Error parsing JSON in file {path}") from err
-        if not len(tests):
-            raise ValueError(f"No scenario tests were loaded from {path}!")
-
-    def __try_qna_query(
-        self,
-        test_prompt: QnATest,
-        rating_threshold: int = TestBase.default_rating_threshold,
-        confidence_threshold: float = TestBase.default_confidence_threshold,
-    ):
-        """
-        See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
-        Rather than follow the usual approach for failing fast on the first wrong datum,
-        we run all the examples and accumulate error messages, then report the results.
-        """
-        exp_query = test_prompt.query
-        exp_labels = test_prompt.labels
-        exp_actions = test_prompt.actions
-        exp_rating = test_prompt.rating
-        exp_keywords = test_prompt.keywords
-        prompt = exp_query  # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
-
-        metadata = {
-            "prompt": prompt,
-            "test_prompt": test_prompt.dict(),
-            "rating_threshold": rating_threshold,
-            "confidence_threshold": confidence_threshold,
-        }
-        # On success this will be returned as empty. If problems are found,
-        # we put those kvs first, so they are printed first...
-        errors = {}
-        warnings = {}
-
-        answer = self.chatbot.query(prompt)
-        try:
-            if isinstance(answer, str) or answer.get("error"):
-                qf = {
-                    "query_failure": f"unexpected message returned: {answer}",
-                    "metadata": metadata,
-                    "error": answer.get("error", ""),
-                }
-                self.key_results["errors"].append(qf)
-                if self.verbose:
-                    print(qf)
-                return qf
-
-            metadata["answer"] = answer
-
-            actual_query = str(answer.get("query"))
-            actual_rtu = answer.get("reply_to_user")
-            actual_content = answer.get("content", {})
-
-            # Sigh, sometimes what we want is in 'reply', other times at the top level.
-            actual_reply = actual_content.get("reply", answer)
-
-            actual_label = actual_reply.get("label")
-            actual_actions = actual_reply.get("actions", "")
-
-            if isinstance(actual_actions, str):
-                actual_actions = re.split(r"\s*,\s*", actual_reply.get("actions", ""))
-            actual_keywords = dict(
-                [(key, actual_reply.get(key, "")) for key in exp_keywords]
-            )
-            # We have seen the occasional confidence scores at the content level, rather than inside the reply.
-            actual_confidence = actual_reply.get(
-                "confidence", actual_content.get("confidence", 1.0)
-            )
-            # actual_text = actual_reply.get('text', '')
-
-            # We have seen subtle punctuation changes in prompts...
-            p2 = re.sub(r"\W", " ", prompt)
-            aq = re.sub(r"\W", " ", actual_query)
-            if p2 != aq:
-                errors["unexpected answer.query"] = f"{prompt} != {actual_query}"
-
-            low_confidence_reasons = []
-            if actual_confidence < confidence_threshold:
-                low_confidence_reasons.append(
-                    f"Actual confidence ({actual_confidence}) < confidence threshold ({confidence_threshold})."
-                )
-            if exp_rating < rating_threshold:
-                low_confidence_reasons.append(
-                    f"Expected rating ({exp_rating}) < rating threshold ({rating_threshold})."
-                )
-
-            if low_confidence_reasons:
-                reasons = " ".join(low_confidence_reasons)
-                lcr = LowConfidenceResult(
-                    prompt,
-                    reasons,
-                    actual_reply,
-                    test_prompt,
-                    rating_threshold,
-                    confidence_threshold,
-                )
-                self.key_results["low_confidence_results"].append(lcr)
-                if self.verbose:
-                    print(lcr)
-            else:
-                err_msg = self._check_label(exp_labels, actual_label)
-                if len(err_msg) > 0:
-                    errors["unexpected label"] = err_msg
-                elif actual_label == "emergency" or actual_label == "other":
-                    # Ignore the action if we detect an emergency or other prompt, but check
-                    # the returned user response, since we always return with the same reply for
-                    # these labels!
-                    exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
-                    if exp_rtu != actual_rtu:
-                        errors["unexpected reply_to_user"] = (
-                            f"<{exp_rtu}> != <{actual_rtu}>"
-                        )
-                else:
-                    # For the other label cases, IF there are expected actions, do the actual actions contain
-                    # at least one item in the expected actions? This is not a rigorous requirement, but should
-                    # be adequate. The ChatBot can return more than one actions in a comma-separated list, so
-                    # we check at least one of the actual actions is in the set of the expected actions. This
-                    # is done by computing the intersection of the sets and expecting it to be non-empty.
-                    # Right now, we treat these as warnings, not errors.
-                    if exp_actions:
-                        exp_set = set(exp_actions)
-                        actual_set = set(actual_actions)
-                        if not len(actual_set.intersection(exp_set)):
-                            warnings["unexpected actions"] = (
-                                f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
-                            )
-
-                # For the "keywords", ignore case, since sometimes proper names,
-                # can occur with different cases. Also, we check that _expected_
-                # values, if any, are present, but also allow for additional actual
-                # values. This is because some of the test queries hard-code potential
-                # keywords, but we don't "care" if they appear.
-                # Right now, we treat these as warnings, not errors.
-                missing_kvs = {}
-                for key, value in exp_keywords.items():
-                    if len(value) == 0:
-                        warnings["unexpected keywords"] = (
-                            f"BUG: keyword {key} has zero-length value array!"
-                        )
-                        continue
-                    if len(value) > 1:
-                        warnings["unexpected keywords"] = (
-                            f"TODO: We currently only handle one value in keywords: {key} -> {value}. Ignoring all but the first value!"
-                        )
-                    expected = value[0].lower()
-                    actual = actual_keywords.get(key, "").lower()
-                    if not actual.find(expected) >= 0:
-                        missing_kvs[key] = f"{expected} vs. {actual}"
-                if missing_kvs:
-                    warnings["unexpected keywords"] = missing_kvs
-        except TypeError as te:
-            print(f"TypeError while parsing answer: {answer}")
-            raise te
-
-        if errors:
-            me = errors | metadata
-            self.key_results["errors"].append(me)
-            if self.verbose:
-                print(me)
-        if warnings:
-            mw = warnings | metadata
-            self.key_results["warnings"].append(mw)
-            if self.verbose:
-                print(mw)
-
     def __try_all(
         self,
         method: str,
         use_case_name: str,
-        require_simple_or_agent: bool,
-        test_data_loader: Callable[[Path], list[BaseTest]],
-        try_query: Callable[[BaseTest, int, float], None],
+        test_data_path: Path,
+        test_data: Sequence[BaseAITest],
+        query_runner: QueryRunner,
         sample_rate: float,
         rating_threshold: int,
         confidence_threshold: float,
     ):
-        """Template method supporting `try_qna_queries` and `try_sessions`."""
-        file_name = self._get_data_file(
-            use_case_name, require_simple_or_agent=require_simple_or_agent
-        )
-
+        """Template method supporting `try_qna_queries` and `try_scenarios`."""
         if not sample_rate > 0.0:
             sample_rate = self.sample_rate
 
         d = {
             "step": method,
             "which_chatbot": TestBase.which_chatbot_choice,
-            "file_name": str(file_name),
+            "use_case": use_case_name,
+            "file_name": str(test_data_path),
             "sample_rate": sample_rate,
             "rating_threshold": rating_threshold,
             "confidence_threshold": confidence_threshold,
@@ -860,11 +598,8 @@ class TestBaseRunner(TestBase):
         }
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
-        test_prompts = test_data_loader(file_name)
         samples = (
-            self._sample(test_prompts, sample_rate)
-            if sample_rate < 1.0
-            else test_prompts
+            self._sample(test_data, sample_rate) if sample_rate < 1.0 else test_data
         )
 
         last_time = time.time()
@@ -872,11 +607,24 @@ class TestBaseRunner(TestBase):
 
         for test_prompt in samples:
             self.samples_count += 1
-            try_query(
+            metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(
                 test_prompt,
-                rating_threshold=rating_threshold,
-                confidence_threshold=confidence_threshold,
             )
+            if errors:
+                me = errors | metadata  # print the error data first.
+                self.key_results["errors"].append(me)
+                if self.verbose:
+                    print(me)
+            if warnings:
+                mw = warnings | metadata  # print the warning data first.
+                self.key_results["warnings"].append(mw)
+                if self.verbose:
+                    print(mw)
+
+            if lowConfidenceResults:
+                self.key_results["low_confidence_results"].extend(lowConfidenceResults)
+                if self.verbose:
+                    print(lowConfidenceResults)
 
             lcr_count = len(self.key_results["low_confidence_results"])
             warning_count = len(self.key_results["warnings"])
@@ -919,18 +667,23 @@ class TestBaseRunner(TestBase):
         then accumulate errors and report them at the end. Otherwise, fail on the first prompt
         where we detect errors in the result.
         """
+        file_path = self._get_data_file(use_case_name, "qna")
+        data_loader = QnADataLoader()
+        data = data_loader.load_data(file_path)
+        runner = QnAQueryRunner(self.chatbot, rating_threshold, confidence_threshold)
+
         self.__try_all(
             method="try_qna_queries",
             use_case_name=use_case_name,
-            require_simple_or_agent=False,
-            test_data_loader=self.__load_qna_test_data,
-            try_query=self.__try_qna_query,
+            test_data_path=file_path,
+            test_data=data,
+            query_runner=runner,
             sample_rate=sample_rate,
             rating_threshold=rating_threshold,
             confidence_threshold=confidence_threshold,
         )
 
-    def try_sessions(
+    def try_scenarios(
         self,
         use_case_name: str,
         sample_rate: float = 0.0,
@@ -944,12 +697,19 @@ class TestBaseRunner(TestBase):
         then accumulate errors and report them at the end. Otherwise, fail on the first prompt
         where we detect errors in the result.
         """
+        file_path = self._get_data_file(use_case_name, "scenario")
+        data_loader = ScenarioDataLoader()
+        data = data_loader.load_data(file_path)
+        runner = ScenarioQueryRunner(
+            self.chatbot, rating_threshold, confidence_threshold
+        )
+
         self.__try_all(
-            method="try_sessions",
+            method="try_scenarios",
             use_case_name=use_case_name,
-            require_simple_or_agent=True,
-            test_data_loader=self.__load_session_test_data,
-            try_query=self.__try_session_query,
+            test_data_path=file_path,
+            test_data=data,
+            query_runner=runner,
             sample_rate=sample_rate,
             rating_threshold=rating_threshold,
             confidence_threshold=confidence_threshold,
@@ -975,10 +735,3 @@ class TestBaseRunner(TestBase):
                 k = minimum_n
             samples = random.sample(collection, k=k)
         return samples
-
-    def _check_label(self, expected: Sequence[str], actual: str) -> str:
-        return (
-            ""
-            if actual in expected
-            else f"""label '{actual}' not in expected: {expected}."""
-        )

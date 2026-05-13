@@ -312,23 +312,11 @@ class ResourceManager:
         """
         return self.resources.get(resource_id, {})
 
-    def resource_matches_criteria(
-        self, resource: dict[str, Any], criteria: dict[str, Callable[[Any], bool]]
-    ) -> bool:
-        """
-        Return True if the resource matches the input criteria and
-        `self._ignore(resource)` return False.
-        """
-        success = ResourceManager.resource_matches_criteria(
-            resource, criteria
-        )
-        return success and not self._ignore(resource)
-
     @classmethod
     def resource_matches_criteria(
         cls,
-        resource:  dict[str, Any],
-        criteria:  dict[str, Callable[[Any], bool]],
+        resource: dict[str, Any],
+        criteria: dict[str, Callable[[Any], bool]],
     ) -> bool:
         for key, matcher in criteria.items():
             if matcher and not matcher(resource[key]):
@@ -383,7 +371,7 @@ class ResourceManager:
             criteria,
             sort_by_key,
         )
-        return list(filter(lambda res: self._ignore(res) == False, found))
+        return list(filter(lambda res: not self._ignore(res), found))
 
     def get_resource_ids_by_criteria(self, criteria: dict[str, Any]) -> list[str]:
         """

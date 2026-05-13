@@ -416,7 +416,10 @@ class AppointmentManager(ResourceManager):
         one_second = timedelta(seconds=1)
 
         def dt_eq(dt: datetime) -> bool:
-            return dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
+            return (
+                dt >= appointment_date_time - one_second
+                and dt <= appointment_date_time + one_second
+            )
 
         criteria["appointment_date_time"] = dt_eq
 

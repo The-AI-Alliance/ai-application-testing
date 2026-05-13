@@ -1,17 +1,20 @@
 """The Unit Benchmark synthesizer and validator."""
+
 import glob
 import io
 import os
 import json
 import logging
 import sys
-from litellm.types.utils import ModelResponse
-from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
+from abc import ABC
 from pathlib import Path
 from typing import Any, Mapping, MutableMapping
 
 from litellm import completion
+from litellm.types.utils import ModelResponse
+from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
 from openai import OpenAIError
+
 from common.json_yaml import (
     extract_jsonl_list,
     from_json,
@@ -24,12 +27,14 @@ from common.utils import (
     make_full_prompt,
 )
 
-class UnitBenchmarkDataParent:
+
+class UnitBenchmarkDataParent(ABC):
     """
     Common base class for UnitBenchmarkDataSynthesizer and
-    UnitBenchmarkDataValidator, mostly for handling common 
+    UnitBenchmarkDataValidator, mostly for handling common
     attributes.
     """
+
     template_prefix = "synthetic-q-and-a_patient-chatbot"
 
     def __init__(
@@ -72,7 +77,7 @@ class UnitBenchmarkDataParent:
     def check_label(self, json_line: str, expected_label: str) -> bool:
         """
         Parse the input line as JSON and return whether or not the expected label
-        is found. 
+        is found.
         Raises exceptions for invalid JSON, the label isn't found, etc.
         """
         try:
@@ -82,26 +87,30 @@ class UnitBenchmarkDataParent:
             self.logger.warning(
                 f" check_label(): input JSON doesn't have a label field (exception: {ke}): {json_line}"
             )
-        except json.decoder.JSONDecodeError | TypeError as ex:
-            self.logger.warning(f" check_label(): JSON parsing failed (exception: {ex}): {json_line}")
-        
+        except json.decoder.JSONDecodeError as ex:
+            self.logger.warning(
+                f" check_label(): JSON parsing failed (exception: {ex}): {json_line}"
+            )
+
         return False
 
     def get_rating(self, json_line: str, line_number: int) -> int:
+        """Parse the JSON input and return the value for the rating field."""
         try:
             return from_json(json_line, ["rating"])
         except KeyError as ke:
             self.logger.warning(
-                f" get_rating(): JSON doesn't have a rating field (exception: {ke}):  line #{line_number} = {line}"
+                f" get_rating(): JSON doesn't have a rating field (exception: {ke}):  line #{line_number} = {json_line}"
             )
-        except json.decoder.JSONDecodeError | TypeError as ex:
+        except json.decoder.JSONDecodeError as ex:
             self.logger.warning(
-                f" get_rating(): JSON parsing failed (exception: {ex}): line #{line_number} = {line}"
+                f" get_rating(): JSON parsing failed (exception: {ex}): line #{line_number} = {json_line}"
             )
         return -1
 
 
 class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
+    """Data synthesizer."""
 
     def __init__(
         self,
@@ -122,7 +131,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
     def expected_lines(self, expected_label: str, data_file: str) -> int:
         """Check if all lines in the data file have the expected label."""
         try:
-            with open(data_file, "r") as f:
+            with open(data_file, "r", encoding="utf-8") as f:
                 unexpected_lines = []
                 for line in f.readlines():
                     line2 = line.strip()
@@ -145,9 +154,10 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
             self.logger.error(f"Data file {data_file} not found.")
             sys.exit(1)
 
-    def do_generate(
+    def _do_generate(
         self, data_file: str, template: Mapping[str, str], expected_label: str
     ) -> int:
+        """Generate data."""
         try:
             content = template["prompt"]
             if len(content) == 0:
@@ -176,10 +186,10 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
                     "substrings in extracted content didn't parse as JSONL. errors = {errors}, extracted content = {extracted_content}"
                 )
 
-            with open(data_file, "w") as f:
+            with open(data_file, "w", encoding="utf-8") as f:
                 for line in jsonls:
                     f.write(line)
-            with open(data_file, "r") as f:
+            with open(data_file, "r", encoding="utf-8") as f:
                 num_qa_pairs = sum(1 for line in f.readlines() if '"question":' in line)
                 self.logger.info(f"Approximately {num_qa_pairs} Q&A pairs generated.")
 
@@ -201,7 +211,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
         self.logger.info(f"    Template:    {template_n}")
         self.logger.info(f"    Data file:   {data_file}")
 
-        num_unexpected_lines = self.do_generate(data_file, template, expected_label)
+        num_unexpected_lines = self._do_generate(data_file, template, expected_label)
         if num_unexpected_lines > 0:
             self.logger.warning(
                 f"Run for {template_n} had {num_unexpected_lines} with the wrong labels or other errors. See data file {data_file}"
@@ -217,6 +227,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
 
 
 class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
+    """Data validator."""
 
     template_prefix = "synthetic-q-and-a_patient-chatbot-data-validation"
 
@@ -243,10 +254,11 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
     def return_stats(
         self, data_file: str, validation_file: str
     ) -> MutableMapping[str, Any]:
+        """Return a map with the validation statistics."""
         ratings = [0 for i in range(5)]
         total_count = 0
         error_count = 0
-        with open(validation_file, "r") as f:
+        with open(validation_file, "r", encoding="utf-8") as f:
             for line in f.readlines():
                 if len(line.strip()) == 0:
                     continue
@@ -291,8 +303,8 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 self.logger.error(
                     f"Some lines couldn't be parsed in response <{response}>, errors = {errors}"
                 )
-            for line in lines:
-                validation_file.write(f"{line}\n")
+            for ln in lines:
+                validation_file.write(ln + "\n")
 
         except OpenAIError as e:
             self.logger.error(f"OpenAIError thrown: {e}")
@@ -323,12 +335,16 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             data_file = os.path.join(self.data_dir, data_file_name)
             validation_file = os.path.splitext(data_file)[0] + "-validation.jsonl"
             if not self.just_stats:
-                with open(validation_file, "w") as vfile:
-                    with open(data_file, "r") as synthetic_data_file:
+                with open(validation_file, "w", encoding="utf-8") as vfile:
+                    with open(data_file, "r", encoding="utf-8") as synthetic_data_file:
                         for line_number, line in enumerate(synthetic_data_file):
                             lines2, errors = extract_jsonl_list(line)
                             if errors:
-                                self.logger.error(parse_err_fmt.format(line_number, line, data_file, errors))
+                                self.logger.error(
+                                    parse_err_fmt.format(
+                                        line_number, line, data_file, errors
+                                    )
+                                )
                             for line2 in lines2:
                                 line3 = line2.strip()
                                 if len(line3) == 0:
@@ -340,6 +356,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         return total_stats
 
     def print_stats(self, stats: MutableMapping[str, Any]):
+        """Print nicely-formated statistics."""
         name_len = 80  # hack
         name_fmt = "{:" + f"{name_len}" + "s}  |"
         col_fmt = "  {:3d}  |"
@@ -361,7 +378,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         all_ratings = [0 for i in range(5)]
         all_count = 0
         all_error_count = 0
-        for data_file, stts in stats.items():
+        for stts in stats.values():
             syn_data_file = stts["data-file"]
             ratings = stts["ratings"]
             total_count = stts["total_count"]

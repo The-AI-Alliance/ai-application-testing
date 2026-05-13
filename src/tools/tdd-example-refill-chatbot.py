@@ -1,3 +1,5 @@
+"""A basic example of refill requests for the ChatBot."""
+
 import os
 import sys
 import logging
@@ -16,6 +18,7 @@ from common.utils import (
 
 
 class TDDExampleRefillChatbot:
+    """A basic example of refill requests for the ChatBot."""
 
     queries_responses = {
         "refill": {

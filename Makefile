@@ -769,13 +769,13 @@ unit-tests-appointments::
 	    --start-directory tests/unit/apps/chatbot \
 	    --top-level-directory .
 
-unit-tests-ai:: ${TEST_OUTPUT_DIR} unit-tests-ai-agent unit-tests-ai-simple
+unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
 # The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai-agent unit-tests-ai-simple:: ${SRC_DIR}/${TESTS_LOGS_DIR} 
+unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} 
 	@echo "${INFO}Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${_END}"
 	@echo "${INFO}AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
 	cd ${SRC_DIR} && \
@@ -877,9 +877,10 @@ integration-tests-dedicated:: run-command-checks
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
-.PHONY: before-pr format lint type-check type-check-watch
+.PHONY: before-pr before-pr-flt format lint ruff pylint type-check type-check-watch
 
-before-pr:: tests format lint ruff pylint type-check
+before-pr:: before-pr-flt tests 
+before-pr-flt:: format lint type-check
 
 format::
 	@echo "${INFO}$@: Running 'black' on the code.${_END}"
@@ -891,9 +892,13 @@ ruff::
 	@echo "${INFO}$@: Running 'ruff' to lint the code.${_END}"
 	uv run ruff check --fix ${SRC_DIR}
 
+# We don't lint the src/tools content, because they are intended more as "scripts",
+# rather than modules with higher quality expectations.
+pylint2::
+	@echo "${INFO}$@: Running 'pylint' on the code.${_END} (configuration in pylintrc.toml)"
+	uv run pylint --ignore=${SRC_DIR}/tools,${SRC_DIR}/tools/langflow ${SRC_DIR}
 pylint::
-	@echo "${INFO}$@: Running 'pylint' on the code.${_END}"
-	uv run pylint ${SRC_DIR}
+	@echo "${INFO}$@: Not currently running 'pylint' on the code due to excessive 'noise'.${_END}"
 
 type-check::
 	@echo "${INFO}Running 'ty' on the code.${_END}"

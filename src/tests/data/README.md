@@ -1,15 +1,15 @@
 # README for AI Test's Data Directory
 
-The JSONL files in this directory, one per _use case_, fall into two categories:
+The JSONL and JSON files in this directory, one or both per _use case_, which fall into two categories:
 
-* _Simple_: Q&A pairs used with `ChatBotSimple` and sometimes `ChatBotAgent`.
+* _QnA_: Q&A pairs, one per line, so JSONL format. They are used with `ChatBotSimple` and sometimes `ChatBotAgent`.
 * _Scenario_: More complex JSON files used when a short session between a user and the system is expected, e.g., those implemented with _agent skills_ in `ChatBotAgent`.
 
-When there are two JSONL files for a use case, for example, `appointments-simple.jsonl` and `appointments-scenario.jsonl`, they used with `ChatBotSimple` and `ChatBotAgent`, respectively. If there is only one file, like `others.jsonl`, it is used to for testing both implementations.
+When there are two files for a use case, for example, `appointments-qna.jsonl` and `appointments-scenario.json`, they are used with `ChatBotSimple` and `ChatBotAgent`, respectively. If there is only one file, like `others-qna.jsonl`, it is used to for testing both implementations.
 
-## Format for the &ldquo;Simple&rdquo; JSONL Files 
+## Format for the &ldquo;QnA&rdquo; JSONL Files 
 
-The _simple_ files are adapted from the outputs of the data synthesis and validation tools discussed in the guide. However, quite a few changes have been made reflecting experience working with these data sets, adding additional uses, etc. Hence, this README discusses some important details.
+The `*-qna.jsonl` files are adapted from the outputs of the data synthesis and validation tools discussed in the guide. However, quite a few changes have been made reflecting experience working with these data sets, adding additional uses, etc. Hence, this README discusses some important details.
 
 In a nutshell, these test Q&A pairs verify that different ways of querying for the same purpose are properly _classified_ (labeled) by the ChatBot, with no further interaction. Compare to the discussion of the Agent data files below.
 
@@ -45,7 +45,7 @@ The last three fields only appear in an example JSONL if they are non-empty.
 
 During testing, if the `rating` is below a threshold, the ChatBot result is logged as _low confidence_ and not checked for expected results. The ChatBot is also asked to provide its _confidence_ of the result, which is used similarly during the test.
 
-The `label` returned by the ChatBot should correspond to the use case file name! However, in practice, some queries are ambiguous enough that more than one label would be a reasonable interpretation, which is why `labels` is a list. The first list element is always the name of the use case. So, for example, there are many examples in `prescriptions.jsonl` with the label list `["prescription", "appointment"]`, like this one:
+The `label` returned by the ChatBot should correspond to the use case file name! However, in practice, some queries are ambiguous enough that more than one label would be a reasonable interpretation, which is why `labels` is a list. The first list element is always the name of the use case. So, for example, there are many examples in `prescriptions-qna.jsonl` with the label list `["prescription", "appointment"]`, like this one:
 
 ```json
 {
@@ -59,9 +59,93 @@ The `label` returned by the ChatBot should correspond to the use case file name!
 
 You can see from the query that it is reasonable to interpret the query as an appointment or prescription query. It is really both, but at this time we ask the ChatBot to return only one `label`.
 
-## Format for the &ldquo;Agent&rdquo; JSONL Files
+## Format for the &ldquo;Scenario&rdquo; JSONL Files
 
-The agent test data sets up a session with required data the agent needs to get from the user and the expected final results. Hence, this data is more complicated than the _simple_ Q&A pairs discussed above.
+The scenario files for agent testing have data to set up a scenario, including example opening user prompts, capture of initial and final state for checking pre- and post-conditions, required data the agent needs to get from the user during the session, and the expected final successful or unsuccessful results. Hence, this data is more complicated than the _simple_ Q&A pairs discussed above.
 
-TODO
+A JSON, not JSONL, file format is used, with a JSON array of objects. Here is the first array element, defining a single scenario, from `appointments-scenario.json`:
 
+```json
+[
+  { 
+    "scenario": "Schedule a new appointment",  
+    "inputs": {
+      "required-information": [
+        {
+          "label": "patient-name",
+          "name": "Patient name",
+          "description": "Name of the patient for the appointment.",
+          "type": "str"
+        },
+        {
+          "label": "appointment-date-time",
+          "name": "Appointment date and time",
+          "description": "A new date-time for the appointment that works for the patient and is open in the schedule.",
+          "type": "datetime.datetime"
+        },
+        {
+          "label": "reason",
+          "name": "Reason",
+          "description": "Purpose of the appointment.",
+          "type": "str"
+        }
+      ],
+      "pre-conditions": [
+        "no-appointment-at-date-time-for-patient"
+      ]
+    },
+    "outputs": {
+      "successes": [
+        {
+          "text": "A new appointment is created for the patient at the date-time.",
+          "post-conditions": [
+            "before-appointments-count-plus-one",
+            "appointment-at-date-time-for-patient"
+          ]
+        }
+      ],
+      "failures": [
+        {
+          "text": "The proposed date-time is invalid.",
+          "post-conditions": [
+            "appointments-unchanged"
+          ]
+        },
+        {
+          "text": "An appointment could not be created for the patient at the date-time.",
+          "post-conditions": [
+            "appointments-unchanged"
+          ]
+        }
+      ]
+    },
+    "initial-queries": [
+      {
+        "query": "I need to schedule my next appointment.",
+        "labels": ["appointment"],
+        "actions": ["schedule"], 
+        "rating": 5
+      },
+      {
+        "query": "I need to schedule an appointment.",
+        "labels": ["appointment"],
+        "actions": ["schedule"],
+        "rating": 5
+      },
+      {
+        "query": "I need to schedule an appointment for a flu vaccine.",
+        "labels": ["appointment"],
+        "actions": ["schedule"], 
+        "vaccines": ["flu"],
+        "rating": 5
+      },
+      {
+        "query": "I need to schedule an appointment for a COVID vaccine.",
+        "labels": ["appointment"],
+        "actions": ["schedule"],
+        "vaccines": ["COVID"],
+        "rating": 5
+      }
+    ]
+  },
+```

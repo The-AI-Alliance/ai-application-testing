@@ -3,7 +3,7 @@ name = "ai_application_testing"
 version = "0.5.0"
 description = "Code and documentation for the AI Alliance user guide and tools for 'Testing Generative AI Agent Applications'."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
@@ -12,6 +12,8 @@ dependencies = [
     "httpx>=0.28.1",
     "deepagents>=0.5.9",
     "langchain-ollama>=1.1.0",
+    "openai>=2.36.0",
+    "litellm>=1.83.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -36,24 +38,3 @@ dev = [
 [tool.ty.src]
 include = ["src"]
 exclude = ["src/tools/langflow"]
-
-[tool.pylint.main]
-# Tip: use the following command to generate a complete 
-# example .toml file. The [tool.pylint.*] sections were
-# edited to include only overrides.
-# cd src && uv run pylint --disable=bare-except,invalid-name --class-rgx='[A-Z][a-z]+' --generate-toml-config 
-
-[tool.pylint.design]
-# Maximum number of positional arguments for function / method.
-max-positional-arguments = 8
-
-[tool.pylint.format]
-# Maximum number of characters on a single line. Pylint's default of 100 is based
-# on PEP 8's guidance that teams may choose line lengths up to 99 characters.
-# However, we use some long lines for error messages that normally are not of interest to read.
-max-line-length = 150
-
-[tool.pylint.variables]
-# Tells whether unused global variables should be treated as a violation.
-allow-global-unused-variables = false
-

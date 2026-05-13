@@ -132,7 +132,9 @@ class TestDateTimeTools(unittest.TestCase):
         self.assertEqual(expected, actual, f"t: {t}, fmt: {def_friendly_time_format}")
 
     @given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
-    def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(self, dt, fmt):
+    def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(
+        self, dt, fmt
+    ):
         import locale
 
         current_locale = locale.getlocale()

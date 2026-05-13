@@ -1,13 +1,13 @@
-# Unit tests for the "utils" module using Hypothesis for property-based testing.
-# https://hypothesis.readthedocs.io/en/latest/
+"""
+Unit tests for the "utils" module using Hypothesis for property-based testing.
+https://hypothesis.readthedocs.io/en/latest/
+"""
 
 import re
 import shutil
 import unittest
-from hypothesis import given, strategies as st
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Mapping
+from hypothesis import given, strategies as st
 
 from common.utils import (
     all_use_cases,
@@ -16,9 +16,17 @@ from common.utils import (
     model_dir_name,
 )
 
+
+def valid_dirs(min_size: int = 1, max_size: int = 5):
+    """Hypothesis strategy for generating directory names."""
+    return st.text(
+        alphabet=st.characters(codec="ascii"), min_size=min_size, max_size=max_size
+    ).map(lambda s: re.sub(r"\W", "_", s))
+
+
 class TestUtils(unittest.TestCase):
     """
-    Test the utilities.
+    Test the common utilities.
     """
 
     use_cases = all_use_cases()
@@ -26,15 +34,11 @@ class TestUtils(unittest.TestCase):
     use_cases_labels = list(use_cases.values())
     test_temp = "./test-temp"
 
-    def valid_dirs(min_size: int = 1, max_size: int = 5):
-        return st.text(
-            alphabet=st.characters(codec="ascii"), min_size=min_size, max_size=max_size
-        ).map(lambda s: re.sub(r"\W", "_", s))
-
     def tearDown(self):
         self.clean()
 
     def clean(self):
+        """Remove the temporary file and its directory."""
         tt = Path(self.test_temp)
         if tt.exists():
             shutil.rmtree(self.test_temp)

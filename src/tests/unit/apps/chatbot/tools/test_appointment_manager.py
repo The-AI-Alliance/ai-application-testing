@@ -9,7 +9,7 @@ import os
 import tempfile
 import unittest
 from datetime import datetime, timedelta
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
 
@@ -377,7 +377,9 @@ class TestAppointmentManager(unittest.TestCase):
         id = self.tool.get_appointment_id_for_name_and_date_time(
             appointment_dict["patient_name"], appointment_dict["appointment_date_time"]
         )
-        self.assertEqual(appointment2["id"], id, f"appointments = {self.tool.get_appointments()}")
+        self.assertEqual(
+            appointment2["id"], id, f"appointments = {self.tool.get_appointments()}"
+        )
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_empty_if_match_does_not_exist(
@@ -409,7 +411,7 @@ class TestAppointmentManager(unittest.TestCase):
         # Create new instance and verify appointments exist.
         new_tool = self._make_tool(clear=False)
         second_appointments = new_tool.get_appointments()
-        
+
         # Check that they both have the same list of appointments.
         self._check_appointments_lists(first_appointments, second_appointments)
 

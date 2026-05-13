@@ -1,3 +1,5 @@
+"""Driver for data synthesis."""
+
 import os
 from common.utils import setup
 from tools.unit_benchmark import UnitBenchmarkDataSynthesizer

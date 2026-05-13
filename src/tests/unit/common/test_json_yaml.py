@@ -3,12 +3,10 @@
 
 import json
 import re
-import shutil
 import unittest
 from hypothesis import given, strategies as st
 from datetime import datetime, timedelta
 from json.decoder import JSONDecodeError
-from pathlib import Path
 from typing import Any, Mapping
 
 from common.json_yaml import (
@@ -247,29 +245,26 @@ class TestJsonYaml(unittest.TestCase):
     def test_from_json(self):
         d = {
             "one": 1,
-            "two": {
-                "two1": 2
-            },
-            "three": [
-                {
-                    "three1": 3,
-                    "three2": 3.12
-                },
-                "3.2"
-            ]
+            "two": {"two1": 2},
+            "three": [{"three1": 3, "three2": 3.12}, "3.2"],
         }
         js = json.dumps(d)
-        self.assertEqual(1,     from_json(js, ["one"]))
-        self.assertEqual(2,     from_json(js, ["two", "two1"]))
-        self.assertEqual(3,     from_json(js, ["three", 0, "three1"]))
-        self.assertEqual(3.12,  from_json(js, ["three", 0, "three2"]))
+        self.assertEqual(1, from_json(js, ["one"]))
+        self.assertEqual(2, from_json(js, ["two", "two1"]))
+        self.assertEqual(3, from_json(js, ["three", 0, "three1"]))
+        self.assertEqual(3.12, from_json(js, ["three", 0, "three2"]))
         self.assertEqual("3.2", from_json(js, ["three", 1]))
         with self.assertRaises(ValueError):
             from_json(js, [])
         for kis in [[4], [4.1], ["four"], ["two", "two2"], ["three", 0, "three3"]]:
             with self.assertRaises(KeyError):
                 from_json(js, kis)
-        for kis in [["one", "bad"], ["two", "two1", "bad"], ["three", "three1"], ["three", 4.1]]:
+        for kis in [
+            ["one", "bad"],
+            ["two", "two1", "bad"],
+            ["three", "three1"],
+            ["three", 4.1],
+        ]:
             with self.assertRaises(TypeError):
                 from_json(js, kis)
         for js2 in ["[", "]", "{", "}"]:

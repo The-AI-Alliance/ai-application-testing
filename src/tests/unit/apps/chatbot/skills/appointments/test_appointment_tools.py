@@ -12,7 +12,7 @@ import tempfile
 import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 from langchain_core.tools.structured import BaseTool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
@@ -564,12 +564,12 @@ class TestAppointmentTools(unittest.TestCase):
         # Create new instance and verify appointments exist.
         old_tool = self.tool
         first_appointments = old_tool.get_appointments()
-        
+
         # Create new instance and verify appointments exist.
         new_tool = self._make_manager()
         self.assertIsNot(old_tool, new_tool)
         second_appointments = new_tool.get_appointments()
-        
+
         # Check that they both have the same list of appointments.
         self._check_appointments_lists(first_appointments, second_appointments)
 
