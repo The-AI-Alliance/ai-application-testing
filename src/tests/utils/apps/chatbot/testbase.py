@@ -233,7 +233,7 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
                 errors["query_failure"] = (
                     f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
                 )
-                return metadata, errors, warnings, lowConfidenceResults
+              fixme  return metadata, errors, warnings, lowConfidenceResults
 
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
@@ -339,6 +339,7 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
             print(f"TypeError while parsing answer: {answer}")
             raise te
 
+        # The Q&A tests always only return one result in the list.
         return [{
             "metadata": metadata, 
             "errors": errors, 
@@ -646,24 +647,27 @@ class TestBaseRunner(TestBase):
 
         for test_prompt in samples:
             self.samples_count += 1
-            metadata, errors, warnings, lowConfidenceResults = query_runner.run_test(
-                test_prompt,
-            )
-            if errors:
-                me = errors | metadata  # print the error data first.
-                self.key_results["errors"].append(me)
-                if self.verbose:
-                    print(me)
-            if warnings:
-                mw = warnings | metadata  # print the warning data first.
-                self.key_results["warnings"].append(mw)
-                if self.verbose:
-                    print(mw)
+            results = query_runner.run_test(test_prompt)
+            for result in results:
+                metadata = result.get("metadata")
+                errors = result.get("errors")
+                warnings = result.get("warnings")
+                lowConfidenceResults = result.get("lowConfidenceResults")
+                if errors:
+                    me = errors | metadata  # print the error data first.
+                    self.key_results["errors"].append(me)
+                    if self.verbose:
+                        print(me)
+                if warnings:
+                    mw = warnings | metadata  # print the warning data first.
+                    self.key_results["warnings"].append(mw)
+                    if self.verbose:
+                        print(mw)
 
-            if lowConfidenceResults:
-                self.key_results["low_confidence_results"].extend(lowConfidenceResults)
-                if self.verbose:
-                    print(lowConfidenceResults)
+                if lowConfidenceResults:
+                    self.key_results["low_confidence_results"].extend(lowConfidenceResults)
+                    if self.verbose:
+                        print(lowConfidenceResults)
 
             lcr_count = len(self.key_results["low_confidence_results"])
             warning_count = len(self.key_results["warnings"])
