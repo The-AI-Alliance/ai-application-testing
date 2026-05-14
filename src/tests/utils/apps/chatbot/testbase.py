@@ -233,7 +233,12 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
                 errors["query_failure"] = (
                     f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
                 )
-              fixme  return metadata, errors, warnings, lowConfidenceResults
+                return [{
+                    "metadata": metadata, 
+                    "errors": errors, 
+                    "warnings": warnings, 
+                    "lowConfidenceResults": lowConfidenceResults,
+                }]
 
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
