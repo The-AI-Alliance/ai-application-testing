@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from io import StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Any, Sequence, TypeVar
+from typing import Any, Sequence, Tuple, TypeVar
 
 from apps.chatbot import (
     ChatBot,
@@ -147,7 +147,7 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
             raise ValueError(f"No scenario tests were loaded from {path}!")
 
 
-class QueryRunner[TESTDATUM](ABC):
+class TestInstanceRunner[TESTDATUM](ABC):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -159,10 +159,27 @@ class QueryRunner[TESTDATUM](ABC):
         self.confidence_threshold = confidence_threshold
 
     @abstractmethod
-    def run_query(
+    def run_test(
         self,
         test_prompt: TESTDATUM,
-    ):
+    ) -> list[dict[str,dict[str,Any]]]:
+        """
+        Run the input test.
+
+        Args:
+            - test_prompt (TESTDATUM): The object with all the information
+              for the test to run.
+
+        Returns:
+            list[dict[str,dict[str,Any]]] a list of dictionaries, each with
+            the following top-level keys:
+            * `metadata` for a dictionary with information about the test construction and results. 
+            * `errors` for a dictionary with any errors encountered. 
+            * `warnings` for a dictionary with any warnings encountered. 
+            * `lowConfidenceResults` for a list with with zero or one results that are not trusted.
+            The list of dictionaries will have one entry unless a particular test has more than
+            one starting prompt.
+        """
         pass
 
     def _check_label(self, expected: Sequence[str], actual: str) -> str:
@@ -173,7 +190,7 @@ class QueryRunner[TESTDATUM](ABC):
         )
 
 
-class QnAQueryRunner(QueryRunner[QnATest]):
+class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -182,12 +199,10 @@ class QnAQueryRunner(QueryRunner[QnATest]):
     ):
         super().__init__(chatbot, rating_threshold, confidence_threshold)
 
-    def run_query(
+    def run_test(
         self,
         test_prompt: QnATest,
-    ) -> tuple[
-        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
-    ]:
+    ) -> list[dict[str,dict[str,Any]]]:
         """
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum,
@@ -324,10 +339,15 @@ class QnAQueryRunner(QueryRunner[QnATest]):
             print(f"TypeError while parsing answer: {answer}")
             raise te
 
-        return metadata, errors, warnings, lowConfidenceResults
+        return [{
+            "metadata": metadata, 
+            "errors": errors, 
+            "warnings": warnings, 
+            "lowConfidenceResults": lowConfidenceResults,
+        }]
 
 
-class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
+class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -335,13 +355,13 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
         confidence_threshold: float,
     ):
         super().__init__(chatbot, rating_threshold, confidence_threshold)
+        self.user_chatbot, self.user_shell = TestBase.make_chatbot(
+            chatbot_kind = "simple", optional_name_suffix = "user-surrogate")
 
-    def run_query(
+    def run_test(
         self,
         test_prompt: ScenarioTest,
-    ) -> tuple[
-        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
-    ]:
+    ) -> list[dict[str,dict[str,Any]]]:
         """
         run a scenario session.
         """
@@ -349,7 +369,6 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
         # test_prompt.inputs
         # test_prompt.successes
         # test_prompt.failures
-        # test_prompt.initial_queries
         # test_prompt.start_data
         # test_prompt.end_data
         # test_prompt.errors = {
@@ -358,19 +377,29 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
         #     "post-conditions": [],
         # }
 
-        metadata = {
-            "test_prompt": test_prompt.to_dict(),
-            "rating_threshold": self.rating_threshold,
-            "confidence_threshold": self.confidence_threshold,
-        }
-        # On success these will be returned as empty.
-        errors = {}
-        warnings = {}
-        lowConfidenceResults = []
-        raise ValueError("Not yet implemented")
+        all = []
 
-        return metadata, errors, warnings, lowConfidenceResults
+        for query in test_prompt.initial_queries:
+            metadata = {
+                "initial_query": query,
+                "rating_threshold": self.rating_threshold,
+                "confidence_threshold": self.confidence_threshold,
+            }
+            # On success these will be returned as empty.
+            errors = {}
+            warnings = {}
+            lowConfidenceResults = []
 
+            answer = self.chatbot.query(query)
+            metadata["answer"] = answer
+            all.append({
+                "metadata": metadata, 
+                "errors": errors, 
+                "warnings": warnings, 
+                "lowConfidenceResults": lowConfidenceResults,
+            })
+
+        return all
 
 class TestBase(unittest.TestCase):
     """
@@ -385,14 +414,19 @@ class TestBase(unittest.TestCase):
     which_chatbot_choice: str = ""
     which_chatbot_name: str = ""
 
-    def make_chatbot(self):
-        logger = logging.getLogger(self.__class__.__name__)
+    @classmethod
+    def make_chatbot(
+        cls, chatbot_kind: str = '', optional_name_suffix: str = ""
+    ) -> Tuple[ChatBot, ChatBotShell]:
+        suffix = "" if not optional_name_suffix else f"-{optional_name_suffix}"
+        logger = logging.getLogger(f"{cls.__name__}{suffix}")
         logger.setLevel(logging.INFO)
 
+        which_chatbot = chatbot_kind if chatbot_kind else TestBase.which_chatbot_choice
         chatbot_class = (
-            ChatBotAgent if TestBase.which_chatbot_choice == "agent" else ChatBotSimple
+            ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
         )
-        self.chatbot = chatbot_class(
+        chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
             template_dir=self.template_dir,
@@ -404,7 +438,8 @@ class TestBase(unittest.TestCase):
             ),
             logger=logger,
         )
-        self.shell = ChatBotShell(self.chatbot, stdout=StringIO())
+        shell = ChatBotShell(self.chatbot, stdout=StringIO())
+        return chatbot, shell
 
     def setUp(self):
         """
@@ -438,7 +473,7 @@ class TestBase(unittest.TestCase):
         self.samples_count: int = 0
         self.key_results = {"low_confidence_results": [], "errors": [], "warnings": []}
 
-        self.make_chatbot()
+        self.chatbot, self.shell = TestBase.make_chatbot()
 
 
 class TestBaseRunner(TestBase):
@@ -581,7 +616,7 @@ class TestBaseRunner(TestBase):
         use_case_name: str,
         test_data_path: Path,
         test_data: Sequence[BaseAITest],
-        query_runner: QueryRunner,
+        query_runner: TestInstanceRunner,
         sample_rate: float,
         rating_threshold: int,
         confidence_threshold: float,
@@ -611,7 +646,7 @@ class TestBaseRunner(TestBase):
 
         for test_prompt in samples:
             self.samples_count += 1
-            metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(
+            metadata, errors, warnings, lowConfidenceResults = query_runner.run_test(
                 test_prompt,
             )
             if errors:
@@ -674,7 +709,7 @@ class TestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "qna")
         data_loader = QnADataLoader()
         data = data_loader.load_data(file_path)
-        runner = QnAQueryRunner(self.chatbot, rating_threshold, confidence_threshold)
+        runner = QnATestInstanceRunner(self.chatbot, rating_threshold, confidence_threshold)
 
         self.__try_all(
             method="try_qna_queries",
@@ -704,7 +739,7 @@ class TestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
-        runner = ScenarioQueryRunner(
+        runner = ScenarioTestInstanceRunner(
             self.chatbot, rating_threshold, confidence_threshold
         )
 
