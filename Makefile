@@ -725,7 +725,7 @@ open-webui-setup::
 	cd ${OPEN_WEBUI_DIR} && . .venv/bin/activate
 
 help-open-webui:: 
-	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.12 --with greenlet open-webui@latest serve --help
+	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.13 --with greenlet open-webui@latest serve --help
 
 remove-open-webui::
 	uv tool uninstall open-webui
