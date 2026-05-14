@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 from json.decoder import JSONDecodeError
 from typing import Any, Generic, TypeVar
 
+from common.collections import get_chain
+
 from litellm.types.utils import ModelResponse
 
 RESPONSE = TypeVar("RESPONSE")
@@ -119,9 +121,10 @@ class ModelResponseParser(ResponseParser[ModelResponse]):
         """
         response_dict = response.to_dict()
         # A hacky way way to get the "content"!!!
-        content = response_dict["choices"][0]["message"][
-            "content"
-        ]  # ty: ignore[not-subscriptable]
+        content = get_chain(response_dict, ["choices", 0, "message", "content"])
+        # print(f"content (type = {type(content)}: {content})")
+        if content is None:
+            content = ""
         return self._make_full_response(query, content, response_dict)
 
 

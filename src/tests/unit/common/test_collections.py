@@ -72,6 +72,24 @@ class TestCollections(unittest.TestCase):
         keys.append(str(depth))
         self.assertEqual(depth, get_chain(root, keys), f"{depth}: {keys}, {d}")
 
+    @given(st.integers(min_value=0, max_value=3))
+    def test_get_chain_can_mix_dict_and_sequence_referencing(self, depth: int):
+        keys = [str(i) for i in range(depth)]
+        root = {}
+        d = root
+        for k in keys:
+            d[k] = {}
+            d = d[k]
+        ary = [{"zero": 0}, {"one": 1}]
+        d[str(depth)] = ary
+        keys.append(str(depth))
+        self.assertEqual(
+            0, get_chain(root, keys + [0, "zero"]), f"{depth}: {keys}, {root}"
+        )
+        self.assertEqual(
+            1, get_chain(root, keys + [1, "one"]), f"{depth}: {keys}, {root}"
+        )
+
     @given(st.integers(min_value=0, max_value=10))
     def test_get_chain_ends_early_and_returns_None_at_first_None_value(
         self, depth: int

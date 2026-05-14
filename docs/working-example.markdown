@@ -544,18 +544,20 @@ make integration-tests   # integration tests
 
 The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory. Specifically, the generative AI _unit benchmarks_ are driven by four test suites in [`src/tests/unit/apps/chatbot/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="atc"} that are named `ai_test_chatbot_*.py`, where `*` is one of the use case names. Most of the implementation is in a `TestBase` parent class in  [`src/tests/utils/apps/chatbot/testbase.py`]({{site.gh_edit_repository}}/tree/main/src/tests/utils/apps/chatbot/testbase.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
 
-Test data files of Q&A  (question and answer) pairs (and additional metadata) were adapted from the example tool outputs found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}. However, _we made a lot of changes reflecting what we learned while iterating on the development of the ChatBot application!_ 
+There are two fundamental kinds of tests, _simple_ Q&A (question and answer) pairs (with additional metadata), and _scenario_ tests for more involved agent-based interactions. They reflect the two implementations of the ChatBot, the original [ChatBotSimple](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_simple.py){:target="_blank"} and the newer, more sophisticated [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"}.
 
-These test data files in JSONL format are in the [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} directory. There are four files (at the time of this writing) for user queries that we classify into four, broad use cases:
+Let's start with the Q&A tests. The data files for these tests were adapted from the example tool outputs found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}. However, _we made a lot of changes reflecting what we learned while iterating on the development of the ChatBot application!_ 
+
+These Q&A test data files in JSONL format are in the [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} directory. There are four files (at the time of this writing) for user queries that we classify into four, broad use cases:
 
 <a id="table-5"></a>
 
 | Use Case | Description |
 | :------- | :---------- |
-| [Emergencies]({{site.gh_edit_repository}}/tree/main/src/tests/data/emergencies.jsonl){:target="test-data"} | Queries that strongly suggest the patient needs urgent medical attention. In the US, they would be told to call _911_ immediately. |
-| [Prescriptions]({{site.gh_edit_repository}}/tree/main/src/tests/data/prescriptions.jsonl){:target="test-data"} | Refill requests, questions about how to take a medication, store it, compatibility with particular activities, etc. |
-| [Appointments]({{site.gh_edit_repository}}/tree/main/src/tests/data/appointments.jsonl){:target="test-data"} | Requests to schedule or reschedule an appointment. |
-| [Others]({{site.gh_edit_repository}}/tree/main/src/tests/data/others.jsonl){:target="test-data"} | Other general health questions and other kinds of queries, such as how to pay a bill, where the office is located, etc. (Many of these Q&A pairs suggest possible future use cases to support.) |
+| [Emergencies]({{site.gh_edit_repository}}/tree/main/src/tests/data/emergencies-qna.jsonl){:target="test-data"} | Queries that strongly suggest the patient needs urgent medical attention. In the US, they would be told to call _911_ immediately. |
+| [Prescriptions]({{site.gh_edit_repository}}/tree/main/src/tests/data/prescriptions-qna.jsonl){:target="test-data"} | Refill requests, questions about how to take a medication, store it, compatibility with particular activities, etc. |
+| [Appointments]({{site.gh_edit_repository}}/tree/main/src/tests/data/appointments-qna.jsonl){:target="test-data"} | Requests to schedule or reschedule an appointment. |
+| [Others]({{site.gh_edit_repository}}/tree/main/src/tests/data/others-qna.jsonl){:target="test-data"} | Other general health questions and other kinds of queries, such as how to pay a bill, where the office is located, etc. (Many of these Q&A pairs suggest possible future use cases to support.) |
 
 **Table 5:** Use case test data files.
 
@@ -612,6 +614,18 @@ The `label` returned by the ChatBot should correspond to the use case file name!
 ```
 
 You can see from the query that it's reasonable to interpret the query as an appointment or prescription query. It is really both, but we &ldquo;force&rdquo; the ChatBot to choose and return only one `label`.
+
+The _scenario_ tests are handled similarly, but have more complicated data, structured as JSON arrays in JSON files, as opposed to JSONL. At this time, only the appointments use case has an agent-based implementation and corresponding test set.
+
+<a id="table-8"></a>
+
+| Use Case | Description |
+| :------- | :---------- |
+| [Appointments]({{site.gh_edit_repository}}/tree/main/src/tests/data/appointments-scenario.json){:target="test-data"} | Scenarios for managing appointments. |
+
+**Table 8:** Use case test data files for _scenario_ (agent-based tests.
+
+Note that these tests require the [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"} implementation, while the Q&A tests can be executed by both the original [ChatBotSimple](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_simple.py){:target="_blank"} and [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"} implementations.
 
 #### Dealing with Slow and Expensive Inference
 

@@ -298,13 +298,24 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 verbose=False,
                 # format = "json",
             )
-            lines, errors = extract_jsonl_list(extract_content(response))
-            if errors:
+            if isinstance(response, ModelResponse):
+                lines, errors = extract_jsonl_list(extract_content(response))
+                if errors:
+                    self.logger.error(
+                        f"Some lines couldn't be parsed in response <{response}>, errors = {errors}"
+                    )
+                for ln in lines:
+                    validation_file.write(ln + "\n")
+            elif isinstance(response, CustomStreamWrapper):
                 self.logger.error(
-                    f"Some lines couldn't be parsed in response <{response}>, errors = {errors}"
+                    f"Logic error: CustomStreamWrapper (streaming) responses are not supported: {response}"
                 )
-            for ln in lines:
-                validation_file.write(ln + "\n")
+                sys.exit(1)
+            else:
+                self.logger.error(
+                    f"Logic error: unexpected response type ({type(response)}) received: {response}"
+                )
+                sys.exit(1)
 
         except OpenAIError as e:
             self.logger.error(f"OpenAIError thrown: {e}")

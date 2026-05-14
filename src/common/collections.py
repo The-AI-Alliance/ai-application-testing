@@ -1,9 +1,9 @@
 """Miscellaneous utilities for working with collections."""
 
-from typing import Any, MutableMapping
+from typing import Any, Mapping, MutableMapping, Sequence
 
 
-def get(dictionary: dict[str, Any], key: str, default: Any | None = None) -> Any:
+def get(dictionary: Mapping[str, Any], key: str, default: Any | None = None) -> Any:
     """
     Instead of returning None, raise a `ValueError` if `None`
     would be returned.
@@ -28,27 +28,43 @@ def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
         return None
 
 
-def get_chain(dictionary: dict[str, Any], keys: list[str]) -> Any | None:
+def get_chain(dictionary: Mapping[str, Any], keys: Sequence[str | int]) -> Any | None:
     """
-    'Chain' calls to `get` on the input `dictionary` and nested dictionaries, stopping
-    at the first `None` value returned. This eliminates the tedium of
+    'Chain' calls to `get` on the input `dictionary` and nested dictionaries or lists,
+    stopping at the first `None` value returned. This eliminates the tedium of
     doing this one call at a time and checking for None each time.
     If `keys` is empty, `None` is returned.
-    Raises a `TypeError` if there are keys left, but we the previously-retrieved
-    object is not a dictionary.
+    Raises a `TypeError` if there are keys left, but the previously-retrieved
+    object is not a dictionary or list.
+
+    Args:
+        - dictionary (Mapping[str, Any]): The dictionary to traverse, the structure
+          of which which must correspond the list of keys, meaning a key that is a `str`
+          must correspond to a dictionary retrieved with the previous key, while a key
+          that is an `int` must correspond to an array that was retrieved with the
+          previous key.
+        - keys (list[str|int]): A list of string keys for dictionaries and/or integer
+          indices into arrays.
     """
     value = None
     d = dictionary
     for key in keys:
-        if not isinstance(d, dict):
-            raise ValueError(
-                f"object '{d}' is not a dictionary. Input dict = {dictionary}, keys = {keys}"
-            )
-        value = d.get(key)
-        if value is None:
-            return value
+        if isinstance(d, Mapping) and isinstance(key, str):
+            value = d.get(key)  # ty: ignore[invalid-argument-type]
+            if value is None:
+                break
+            else:
+                d = value
+        elif isinstance(d, Sequence) and isinstance(key, int):
+            value = d[key]
+            if value is None:
+                break
+            else:
+                d = value
         else:
-            d = value
+            raise ValueError(
+                f"object '{d}' must be a dictionary or list and the key '{key}' must be str or int, respectively. Input dict = {dictionary}, keys = {keys}"
+            )
     return value
 
 

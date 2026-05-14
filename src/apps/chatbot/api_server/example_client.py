@@ -28,8 +28,9 @@ def example_basic_query():
     client = make_client()
 
     response = client.chat.completions.create(
-        model="ollama_chat/gemma4:e4b", messages=example_messages
-    )  # ty: ignore[invalid-argument-type]
+        model="ollama_chat/gemma4:e4b",
+        messages=example_messages,  # ty: ignore[invalid-argument-type]
+    )
 
     print(f"\nUser: {example_content}")
     print(f"Assistant: {response.choices[0].message.content}")

@@ -9,6 +9,8 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from .collections import get_chain
+
 from litellm.types.utils import ModelResponse
 
 common_defaults = {
@@ -28,7 +30,7 @@ def setup(
     tool: str,
     description: str,
     epilog: str = "",
-    add_arguments: Callable[[argparse.ArgumentParser], None] = lambda ap: None,
+    add_arguments: Callable[[argparse.ArgumentParser], Any | None] = lambda ap: None,
     omit_arguments: set[str] = set(),
 ) -> tuple[argparse.Namespace, logging.Logger]:
     parser = parser_with_common_args(
@@ -261,8 +263,6 @@ def extract_content(litellm_response: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""
     response_dict = litellm_response.to_dict()
     # TODO: There must be an easier way to get the "content"!!!
-    content = response_dict["choices"][0]["message"][
-        "content"
-    ]  # ty: ignore[not-subscriptable]
+    content = get_chain(response_dict, ["choices", 0, "message", "content"])
     # print(f"content (type = {type(content)}: {content})")
-    return content
+    return content if content is not None else ""

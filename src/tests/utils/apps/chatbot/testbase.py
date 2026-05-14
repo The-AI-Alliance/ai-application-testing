@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from io import StringIO, TextIOWrapper
 from pathlib import Path
-from typing import Any, Sequence, Type
+from typing import Any, Sequence, TypeVar
 
 from apps.chatbot import (
     ChatBot,
@@ -26,9 +26,7 @@ from apps.chatbot import (
 from common.collections import dict_pop
 from common.json_yaml import decode_json
 
-import BaseAITest
-import QnATest
-import ScenarioTest
+from .data_ai_tests import BaseAITest, QnATest, ScenarioTest
 
 
 class LowConfidenceResult:
@@ -65,7 +63,7 @@ class LowConfidenceResult:
             "query": self.query,
             "reasons": self.reasons,
             "reply": self.reply,
-            "test_prompt": self.test_prompt.dict(),
+            "test_prompt": self.test_prompt.to_dict(),
             "rating_threshold": self.rating_threshold,
             "confidence_threshold": self.confidence_threshold,
         }
@@ -74,7 +72,16 @@ class LowConfidenceResult:
         return json.dumps(self.dict())
 
 
-class QnADataLoader:
+TESTDATUM = TypeVar("TESTDATUM")
+
+
+class TestDataLoader[TESTDATUM](ABC):
+    @abstractmethod
+    def load_data(self, path: Path) -> list[TESTDATUM]:
+        pass
+
+
+class QnADataLoader(TestDataLoader[QnATest]):
     def load_data(self, path: Path) -> list[QnATest]:
         if not path.exists():
             raise FileNotFoundError(path)
@@ -108,7 +115,7 @@ class QnADataLoader:
         return tests
 
 
-class ScenarioDataLoader:
+class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
     def load_data(self, path: Path) -> list[ScenarioTest]:
         if not path.exists():
             raise FileNotFoundError(path)
@@ -129,15 +136,18 @@ class ScenarioDataLoader:
             lines = file.readlines()
             try:
                 objs = decode_json("".join(lines))
-                tests = [kind.from_dict(obj) for obj in objs]
-                return tests
+                tests = kind.from_dict(objs)
+                if isinstance(tests, list):
+                    return tests
+                else:
+                    return [tests]
             except ValueError as err:
                 raise ValueError(f"Error parsing JSON in file {path}") from err
         if not len(tests):
             raise ValueError(f"No scenario tests were loaded from {path}!")
 
 
-class QueryRunner(ABC):
+class QueryRunner[TESTDATUM](ABC):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -151,7 +161,7 @@ class QueryRunner(ABC):
     @abstractmethod
     def run_query(
         self,
-        test_prompt: Type[BaseAITest],
+        test_prompt: TESTDATUM,
     ):
         pass
 
@@ -163,7 +173,7 @@ class QueryRunner(ABC):
         )
 
 
-class QnAQueryRunner(QueryRunner):
+class QnAQueryRunner(QueryRunner[QnATest]):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -192,28 +202,23 @@ class QnAQueryRunner(QueryRunner):
 
         metadata = {
             "prompt": prompt,
-            "test_prompt": test_prompt.dict(),
+            "test_prompt": test_prompt.to_dict(),
             "rating_threshold": self.rating_threshold,
             "confidence_threshold": self.confidence_threshold,
         }
         # On success this will be returned as empty.
         errors = {}
         warnings = {}
+        lowConfidenceResults = []
 
         answer = self.chatbot.query(prompt)
+        metadata["answer"] = answer
         try:
             if isinstance(answer, str) or answer.get("error"):
-                qf = {
-                    "query_failure": f"unexpected message returned: {answer}",
-                    "metadata": metadata,
-                    "error": answer.get("error", ""),
-                }
-                self.key_results["errors"].append(qf)
-                if self.verbose:
-                    print(qf)
-                return qf
-
-            metadata["answer"] = answer
+                errors["query_failure"] = (
+                    f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
+                )
+                return metadata, errors, warnings, lowConfidenceResults
 
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
@@ -252,7 +257,6 @@ class QnAQueryRunner(QueryRunner):
                     f"Expected rating ({exp_rating}) < rating threshold ({self.rating_threshold})."
                 )
 
-            lowConfidenceResults = []
             if low_confidence_reasons:
                 reasons = " ".join(low_confidence_reasons)
                 lowConfidenceResults.append(
@@ -323,7 +327,7 @@ class QnAQueryRunner(QueryRunner):
         return metadata, errors, warnings, lowConfidenceResults
 
 
-class ScenarioQueryRunner(QueryRunner):
+class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
     def __init__(
         self,
         chatbot: ChatBot,
@@ -355,7 +359,7 @@ class ScenarioQueryRunner(QueryRunner):
         # }
 
         metadata = {
-            "test_prompt": test_prompt.dict(),
+            "test_prompt": test_prompt.to_dict(),
             "rating_threshold": self.rating_threshold,
             "confidence_threshold": self.confidence_threshold,
         }
