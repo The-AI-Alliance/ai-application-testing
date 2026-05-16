@@ -151,18 +151,24 @@ class TestInstanceRunner[TESTDATUM](ABC):
     def __init__(
         self,
         chatbot: ChatBot,
-        rating_threshold: int,
-        confidence_threshold: float,
+        shell: ChatBotShell,
+        environment: dict[str, str],
+        template_replacement_key_values: dict[str, str] = {},
     ):
         self.chatbot = chatbot
-        self.rating_threshold = rating_threshold
-        self.confidence_threshold = confidence_threshold
+        self.shell = shell
+        self.environment = environment
+        self.template_replacement_key_values = template_replacement_key_values
+        self.rating_threshold: int = int(self.environment.get("rating_threshold", 4))
+        self.confidence_threshold: float = float(
+            self.environment.get("confidence_threshold", 0.9)
+        )
 
     @abstractmethod
     def run_test(
         self,
         test_prompt: TESTDATUM,
-    ) -> list[dict[str,dict[str,Any]]]:
+    ) -> list[dict[str, Any]]:
         """
         Run the input test.
 
@@ -173,9 +179,9 @@ class TestInstanceRunner[TESTDATUM](ABC):
         Returns:
             list[dict[str,dict[str,Any]]] a list of dictionaries, each with
             the following top-level keys:
-            * `metadata` for a dictionary with information about the test construction and results. 
-            * `errors` for a dictionary with any errors encountered. 
-            * `warnings` for a dictionary with any warnings encountered. 
+            * `metadata` for a dictionary with information about the test construction and results.
+            * `errors` for a dictionary with any errors encountered.
+            * `warnings` for a dictionary with any warnings encountered.
             * `lowConfidenceResults` for a list with with zero or one results that are not trusted.
             The list of dictionaries will have one entry unless a particular test has more than
             one starting prompt.
@@ -194,15 +200,21 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
     def __init__(
         self,
         chatbot: ChatBot,
-        rating_threshold: int,
-        confidence_threshold: float,
+        shell: ChatBotShell,
+        environment: dict[str, str],
+        template_replacement_key_values: dict[str, str] = {},
     ):
-        super().__init__(chatbot, rating_threshold, confidence_threshold)
+        super().__init__(
+            chatbot,
+            shell,
+            environment,
+            template_replacement_key_values=template_replacement_key_values,
+        )
 
     def run_test(
         self,
         test_prompt: QnATest,
-    ) -> list[dict[str,dict[str,Any]]]:
+    ) -> list[dict[str, Any]]:
         """
         Run a Q&A test session.
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
@@ -234,12 +246,14 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
                 errors["query_failure"] = (
                     f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
                 )
-                return [{
-                    "metadata": metadata, 
-                    "errors": errors, 
-                    "warnings": warnings, 
-                    "lowConfidenceResults": lowConfidenceResults,
-                }]
+                return [
+                    {
+                        "metadata": metadata,
+                        "errors": errors,
+                        "warnings": warnings,
+                        "lowConfidenceResults": lowConfidenceResults,
+                    }
+                ]
 
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
@@ -346,40 +360,52 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
             raise te
 
         # The Q&A tests always only return one result in the list.
-        return [{
-            "metadata": metadata, 
-            "errors": errors, 
-            "warnings": warnings, 
-            "lowConfidenceResults": lowConfidenceResults,
-        }]
+        return [
+            {
+                "metadata": metadata,
+                "errors": errors,
+                "warnings": warnings,
+                "lowConfidenceResults": lowConfidenceResults,
+            }
+        ]
 
 
 class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
     """
-    Runner for scenario tests. A second ChatBot is created to function 
-    as a user _surrogate_. It initiates the scenario with one of the 
+    Runner for scenario tests. A second ChatBot is created to function
+    as a user _surrogate_. It initiates the scenario with one of the
     initial queries defined for the scenario, then answers questions from
     the ChatBotAgent that tries to complete the scenario.
     """
+
     def __init__(
         self,
         chatbot: ChatBot,
-        rating_threshold: int,
-        confidence_threshold: float,
-        template_replacement_key_values: dict[str,str] = {},
+        shell: ChatBotShell,
+        environment: dict[str, str],
+        template_replacement_key_values: dict[str, str] = {},
     ):
-        super().__init__(chatbot, rating_threshold, confidence_threshold)
+        super().__init__(
+            chatbot,
+            shell,
+            environment,
+            template_replacement_key_values=template_replacement_key_values,
+        )
+        # default value never used, but ensures type checking!
+        ttd = self.environment.get("test_template_dir", "")
         self.user_chatbot, self.user_shell = TestBase.make_chatbot(
-            chatbot_kind = "simple", 
-            optional_name_suffix = "user-surrogate",
-            template_dir = self.test_template_dir,
-            template_file = "patient-surrogate.yaml",
-            template_replacement_key_values = template_replacement_key_values)
+            self.environment,
+            chatbot_kind="simple",
+            optional_name_suffix="user-surrogate",
+            template_dir=ttd,
+            template_file="patient-surrogate.yaml",
+            template_replacement_key_values=self.template_replacement_key_values,
+        )
 
     def run_test(
         self,
         test_prompt: ScenarioTest,
-    ) -> list[dict[str,dict[str,Any]]]:
+    ) -> list[dict[str, Any]]:
         """
         Run a scenario test session.
         """
@@ -402,36 +428,43 @@ class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
                 "initial_query": query,
                 "rating_threshold": self.rating_threshold,
                 "confidence_threshold": self.confidence_threshold,
-                "conversation": []
+                "conversation": [],
             }
             # On success these will be returned as empty.
             errors = {}
             warnings = {}
             lowConfidenceResults = []
 
-            chatbot_shell_in  = self.chatbot.stdin
-            chatbot_shell_out = self.chatbot.stdout
-            user_shell_in     = self.user_shell.stdin
-            user_shell_out    = self.user_shell.stdout
-            
+            chatbot_shell_in = self.shell.stdin
+            user_shell_in = self.user_shell.stdin
+
             chatbot_query = query
             while True:
-                chatbot_answer = chatbot_shell_in.write(chatbot_query)
-                user_answer = user_shell_in.write(chatbot_answer)
-                medata["conversation"].append((chatbot_query, chatbot_answer, user_answer))
+                chatbot_shell_in.write(chatbot_query)
+                chatbot_answer = self.shell.replies[-1]
+                user_shell_in.write(chatbot_answer)
+                user_answer = self.user_shell.replies[-1]
+                metadata["conversation"].append(
+                    (chatbot_query, chatbot_answer, user_answer)
+                )
                 if user_answer.find("good bye"):
                     metadata["success"] = True
                     break
                 chatbot_query = user_answer
 
-            all.append({
-                "metadata": metadata, 
-                "errors": errors, 
-                "warnings": warnings, 
-                "lowConfidenceResults": lowConfidenceResults,
-            })
+            # TODO check conditions, etc.!!
+
+            all.append(
+                {
+                    "metadata": metadata,
+                    "errors": errors,
+                    "warnings": warnings,
+                    "lowConfidenceResults": lowConfidenceResults,
+                }
+            )
 
         return all
+
 
 class TestBase(unittest.TestCase):
     """
@@ -448,34 +481,41 @@ class TestBase(unittest.TestCase):
 
     @classmethod
     def make_chatbot(
-        cls, chatbot_kind: str = '', 
+        cls,
+        environment: dict[str, Any],
+        chatbot_kind: str = "",
         optional_name_suffix: str = "",
         template_dir: str = "",
         template_file: str = "",
+        template_replacement_key_values: dict[str, str] = {},
     ) -> Tuple[ChatBot, ChatBotShell]:
         suffix = "" if not optional_name_suffix else f"-{optional_name_suffix}"
         logger = logging.getLogger(f"{cls.__name__}{suffix}")
         logger.setLevel(logging.INFO)
 
-        td = template_dir if template_dir else self.template_dir
+        # Default values shown for environment.get() should never be used!
+        # They are here to ensure correct typing...
+        td = template_dir if template_dir else environment.get("template_dir", "")
+        ct = environment.get("confidence_threshold", 0.9)
+
         which_chatbot = chatbot_kind if chatbot_kind else TestBase.which_chatbot_choice
-        chatbot_class = (
-            ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
-        )
+        chatbot_class = ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
         chatbot = chatbot_class(
-            model=self.model,
-            service_url=self.service_url,
+            model=environment.get("model", ""),
+            service_url=environment.get("service_url", ""),
             template_dir=td,
-            data_dir=self.data_dir,
-            output_dir=self.output_dir,
-            confidence_level_threshold=self.confidence_threshold,
+            data_dir=environment.get("data_dir", ""),
+            output_dir=environment.get("output_dir", ""),
+            confidence_level_threshold=ct,
             response_handler=ChatBotResponseHandler(
-                confidence_level_threshold=self.confidence_threshold, logger=logger
+                confidence_level_threshold=ct,
+                logger=logger,
             ),
             logger=logger,
             template_file=template_file,
+            template_replacement_key_values=template_replacement_key_values,
         )
-        shell = ChatBotShell(self.chatbot, stdin=StringIO(), stdout=StringIO())
+        shell = ChatBotShell(chatbot, stdin=StringIO(), stdout=StringIO())
         return chatbot, shell
 
     def setUp(self):
@@ -486,34 +526,37 @@ class TestBase(unittest.TestCase):
         between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum
         threshold of 5 samples, if available, will be used in all cases.)
         """
-        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:e4b")
-        self.service_url = os.environ.get("INFERENCE_URL", "http://localhost:11434")
-        self.template_dir = os.environ.get(
+        self.environment = {}
+        self.environment["model"] = os.environ.get("MODEL", "ollama_chat/gemma4:e4b")
+        self.environment["service_url"] = os.environ.get(
+            "INFERENCE_URL", "http://localhost:11434"
+        )
+        self.environment["template_dir"] = os.environ.get(
             "CHATBOT_TEMPLATES_DIR", "apps/chatbot/prompts/templates"
         )
-        self.test_template_dir = os.environ.get(
+        self.environment["test_template_dir"] = os.environ.get(
             "CHATBOT_TEST_TEMPLATES_DIR", "tests/prompts/templates"
         )
-        self.data_dir = os.environ.get("DATA_DIR", "data")
-        self.output_dir = os.environ.get("OUTPUT_DIR", "../output/tests")
-        self.accumulate_test_results: bool = bool(
+        self.environment["data_dir"] = os.environ.get("DATA_DIR", "data")
+        self.environment["output_dir"] = os.environ.get("OUTPUT_DIR", "../output/tests")
+        self.environment["accumulate_test_results"] = bool(
             os.environ.get("ACCUMULATE_TEST_ERRORS", False)
         )
-        self.sample_rate: float = float(os.environ.get("DATA_SAMPLE_RATE", 1.0))
-        self.rating_threshold: int = int(
+        self.environment["sample_rate"] = float(os.environ.get("DATA_SAMPLE_RATE", 1.0))
+        self.environment["rating_threshold"] = int(
             os.environ.get("RATING_THRESHOLD", TestBase.default_rating_threshold)
         )
-        self.confidence_threshold: float = float(
+        self.environment["confidence_threshold"] = float(
             os.environ.get(
                 "CONFIDENCE_THRESHOLD", TestBase.default_confidence_threshold
             )
         )
-        self.verbose: bool = bool(os.environ.get("VERBOSE", False))
+        self.environment["verbose"] = bool(os.environ.get("VERBOSE", False))
 
-        self.samples_count: int = 0
+        self.samples_count = 0
         self.key_results = {"low_confidence_results": [], "errors": [], "warnings": []}
 
-        self.chatbot, self.shell = TestBase.make_chatbot()
+        self.chatbot, self.shell = TestBase.make_chatbot(self.environment)
 
 
 class TestBaseRunner(TestBase):
@@ -547,14 +590,17 @@ class TestBaseRunner(TestBase):
 
         d = {
             "step": "setUp",
-            "model": self.model,
-            "service_url": self.service_url,
-            "template_dir": self.template_dir,
-            "data_dir": self.data_dir,
-            "accumulate_test_results": self.accumulate_test_results,
-            "default sample_rate": self.sample_rate,
-            "default rating_threshold": self.rating_threshold,
-            "default confidence_threshold": self.confidence_threshold,
+            "model": self.environment.get("model"),
+            "service_url": self.environment.get("service_url"),
+            "template_dir": self.environment.get("template_dir"),
+            "test_template_dir": self.environment.get("test_template_dir"),
+            "data_dir": self.environment.get("data_dir"),
+            "accumulate_test_results": self.environment.get("accumulate_test_results"),
+            "default sample_rate": self.environment.get("sample_rate", 1.0),
+            "default rating_threshold": self.environment.get("rating_threshold", 4),
+            "default confidence_threshold": self.environment.get(
+                "confidence_threshold", 0.9
+            ),
         }
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
@@ -663,7 +709,7 @@ class TestBaseRunner(TestBase):
     ):
         """Template method supporting `try_qna_queries` and `try_scenarios`."""
         if not sample_rate > 0.0:
-            sample_rate = self.sample_rate
+            sample_rate = self.environment.get("sample_rate", 1.0)
 
         d = {
             "step": method,
@@ -673,7 +719,7 @@ class TestBaseRunner(TestBase):
             "sample_rate": sample_rate,
             "rating_threshold": rating_threshold,
             "confidence_threshold": confidence_threshold,
-            "accumulate_test_results": self.accumulate_test_results,
+            "accumulate_test_results": self.environment.get("accumulate_test_results"),
         }
         print(json.dumps(d), file=TestBaseRunner.log_file)
 
@@ -688,30 +734,32 @@ class TestBaseRunner(TestBase):
             self.samples_count += 1
             results = query_runner.run_test(test_prompt)
             for result in results:
-                metadata = result.get("metadata")
-                errors = result.get("errors")
-                warnings = result.get("warnings")
-                lowConfidenceResults = result.get("lowConfidenceResults")
+                metadata = result.get("metadata", {})
+                errors = result.get("errors", {})
+                warnings = result.get("warnings", {})
+                lowConfidenceResults = result.get("lowConfidenceResults", [])
                 if errors:
                     me = errors | metadata  # print the error data first.
                     self.key_results["errors"].append(me)
-                    if self.verbose:
+                    if self.environment.get("verbose"):
                         print(me)
                 if warnings:
                     mw = warnings | metadata  # print the warning data first.
                     self.key_results["warnings"].append(mw)
-                    if self.verbose:
+                    if self.environment.get("verbose"):
                         print(mw)
 
                 if lowConfidenceResults:
-                    self.key_results["low_confidence_results"].extend(lowConfidenceResults)
-                    if self.verbose:
+                    self.key_results["low_confidence_results"].extend(
+                        lowConfidenceResults
+                    )
+                    if self.environment.get("verbose"):
                         print(lowConfidenceResults)
 
             lcr_count = len(self.key_results["low_confidence_results"])
             warning_count = len(self.key_results["warnings"])
             error_count = len(self.key_results["errors"])
-            if not self.accumulate_test_results:
+            if not self.environment.get("accumulate_test_results"):
                 self.assertEqual(
                     0,
                     error_count,
@@ -752,7 +800,7 @@ class TestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "qna")
         data_loader = QnADataLoader()
         data = data_loader.load_data(file_path)
-        runner = QnATestInstanceRunner(self.chatbot, rating_threshold, confidence_threshold)
+        runner = QnATestInstanceRunner(self.chatbot, self.shell, self.environment)
 
         self.__try_all(
             method="try_qna_queries",
@@ -782,14 +830,19 @@ class TestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
-        monday = datetime(2027, 1, 4, 8) # After this date passes, move it to a future weekday...
-        self.assertTrue(monday > datetime.now(), "Bug. We hard-code 01-04-2027, which is now past today! Edit the previous line!")
-        use_case_dates_times = [monday, monday+timedelta(days=2,hours=1)]
+        monday = datetime(
+            2027, 1, 4, 8
+        )  # After this date passes, move it to a future weekday...
+        self.assertTrue(
+            monday > datetime.now(),
+            "Bug. We hard-coded 01-04-2027, which is now past today! Edit the definition of 'monday'!",
+        )
+        use_case_dates_times = [str(monday), str(monday + timedelta(days=2, hours=1))]
         replacements = {
             "PATIENT_NAME": "John Doe",
-            "USE_CASE_DATES_AND_TIMES": use_case_dates_times,
-            "USE_CASE_DATE_AND_TIME": monday,
-            "NEW_USE_CASE_DATE_AND_TIME": monday+timedelta(days=3,hours=2),
+            "USE_CASE_DATES_AND_TIMES": ", ".join(use_case_dates_times),
+            "USE_CASE_DATE_AND_TIME": str(monday),
+            "NEW_USE_CASE_DATE_AND_TIME": str(monday + timedelta(days=3, hours=2)),
             "USE_CASE": use_case_name,
             "REASON": "",
             "PROBLEM": "My back hurts",
@@ -799,8 +852,10 @@ class TestBaseRunner(TestBase):
         }
 
         runner = ScenarioTestInstanceRunner(
-            self.chatbot, rating_threshold, confidence_threshold,
-            template_replacement_key_values = replacements
+            self.chatbot,
+            self.shell,
+            self.environment,
+            template_replacement_key_values=replacements,
         )
 
         self.__try_all(

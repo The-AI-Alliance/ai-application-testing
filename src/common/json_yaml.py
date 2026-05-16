@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any, Mapping, MutableMapping
 from common.utils import replace_variables
 
+
 def load_yaml_from_file(
-        path: Path, replacements: dict[str,str] = {}
-    ) -> Mapping[str, Any]:
+    path: Path, replacements: dict[str, str] = {}
+) -> Mapping[str, Any]:
     """
     Parse a YAML file and return the corresponding Mapping.
     If `replacements` is not empty, replace any occurrences of `{{key}}`,
@@ -21,9 +22,8 @@ def load_yaml_from_file(
     text = path.read_text()
     return load_yaml(text, replacements=replacements)
 
-def load_yaml(
-        text: str, replacements: dict[str,str] = {}
-    ) -> Mapping[str, Any]:
+
+def load_yaml(text: str, replacements: dict[str, str] = {}) -> Mapping[str, Any]:
     """
     Parse a YAML string and return the corresponding Mapping.
     If `replacements` is not empty, replace any occurrences of `{{key}}`,

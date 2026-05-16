@@ -2,9 +2,7 @@
 # https://hypothesis.readthedocs.io/en/latest/
 
 import json
-import re
 import unittest
-import yaml
 from hypothesis import given, strategies as st
 from datetime import datetime, timedelta
 from json.decoder import JSONDecodeError
@@ -18,12 +16,9 @@ from common.json_yaml import (
     load_yaml,
 )
 
-from common.utils import replace_variables
 
 from tests.utils.hypothesis import (
     escaped_dquotes,
-    replacement_keys,
-    valid_dirs,
 )
 
 
@@ -31,7 +26,7 @@ class TestJsonYaml(unittest.TestCase):
     """
     Test the JSON and YAML utilities.
     """
-    
+
     def __check_encode_decode_json(
         self,
         question: str,
@@ -283,7 +278,9 @@ class TestJsonYaml(unittest.TestCase):
                 {{THREE2}}: {{THREE12}}
               - 3.2
         """
-        m = load_yaml(s, {"ONE": "one", "TWO1": "two1", "THREE2": "three2", "THREE12": "3.12"})
+        m = load_yaml(
+            s, {"ONE": "one", "TWO1": "two1", "THREE2": "three2", "THREE12": "3.12"}
+        )
         one = m.get("one")
         self.assertIsNotNone(one)
         self.assertEqual(1, one)
@@ -292,7 +289,8 @@ class TestJsonYaml(unittest.TestCase):
         self.assertEqual({"two1": 2}, two)
         three = m.get("three")
         self.assertIsNotNone(three)
-        self.assertEqual([{"three1": 3, "three2": 3.12},3.2], three)
+        self.assertEqual([{"three1": 3, "three2": 3.12}, 3.2], three)
+
 
 if __name__ == "__main__":
     unittest.main()

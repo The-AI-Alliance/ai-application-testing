@@ -25,11 +25,14 @@ class ChatBotSimple(ChatBot):
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
+        template_file: str = "",
+        template_replacement_key_values: dict[str, str] = {},
     ):
         """
         Initialize the simple ChatBot implementation.
         Use a `ChatBotResponseHandler` for the response_handler.
         """
+        tf = template_file if template_file else self.default_template_file
         super().__init__(
             model=model,
             service_url=service_url,
@@ -39,7 +42,8 @@ class ChatBotSimple(ChatBot):
             confidence_level_threshold=confidence_level_threshold,
             response_handler=response_handler,
             logger=logger,
-            template_file=self.default_template_file,
+            template_file=tf,
+            template_replacement_key_values=template_replacement_key_values,
         )
         self.response_parser = ModelResponseParser()
 

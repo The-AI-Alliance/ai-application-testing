@@ -3,7 +3,6 @@ Unit tests for the "utils" module using Hypothesis for property-based testing.
 https://hypothesis.readthedocs.io/en/latest/
 """
 
-import re
 import shutil
 import unittest
 from pathlib import Path
@@ -17,10 +16,7 @@ from common.utils import (
     replace_variables,
 )
 
-from tests.utils.hypothesis import (
-    valid_dirs,
-    replacement_keys
-)
+from tests.utils.hypothesis import valid_dirs, replacement_keys
 
 
 class TestUtils(unittest.TestCase):
@@ -94,8 +90,10 @@ class TestUtils(unittest.TestCase):
             ensure_dirs_exist(fdir)
 
     @given(replacement_keys(), st.text())
-    def test_replace_variables_replaces_keys_with_values(self, keys: list[str], separator: str):
-        keys2  = ["{{" + key + "}}" for key in keys]
+    def test_replace_variables_replaces_keys_with_values(
+        self, keys: list[str], separator: str
+    ):
+        keys2 = ["{{" + key + "}}" for key in keys]
         values = [key.upper() for key in keys]
         kvs = dict([(keys[i], values[i]) for i in list(range(len(keys)))])
         s = separator + separator.join(keys2) + separator

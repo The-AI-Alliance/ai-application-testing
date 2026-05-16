@@ -1,5 +1,6 @@
 import cmd
 import sys
+from typing import Any
 from rich.status import Status
 
 from .chatbot import ChatBot
@@ -39,13 +40,13 @@ class ChatBotShell(cmd.Cmd):
         chatbot: ChatBot,
         stdin=sys.stdin,
         stdout=sys.stdout,
-        verbose: bool = False,        
+        verbose: bool = False,
     ):
         super().__init__(stdin=stdin, stdout=stdout)
         self.chatbot = chatbot
         self.verbose = verbose
         self.logger = chatbot.logger
-        self.responses: list[dict[str,Any]] = []
+        self.responses: list[dict[str, Any]] = []
         self.replies: list[str] = []
 
     def default(self, line):

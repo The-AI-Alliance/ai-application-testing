@@ -35,6 +35,7 @@ class ChatBotAgent(ChatBot):
         response_handler: ResponseHandler,
         logger: logging.Logger,
         template_file: str = "",
+        template_replacement_key_values: dict[str, str] = {},
     ):
         """
         Initialize the Deep Agents-based ChatBot implementation.
@@ -44,6 +45,7 @@ class ChatBotAgent(ChatBot):
         # we use `ollama_chat` in the model argument, remove the "_chat".
         model2 = model.replace("/", ":").replace("_chat", "")
 
+        tf = template_file if template_file else self.default_template_file
         super().__init__(
             model=model2,
             service_url=service_url,
@@ -53,7 +55,8 @@ class ChatBotAgent(ChatBot):
             confidence_level_threshold=confidence_level_threshold,
             response_handler=response_handler,
             logger=logger,
-            template_file=template_file,
+            template_file=tf,
+            template_replacement_key_values=template_replacement_key_values,
         )
         self.response_parser = DeepAgentResponseParser()
         if model2.find("gpt-oss") >= 0:

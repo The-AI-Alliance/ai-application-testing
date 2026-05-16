@@ -32,7 +32,7 @@ class ChatBot(ABC):
         response_handler: ResponseHandler,
         logger: logging.Logger,
         template_file: str = "",
-        template_replacement_key_values: dict[str,str] = {}
+        template_replacement_key_values: dict[str, str] = {},
     ):
         """
         Initialize the ChatBot base class.
@@ -99,7 +99,9 @@ class ChatBot(ABC):
         self.template_file = Path(template_dir, template_filename)
         if self.logger:
             self.logger.info(f"Using template file: {self.template_file}")
-        self.template = load_yaml_from_file(self.template_file, replacements=template_replacement_key_values)
+        self.template = load_yaml_from_file(
+            self.template_file, replacements=template_replacement_key_values
+        )
         self.system_prompt = self.template.get("system")
         if not self.system_prompt:
             error_msg = f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}"

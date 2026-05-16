@@ -94,7 +94,9 @@ class TDDExampleRefillChatbot:
                 self.logger.info(
                     f"  Using template {template_name} in {self.template_dir}:"
                 )
-                template = load_yaml_from_file(Path(self.template_dir, template_name + ".yaml"))
+                template = load_yaml_from_file(
+                    Path(self.template_dir, template_name + ".yaml")
+                )
 
                 for query in queries:
                     for drug in self.drugs:
