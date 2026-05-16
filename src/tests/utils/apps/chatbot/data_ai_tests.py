@@ -89,11 +89,35 @@ class ScenarioTest(BaseAITest):
             self.required_information = required_information
             self.pre_conditions = pre_conditions
 
+        def __repr__(self) -> str:
+            return self.json()
+
+        def to_dict(self) -> Mapping[str, Any]:
+            class_name = self.__class__.__name__
+            d = {"name": class_name}
+            d.update(vars(self))
+            return d
+
+        def json(self) -> str:
+            return json.dumps(self.to_dict())
+
     class SuccessFailure:
         def __init__(self, succeeded: bool, text: str, post_conditions: list[str]):
             self.succeeded = succeeded
             self.text = text
             self.post_conditions = post_conditions
+
+        def __repr__(self) -> str:
+            return self.json()
+
+        def to_dict(self) -> Mapping[str, Any]:
+            class_name = self.__class__.__name__
+            d = {"name": class_name}
+            d.update(vars(self))
+            return d
+
+        def json(self) -> str:
+            return json.dumps(self.to_dict())
 
     class Success(SuccessFailure):
         def __init__(self, text: str, post_conditions: list[str]):
@@ -233,13 +257,9 @@ class ScenarioTest(BaseAITest):
         scenario = get(obj, "scenario")
         inputs = get(obj, "inputs")
         outputs = get(obj, "outputs")
-        successes = [
-            (s.get("text"), s.get("post_conditions")) for s in get(outputs, "successes")
-        ]
-        failures = [
-            (f.get("text"), f.get("post_conditions")) for f in get(outputs, "failures")
-        ]
 
+        # Inputs, successes, and initial queries can't be empty.
+        # Failures can be empty.
         inputs = ScenarioTest.Inputs(
             required_information=get(inputs, "required-information"),
             pre_conditions=get(inputs, "pre-conditions"),
@@ -247,18 +267,17 @@ class ScenarioTest(BaseAITest):
         successes = [
             ScenarioTest.Success(
                 text=get(s, "text"),
-                post_conditions=get(s, "post_conditions"),
+                post_conditions=get(s, "post-conditions"),
             )
             for s in get(outputs, "successes")
         ]
         failures = [
             ScenarioTest.Failure(
                 text=get(f, "text"),
-                post_conditions=get(f, "post_conditions"),
+                post_conditions=get(f, "post-conditions"),
             )
-            for f in get(outputs, "failures")
+            for f in get(outputs, "failures", [])
         ]
-
         initial_queries = get(obj, "initial-queries")
 
         return cls(
@@ -268,6 +287,22 @@ class ScenarioTest(BaseAITest):
             failures=failures,
             initial_queries=initial_queries,
         )
+
+    def __repr__(self) -> str:
+        return self.json()
+
+    def to_dict(self) -> Mapping[str, Any]:
+        class_name = self.__class__.__name__
+        d = {"name": class_name}
+        d.update(vars(self))
+        return d
+
+    def json(self) -> str:
+        d = self.to_dict()
+        d["inputs"]    = d["inputs"].json()
+        d["successes"] = [s.json() for s in d["successes"]]
+        d["failures"]  = [f.json() for f in d["failures"]]
+        return json.dumps(d)
 
 
 class AppointmentScenarioTest(ScenarioTest):

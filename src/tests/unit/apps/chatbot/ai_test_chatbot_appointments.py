@@ -13,4 +13,4 @@ class AITestChatBotAppointments(TestBaseRunner):
     """
 
     def test_chatbot_appointment_requests(self):
-        self.try_scenarios("appointment")
+        self.try_scenarios("appointments")

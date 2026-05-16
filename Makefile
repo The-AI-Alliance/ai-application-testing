@@ -77,7 +77,7 @@ INTEGRATION_TEST_DATA_SAMPLE_RATE ?= 1.0
 DATA_SAMPLE_RATE                  ?= ${UNIT_TEST_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-PROMPTS_TEMPLATES_DIR       ?= tools/prompts/templates
+TOOLS_PROMPTS_TEMPLATES_DIR ?= tools/prompts/templates
 CHATBOT_TEMPLATES_DIR       ?= apps/chatbot/prompts/templates
 CHATBOT_TEST_TEMPLATES_DIR  ?= tests/prompts/templates
 CHATBOT_DATA_DIR            ?= ${DATA_DIR}/chatbot
@@ -419,42 +419,43 @@ clean-code:: clean-tools
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
 	@echo "${GREEN}For the GitHub Pages website:${_END}"
-	@echo "  ${GREEN}GITHUB_PAGES_URL:${_END}        ${GITHUB_PAGES_URL}"
-	@echo "  ${GREEN}PWD:${_END}                     ${PWD} ('print working directory')"
-	@echo "  ${GREEN}DOCS_DIR:${_END}                ${DOCS_DIR}"
-	@echo "  ${GREEN}SITE_DIR:${_END}                ${SITE_DIR}"
-	@echo "  ${GREEN}JEKYLL_PORT:${_END}             ${JEKYLL_PORT}"
+	@echo "  ${GREEN}GITHUB_PAGES_URL:${_END}            ${GITHUB_PAGES_URL}"
+	@echo "  ${GREEN}PWD:${_END}                         ${PWD} ('print working directory')"
+	@echo "  ${GREEN}DOCS_DIR:${_END}                    ${DOCS_DIR}"
+	@echo "  ${GREEN}SITE_DIR:${_END}                    ${SITE_DIR}"
+	@echo "  ${GREEN}JEKYLL_PORT:${_END}                 ${JEKYLL_PORT}"
 	@echo
 
 print-info-tools:: print-info-code
 print-info-code::
 	@echo "${GREEN}For the example code and tools:${_END}"
-	@echo "  ${GREEN}MODEL:${_END}                   ${MODEL} (the default)"
-	@echo "  ${GREEN}MODELS:${_END} (all we use)     ${MODELS}"
-	@echo "  ${GREEN}ALL_TOOLS:${_END}               ${ALL_TOOLS}"
-	@echo "  ${GREEN}INFERENCE_SERVICE:${_END}       ${INFERENCE_SERVICE}"
-	@echo "  ${GREEN}INFERENCE_URL:${_END}           ${INFERENCE_URL}"
-	@echo "  ${GREEN}PROMPTS_TEMPLATES_DIR:${_END}   ${PROMPTS_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${_END}   ${CHATBOT_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${_END}      ${CHATBOT_OUTPUT_DIR}"
-	@echo "  ${GREEN}SRC_DIR:${_END}                 ${SRC_DIR}"
-	@echo "  ${GREEN}APP_ARGS:${_END}                ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
+	@echo "  ${GREEN}MODEL:${_END}                       ${MODEL} (the default)"
+	@echo "  ${GREEN}MODELS:${_END} (all we use)         ${MODELS}"
+	@echo "  ${GREEN}ALL_TOOLS:${_END}                   ${ALL_TOOLS}"
+	@echo "  ${GREEN}INFERENCE_SERVICE:${_END}           ${INFERENCE_SERVICE}"
+	@echo "  ${GREEN}INFERENCE_URL:${_END}               ${INFERENCE_URL}"
+	@echo "  ${GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${_END} ${TOOLS_PROMPTS_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${_END}       ${CHATBOT_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_TEST_TEMPLATES_DIR:${_END}  ${CHATBOT_TEST_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CHATBOT_OUTPUT_DIR}"
+	@echo "  ${GREEN}SRC_DIR:${_END}                     ${SRC_DIR}"
+	@echo "  ${GREEN}APP_ARGS:${_END}                    ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo "  ${GREEN}The following depend on the value of MODEL:${_END}"
-	@echo "  ${GREEN}OUTPUT_DIR:${_END}              ${OUTPUT_DIR}"
-	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${_END}         ${OUTPUT_LOGS_DIR}"
-	@echo "  ${GREEN}TESTS_LOGS_DIR:${_END}          ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
-	@echo "  ${GREEN}DATA_DIR:${_END}                ${DATA_DIR}"
-	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${_END}  ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
+	@echo "  ${GREEN}OUTPUT_DIR:${_END}                  ${OUTPUT_DIR}"
+	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${_END}             ${OUTPUT_LOGS_DIR}"
+	@echo "  ${GREEN}TESTS_LOGS_DIR:${_END}              ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
+	@echo "  ${GREEN}DATA_DIR:${_END}                    ${DATA_DIR}"
+	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${_END}      ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
 	@echo "${GREEN}The environment:${_END}"
-	@echo "  ${GREEN}GIT_HASH:${_END}                ${GIT_HASH}"
-	@echo "  ${GREEN}TIMESTAMP:${_END}               ${TIMESTAMP}"
-	@echo "  ${GREEN}MAKEFLAGS:${_END}               ${MAKEFLAGS}"
-	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${_END}     ${MAKEFLAGS_RECURSIVE}"
-	@echo "  ${GREEN}UNAME:${_END}                   ${UNAME}"
-	@echo "  ${GREEN}ARCHITECTURE:${_END}            ${ARCHITECTURE}"
-	@echo "  ${GREEN}GIT_HASH:${_END}                ${GIT_HASH}"
+	@echo "  ${GREEN}GIT_HASH:${_END}                    ${GIT_HASH}"
+	@echo "  ${GREEN}TIMESTAMP:${_END}                   ${TIMESTAMP}"
+	@echo "  ${GREEN}MAKEFLAGS:${_END}                   ${MAKEFLAGS}"
+	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${_END}         ${MAKEFLAGS_RECURSIVE}"
+	@echo "  ${GREEN}UNAME:${_END}                       ${UNAME}"
+	@echo "  ${GREEN}ARCHITECTURE:${_END}                ${ARCHITECTURE}"
+	@echo "  ${GREEN}GIT_HASH:${_END}                    ${GIT_HASH}"
 	@echo
 # Code Targets
 
@@ -519,7 +520,7 @@ run-tdd-example-refill-chatbot:: before-run
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
-		--template-dir ${PROMPTS_TEMPLATES_DIR} \
+		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
@@ -532,7 +533,7 @@ run-unit-benchmark-data-synthesis:: before-run
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
-		--template-dir ${PROMPTS_TEMPLATES_DIR} \
+		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
@@ -546,7 +547,7 @@ run-unit-benchmark-data-validation:: before-run
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
-	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
+	  --template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 	  --data-dir ${DATA_DIR} \
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
@@ -574,7 +575,7 @@ langflow-pipeline::
 	cd ${SRC_DIR} && ${TIME} uv run python -m tools.langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
-	  --template-dir ${PROMPTS_TEMPLATES_DIR} \
+	  --template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 	  --data-dir ${DATA_DIR} \
 	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
@@ -592,7 +593,7 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	cd ${SRC_DIR} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 	  export DATA_DIR=${DATA_DIR} && \
 	  uv run python -m unittest discover \
 	    --start-directory tests/unit/langflow \
@@ -783,7 +784,7 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
     export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
     export CHATBOT_TEST_TEMPLATES_DIR=${CHATBOT_TEST_TEMPLATES_DIR} && \
 	  export DATA_DIR=${TEST_DATA_DIR} && \
@@ -802,7 +803,8 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS
 
 
 # A special target for running one of the AI tests. Invoke as follows:
-# make TEST=path/to/test.py one-test-ai
+# make TEST=tests/.../ai_test_foo.py WHICH_CHATBOT=agent|simple one-test-ai
+# Note that src is considered the root directory for TEST.
 
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "${INFO}Running one AI unit test: TEST = ${TEST} ...${_END}"
@@ -813,8 +815,9 @@ one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
+    export CHATBOT_TEST_TEMPLATES_DIR=${CHATBOT_TEST_TEMPLATES_DIR} && \
 	  export DATA_DIR=${TEST_DATA_DIR} && \
 	  export TESTS_LOGS_FILE_TEMPLATE=${TESTS_LOGS_FILE_TEMPLATE} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -868,7 +871,7 @@ integration-tests-dedicated:: run-command-checks
 	  export DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export PROMPTS_TEMPLATES_DIR=${PROMPTS_TEMPLATES_DIR} && \
+	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
 	  export DATA_DIR=${TEST_DATA_DIR} && \
 	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
@@ -978,7 +981,7 @@ the directory output by this llm command:
 Use the following make command to do this automatically:
   make install-llm-templates 
 
-WARNING: If you edit the templates in ${PROMPTS_TEMPLATES_DIR}, rerun  
+WARNING: If you edit the templates in ${TOOLS_PROMPTS_TEMPLATES_DIR}, rerun  
   make install-llm-templates 
 
 (llm is required to run this target, because it uses 'llm templates path'
@@ -1006,7 +1009,7 @@ clean-llm:: help-llm clean-llm-templates
 	@echo
 
 clean-llm-templates::
-	@cd ${PROMPTS_TEMPLATES_DIR} && \
+	@cd ${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 		llmdir="$$(llm templates path)" && \
 		for t in *.yaml; do echo "removing: $$llmdir/$$t"; rm -f "$$llmdir/$$t"; done && \
 		ls -l "$$llmdir"
@@ -1018,8 +1021,8 @@ install-llm:: help-llm install-llm-templates
 
 install-llm-templates:: command-check-llm
 	@llmdir="$$(llm templates path)" && \
-	echo "${INFO}${_END}Installing the llm templates from ${HIGHLIGHT}${PROMPTS_TEMPLATES_DIR}${_END} into ${HIGHLIGHT}$$llmdir${_END} ..." && \
-	cp ${PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
+	echo "${INFO}${_END}Installing the llm templates from ${HIGHLIGHT}${TOOLS_PROMPTS_TEMPLATES_DIR}${_END} into ${HIGHLIGHT}$$llmdir${_END} ..." && \
+	cp ${TOOLS_PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
 

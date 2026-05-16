@@ -136,7 +136,7 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
             lines = file.readlines()
             try:
                 objs = decode_json("".join(lines))
-                tests = kind.from_dict(objs)
+                tests = [kind.from_dict(obj) for obj in objs]
                 if isinstance(tests, list):
                     return tests
                 else:
@@ -438,7 +438,7 @@ class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
             chatbot_shell_in = self.shell.stdin
             user_shell_in = self.user_shell.stdin
 
-            chatbot_query = query
+            chatbot_query = query["query"]
             while True:
                 chatbot_shell_in.write(chatbot_query)
                 chatbot_answer = self.shell.replies[-1]
