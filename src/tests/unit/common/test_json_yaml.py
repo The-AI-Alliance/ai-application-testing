@@ -4,6 +4,7 @@
 import json
 import re
 import unittest
+import yaml
 from hypothesis import given, strategies as st
 from datetime import datetime, timedelta
 from json.decoder import JSONDecodeError
@@ -14,6 +15,15 @@ from common.json_yaml import (
     decode_json,
     encode_json,
     from_json,
+    load_yaml,
+)
+
+from common.utils import replace_variables
+
+from tests.utils.hypothesis import (
+    escaped_dquotes,
+    replacement_keys,
+    valid_dirs,
 )
 
 
@@ -21,18 +31,7 @@ class TestJsonYaml(unittest.TestCase):
     """
     Test the JSON and YAML utilities.
     """
-
-    def clean_text(s: str) -> str:
-        """Fix some problematic substrings that cause problems with JSON conversion."""
-        s1 = re.sub(r'"', r"\"", s)
-        s2 = re.sub(r"\}[,\s]*\{", "_ _", s1)
-        return s2
-
-    def escaped_dquotes(min_size: int = 0, max_size: int = 5):
-        return st.text(
-            alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size
-        ).map(lambda s: TestJsonYaml.clean_text(s))
-
+    
     def __check_encode_decode_json(
         self,
         question: str,
@@ -271,6 +270,29 @@ class TestJsonYaml(unittest.TestCase):
             with self.assertRaises(JSONDecodeError):
                 from_json(js2, ["ignored"])
 
+    def test_load_yaml_with_replacements(self):
+        """
+        Test that load_yaml preforms key-value substitution in the text if defined.
+        """
+        s = """
+            {{ONE}}: 1
+            two: 
+              {{TWO1}}: 2
+            three: 
+              - three1: 3
+                {{THREE2}}: {{THREE12}}
+              - 3.2
+        """
+        m = load_yaml(s, {"ONE": "one", "TWO1": "two1", "THREE2": "three2", "THREE12": "3.12"})
+        one = m.get("one")
+        self.assertIsNotNone(one)
+        self.assertEqual(1, one)
+        two = m.get("two")
+        self.assertIsNotNone(two)
+        self.assertEqual({"two1": 2}, two)
+        three = m.get("three")
+        self.assertIsNotNone(three)
+        self.assertEqual([{"three1": 3, "three2": 3.12},3.2], three)
 
 if __name__ == "__main__":
     unittest.main()

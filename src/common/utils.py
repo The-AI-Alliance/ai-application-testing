@@ -266,3 +266,12 @@ def extract_content(litellm_response: ModelResponse) -> str:
     content = get_chain(response_dict, ["choices", 0, "message", "content"])
     # print(f"content (type = {type(content)}: {content})")
     return content if content is not None else ""
+
+def replace_variables(string: str, variables: dict[str,Any]) -> str:
+    """
+    Replace variables in a string with their values. Variables are delimited
+    by `{{FOO}}`.
+    """
+    for key, value in variables.items():
+        string = string.replace('{{'+key+'}}', str(value))    
+    return string

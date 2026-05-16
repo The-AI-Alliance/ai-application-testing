@@ -34,6 +34,7 @@ class ChatBotAgent(ChatBot):
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
+        template_file: str = "",
     ):
         """
         Initialize the Deep Agents-based ChatBot implementation.
@@ -52,7 +53,7 @@ class ChatBotAgent(ChatBot):
             confidence_level_threshold=confidence_level_threshold,
             response_handler=response_handler,
             logger=logger,
-            template_file=self.default_template_file,
+            template_file=template_file,
         )
         self.response_parser = DeepAgentResponseParser()
         if model2.find("gpt-oss") >= 0:

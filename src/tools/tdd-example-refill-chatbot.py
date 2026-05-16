@@ -8,7 +8,7 @@ from pathlib import Path
 from litellm import completion
 
 from openai import OpenAIError
-from common.json_yaml import load_yaml
+from common.json_yaml import load_yaml_from_file
 from common.utils import (
     setup,
     common_defaults,
@@ -94,7 +94,7 @@ class TDDExampleRefillChatbot:
                 self.logger.info(
                     f"  Using template {template_name} in {self.template_dir}:"
                 )
-                template = load_yaml(Path(self.template_dir, template_name + ".yaml"))
+                template = load_yaml_from_file(Path(self.template_dir, template_name + ".yaml"))
 
                 for query in queries:
                     for drug in self.drugs:

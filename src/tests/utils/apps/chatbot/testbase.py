@@ -11,7 +11,7 @@ import re
 import time
 import unittest
 from abc import ABC, abstractmethod
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Any, Sequence, Tuple, TypeVar
@@ -204,6 +204,7 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
         test_prompt: QnATest,
     ) -> list[dict[str,dict[str,Any]]]:
         """
+        Run a Q&A test session.
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum,
         we run all the examples and accumulate error messages, then report the results.
@@ -354,24 +355,34 @@ class QnATestInstanceRunner(TestInstanceRunner[QnATest]):
 
 
 class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
+    """
+    Runner for scenario tests. A second ChatBot is created to function 
+    as a user _surrogate_. It initiates the scenario with one of the 
+    initial queries defined for the scenario, then answers questions from
+    the ChatBotAgent that tries to complete the scenario.
+    """
     def __init__(
         self,
         chatbot: ChatBot,
         rating_threshold: int,
         confidence_threshold: float,
+        template_replacement_key_values: dict[str,str] = {},
     ):
         super().__init__(chatbot, rating_threshold, confidence_threshold)
         self.user_chatbot, self.user_shell = TestBase.make_chatbot(
-            chatbot_kind = "simple", optional_name_suffix = "user-surrogate")
+            chatbot_kind = "simple", 
+            optional_name_suffix = "user-surrogate",
+            template_dir = self.test_template_dir,
+            template_file = "patient-surrogate.yaml",
+            template_replacement_key_values = template_replacement_key_values)
 
     def run_test(
         self,
         test_prompt: ScenarioTest,
     ) -> list[dict[str,dict[str,Any]]]:
         """
-        run a scenario session.
+        Run a scenario test session.
         """
-        # test_prompt.scenario
         # test_prompt.inputs
         # test_prompt.successes
         # test_prompt.failures
@@ -387,17 +398,32 @@ class ScenarioTestInstanceRunner(TestInstanceRunner[ScenarioTest]):
 
         for query in test_prompt.initial_queries:
             metadata = {
+                "scenario": test_prompt.scenario,
                 "initial_query": query,
                 "rating_threshold": self.rating_threshold,
                 "confidence_threshold": self.confidence_threshold,
+                "conversation": []
             }
             # On success these will be returned as empty.
             errors = {}
             warnings = {}
             lowConfidenceResults = []
 
-            answer = self.chatbot.query(query)
-            metadata["answer"] = answer
+            chatbot_shell_in  = self.chatbot.stdin
+            chatbot_shell_out = self.chatbot.stdout
+            user_shell_in     = self.user_shell.stdin
+            user_shell_out    = self.user_shell.stdout
+            
+            chatbot_query = query
+            while True:
+                chatbot_answer = chatbot_shell_in.write(chatbot_query)
+                user_answer = user_shell_in.write(chatbot_answer)
+                medata["conversation"].append((chatbot_query, chatbot_answer, user_answer))
+                if user_answer.find("good bye"):
+                    metadata["success"] = True
+                    break
+                chatbot_query = user_answer
+
             all.append({
                 "metadata": metadata, 
                 "errors": errors, 
@@ -422,12 +448,16 @@ class TestBase(unittest.TestCase):
 
     @classmethod
     def make_chatbot(
-        cls, chatbot_kind: str = '', optional_name_suffix: str = ""
+        cls, chatbot_kind: str = '', 
+        optional_name_suffix: str = "",
+        template_dir: str = "",
+        template_file: str = "",
     ) -> Tuple[ChatBot, ChatBotShell]:
         suffix = "" if not optional_name_suffix else f"-{optional_name_suffix}"
         logger = logging.getLogger(f"{cls.__name__}{suffix}")
         logger.setLevel(logging.INFO)
 
+        td = template_dir if template_dir else self.template_dir
         which_chatbot = chatbot_kind if chatbot_kind else TestBase.which_chatbot_choice
         chatbot_class = (
             ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
@@ -435,7 +465,7 @@ class TestBase(unittest.TestCase):
         chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
-            template_dir=self.template_dir,
+            template_dir=td,
             data_dir=self.data_dir,
             output_dir=self.output_dir,
             confidence_level_threshold=self.confidence_threshold,
@@ -443,8 +473,9 @@ class TestBase(unittest.TestCase):
                 confidence_level_threshold=self.confidence_threshold, logger=logger
             ),
             logger=logger,
+            template_file=template_file,
         )
-        shell = ChatBotShell(self.chatbot, stdout=StringIO())
+        shell = ChatBotShell(self.chatbot, stdin=StringIO(), stdout=StringIO())
         return chatbot, shell
 
     def setUp(self):
@@ -459,6 +490,9 @@ class TestBase(unittest.TestCase):
         self.service_url = os.environ.get("INFERENCE_URL", "http://localhost:11434")
         self.template_dir = os.environ.get(
             "CHATBOT_TEMPLATES_DIR", "apps/chatbot/prompts/templates"
+        )
+        self.test_template_dir = os.environ.get(
+            "CHATBOT_TEST_TEMPLATES_DIR", "tests/prompts/templates"
         )
         self.data_dir = os.environ.get("DATA_DIR", "data")
         self.output_dir = os.environ.get("OUTPUT_DIR", "../output/tests")
@@ -748,8 +782,25 @@ class TestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
+        monday = datetime(2027, 1, 4, 8) # After this date passes, move it to a future weekday...
+        self.assertTrue(monday > datetime.now(), "Bug. We hard-code 01-04-2027, which is now past today! Edit the previous line!")
+        use_case_dates_times = [monday, monday+timedelta(days=2,hours=1)]
+        replacements = {
+            "PATIENT_NAME": "John Doe",
+            "USE_CASE_DATES_AND_TIMES": use_case_dates_times,
+            "USE_CASE_DATE_AND_TIME": monday,
+            "NEW_USE_CASE_DATE_AND_TIME": monday+timedelta(days=3,hours=2),
+            "USE_CASE": use_case_name,
+            "REASON": "",
+            "PROBLEM": "My back hurts",
+            "PRESCRIPTION": "Codeine",
+            "BODY_PART": "back",
+            "VACCINE": "COVID",
+        }
+
         runner = ScenarioTestInstanceRunner(
-            self.chatbot, rating_threshold, confidence_threshold
+            self.chatbot, rating_threshold, confidence_threshold,
+            template_replacement_key_values = replacements
         )
 
         self.__try_all(

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-from common.json_yaml import load_yaml
+from common.json_yaml import load_yaml_from_file
 from common.utils import (
     ensure_dirs_exist,
     get_package_version,
@@ -32,6 +32,7 @@ class ChatBot(ABC):
         response_handler: ResponseHandler,
         logger: logging.Logger,
         template_file: str = "",
+        template_replacement_key_values: dict[str,str] = {}
     ):
         """
         Initialize the ChatBot base class.
@@ -45,7 +46,8 @@ class ChatBot(ABC):
             - confidence_level_threshold (float): Minimum confidence threshold (0.0-1.0)
             - response_handler (ResponseHandler): Handler for processing responses
             - logger (logging.Logger): Logger instance
-            - template_file (str): Optional template file name (defaults to default_template_file)
+            - template_file (str): Optional template file name (defaults to default_template_file) in template_dir
+            - template_replacement_key_values (dict[str,str]): Replace occurrences of `{{key}}` with the corresponding value.
         """
         self.model = model
         self.service_url = service_url
@@ -97,7 +99,7 @@ class ChatBot(ABC):
         self.template_file = Path(template_dir, template_filename)
         if self.logger:
             self.logger.info(f"Using template file: {self.template_file}")
-        self.template = load_yaml(self.template_file)
+        self.template = load_yaml_from_file(self.template_file, replacements=template_replacement_key_values)
         self.system_prompt = self.template.get("system")
         if not self.system_prompt:
             error_msg = f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}"

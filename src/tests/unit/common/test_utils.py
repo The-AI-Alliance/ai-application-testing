@@ -14,14 +14,13 @@ from common.utils import (
     ensure_dirs_exist,
     make_parent_dirs,
     model_dir_name,
+    replace_variables,
 )
 
-
-def valid_dirs(min_size: int = 1, max_size: int = 5):
-    """Hypothesis strategy for generating directory names."""
-    return st.text(
-        alphabet=st.characters(codec="ascii"), min_size=min_size, max_size=max_size
-    ).map(lambda s: re.sub(r"\W", "_", s))
+from tests.utils.hypothesis import (
+    valid_dirs,
+    replacement_keys
+)
 
 
 class TestUtils(unittest.TestCase):
@@ -93,6 +92,16 @@ class TestUtils(unittest.TestCase):
         fdir = f"{self.test_temp}/{'/'.join(dirs)}"
         with self.assertRaises(ValueError):
             ensure_dirs_exist(fdir)
+
+    @given(replacement_keys(), st.text())
+    def test_replace_variables_replaces_keys_with_values(self, keys: list[str], separator: str):
+        keys2  = ["{{" + key + "}}" for key in keys]
+        values = [key.upper() for key in keys]
+        kvs = dict([(keys[i], values[i]) for i in list(range(len(keys)))])
+        s = separator + separator.join(keys2) + separator
+        expected = separator + separator.join(values) + separator
+        actual = replace_variables(s, kvs)
+        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":

@@ -8,11 +8,30 @@ from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Mapping, MutableMapping
+from common.utils import replace_variables
 
+def load_yaml_from_file(
+        path: Path, replacements: dict[str,str] = {}
+    ) -> Mapping[str, Any]:
+    """
+    Parse a YAML file and return the corresponding Mapping.
+    If `replacements` is not empty, replace any occurrences of `{{key}}`,
+    for the keys in `replacements` with the corresponding values.
+    """
+    text = path.read_text()
+    return load_yaml(text, replacements=replacements)
 
-def load_yaml(path: Path) -> Mapping[str, Any]:
-    """Parse a YAML file and return the corresponding Mapping."""
-    return yaml.safe_load(path.read_text())
+def load_yaml(
+        text: str, replacements: dict[str,str] = {}
+    ) -> Mapping[str, Any]:
+    """
+    Parse a YAML string and return the corresponding Mapping.
+    If `replacements` is not empty, replace any occurrences of `{{key}}`,
+    for the keys in `replacements` with the corresponding values.
+    """
+    if replacements:
+        text = replace_variables(text, replacements)
+    return yaml.safe_load(text)
 
 
 class DatetimeEncoder(json.JSONEncoder):

@@ -18,7 +18,7 @@ from openai import OpenAIError
 from common.json_yaml import (
     extract_jsonl_list,
     from_json,
-    load_yaml,
+    load_yaml_from_file,
 )
 from common.utils import (
     all_use_cases,
@@ -204,7 +204,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
     def generate_data_for_use_case(self, which_one: str, expected_label: str) -> int:
         """Generate data for the given use case with its expected label."""
         template_n = self.template_name(which_one)
-        template = load_yaml(Path(self.template_dir, template_n + ".yaml"))
+        template = load_yaml_from_file(Path(self.template_dir, template_n + ".yaml"))
         data_file = os.path.join(self.data_dir, f"{template_n}-data.jsonl")
 
         self.logger.info(f"  For expected label: {expected_label}:")
@@ -249,7 +249,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
 
         template_file = Path(template_dir, self.template_prefix + ".yaml")
         self.logger.info(f"Using template file: {template_file}")
-        self.template = load_yaml(template_file)
+        self.template = load_yaml_from_file(template_file)
 
     def return_stats(
         self, data_file: str, validation_file: str

@@ -37,14 +37,16 @@ class ChatBotShell(cmd.Cmd):
     def __init__(
         self,
         chatbot: ChatBot,
-        verbose: bool = False,
         stdin=sys.stdin,
         stdout=sys.stdout,
+        verbose: bool = False,        
     ):
         super().__init__(stdin=stdin, stdout=stdout)
         self.chatbot = chatbot
         self.verbose = verbose
         self.logger = chatbot.logger
+        self.responses: list[dict[str,Any]] = []
+        self.replies: list[str] = []
 
     def default(self, line):
         "Process the user prompt"
@@ -55,6 +57,8 @@ class ChatBotShell(cmd.Cmd):
             with Status("One moment..."):
                 response = self.chatbot.query(line)
             if isinstance(response, str):
+                self.responses.append({})
+                self.replies.append(response)
                 print(f"Something went wrong: {response}")
                 print(
                     "Try your query again or report an issue to the development team:"
@@ -62,6 +66,8 @@ class ChatBotShell(cmd.Cmd):
                 print("  https://github.com/The-AI-Alliance/ai-application-testing")
             else:
                 answer = response.get("reply_to_user", "")
+                self.responses.append(response)
+                self.replies.append(answer)
                 if answer:
                     print(answer + "\n", file=self.stdout)
                 error = response.get("error", "")
