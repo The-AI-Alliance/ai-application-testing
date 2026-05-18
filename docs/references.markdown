@@ -257,3 +257,7 @@ Many [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles a
 * [SQL injection](https://en.wikipedia.org/wiki/SQL_injection){:target="_wikipedia"}
 * [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development){:target="_wikipedia"} 
 * [Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol){:target="_wikipedia"}
+
+## Synthetic Data Generation
+
+* Nadas, Mihai, Laura Diosan, and Andreea Tomescu. 2025. “Synthetic Data Generation Using Large Language Models: Advances in Text and Code.” arXiv [Cs.CL]. arXiv. [http://arxiv.org/abs/2503.14023](http://arxiv.org/abs/2503.14023).

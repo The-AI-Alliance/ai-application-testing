@@ -1,7 +1,7 @@
 # Makefile for the ai-application-testing website and repo example code.
 
 # Some Environment variables
-MAKEFLAGS              = --warn-undefined-variables
+MAKEFLAGS             ?= --warn-undefined-variables
 MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
 UNAME                 ?= $(shell uname)
 ARCHITECTURE          ?= $(shell uname -m)
@@ -97,67 +97,71 @@ CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 ## Override when running `make view-local` using e.g., `JEKYLL_PORT=8000 make view-local`
 JEKYLL_PORT           ?= 4000
 
-# Colors used to make some messages stand out more than others...
-RED          = \033[31m
-BOLD_RED     = \033[1;31m
-GREEN        = \033[32m
-BOLD_GREEN   = \033[1;32m
-YELLOW       = \033[33m
-BOLD_YELLOW  = \033[1;33m
-BLUE         = \033[34m
-BOLD_BLUE    = \033[1;34m
-PURPLE       = \033[35m
-BOLD_PURPLE  = \033[1;35m
-CYAN         = \033[36m
-BOLD_CYAN    = \033[1;36m
+# Colored output using tput. Adapted from
+# https://stackoverflow.com/a/53528374
+# Posted by Robert Ranjan
+# Retrieved 2026-05-18, License - CC BY-SA 4.0
+# TIP: Run `make show-colors` (This target is at the end of this file.)
 
-ERROR        = ${BOLD_RED}ERROR:
-WARN         = ${BOLD_YELLOW}WARNING:
-NOTE         = ${BOLD_PURPLE}NOTE:
-INFO         = ${BOLD_PURPLE}
-TIP          = ${BOLD_BLUE}TIP:
-HIGHLIGHT    = ${BOLD_GREEN}
-_END         = \033[0m
+RED=$(shell tput setaf 1)
+GREEN=$(shell tput setaf 2)
+ORANGE=$(shell tput setaf 3)
+BLUE=$(shell tput setaf 4)
+PINK=$(shell tput setaf 5)
+DARK_GREEN=$(shell tput setaf 6)
+LIGHT_GREY=$(shell tput setaf 7)
+BLACK=$(shell tput setaf 8)
+# virtually identical to RED:
+RED2=$(shell tput setaf 9)
+RESET=$(shell tput sgr0)
 
+ERROR        = ${RED}ERROR:
+WARN         = ${ORANGE}WARNING:
+WARNING      = ${ORANGE}WARNING:
+NOTE         = ${BLUE}NOTE:
+INFO         = ${DARK_GREEN}INFO:
+TIP          = ${BLUE}TIP:
+HIGHLIGHT    = ${BLUE}
 
 ifndef DOCS_DIR
-$(error ERROR: There is no ${DOCS_DIR} directory!)
+$(error ${ERROR} There is no ${DOCS_DIR} directory!${RESET})
 endif
 ifndef SRC_DIR
-$(error ERROR: There is no ${SRC_DIR} directory!)
+$(error ${ERROR} There is no ${SRC_DIR} directory!${RESET})
 endif
 
 
+# When you see ${GREEN}${RESET}, it is there to make it easier to line up 
+# multi-line descriptions!
 define help_message
 
-Quick help for this make process. 
-
+Quick help for this make process.
 Try these more specific help targets:
 
-make help-docs          # Help on the website targets.
-make help-tools         # Help on the tools and example ChatBot targets.
-make help-code          # Synonym for "help-tools".
+${GREEN}make help-docs${RESET}          # Help on the website targets.
+${GREEN}make help-tools${RESET}         # Help on the tools and example ChatBot targets.
+${GREEN}make help-code${RESET}          # Synonym for "help-tools".
 
-make print-info         # Print the current values of some make and env. variables.
-make clean              # Makes clean-docs and clean-code, but not clean-setup, uninstall-uv
+${GREEN}make print-info${RESET}         # Print the current values of some make and env. variables.
+${GREEN}make clean${RESET}              # Makes clean-docs and clean-code, but not clean-setup, uninstall-uv
 endef
 
 define help_message_docs
 
-Quick help for this make process. This Makefile is used for the website management.
+Help for the GitHub Pages-related targets.
 For running the example tools described there, see src/Makefile or run "make help-src".
 
-make help-docs          # Help on the website make targets.
-make all-docs           # Clean and locally view the document.
-make clean-docs         # Remove build artifacts, etc.
-make view-pages         # View the published GitHub pages in a browser.
-make view-local         # View the pages locally (requires Jekyll).
-                        # Tip: "JEKYLL_PORT=8000 make view-local" uses port 8000 instead of 4000!
+${GREEN}make help-docs${RESET}          # Help on the website make targets.
+${GREEN}make all-docs${RESET}           # Clean and locally view the document.
+${GREEN}make clean-docs${RESET}         # Remove build artifacts, etc.
+${GREEN}make view-pages${RESET}         # View the published GitHub pages in a browser.
+${GREEN}make view-local${RESET}         # View the pages locally (requires Jekyll).
+${GREEN}${RESET}                        # ${TIP} "JEKYLL_PORT=8000 make view-local" uses port 8000 instead of 4000!${RESET}
 
-make setup-jekyll       # Install Jekyll. Make sure Ruby is installed. 
-                        # (Only needed for local viewing of the document.)
-make run-jekyll         # Used by "view-local"; assumes everything is already built.
-                        # Tip: "JEKYLL_PORT=8000 make run-jekyll" uses port 8000 instead of 4000!
+${GREEN}make setup-jekyll${RESET}       # Install Jekyll. Make sure Ruby is installed. 
+${GREEN}${RESET}                        # (Only needed for local viewing of the document.)
+${GREEN}make run-jekyll${RESET}         # Used by "view-local"; assumes everything is already built.
+${GREEN}${RESET}                        # ${TIP} "JEKYLL_PORT=8000 make run-jekyll" uses port 8000 instead of 4000!${RESET}
 
 endef
 
@@ -171,141 +175,147 @@ that are used to pass arguments to the commands. Run 'make print-info-code' to s
 list of variables and their default definitions. Specific variables are mentioned for
 the corresponding targets:
 
-make all-models-*       # Extract "*" as one of the other targets (such as, "all-tools"),
-                        # that is everything to the right of "all-models-", and 
-                        # make that target for ALL the models defined by "MODELS":
-                        #   ${MODELS}
-                        # (Not useful for model-agnostic targets, like "setup"...)
-                        # You can override the list of models as follows:
-                        #   make MODELS="..." all-models-...
-make all-tools          # Clean outputs and run all the tools using the model defined by "MODEL".
-make all-code           # Synonym for "all-tools".
-make run-tools          # Run all the tools (but not the ChatBot app) without cleaning first. 
-                        # Built by "all-tools".
-make run-code           # Synonym for "run-tools".
+${GREEN}make all-models-*${RESET}       # Extract "*" as one of the other targets (such as, "all-tools"),
+${GREEN}${RESET}                        # that is everything to the right of "all-models-", and 
+${GREEN}${RESET}                        # make that target for ALL the models defined by "MODELS":
+${GREEN}${RESET}                        #   ${MODELS}
+${GREEN}${RESET}                        # (Not useful for model-agnostic targets, like "setup"...)
+${GREEN}${RESET}                        # You can override the list of models as follows:
+${GREEN}${RESET}                        #   make MODELS="..." all-models-...
+${GREEN}make all-tools${RESET}          # Clean outputs and run all the tools using the model defined by "MODEL".
+${GREEN}make all-code${RESET}           # Synonym for "all-tools".
+${GREEN}make run-tools${RESET}          # Run all the tools (but not the ChatBot app) without cleaning first. 
+${GREEN}${RESET}                        # Built by "all-tools".
+${GREEN}make run-code${RESET}           # Synonym for "run-tools".
 
-make setup              # One-time setup tasks; e.g., builds target install-uv.
-make one-time-setup     # Synonym for "setup".
-make install-uv         # Explain how to install "uv".
-                        # Run "make help-command-uv" for more information.
-make install-jq         # Explain how to install "jq" (an optional CLI tool).
+${GREEN}make setup${RESET}              # One-time setup tasks; e.g., builds target install-uv.
+${GREEN}make one-time-setup${RESET}     # Synonym for "setup".
+${GREEN}make install-uv${RESET}         # Explain how to install "uv".
+${GREEN}${RESET}                        # Run "make help-command-uv" for more information.
+${GREEN}make install-jq${RESET}         # Explain how to install "jq" (an optional CLI tool).
 
-make build              # Build a distribution
-make install            # Install the code locally in development mode
+${GREEN}make build${RESET}              # Build a distribution
+${GREEN}make install${RESET}            # Install the code locally in development mode
 
-make tests              # Following convention, this target runs the unit tests only, building
-                        # the targets "unit-tests-non-ai", "unit-tests-ai", and "unit-tests-appointments".
-make test               # Synonym for "tests".
-make unit-tests         # Synonym for "tests".
-make unit-tests-non-ai  # All unit tests that don't involve inference invocations.
-make unit-tests-ai      # All unit tests that do involve inference invocations, which take a long time to run.
-make unit-tests-appointments
-                        # Unit tests for the appointment management tool.
-make unit-tests-langflow
-                        # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
-                        # so we don't force you to have Langflow installed.
+${GREEN}make tests${RESET}              # Following convention, this target runs the unit tests only, building
+${GREEN}${RESET}                        # the targets "unit-tests-non-ai", "unit-tests-ai", and "unit-tests-appointments".
+${GREEN}make test${RESET}               # Synonym for "tests".
+${GREEN}make unit-tests${RESET}         # Synonym for "tests".
+${GREEN}make unit-tests-non-ai${RESET}  # All unit tests that don't involve inference invocations.
+${GREEN}make unit-tests-ai${RESET}      # All unit tests that do involve inference invocations, which take a long time to run.
+${GREEN}make unit-tests-appointments${RESET}
+${GREEN}${RESET}                        # Unit tests for the appointment management tool.
+${GREEN}make unit-tests-langflow${RESET}
+${GREEN}${RESET}                        # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
+${GREEN}${RESET}                        # so we don't force you to have Langflow installed.
 
-make integration-tests  # Run the integration tests, including "dedicated" integration tests
-                        # and all unit tests with more "exhaustive" sample data flags.
-make integration-tests-dedicated
-                        # The "dedicated" integration tests, omitting the unit tests.
+${GREEN}make integration-tests${RESET}  # Run the integration tests, including "dedicated" integration tests
+${GREEN}${RESET}                        # and all unit tests with more "exhaustive" sample data flags.
+${GREEN}make integration-tests-dedicated${RESET}
+${GREEN}${RESET}                        # The "dedicated" integration tests, omitting the unit tests.
 
-make all-tests          # Run the unit and integration tests.
-make all-tests-langflow # Run all the tests for the Langflow integration.
+${GREEN}make all-tests${RESET}          # Run the unit and integration tests.
+${GREEN}make all-tests-langflow${RESET} # Run all the tests for the Langflow integration.
 
-make format             # Format the Python code with 'black'.
-make lint               # Lint the Python code with 'ruff' and 'pylint.
-make type-check         # Type check the Python code with 'ty'.
-make type-check-watch   # Type check the Python code with 'ty' in "watch" mode, so you can fix mistakes and keep it updating.
-make before-pr          # Make tests, format, lint, and type-check. Do this before submitting a PR!
+${GREEN}make format-lint-type-check${RESET}
+${GREEN}${RESET}                        # Do formating, linting, and type checking.
+${GREEN}make flt${RESET}                # Synonym for format-lint-type-check.
+${GREEN}make format${RESET}             # Format the Python code with 'black'.
+${GREEN}make lint${RESET}               # Lint the Python code by making the ruff and pylint targets.
+${GREEN}make ruff${RESET}               # Lint the Python code 'ruff'.
+${GREEN}make pylint${RESET}             # Lint the Python code 'pylint'.
+${GREEN}make type-check${RESET}         # Type check the Python code with 'ty'.
+${GREEN}make type-check-watch${RESET}   # Type check the Python code with 'ty' in "watch" mode, so you can fix mistakes and keep it updating.
+${GREEN}make before-pr${RESET}          # Make format-lint-type-check and tests. 
+${GREEN}${RESET}                        # DO THIS BEFORE SUBMITTING A PR!
 
-make clean-tools        # Remove build artifacts in ${OUTPUT_DIR}.
-make clean-code         # Synonym for "clean-tools".
-make clean-setup        # Undoes everything done by the setup target or provides
-                        # instructions for what you must do manually in some cases.
-make uninstall-uv       # Explain how to uninstall "uv".
+${GREEN}make clean-tools${RESET}        # Remove build artifacts in ${OUTPUT_DIR}.
+${GREEN}make clean-code${RESET}         # Synonym for "clean-tools".
+${GREEN}make clean-setup${RESET}        # Undoes everything done by the setup target or provides
+${GREEN}${RESET}                        # instructions for what you must do manually in some cases.
+${GREEN}make uninstall-uv${RESET}       # Explain how to uninstall "uv".
 
 For tools run by the following targets, which invoke inference, the model 
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, 
 so if you want to use a different model, invoke make as in this example:
 
-  make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot
+  ${BLUE}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${RESET}
 
 See also the description of "all-models-*" above.
 
 All the following" targets may run setup dependencies that are redundant most of the time,
 but easy to forgot when important! See also the "help-*" targets below.
 
-make run-tdd-example-refill-chatbot   
-                        # Run the code for the TDD example "unit benchmark".
-                        # See the TDD chapter in the website for details.
-make run-terc           # Synonym for "run-tdd-example-refill-chatbot".
-make terc               # Synonym for "run-tdd-example-refill-chatbot".
+${GREEN}make run-tdd-example-refill-chatbot${RESET}
+${GREEN}${RESET}                        # Run the code for the TDD example "unit benchmark".
+${GREEN}${RESET}                        # See the TDD chapter in the website for details.
+${GREEN}make run-terc${RESET}           # Synonym for "run-tdd-example-refill-chatbot".
+${GREEN}make terc${RESET}               # Synonym for "run-tdd-example-refill-chatbot".
 
-make run-unit-benchmark-data-synthesis
-                        # Run the code for "unit benchmark" data synthesis.
-                        # See the Unit Benchmark chapter in the website for details.
-make run-ubds           # Synonym for "run-unit-benchmark-data-synthesis".
-make ubds               # Synonym for "run-unit-benchmark-data-synthesis".
+${GREEN}make run-unit-benchmark-data-synthesis${RESET}
+${GREEN}${RESET}                        # Run the code for "unit benchmark" data synthesis.
+${GREEN}${RESET}                        # See the Unit Benchmark chapter in the website for details.
+${GREEN}make run-ubds${RESET}           # Synonym for "run-unit-benchmark-data-synthesis".
+${GREEN}make ubds${RESET}               # Synonym for "run-unit-benchmark-data-synthesis".
 
-make run-unit-benchmark-data-validation
-                        # Run the code for validating the synthetic data for the unit benchmarks.
-                        # See the Unit Benchmark chapter in the website for details.
-make run-ubdv           # Synonym for "run-unit-benchmark-data-validation".
-make ubdv               # Synonym for "run-unit-benchmark-data-validation".
+${GREEN}make run-unit-benchmark-data-validation${RESET}
+${GREEN}${RESET}                        # Run the code for validating the synthetic data for the unit benchmarks.
+${GREEN}${RESET}                        # See the Unit Benchmark chapter in the website for details.
+${GREEN}make run-ubdv${RESET}           # Synonym for "run-unit-benchmark-data-validation".
+${GREEN}make ubdv${RESET}               # Synonym for "run-unit-benchmark-data-validation".
 
-make run-langflow-pipeline
-                        # Run the Langflow benchmark pipeline (synthesis + validation).
-                        # This orchestrates both synthesis and validation in a single flow.
-make langflow-pipeline  # Synonym for "run-langflow-pipeline".
+${GREEN}make run-langflow-pipeline${RESET}
+${GREEN}${RESET}                        # Run the Langflow benchmark pipeline (synthesis + validation).
+${GREEN}${RESET}                        # This orchestrates both synthesis and validation in a single flow.
+${GREEN}make langflow-pipeline${RESET}  # Synonym for "run-langflow-pipeline".
 
 The following targets are for the example ChatBot application. See also the "help-*" targets next.
 
-make chatbot            # Run the ${WHICH_CHATBOT} implementation of the ChatBot application.
-make run-chatbot        # Synonym for "chatbot".
-make agent-chatbot      # Run the 'agent' implementation of the ChatBot.
-make simple-chatbot     # Run the 'simple' implementation of the ChatBot.
+${GREEN}make chatbot${RESET}            # Run the ${WHICH_CHATBOT} implementation of the ChatBot application.
+${GREEN}make run-chatbot${RESET}        # Synonym for "chatbot".
+${GREEN}make agent-chatbot${RESET}      # Run the 'agent' implementation of the ChatBot.
+${GREEN}make simple-chatbot${RESET}     # Run the 'simple' implementation of the ChatBot.
 
-make mcp-server         # Run the ChatBot's MCP server.
-make run-mcp-server     # Synonym for "mcp-server".
-make api-server         # Run the ChatBot's OpenAI-compatible API server.
-make run-api-server     # Synonym for "api-server".
+${GREEN}make mcp-server${RESET}         # Run the ChatBot's MCP server.
+${GREEN}make run-mcp-server${RESET}     # Synonym for "mcp-server".
+${GREEN}make api-server${RESET}         # Run the ChatBot's OpenAI-compatible API server.
+${GREEN}make run-api-server${RESET}     # Synonym for "api-server".
 
 Tasks for help, debugging, setup, etc.
 
-make help-tools         # Prints this output.
-make help-code          # Synonym for "help-tools".
-make help-tools-all     # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
-make help-code-all      # Synonym for "help-tools-all".
+${GREEN}make help-tools${RESET}         # Prints this output.
+${GREEN}make help-code${RESET}          # Synonym for "help-tools".
+${GREEN}make help-tools-all${RESET}     # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
+${GREEN}make help-code-all${RESET}      # Synonym for "help-tools-all".
 
-make help-terc          # Synonym for "help-tdd-example-refill-chatbot".
-make help-tdd-example-refill-chatbot   
-                        # Show help for the TDD example code by passing the "--help" flag.
+${GREEN}make help-terc${RESET}          # Synonym for "help-tdd-example-refill-chatbot".
+${GREEN}make help-tdd-example-refill-chatbot${RESET}
+${GREEN}${RESET}                        # Show help for the TDD example code by passing the "--help" flag.
 
-make help-ubds          # Synonym for "help-unit-benchmark-data-synthesis".
-make help-unit-benchmark-data-synthesis
-                        # Show help for the "unit benchmark" data synthesis code by passing the "--help" flag.
+${GREEN}make help-ubds${RESET}          # Synonym for "help-unit-benchmark-data-synthesis".
+${GREEN}make help-unit-benchmark-data-synthesis${RESET}
+${GREEN}${RESET}                        # Show help for the "unit benchmark" data synthesis code by passing the "--help" flag.
 
-make help-ubdv          # Synonym for "help-unit-benchmark-data-validation".
-make help-unit-benchmark-data-validation
-                        # Show help for the synthetic data validation code by passing the "--help" flag.
-                        # Run the code for validating the synthetic data for the unit benchmarks.
+${GREEN}make help-ubdv${RESET}          # Synonym for "help-unit-benchmark-data-validation".
+${GREEN}make help-unit-benchmark-data-validation${RESET}
+${GREEN}${RESET}                        # Show help for the synthetic data validation code by passing the "--help" flag.
+${GREEN}${RESET}                        # Run the code for validating the synthetic data for the unit benchmarks.
 
-make help-langflow-pipeline
-                        # Show help for the Langflow pipeline by passing the "--help" flag.
-make help-langflow      # Synonym for "help-langflow-pipeline".
+${GREEN}make help-langflow-pipeline${RESET}
+${GREEN}${RESET}                        # Show help for the Langflow pipeline by passing the "--help" flag.
+${GREEN}make help-langflow${RESET}      # Synonym for "help-langflow-pipeline".
 
-make help-chatbot       # Show help for the interactive ChatBot application.
-make help-mcp-server    # Show help for the ChatBot's MCP server.
-make help-api-server    # Show help for the ChatBot's OpenAI-compatible API server.
+${GREEN}make help-chatbot${RESET}       # Show help for the interactive ChatBot application.
+${GREEN}make help-mcp-server${RESET}    # Show help for the ChatBot's MCP server.
+${GREEN}make help-api-server${RESET}    # Show help for the ChatBot's OpenAI-compatible API server.
 
-make view-api-server-docs  # Open a browser showing the API server "docs".
-make view-api-server-redoc # Open a browser showing the API server "redoc".
+${GREEN}make view-api-server-docs${RESET}  # Open a browser showing the API server "docs".
+${GREEN}make view-api-server-redoc${RESET} # Open a browser showing the API server "redoc".
 
 Several CLI tools are required, like "uv", or only needed for a few special make targets, like "jq":
 
-make help-command-uv    # Prints specific information about "uv", including installation.
-make help-command-jq    # Prints specific information about "jq", including installation.
+${GREEN}make help-command-uv${RESET}    # Prints specific information about "uv", including installation.
+${GREEN}make help-command-jq${RESET}    # Prints specific information about "jq", including installation.
 endef
 
 define help_message_uv
@@ -334,7 +344,7 @@ inspector `@modelcontextprotocol/inspector`. Otherwise, node is not used in
 this project. See https://nodejs.org/en/download/ for installation instructions.
 endef
 
-open-url-message = Try ${HIGHLIGHT}⌘+click${_END} or ${HIGHLIGHT}^+click${_END} on the URL.
+open-url-message = Try ${HIGHLIGHT}⌘+click${RESET} or ${HIGHLIGHT}^+click${RESET} on the URL.
 
 define gem-error-message
 
@@ -405,7 +415,7 @@ help-command-jq::
 	@echo
 
 help-command-%::
-	@echo "${GREEN}${RED}Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'.${_END}"
+	@echo "${ORANGE}Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'.${RESET}"
 
 help-tools-all help-code-all:: help-code help-terc help-ubds help-ubdv
 
@@ -418,45 +428,46 @@ clean-code:: clean-tools
 
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
-	@echo "${GREEN}For the GitHub Pages website:${_END}"
-	@echo "  ${GREEN}GITHUB_PAGES_URL:${_END}            ${GITHUB_PAGES_URL}"
-	@echo "  ${GREEN}PWD:${_END}                         ${PWD} ('print working directory')"
-	@echo "  ${GREEN}DOCS_DIR:${_END}                    ${DOCS_DIR}"
-	@echo "  ${GREEN}SITE_DIR:${_END}                    ${SITE_DIR}"
-	@echo "  ${GREEN}JEKYLL_PORT:${_END}                 ${JEKYLL_PORT}"
+	@echo "${BLUE}For the GitHub Pages website:${RESET}"
+	@echo "  ${GREEN}GITHUB_PAGES_URL:${RESET}            ${GITHUB_PAGES_URL}"
+	@echo "  ${GREEN}PWD:${RESET}                         ${PWD} ('print working directory')"
+	@echo "  ${GREEN}DOCS_DIR:${RESET}                    ${DOCS_DIR}"
+	@echo "  ${GREEN}SITE_DIR:${RESET}                    ${SITE_DIR}"
+	@echo "  ${GREEN}JEKYLL_PORT:${RESET}                 ${JEKYLL_PORT}"
 	@echo
 
 print-info-tools:: print-info-code
 print-info-code::
-	@echo "${GREEN}For the example code and tools:${_END}"
-	@echo "  ${GREEN}MODEL:${_END}                       ${MODEL} (the default)"
-	@echo "  ${GREEN}MODELS:${_END} (all we use)         ${MODELS}"
-	@echo "  ${GREEN}ALL_TOOLS:${_END}                   ${ALL_TOOLS}"
-	@echo "  ${GREEN}INFERENCE_SERVICE:${_END}           ${INFERENCE_SERVICE}"
-	@echo "  ${GREEN}INFERENCE_URL:${_END}               ${INFERENCE_URL}"
-	@echo "  ${GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${_END} ${TOOLS_PROMPTS_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${_END}       ${CHATBOT_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_TEST_TEMPLATES_DIR:${_END}  ${CHATBOT_TEST_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CHATBOT_OUTPUT_DIR}"
-	@echo "  ${GREEN}SRC_DIR:${_END}                     ${SRC_DIR}"
-	@echo "  ${GREEN}APP_ARGS:${_END}                    ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
-	@echo "  ${GREEN}The following depend on the value of MODEL:${_END}"
-	@echo "  ${GREEN}OUTPUT_DIR:${_END}                  ${OUTPUT_DIR}"
-	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${_END}             ${OUTPUT_LOGS_DIR}"
-	@echo "  ${GREEN}TESTS_LOGS_DIR:${_END}              ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
-	@echo "  ${GREEN}DATA_DIR:${_END}                    ${DATA_DIR}"
-	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${_END}      ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
+	@echo "${BLUE}For the example code and tools:${RESET}"
+	@echo "  ${GREEN}MODEL:${RESET}                       ${MODEL} (the default)"
+	@echo "  ${GREEN}MODELS:${RESET} (all we use)         ${MODELS}"
+	@echo "  ${GREEN}ALL_TOOLS:${RESET}                   ${ALL_TOOLS}"
+	@echo "  ${GREEN}INFERENCE_SERVICE:${RESET}           ${INFERENCE_SERVICE}"
+	@echo "  ${GREEN}INFERENCE_URL:${RESET}               ${INFERENCE_URL}"
+	@echo "  ${GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${RESET} ${TOOLS_PROMPTS_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${RESET}       ${CHATBOT_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_TEST_TEMPLATES_DIR:${RESET}  ${CHATBOT_TEST_TEMPLATES_DIR}"
+	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${RESET}          ${CHATBOT_OUTPUT_DIR}"
+	@echo "  ${GREEN}SRC_DIR:${RESET}                     ${SRC_DIR}"
+	@echo "  ${GREEN}APP_ARGS:${RESET}                    ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
+	@echo
+	@echo "  ${BLUE}The following depend on the value of MODEL (${MODEL}):${RESET}"
+	@echo "  ${GREEN}OUTPUT_DIR:${RESET}                  ${OUTPUT_DIR}"
+	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${RESET}             ${OUTPUT_LOGS_DIR}"
+	@echo "  ${GREEN}TESTS_LOGS_DIR:${RESET}              ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
+	@echo "  ${GREEN}DATA_DIR:${RESET}                    ${DATA_DIR}"
+	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${RESET}      ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
-	@echo "${GREEN}The environment:${_END}"
-	@echo "  ${GREEN}GIT_HASH:${_END}                    ${GIT_HASH}"
-	@echo "  ${GREEN}TIMESTAMP:${_END}                   ${TIMESTAMP}"
-	@echo "  ${GREEN}MAKEFLAGS:${_END}                   ${MAKEFLAGS}"
-	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${_END}         ${MAKEFLAGS_RECURSIVE}"
-	@echo "  ${GREEN}UNAME:${_END}                       ${UNAME}"
-	@echo "  ${GREEN}ARCHITECTURE:${_END}                ${ARCHITECTURE}"
-	@echo "  ${GREEN}GIT_HASH:${_END}                    ${GIT_HASH}"
+	@echo "${BLUE}Some 'environment' settings:${RESET}"
+	@echo "  ${GREEN}GIT_HASH:${RESET}                    ${GIT_HASH}"
+	@echo "  ${GREEN}TIMESTAMP:${RESET}                   ${TIMESTAMP}"
+	@echo "  ${GREEN}MAKEFLAGS:${RESET}                   ${MAKEFLAGS}"
+	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${RESET}         ${MAKEFLAGS_RECURSIVE}"
+	@echo "  ${GREEN}UNAME:${RESET}                       ${UNAME}"
+	@echo "  ${GREEN}ARCHITECTURE:${RESET}                ${ARCHITECTURE}"
 	@echo
+
 # Code Targets
 
 .PHONY: all-tools all-code run-tools run-code
@@ -473,17 +484,17 @@ print-info-env::
 all-models-% :: 
 	@timestamp=${TIMESTAMP}; \
 	target=${@:all-models-%=%}; \
-	echo "Making target \"$$target\" for all models: ${MODELS}"; \
+	echo "${INFO} Making target \"$$target\" for all models:${RESET} ${MODELS}"; \
 	for model in ${MODELS}; \
 	do \
-		echo "\nModel = $$model"; \
-		echo ${MAKE} ${MAKEFLAGS} TIMESTAMP=${TIMESTAMP} MODEL="$$model" $$target; \
-		${MAKE} MODEL="$$model" $$target; \
+		echo && echo "${INFO} Model = $$model${RESET}" && \
+		echo "${INFO} ${MAKE} ${MAKEFLAGS} TIMESTAMP=${TIMESTAMP} MODEL=$$model $$target${RESET}"; \
+		echo ${MAKE} MODEL="$$model" $$target; \
 	done; \
-	echo "Output log files (if any) can be found under:"; \
+	echo "\n${NOTE} Output log files (if any) can be found under:${RESET}"; \
 	for model in ${MODELS}; \
 	do \
-		echo "  output/$$model/logs/${TIMESTAMP}"; \
+		echo "  ${BLUE}output/$$model/logs/${TIMESTAMP}${RESET}"; \
 	done
 
 all-tools all-code:: run-tools
@@ -502,7 +513,7 @@ help-ubds:: help-unit-benchmark-data-synthesis
 help-ubdv:: help-unit-benchmark-data-validation
 
 ${ALL_TOOLS:%=help-%}::
-	@echo "${GREEN}Help on ${@help-%=%}.py:"
+	@echo "${GREEN}Help on ${@help-%=%}.py:${RESET}"
 	@echo
 	cd ${SRC_DIR} && uv run tools/${@:help-%=%}.py --help
 	@echo
@@ -514,8 +525,8 @@ ${ALL_TOOLS:%=help-%}::
 # just prints help.
 
 run-tdd-example-refill-chatbot:: before-run
-	@echo "${INFO} *** Running the TDD example. ${_END}"
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "${INFO} *** Running the TDD example.${RESET}"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
@@ -524,11 +535,11 @@ run-tdd-example-refill-chatbot:: before-run
 		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 run-unit-benchmark-data-synthesis:: before-run
-	@echo "${INFO} *** Running the unit benchmark data synthesis example. ${_END}"
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "${INFO} *** Running the unit benchmark data synthesis example.${RESET}"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 		--model ${MODEL} \
@@ -538,11 +549,11 @@ run-unit-benchmark-data-synthesis:: before-run
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 		${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 run-unit-benchmark-data-validation:: before-run
-	@echo "${INFO} *** Running the unit benchmark synthetic data validation example. ${_END}"
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "${INFO} *** Running the unit benchmark synthetic data validation example. ${RESET}"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run tools/${@:run-%=%}.py \
 	  --model ${MODEL} \
@@ -552,16 +563,16 @@ run-unit-benchmark-data-validation:: before-run
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
 	  ${JUST_STATS} ${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 before-run:: silent-before-run
-	@echo "${WARN}${_END} If errors occur, try ${HIGHLIGHT}make setup${_END} or ${HIGHLIGHT}make clean-setup setup${_END}, then try again."
+	@echo "${ORANGE} If errors occur, try ${HIGHLIGHT}make setup${ORANGE} or ${HIGHLIGHT}make clean-setup setup${ORANGE}, then try again.${RESET}"
 
 silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
 run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
-	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR}: Ollama is not running!${_END}" || exit 1
+	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR} Ollama is not running!${RESET}" || exit 1
 
 # Langflow targets
 .PHONY: run-langflow-pipeline langflow-pipeline help-langflow-pipeline  
@@ -569,8 +580,8 @@ provider-server-check::
 
 run-langflow-pipeline:: langflow-pipeline
 langflow-pipeline:: 
-	@echo "${INFO}Running the Langflow unit benchmark pipeline (synthesis + validation)...${_END}"
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@}.log${_END}\n"
+	@echo "${INFO} Running the Langflow unit benchmark pipeline (synthesis + validation)...${RESET}"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@}.log${RESET}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${TIME} uv run python -m tools.langflow.unit_benchmark_flow \
 	  --model ${MODEL} \
@@ -580,16 +591,16 @@ langflow-pipeline::
 	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
 	  ${JUST_STATS} ${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 help-lf help-langflow help-langflow-pipeline::
-	@echo "${INFO}Help on the Langflow unit benchmark pipeline:${_END}"
+	@echo "${INFO} Help on the Langflow unit benchmark pipeline:${RESET}"
 	@echo
 	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 	@echo
 
 all-tests-langflow unit-tests-langflow:: run-command-checks
-	@echo "${INFO}Running the langflow unit tests...${_END}"
+	@echo "${INFO} Running the langflow unit tests...${RESET}"
 	cd ${SRC_DIR} && \
 	  export MODEL=${MODEL} && \
 	  export INFERENCE_URL=${INFERENCE_URL} && \
@@ -628,14 +639,14 @@ help-chatbot::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
-	@echo "${INFO}Running the \"${WHICH_CHATBOT}\" ChatBot...${_END}" && \
-	echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}\n" && \
+	@echo "${INFO} Running the \"${WHICH_CHATBOT}\" ChatBot...${RESET}" && \
+	echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${RESET}\n" && \
 		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
-		echo "${ERROR} ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot!${_END} (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
+		echo "${ERROR} ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot!${RESET} (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
 		echo ""
 
 after-chatbot::
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${RESET}\n"
 
 .PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
 
@@ -643,7 +654,7 @@ after-chatbot::
 # blank.
 run-mcp-server:: mcp-server
 mcp-server:: before-chatbot
-	@echo "${INFO}Running the ChatBot MCP Server...${_END}"
+	@echo "${INFO} Running the ChatBot MCP Server...${RESET}"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
 		--model ${MODEL} \
@@ -655,10 +666,10 @@ mcp-server:: before-chatbot
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 inspect-mcp-server:: command-check-node
-	@echo "${INFO}Running the @modelcontextprotocol/inspector with the ChatBot MCP Server...${_END}"
+	@echo "${INFO} Running the @modelcontextprotocol/inspector with the ChatBot MCP Server...${RESET}"
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
 help-mcp-server::
@@ -668,8 +679,8 @@ help-mcp-server::
 
 run-api-server:: api-server
 api-server:: before-chatbot
-	@echo "${INFO}Running the ChatBot OpenAI-compatible API Server...${_END}"
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
+	@echo "${INFO} Running the ChatBot OpenAI-compatible API Server...${RESET}"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 	export LITELLM_LOG=ERROR; \
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server \
 		--host ${CHATBOT_API_SERVER_HOST} \
@@ -683,31 +694,32 @@ api-server:: before-chatbot
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
 		${APP_ARGS}
-	@echo "\nLog output:\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
+	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 help-api-server::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
 
 check-api-server::
-	@echo "${INFO}'Sanity check' that the OpenAI-compatible API server works:${_END}"
+	@echo "${INFO} 'Sanity check' that the OpenAI-compatible API server works:${RESET}"
 	@echo "Running the server in the background..."
 	${MAKE} api-server & 
 	@echo
-	@echo "  ${HIGHLIGHT}Hit the 'return' key!${_END}"
+	@echo "  ${HIGHLIGHT}Hit the 'return' key!${RESET}"
 	@echo
-	@echo "  Running 'apps/chatbot//api_server/example_client.py'..."
+	@echo "  ${HIGHLIGHT}Running 'apps/chatbot//api_server/example_client.py'...${RESET}"
 	cd ${SRC_DIR} && uv run python apps/chatbot/api_server/example_client.py
-	@echo "  ${INFO}Hack: Find the process id for the server and kill it...${_END}" 
+	@echo "  ${TIP} Hack: Find the process id for the server and kill it...${RESET}" 
 	kill %1
 
 view-api-server-docs view-api-server-redoc::
 	@echo
-	@echo "Opening ${INFO}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${_END}"
+	@echo "${INFO} Opening ${BLUE}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${RESET}"
 	@echo
 	@echo "${open-url-message}"
-	@echo "If the URL isn't found, make sure the server is running! For example,"
-	@echo "run ${HIGHLIGHT}make api-server${_END} in another terminal window, then rerun this target." 
-	@uv run python -m webbrowser "http:${_END}//${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
+	@echo
+	@echo "${WARNING} If the URL isn't found, make sure the server is running! For example,"
+	@echo "run ${HIGHLIGHT}make api-server${ORANGE} in another terminal window, then rerun this target.${RESET}" 
+	@uv run python -m webbrowser "http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
 
 .PHONY: run-open-webui open-webui open-webui-preamble open-webui-setup help-open-webui remove-open-webui
 
@@ -715,14 +727,14 @@ run-open-webui open-webui:: open-webui-preamble open-webui-setup
 	cd ${OPEN_WEBUI_DIR} && DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve
 
 open-webui-preamble::
-	@echo "${INFO}Running Open WebUI (https://docs.openwebui.com/getting-started/) out of directory ${OPEN_WEBUI_DIR}.${_END}"
-	@echo "${INFO}Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!${_END}"
-	@echo "\nOpen ${RED}http://localhost:8080${_END} when it is up (it takes a few minutes)."
+	@echo "${INFO}Running Open WebUI (https://docs.openwebui.com/getting-started/) out of directory ${OPEN_WEBUI_DIR}.${RESET}"
+	@echo "${INFO}Make sure the OpenAI-compatible API Server is running first, i.e., make api-server in another terminal!${RESET}"
+	@echo "\nOpen ${RED}http://localhost:8080${RESET} when it is up (it takes a few minutes)."
 	@echo "${open-url-message}"
 
 open-webui-setup::
 	@test -d ${OPEN_WEBUI_DIR}/.venv || (\
-		echo "Setting up Open WebUI in the ${HIGHLIGHT}${OPEN_WEBUI_DIR}${_END} directory." && \
+		echo "${INFO} Setting up Open WebUI in the ${HIGHLIGHT}${OPEN_WEBUI_DIR}${DARK_GREEN} directory.${RESET}" && \
 		cd ${OPEN_WEBUI_DIR} && uv venv && uv sync && uv tool install open-webui)
 	cd ${OPEN_WEBUI_DIR} && . .venv/bin/activate
 
@@ -742,7 +754,7 @@ ${OUTPUT_DIR} ${TEST_OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_
 
 all-tests:: note-all-tests unit-tests-non-ai integration-tests
 note-all-tests::
-	@echo "${NOTE} The 'all-tests' target does NOT run the AI-related unit tests!${_END}"
+	@echo "${NOTE} The 'all-tests' target does NOT run the AI-related unit tests!${RESET}"
 	@echo 
 	@echo "The integration tests are a strict superset of the unit tests, they run"
 	@echo "the same suite, but with all Q&A examples sampled, etc., plus some other"
@@ -754,7 +766,7 @@ test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-
 # The --pattern argument is unnecessary here, as we pass the default value, but it is
 # included for "symmetry" with the unit-tests-ai target.
 unit-tests-non-ai::
-	@echo "${INFO}Running the non-AI unit tests...${_END}"
+	@echo "${INFO} Running the non-AI unit tests...${RESET}"
 	cd ${SRC_DIR} && \
 	  uv run python -m unittest discover \
 	    --pattern 'test*.py' \
@@ -764,7 +776,7 @@ unit-tests-non-ai::
 .PHONY: unit-tests-appointments
 
 unit-tests-appointments::
-	@echo "${INFO}Running the appointment tool unit tests...${_END}"
+	@echo "${INFO} Running the appointment tool unit tests...${RESET}"
 	cd ${SRC_DIR} && \
 	  uv run python -m unittest discover \
 	    --pattern 'test_appointment*.py' \
@@ -778,8 +790,9 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
 unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} 
-	@echo "${INFO}Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${_END}"
-	@echo "${INFO}AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
+	@echo "${INFO} Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${RESET}"
+	@echo "${INFO} AI test log files:${RESET}"
+	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -807,10 +820,11 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS
 # Note that src is considered the root directory for TEST.
 
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
-	@echo "${INFO}Running one AI unit test: TEST = ${TEST} ...${_END}"
-	@echo "${TIP}${_END} Use ${BOLD_PURPLE}make list-unit-tests-ai${_END} to see the list of tests."
+	@echo "${INFO} Running one AI unit test: TEST = ${TEST} ...${RESET}"
+	@echo "${TIP} Use ${BLUE}make list-unit-tests-ai to see the list of tests.${RESET}"
 	@echo
-	@echo "${INFO}AI test log files: ${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
+	@echo "${INFO} AI test log files:${RESET}"
+	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -837,15 +851,19 @@ list-unit-tests-ai::
 
 post-proc-test-logs:: 
 	@echo
-	@echo "${INFO}Time-stamped JSONL log files were written to:\n  ${BOLD_PURPLE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${INFO}\nThey may be empty!${_END}"
-	@echo "${INFO}The corresponding '*.json' files (if any) were generated using 'jq' and target 'nice-ai-test-logs'. They are easier to read.${_END}"
+	@echo "${INFO} Time-stamped JSONL log files were written to:${RESET}"
+	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
+	@echo "${INFO} (They may be empty!)${RESET}"
+	@echo "${INFO} The corresponding '*.json' files (if any) were generated${RESET}"
+	@echo "${INFO} using 'jq' and target 'nice-ai-test-logs'. They are easier to read.${RESET}"
 	@echo
 	@echo ${MAKE} nice-ai-test-logs || ${MAKE} show-test-logs
 
 show-test-logs::
 	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 	@echo
-	@echo "${TIP}${_END} Run ${HIGHLIGHT}make nice-ai-test-logs${_END} to make a nicely-formatted JSON file from each JSONL file ('jq' CLI tool required)."
+	@echo "${TIP} Run 'make nice-ai-test-logs' to make a nicely-formatted JSON file${RESET}"
+	@echo "${TIP} from each JSONL file. (The 'jq' CLI tool required).${RESET}"
 	@echo 
 
 .PHONY: nice-ai-test-logs
@@ -853,20 +871,22 @@ show-test-logs::
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
 nice-ai-test-logs:: silent-command-check-jq 
 	@for f in ${SRC_DIR}/${TESTS_LOGS_DIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
-	  echo "writing $$ff:"; \
+	  echo "${INFO} Writing $$ff:${RESET}"; \
 	  jq . $$f > $$ff; \
 	done
+	@echo "${BLUE}"
 	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
+	@echo "${RESET}"
 
 integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
 
 # This target runs all the unit-tests, the AI-related, but more exhaustively, as well as the non-AI unit tests.
 integration-tests-from-unit-tests:: run-command-checks
-	@echo "${INFO}Running the unit tests as integration tests with 100% sampling and trying all test query examples...${_END}"
+	@echo "${INFO} Running the unit tests as integration tests with 100% sampling and trying all test query examples...${RESET}"
 	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} tests
 
 integration-tests-dedicated:: run-command-checks
-	@echo "${INFO}Running the 'dedicated' integration tests...${_END}"
+	@echo "${INFO} Running the 'dedicated' integration tests...${RESET}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${INTEGRATION_TEST_DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -882,34 +902,35 @@ integration-tests-dedicated:: run-command-checks
 	  	--start-directory tests/integration \
 	  	--top-level-directory .
 
-.PHONY: before-pr before-pr-flt format lint ruff pylint type-check type-check-watch
+.PHONY: before-pr format-lint-type-check flt
+before-pr:: format-lint-type-check tests
+format-lint-type-check flt:: format lint type-check
 
-before-pr:: before-pr-flt tests 
-before-pr-flt:: format lint type-check
+.PHONY: format lint ruff pylint type-check type-check-watch
 
 format::
-	@echo "${INFO}$@: Running 'black' on the code.${_END}"
+	@echo "${INFO} $@: Running 'black' on the code.${RESET}"
 	uv run black ${SRC_DIR}
 
 lint:: ruff pylint
 
 ruff::
-	@echo "${INFO}$@: Running 'ruff' to lint the code.${_END}"
+	@echo "${INFO} $@: Running 'ruff' to lint the code.${RESET}"
 	uv run ruff check --fix ${SRC_DIR}
 
 # We don't lint the src/tools content, because they are intended more as "scripts",
 # rather than modules with higher quality expectations.
-pylint2::
-	@echo "${INFO}$@: Running 'pylint' on the code.${_END} (configuration in pylintrc.toml)"
+pylint2:: 
+	@echo "${INFO} $@: Running 'pylint' on the code.${RESET} (configuration in pylintrc.toml)"
 	uv run pylint --ignore=${SRC_DIR}/tools,${SRC_DIR}/tools/langflow ${SRC_DIR}
 pylint::
-	@echo "${INFO}$@: Not currently running 'pylint' on the code due to excessive 'noise'.${_END}"
+	@echo "${INFO} $@: Not currently running 'pylint' on the code due to excessive 'noise'.${RESET}"
 
 type-check::
-	@echo "${INFO}Running 'ty' on the code.${_END}"
+	@echo "${INFO} Running 'ty' on the code.${RESET}"
 	uv run ty check ${SRC_DIR} 
 type-check-watch::
-	@echo "${INFO}Running 'ty' on the code in 'watch' mode.${_END}"
+	@echo "${INFO} Running 'ty' on the code in 'watch' mode.${RESET}"
 	uv run ty check --watch ${SRC_DIR} 
 
 .PHONY: one-time-setup setup clean-setup 
@@ -921,17 +942,16 @@ setup one-time-setup:: install-uv uv-venv install-dev-dependencies install-jq
 clean-setup:: uninstall-uv
 
 uninstall-uv:: 
-	@echo "${INFO}You have to uninstall ${@:uninstall-%=%} manually:${_END}"
-	@echo
 	$(info ${help_message_${@:uninstall-%=%}})
-
+	@echo "${ORANGE}  You have to uninstall ${@:uninstall-%=%} manually.${RESET}"
+	
 install-uv:: 
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "${INFO}$$cmd is already installed${_END}" || ${MAKE} help-command-$$cmd
+		echo "${INFO} $$cmd is already installed${RESET}" || ${MAKE} help-command-$$cmd
 
 uv-venv:: command-check-uv 
 	@test -d .venv && echo "'.venv' already exists; not running 'uv venv'." || uv venv
-	@echo "run: 'source .venv/bin/activate' if subsequent commands fail!"
+	@echo "${TIP} run 'source .venv/bin/activate' if subsequent commands fail!${RESET}"
 
 install-dev-dependencies::
 	uv pip install -e ".[dev]"
@@ -944,7 +964,7 @@ install-jq:: help-command-jq
 # Check if a command is on the path.
 command-check-%:
 	@cmd=${@:command-check-%=%} && ${MAKE} silent-$@ || \
-		! echo "${ERROR} ${command_check_message}${_END}" || exit 1
+		! echo "${ERROR} ${command_check_message}${RESET}" || exit 1
 
 silent-command-check-%:
 	@cmd=${@:silent-command-check-%=%} && command -v $$cmd > /dev/null
@@ -956,44 +976,44 @@ silent-command-check-%:
 define help_message_llm
 
 The "llm" CLI is used by many of the tools here. For more details, see:
-  https://github.com/simonw/llm
+  ${GREEN}https://github.com/simonw/llm${RESET}
 
 You can install llm using pip:
-  pip install -U llm bs4
+  ${GREEN}pip install -U llm bs4${RESET}
 or if you use uv:
-  uv add -U llm bs4
+  ${GREEN}uv add -U llm bs4${RESET}
 
 To remove llm, use the corresponding commands, one of:
-  pip uninstall llm bs4
-  uv remove llm bs4
+  ${GREEN}pip uninstall llm bs4${RESET}
+  ${GREEN}uv remove llm bs4${RESET}
 
 If you want to serve models locally using "ollama", see the installation 
 instructions:
-  https://ollama.com 
+  ${GREEN}https://ollama.com${RESET}
 
 Then install the llm plugin for ollama:
-  llm install llm-ollama
+  ${GREEN}llm install llm-ollama${RESET}
 
 The tools also use several llm "templates". These need to be installed into
 the directory output by this llm command:
-  llm templates path
+  ${GREEN}llm templates path${RESET}
 
 Use the following make command to do this automatically:
-  make install-llm-templates 
+  ${GREEN}make install-llm-templates${RESET}
 
-WARNING: If you edit the templates in ${TOOLS_PROMPTS_TEMPLATES_DIR}, rerun  
-  make install-llm-templates 
+${WARNING} If you edit the templates in ${BLUE}${TOOLS_PROMPTS_TEMPLATES_DIR}${ORANGE}, rerun  
+  ${GREEN}make install-llm-templates${RESET}
 
 (llm is required to run this target, because it uses 'llm templates path'
 to determine the installation location.)
 
 So, to summarize the llm-related targets (and mention the rest of them):
-
-make help-llm               # This information!
-make install-llm            # Instructions for installing llm.
-make install-llm-templates  # Install our llm "templates" into llm.
-make clean-llm              # Instructions for uninstalling llm. Also makes clean-llm-templates.
-make clean-llm-templates    # Remove our llm "templates" from the llm installation location.
+ 
+${GREEN}make help-llm${RESET}               # This information!
+${GREEN}make install-llm${RESET}            # Instructions for installing llm.
+${GREEN}make install-llm-templates${RESET}  # Install our llm "templates" into llm.
+${GREEN}make clean-llm${RESET}              # Instructions for uninstalling llm. Also makes clean-llm-templates.
+${GREEN}make clean-llm-templates${RESET}    # Remove our llm "templates" from the llm installation location.
 
 endef
 
@@ -1005,23 +1025,26 @@ help-llm::
 
 clean-llm:: help-llm clean-llm-templates
 	@echo
-	@echo "${NOTE}${_END} ${HIGHLIGHT}make clean-llm-templates${_END} was already executed to uninstall our templates."
+	@echo "${NOTE} ${GREEN}make clean-llm-templates${BLUE} was already executed to uninstall our templates.${RESET}"
 	@echo
 
 clean-llm-templates::
 	@cd ${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 		llmdir="$$(llm templates path)" && \
-		for t in *.yaml; do echo "removing: $$llmdir/$$t"; rm -f "$$llmdir/$$t"; done && \
+		for t in *.yaml; do \
+			echo "${INFO} removing: ${BLUE}$$llmdir/$$t${RESET}"; \
+			rm -f "$$llmdir/$$t"; \
+		done && \
 		ls -l "$$llmdir"
 
 install-llm:: help-llm install-llm-templates
 	@echo
-	@echo "${NOTE}${_END} ${HIGHLIGHT}make install-llm-templates${_END} was already executed to install our templates."
+	@echo "${NOTE} ${GREEN}make install-llm-templates${BLUE} was already executed to install our templates.${RESET}"
 	@echo
 
 install-llm-templates:: command-check-llm
 	@llmdir="$$(llm templates path)" && \
-	echo "${INFO}${_END}Installing the llm templates from ${HIGHLIGHT}${TOOLS_PROMPTS_TEMPLATES_DIR}${_END} into ${HIGHLIGHT}$$llmdir${_END} ..." && \
+	echo "${INFO} Installing the llm templates from ${BLUE}${TOOLS_PROMPTS_TEMPLATES_DIR}${GREEN} into ${BLUE}$$llmdir${GREEN} ...${RESET}" && \
 	cp ${TOOLS_PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
@@ -1029,14 +1052,14 @@ install-llm-templates:: command-check-llm
 .PHONY: build install
 
 build::
-	@echo "${INFO}Building a distribution...${_END}"
+	@echo "${INFO} Building a distribution...${RESET}"
 	rm -rf dist
 	uv build
-	@echo "${INFO}Contents of 'dist':${_END}${_END}"
+	@echo "${INFO} Contents of 'dist': ${RESET}"
 	@ls -l dist
 
 install::
-	@echo "${INFO}Installing the code locally in development mode...${_END}"
+	@echo "${INFO} Installing the code locally in development mode...${RESET}"
 	uv sync
 
 # Docs Targets - for the website.
@@ -1052,9 +1075,9 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@echo "${GREEN}Opening ${GITHUB_PAGES_URL} ..."
+	@echo "${INFO} Opening ${BLUE}${GITHUB_PAGES_URL} ...${RESET}"
 	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "${ERROR}${_END} I could not open the GitHub Pages URL:\n  ${HIGHLIGHT}${GITHUB_PAGES_URL}${_END}\n${_END}" && \
+		(echo "${ERROR} I could not open the GitHub Pages URL:\n  ${HIGHLIGHT}${GITHUB_PAGES_URL}${RESET}\n" && \
 		 echo "${open-url-message}" && \
 		 exit 1 )
 
@@ -1067,11 +1090,11 @@ run-jekyll: clean-docs run-jekyll-message
 
 run-jekyll-message::
 	@echo
-	@echo "${NOTE}${_END}You will see the ${HIGHLIGHT}http://127.0.0.1:${JEKYLL_PORT}/${_END} URL printed when ready."
+	@echo "${NOTE} You will see the ${HIGHLIGHT}http://127.0.0.1:${JEKYLL_PORT}/${GREEN} URL printed when ready.${RESET}"
 	@echo "${open-url-message}"
 
 setup-jekyll:: ruby-installed-check command-check-ruby-bundle
-	@echo "${INFO}Updating Ruby gems required for local viewing of the docs, including jekyll.${_END}"
+	@echo "${INFO} Updating Ruby gems required for local viewing of the docs, including jekyll.${RESET}"
 	gem install jekyll bundler jemoji || ${MAKE} gem-error
 	bundle install || ${MAKE} bundle-error
 	bundle update html-pipeline || ${MAKE} bundle-error
@@ -1079,13 +1102,13 @@ setup-jekyll:: ruby-installed-check command-check-ruby-bundle
 
 ruby-installed-check:
 	@command -v ruby > /dev/null || \
-		( echo "${ERROR}${_END} ${ruby_and_gem_required_message}" && exit 1 )
+		( echo "${ERROR} ${ruby_and_gem_required_message}${RESET}" && exit 1 )
 	@command -v gem  > /dev/null || \
-		( echo "${ERROR}${_END} ${gem_required_message}" && exit 1 )
+		( echo "${ERROR} ${gem_required_message}${RESET}" && exit 1 )
 
 command-check-ruby-%:
 	@command -v ${@:command-check-ruby-%=%} > /dev/null || \
-		( echo "${ERROR}${_END} Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}" && \
+		( echo "${ERROR} Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}${RESET}" && \
 			exit 1 )
 
 
@@ -1094,14 +1117,27 @@ command-check-ruby-%:
 # invoked, independent of the shell script logic. Hence, the only way to make
 # this invocation conditional is to use a make target invocation, as shown above.
 jekyll-error:
-	$(error "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'.")
+	$(error "${ERROR} Failed to run Jekyll. Try running 'make setup-jekyll'.${RESET}")
 ruby-missing-error:
-	$(error "ERROR: 'ruby' is required. ${ruby_installation_message}")
+	$(error "${ERROR} 'ruby' is required. ${ruby_installation_message}${RESET}")
 gem-missing-error:
-	$(error "ERROR: Ruby's 'gem' is required. ${ruby_installation_message}")
+	$(error "${ERROR} Ruby's 'gem' is required. ${ruby_installation_message}${RESET}")
 gem-error:
-	$(error ${gem-error-message})
+	$(error ${ERROR} ${gem-error-message}${RESET})
 bundle-error:
-	$(error ${bundle-error-message})
+	$(error ${ERROR} ${bundle-error-message}${RESET})
 bundle-missing-error:
-	$(error "ERROR: Ruby gem command 'bundle' is required. I tried 'gem install bundle', but it apparently didn't work!")
+	$(error "${ERROR} Ruby gem command 'bundle' is required. I tried 'gem install bundle', but it apparently didn't work!${RESET}")
+
+
+# Use this target to see the colors defined above.
+show-colors:
+	$(info This is <${RED}RED${RESET}>)
+	$(info This is <${RED2}RED2${RESET}>)
+	$(info This is <${GREEN}GREEN${RESET}>)
+	$(info This is <${ORANGE}ORANGE${RESET}>)
+	$(info This is <${BLUE}BLUE${RESET}>)
+	$(info This is <${PINK}PINK${RESET}>)
+	$(info This is <${DARK_GREEN}DARK_GREEN${RESET}>)
+	$(info This is <${LIGHT_GREY}LIGHT_GREY${RESET}>)
+	$(info This is <${BLACK}BLACK${RESET}>)
