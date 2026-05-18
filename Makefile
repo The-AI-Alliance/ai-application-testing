@@ -239,7 +239,7 @@ For tools run by the following targets, which invoke inference, the model
 ${MODEL} is served by ollama. The make variable MODEL specifies the model, 
 so if you want to use a different model, invoke make as in this example:
 
-  ${BLUE}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${RESET}
+  ${HIGHLIGHT}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${RESET}
 
 See also the description of "all-models-*" above.
 
@@ -428,7 +428,7 @@ clean-code:: clean-tools
 
 print-info:: print-info-docs print-info-code print-info-env 
 print-info-docs::
-	@echo "${BLUE}For the GitHub Pages website:${RESET}"
+	@echo "${HIGHLIGHT}For the GitHub Pages website:${RESET}"
 	@echo "  ${GREEN}GITHUB_PAGES_URL:${RESET}            ${GITHUB_PAGES_URL}"
 	@echo "  ${GREEN}PWD:${RESET}                         ${PWD} ('print working directory')"
 	@echo "  ${GREEN}DOCS_DIR:${RESET}                    ${DOCS_DIR}"
@@ -438,7 +438,7 @@ print-info-docs::
 
 print-info-tools:: print-info-code
 print-info-code::
-	@echo "${BLUE}For the example code and tools:${RESET}"
+	@echo "${HIGHLIGHT}For the example code and tools:${RESET}"
 	@echo "  ${GREEN}MODEL:${RESET}                       ${MODEL} (the default)"
 	@echo "  ${GREEN}MODELS:${RESET} (all we use)         ${MODELS}"
 	@echo "  ${GREEN}ALL_TOOLS:${RESET}                   ${ALL_TOOLS}"
@@ -451,7 +451,7 @@ print-info-code::
 	@echo "  ${GREEN}SRC_DIR:${RESET}                     ${SRC_DIR}"
 	@echo "  ${GREEN}APP_ARGS:${RESET}                    ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo
-	@echo "  ${BLUE}The following depend on the value of MODEL (${MODEL}):${RESET}"
+	@echo "  ${HIGHLIGHT}The following depend on the value of MODEL (${MODEL}):${RESET}"
 	@echo "  ${GREEN}OUTPUT_DIR:${RESET}                  ${OUTPUT_DIR}"
 	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${RESET}             ${OUTPUT_LOGS_DIR}"
 	@echo "  ${GREEN}TESTS_LOGS_DIR:${RESET}              ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
@@ -459,7 +459,7 @@ print-info-code::
 	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${RESET}      ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
 	@echo
 print-info-env::
-	@echo "${BLUE}Some 'environment' settings:${RESET}"
+	@echo "${HIGHLIGHT}Some 'environment' settings:${RESET}"
 	@echo "  ${GREEN}GIT_HASH:${RESET}                    ${GIT_HASH}"
 	@echo "  ${GREEN}TIMESTAMP:${RESET}                   ${TIMESTAMP}"
 	@echo "  ${GREEN}MAKEFLAGS:${RESET}                   ${MAKEFLAGS}"
@@ -494,7 +494,7 @@ all-models-% ::
 	echo "\n${NOTE} Output log files (if any) can be found under:${RESET}"; \
 	for model in ${MODELS}; \
 	do \
-		echo "  ${BLUE}output/$$model/logs/${TIMESTAMP}${RESET}"; \
+		echo "  ${HIGHLIGHT}output/$$model/logs/${TIMESTAMP}${RESET}"; \
 	done
 
 all-tools all-code:: run-tools
@@ -713,7 +713,7 @@ check-api-server::
 
 view-api-server-docs view-api-server-redoc::
 	@echo
-	@echo "${INFO} Opening ${BLUE}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${RESET}"
+	@echo "${INFO} Opening ${HIGHLIGHT}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${RESET}"
 	@echo
 	@echo "${open-url-message}"
 	@echo
@@ -792,7 +792,7 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} 
 	@echo "${INFO} Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${RESET}"
 	@echo "${INFO} AI test log files:${RESET}"
-	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
+	@echo "  ${HIGHLIGHT}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -821,10 +821,10 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS
 
 one-test-ai:: ${SRC_DIR}/${TESTS_LOGS_DIR}
 	@echo "${INFO} Running one AI unit test: TEST = ${TEST} ...${RESET}"
-	@echo "${TIP} Use ${BLUE}make list-unit-tests-ai to see the list of tests.${RESET}"
+	@echo "${TIP} Use ${HIGHLIGHT}make list-unit-tests-ai to see the list of tests.${RESET}"
 	@echo
 	@echo "${INFO} AI test log files:${RESET}"
-	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
+	@echo "  ${HIGHLIGHT}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
 	cd ${SRC_DIR} && \
 	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
 	  export MODEL=${MODEL} && \
@@ -852,7 +852,7 @@ list-unit-tests-ai::
 post-proc-test-logs:: 
 	@echo
 	@echo "${INFO} Time-stamped JSONL log files were written to:${RESET}"
-	@echo "  ${BLUE}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
+	@echo "  ${HIGHLIGHT}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${RESET}"
 	@echo "${INFO} (They may be empty!)${RESET}"
 	@echo "${INFO} The corresponding '*.json' files (if any) were generated${RESET}"
 	@echo "${INFO} using 'jq' and target 'nice-ai-test-logs'. They are easier to read.${RESET}"
@@ -874,7 +874,7 @@ nice-ai-test-logs:: silent-command-check-jq
 	  echo "${INFO} Writing $$ff:${RESET}"; \
 	  jq . $$f > $$ff; \
 	done
-	@echo "${BLUE}"
+	@echo "${HIGHLIGHT}"
 	@ls -l ${SRC_DIR}/${TESTS_LOGS_DIR}/*.json*
 	@echo "${RESET}"
 
@@ -1001,7 +1001,7 @@ the directory output by this llm command:
 Use the following make command to do this automatically:
   ${GREEN}make install-llm-templates${RESET}
 
-${WARNING} If you edit the templates in ${BLUE}${TOOLS_PROMPTS_TEMPLATES_DIR}${ORANGE}, rerun  
+${WARNING} If you edit the templates in ${HIGHLIGHT}${TOOLS_PROMPTS_TEMPLATES_DIR}${ORANGE}, rerun  
   ${GREEN}make install-llm-templates${RESET}
 
 (llm is required to run this target, because it uses 'llm templates path'
@@ -1032,7 +1032,7 @@ clean-llm-templates::
 	@cd ${TOOLS_PROMPTS_TEMPLATES_DIR} && \
 		llmdir="$$(llm templates path)" && \
 		for t in *.yaml; do \
-			echo "${INFO} removing: ${BLUE}$$llmdir/$$t${RESET}"; \
+			echo "${INFO} removing: ${HIGHLIGHT}$$llmdir/$$t${RESET}"; \
 			rm -f "$$llmdir/$$t"; \
 		done && \
 		ls -l "$$llmdir"
@@ -1044,7 +1044,7 @@ install-llm:: help-llm install-llm-templates
 
 install-llm-templates:: command-check-llm
 	@llmdir="$$(llm templates path)" && \
-	echo "${INFO} Installing the llm templates from ${BLUE}${TOOLS_PROMPTS_TEMPLATES_DIR}${GREEN} into ${BLUE}$$llmdir${GREEN} ...${RESET}" && \
+	echo "${INFO} Installing the llm templates from ${HIGHLIGHT}${TOOLS_PROMPTS_TEMPLATES_DIR}${GREEN} into ${HIGHLIGHT}$$llmdir${GREEN} ...${RESET}" && \
 	cp ${TOOLS_PROMPTS_TEMPLATES_DIR}/*.yaml "$$llmdir" && \
 	ls -l "$$llmdir"
 
@@ -1075,7 +1075,7 @@ clean-docs::
 	rm -rf ${CLEAN_DOCS_DIRS}   
 
 view-pages::
-	@echo "${INFO} Opening ${BLUE}${GITHUB_PAGES_URL} ...${RESET}"
+	@echo "${INFO} Opening ${HIGHLIGHT}${GITHUB_PAGES_URL} ...${RESET}"
 	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
 		(echo "${ERROR} I could not open the GitHub Pages URL:\n  ${HIGHLIGHT}${GITHUB_PAGES_URL}${RESET}\n" && \
 		 echo "${open-url-message}" && \
@@ -1141,3 +1141,11 @@ show-colors:
 	$(info This is <${DARK_GREEN}DARK_GREEN${RESET}>)
 	$(info This is <${LIGHT_GREY}LIGHT_GREY${RESET}>)
 	$(info This is <${BLACK}BLACK${RESET}>)
+	$(info )
+	$(info This is an ERROR:     ${ERROR} Oooops! ${RESET})
+	$(info This is a  WARN:      ${WARN} Careful! ${RESET})
+	$(info This is a  WARNING:   ${WARNING} Careful! ${RESET})
+	$(info This is a  NOTE:      ${NOTE} Of note... ${RESET})
+	$(info This is an INFO:      ${INFO} It's useful to know ${RESET})
+	$(info This is a  TIP:       ${TIP} This can help... ${RESET})
+	$(info This is a  HIGHLIGHT: ${HIGHLIGHT}/foo/bar/baz ${RESET})
