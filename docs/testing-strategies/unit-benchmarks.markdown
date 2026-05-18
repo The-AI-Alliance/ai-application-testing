@@ -340,9 +340,13 @@ Some of the custom documents might be in formats that are not ideal for inferenc
 
 A number of tools exist for this purpose. For example, [Docling](https://docling-project.github.io/docling/){:target="docling"} is a powerful tool for parsing many different data formats, with special attention to extracting useful information from tables and diagrams, which are common in technical papers. Hence, your synthetic data pipeline that ingests proprietary data might first parse non-text files and use the outputs for RAG storage. 
 
+See also the [Data Sets and Synthetic Data Generation]({{site.referencesurl}}#data-sets-and-synthetic-data-generation) section in the [References]({{site.referencesurl}}).
+
 ### Other Tools for Synthetic Data Generation
 
 If you use synthetic data generation a lot in your organization, it will become necessary to understand some of the potential complexities that you might encounter. 
+
+See also the [Data Sets and Synthetic Data Generation]({{site.referencesurl}}#data-sets-and-synthetic-data-generation) section in the [References]({{site.referencesurl}}).
 
 #### A Survey of Data Synthesis Techniques
 
@@ -353,10 +357,6 @@ If you use synthetic data generation a lot in your organization, it will become 
 Meta's Synthetic Data Kit ([`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"}) focuses on larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models. It supports text, video, and multimodal data.
 
 Synthetic Data Kit uses one or more documents you specify as sources of information for data generation. It can generate different kinds of data sets: Q&A pairs, Q&A pairs with _chain of thought_ (CoT) reasoning, and summaries. It also uses the [vLLM](https://docs.vllm.ai/){:target="vllm"} inference engine, which is a popular production-scale server and experimental support for Intel and Apple Silicon CPUs. 
-
-#### InstructLab
-
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. Among its features is synthetic data generation. See the [References]({{site.referencesurl}}/) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
 
 #### Older Synthetic Data Tools
 
@@ -390,7 +390,7 @@ Evaluations implemented with `unitxt` can be executed by LM Evaluation Harness. 
 
 #### Final Thoughts on Advanced Benchmark and Evaluation Tools
 
-Be careful to check the licenses for any benchmarks or tools you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.baseurl}}/references) for related resources.
+Be careful to check the licenses for any benchmarks or tools you use, as some of them may have restrictions on use. Also, you can find many proprietary benchmarks that might be worth the investment for your purposes. See also the [references]({{site.referencesurl}}) for related resources.
 
 [Let us know]({{site.baseurl}}/contributing/#join-us) of any other tools that you think we should discuss here!
 

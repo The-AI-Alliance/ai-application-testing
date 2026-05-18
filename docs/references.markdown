@@ -6,7 +6,9 @@ nav_order: 80
 
 # References
 
-References for more details on testing, especially in the AI context, and other topics. Note that most of the outside references to particular tools that are mentioned elsewhere in this guide site are not repeated here. 
+This chapter contains references for more details on testing, especially in the AI context, and other topics. Note that some of the outside references to particular tools that are mentioned elsewhere in this guide are not repeated here. 
+
+The references are grouped into major topics.
 
 <details open markdown="block">
   <summary>
@@ -17,81 +19,79 @@ References for more details on testing, especially in the AI context, and other 
 {:toc}
 </details>
 
-## Adrian Cockcroft
+## Data Sets and Synthetic Data Generation
 
-[Dean Wampler]({{site.baseurl}}/contributing/#contributors) and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} about lessons learned at Netflix, which are quoted in several sections of this guide. See also [Dean Wampler](#dean-wampler) and the discussion in [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems).
+There are many data sets available for pretraining, tuning, RL, etc.
 
-## AI for Education
+* [HuggingFace Data Sets](https://huggingface.co/datasets){:target="_blank"}
+* [LLMDataHub](https://github.com/Zjh-819/LLMDataHub){:target="_blank"}
+
+We discussed synthetic data generation in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere in this guide. The following references provide more advanced guidance.
+
+* [Synthetic Data Generation Using Large Language Models: Advances in Text and Code](http://arxiv.org/abs/2503.14023){:target="_blank"}. A survey of synthesis techniques that use LLMs, like we explore in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere in this guide.
+* [Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
+* Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) and the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapters for more details.
+* [Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation.
+
+
+
+## Evaluation and Testing
+
+### Agent Development Kit - Google
+
+Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents. See the discussion in the [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter.
+
+### AI for Education
 
 The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
 
-## Allen Institute of AI
-
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is discussed by [Nathan Lambert](#nathan-lambert) below. It tries to meet similar goals as [InstructLab](#redhat). See [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) for more details.
-
-## Alignment Forum
+### Alignment Forum
 
 The [Alignment Forum](https://www.alignmentforum.org/){:target="alignment-forum"} works on many aspects of alignment.
 
-## Anthropic
+### Anthropic
 
 Anthropic's post, [Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents){:target="anthropic-evals"}, provides valuable tips on testing complex agents, but also general guidance on evaluation concepts. Highly recommended. See the summary in [Agents: What Is Different?]({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/).
 
 [Petri](https://www.anthropic.com/research/petri-open-source-auditing){:target="petri"} is an open-source auditing tool aimed at safety researchers.
 
-## Babeş-Bolyai University
+### CUBE - Common Unified Benchmark Environment
 
-[Synthetic Data Generation Using Large Language Models: Advances in Text and Code](https://arxiv.org/abs/2503.14023){:target="_blank"} surveys techniques that use LLMs, like we are explore in the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter and elsewhere.
+[ServiceNow](https://www.servicenow.com){:target="_blank"} is leading several new AI Alliance projects under the _CUBE_, Common Unified Benchmark Environment, umbrella. CUBE meets a common necessity, to standardize benchmark wrapping so the community can integrate otherwise-incompatible benchmarks uniformly and use them everywhere. The three projects include:
 
-## CVS Health Data Science Team
+* [CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="_cube"} - A collaboration to define the necessary set of standards.
+* [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness/){:target="_cube"} - A framework and research initiative for building and evaluating AI agents.
+* [CUBE Registry](https://github.com/The-AI-Alliance/cube-registry/){:target="_cube"} - A community-maintained index of benchmarks that implement the CUBE standard. Any CUBE-compliant evaluation platform or training harness can discover and run registered benchmarks without custom integration.
 
-[CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
+See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details on these projects.
 
-Among the useful tools in this repository are:
-* A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}.
-* Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
+### DoomArena
 
-## Dean Wampler
+[DoomArena](https://servicenow.github.io/DoomArena/){:target="_blank"} is a framework developed by [ServiceNow](https://www.servicenow.com){:target="_blank"} for testing AI Agents against evolving security threats. It offers a modular, configurable, plug-in framework for testing the security of AI agents across multiple attack scenarios.
 
-In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler](http://deanwampler.com){:target="dw"} (one of this project's [contributors]({{site.baseurl}}/contributing/#contributors)) summarizes the work of this project. After posting the link to the slides, Dean and [Adrian Cockcroft](#adrian-cockcroft) discussed lessons learned at Netflix, which have informed this project's content.
+DoomArena enables detailed threat modeling, adaptive testing, and fine-grained security evaluations through real-world case studies, such as τ-Bench and BrowserGym. These case studies showcase how DoomArena evaluates vulnerabilities in AI agents interacting in airline customer service and e-commerce contexts.
+
+Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions. 
 
 ### Ekimetrics
 
 [ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciencies and ethics. See also the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks/) chapter.
 
-## EleutherAI
-
-[EleutherAI's](https://www.eleuther.ai/){:target="eleuther"} definition of [Alignment](https://www.eleuther.ai/alignment){:target="eleuther"} is quoted in the glossary definition for it.
-
-## Elvis Saravia
-
-Elvis Saravia's [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"}, part of his [DAIR.AI](https://www.dair.ai/){:target="_blank"} learning academy, provides in depth information on [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}.
-
-## EvalEval Coalition
+### EvalEval Coalition
 
 [EvalEval](https://evalevalai.com/){:target="ee"} ([Blog post](https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/){:target="ee-blog"}, [GitHub organization](https://github.com/evaleval){:target="ee-gh"}) is a research coalition on _evaluating evaluations_, hence the name _EvalEval_. Its work is hosted by Hugging Face, University of Edinburgh, and EleutherAI.
 
 The main project is [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"}, &ldquo;a shared schema and crowdsourced evaluation database. It defines a standardized metadata format for storing AI evaluation results — from leaderboard scrapes and research papers to local evaluation runs — so that results from different frameworks can be compared, reproduced, and reused.&rdquo;
 
-## Evan Miller
+### &ldquo;Generative AI: Should We Say Goodbye to Deterministic Testing?&rdquo;
 
-[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/).
+In [Generative AI: Should We Say Goodbye to Deterministic Testing?](https://deanwampler.github.io/polyglotprogramming/papers/#Generative-AI-Should-We-Say-Goodbye-to-Deterministic-Testing){:target="slides"} [Dean Wampler](http://deanwampler.com){:target="dw"} (one of this project's [contributors]({{site.baseurl}}/contributing/#contributors)) summarizes the work of this project. After posting the link to the slides, Dean and Adrian Cockcroft discussed lessons learned at Netflix, which have informed this project's content. See [Testing Challenges at Netflix](#testing-challenges-at-netflix) for more details.
 
-## Google
+### &ldquo;How do I Test AI?&rdquo;
 
-Google's [Agent Development Kit](https://google.github.io/adk-docs/){:target="adk"} has a chapter called [Why Evaluate Agents?](https://google.github.io/adk-docs/evaluate/){:target="adk"}, which provides tips for writing evaluations specifically tailored for agents. See the discussion in the [Testing Agents]({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter.
+[James Thomas](https://bsky.app/profile/hiccupps.bsky.social){:target="jt"} is a QA engineer who [posted](https://bsky.app/profile/hiccupps.bsky.social/post/3lgms2z6zuk25){:target="bsky-jt"} a link to a blog post [How do I Test AI?](https://qahiccupps.blogspot.com/2025/01/how-do-i-test-ai.html){:target="blog-jt"} that lists criteria to consider when testing AI-enabled systems. While the post doesn't provide a lot of details behind the list items, the list is excellent for stimulating further investigation.
 
-## Hamel Husain
-
-[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/){:target="_blank"} is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
-
-## IBM
-
-### RAG
-
-This IBM blog post, [What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"}.
-
-### Evaluation and Benchmark Tools
+### IBM Evaluation and Benchmark Tools
 
 For the following tool, see the [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) chapter for more details:
 
@@ -105,67 +105,15 @@ For the following tools, see the [Unit Benchmarks](({{site.baseurl}}/testing-str
 * [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
 * Stanford ML's [MedAgentBench](https://stanfordmlgroup.github.io/projects/medagentbench/){:target="mab"} an virtual environment and benchmark suite for assessing the performance of LLMs in the context of _electronic health records_ (EHR).
 
+### Langtest
 
-### Mellea
+[Langtest](https://langtest.org/){:target="_blank"}, from [John Snow Labs](https://www.johnsnowlabs.com/){:target="jsl"}, is a test generation and execution framework with &ldquo;60+ test types for comparing LLM & NLP models on accuracy, bias, fairness, robustness & more.&rdquo;
 
-The [Mellea](https://mellea.ai/){:target="mellea"} has similar concepts, such as emphasizing specifynig requirements through a Python API rather than arbitrary prompts.
+### MCP Eval
 
-## James Thomas
+[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"}, from LastMile AI (now part of Meta, is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details.
 
-[James Thomas](https://bsky.app/profile/hiccupps.bsky.social){:target="jt"} is a QA engineer who [posted](https://bsky.app/profile/hiccupps.bsky.social/post/3lgms2z6zuk25){:target="bsky-jt"} a link to a blog post [How do I Test AI?](https://qahiccupps.blogspot.com/2025/01/how-do-i-test-ai.html){:target="blog-jt"} that lists criteria to consider when testing AI-enabled systems. While the post doesn't provide a lot of details behind the list items, the list is excellent for stimulating further investigation.
-
-## Jiayi Yuan, et al.
-
-_Give Me FP32 or Give Me Death? Challenges and Solutions for Reproducible Reasoning_ [paper](https://arxiv.org/abs/2506.09501){:target="_blank"} examines the influence of floating point precision on the reproducibility of inference results, even when randomness is restricted, such as using a low "temperature". Of course, the theme of our project is dealing with the inherent randomness of inference, but there are also times when limiting that randomness is important.
-
-## John Snow Labs and Pacific.ai
-
-John Snow Labs has created [langtest](https://langtest.org/){:target="_blank"}, a test generation and execution framework with &ldquo;60+ test types for comparing LLM & NLP models on accuracy, bias, fairness, robustness & more.&rdquo;
-
-The affiliated company [Pacific.ai](https://pacific.ai/){:target="_blank"} offers a commercial [testing system](https://pacific.ai/testing/){:target="_blank"} with similar features.
-
-## LastMile AI
-
-[MCP Eval](https://mcp-eval.ai/){:target="mcp-eval"} is an evaluation framework for testing Model Context Protocol (MCP) servers and the agents that use them. Unlike traditional testing approaches that mock interactions or test components in isolation. It is built on [MCP Agent](https://mcp-agent.com/){:target="mcp-agent"}, their agent framework that emphasizes MCP as the communication protocol. See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details.
-
-
-## Merriam-Webster Dictionary
-
-The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [Glossary]({{site.glossaryurl}}){:target="_glossary"} for several terms.
-
-## Meta
-
-Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) and the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapters for more details.
-
-The [Llama Stack](https://github.com/llamastack/llama-stack/){:target="ls"} project provides a [Kubernetes Benchmark](https://github.com/llamastack/llama-stack/tree/main/benchmarking/k8s-benchmark){:target="ls-kb"} suite.
-
-## Michael Feathers
-
-[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/arch-design/component-design/#abstractions-encapsulate-complexities).
-
-## MLCommons Glossary
-
-The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [Glossary]({{site.glossaryurl}}){:target="_glossary"}.
-
-## Nathan Lambert
-
-[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. The same content can be found in [this Interconnects blog post](https://www.interconnects.ai/p/frontier-model-post-training){:target="nl"}. [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) discusses these ideas. See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [Allen Institute of AI](#allen-institute-of-ai) entry above.
-
-## NIST Risk Management Framework
-
-The U.S. National Institute of Science and Technology's ([NIST](https://www.nist.gov/){:target="nist"}) Artificial Intelligence [Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework){:target="nist-rmf"} (AI RMF 1.0) is used to inform our [Glossary]({{site.glossaryurl}}){:target="_glossary"}.
-
-## OpenAI
-
-An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
-
-[Announcing OpenAI Pioneers Program](https://openai.com/index/openai-pioneers-program/){:target="_blank"} announced _OpenAI Pioneers Program_, an effort designed to help application developers optimize model performance in their domains.
-
-## Open Data Science
-
-[Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation. See the [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks) chapter for more details.
-
-## Patronus
+### Patronus
 
 The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https://www.patronus.ai/llm-testing){:target="patronus"}, discusses the unique testing challenges raised by generative AI and discusses various techniques for testing these systems.
 
@@ -173,77 +121,131 @@ The Patronus guide, [LLM Testing: The Latest Techniques & Best Practices](https:
 
 [Evaluating Copyright Violations in LLMs](https://github.com/patronus-ai/copyright-evals){:target="ecvil"} has data and tools for detecting examples of responses that violate one or more copyrights. (This work isn't discussed elsewhere in this user guide.)
 
-## PlurAI
+### PlurAI
 
 [Plurai.ai](https://plurai.ai){:target="_blank"} recently created an open-source project called [Intellagent](https://github.com/plurai-ai/intellagent){:target="_blank"} that demonstrates how to exploit some recent research on automated generation of test data, knowledge graphs based on the constraints and requirements for an application, and automated test generation to verify alignment of the system to the requirements. These techniques are designed to provide more exhaustive test coverage of behaviors, including catching corner cases. See the [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/) chapter for more details.
 
-## RedHat
+### Testing Challenges at Netflix
 
-[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
+One of the authors and [Adrian Cockcroft](https://mastodon.social/@adrianco){:target="adrian"} exchanged [messages on Mastodon](https://discuss.systems/@deanwampler/113850433324825993){:target="mastodon"} recently about lessons learned at Netflix, which are quoted in several sections of this guide. See also [Generative AI: Should We Say Goodbye to Deterministic Testing?](#generative-ai-should-we-say-goodbye-to-deterministic-testing) above and the discussion in [Testing Problems Caused by Generative AI Nondeterminism]({{site.baseurl}}/testing-problems).
 
-## RedMonk
-
-The analyst firm [RedMonk](https://redmonk.com/){:target="redmonk"} posted [this interesting piece](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"}, which we discuss in [this chapter]({{site.baseurl}}/advanced-techniques/sdd/). See also the other references in the [Specification-Driven Development](#specification-driven-development) section below and the [glossary entry]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"}.
-
-## ServiceNow
-
-[DoomArena](https://servicenow.github.io/DoomArena/){:target="_blank"} is a framework for testing AI Agents against evolving security threats. It offers a modular, configurable, plug-in framework for testing the security of AI agents across multiple attack scenarios.
-
-DoomArena enables detailed threat modeling, adaptive testing, and fine-grained security evaluations through real-world case studies, such as τ-Bench and BrowserGym. These case studies showcase how DoomArena evaluates vulnerabilities in AI agents interacting in airline customer service and e-commerce contexts.
-
-Furthermore, DoomArena serves as a laboratory for AI agent security research, revealing fascinating insights about agent vulnerabilities, defense effectiveness, and attack interactions. 
-
-ServiceNow is also leading several new AI Alliance projects under the _CUBE_ (Common Unified Benchmark Environment) umbrella. CUBE meets a common necessity, to standardize benchmark wrapping so the community can integrate otherwise-incompatible benchmarks uniformly and use them everywhere. The three projects include:
-
-* [CUBE Standard](https://github.com/The-AI-Alliance/cube-standard/){:target="_cube"} - A collaboration to define the necessary set of standards.
-* [CUBE Harness](https://github.com/The-AI-Alliance/cube-harness/){:target="_cube"} - A framework and research initiative for building and evaluating AI agents.
-* [CUBE Registry](https://github.com/The-AI-Alliance/cube-registry/){:target="_cube"} - A community-maintained index of benchmarks that implement the CUBE standard. Any CUBE-compliant evaluation platform or training harness can discover and run registered benchmarks without custom integration.
-
-See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details on these projects.
-
-## Specification-Driven Development
-
-[SDD]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"} is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references. See the discussion in the [Specification-Driven Development]({{site.baseurl}}/advanced-techniques/sdd/) chapter, where we explore them, and the [RedMonk](#redmonk) section above.
-
-* RedMonk blog post [Vibe Coding vs. Spec-Driven Development](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"},
-* [How I Apply Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"}
-  * [`spec-driven-ai-coding` repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}
-  * Inspirations:
-    * [My current AI coding workflow](https://carlrannaberg.medium.com/my-current-ai-coding-workflow-f6bdc449df7f){:target="_blank"}
-    * [My LLM codegen workflow atm](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/){:target="_blank"}
-* Spec Kit
-  * [Spec-driven development with AI: Get started with a new open source toolkit](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/){:target="_blank"}
-  * [Diving Into Spec-Driven Development With GitHub Spec Kit](https://developer.microsoft.com/blog/spec-driven-development-spec-kit){:target="_blank"}
-  * [Spec Kit website](https://speckit.org/){:target="_blank"}
-  * [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
-* [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
-* [Spec-Driven Development: 10 things you need to know about specs](https://tessl.io/blog/spec-driven-development-10-things-you-need-to-know-about-specs/){:target="10-things"}
-* [OpenSpec](https://github.com/Fission-AI/OpenSpec){:target="openspec"} is a form of SDD designed for use with coding agents.
-
-YouTube videos about SDD:
-
-* [How I Code With AI Agents (Spec-Driven Development)](){:target="youtube1"} is Owain Lewis' detailed explanation of how he uses SDD.
-* [Spec-Driven Development: AI Assisted Coding Explained](https://www.youtube.com/watch?v=mViFYTwWvcM){:target="youtube2"} provides a quick introduction of SDD and how it compares to traditional software development approaches, from IBM.
-
-See also [Mellea](#mellea).
-
-## Stanford 
+### &ldquo;What Makes a Good AI Benchmark?&rdquo;
 
 [What Makes a Good AI Benchmark?](https://hai.stanford.edu/policy/what-makes-a-good-ai-benchmark){:target="hai"} from Stanford's Human-Centered Artificial Intelligence project provides a careful analysis of the qualities of good benchmarks, along with assessments of many well-known, public benchmarks. See also their [BetterBench](https://betterbench.stanford.edu/){:target="bb"} repository of assessments.
 
 Some of the criteria pertain to documentation, ease of adoption, and feedback mechanisms, which may be less important for small-scale and especially private benchmarks, like _unit benchmarks_ discussed in this guide. Other criteria are more applicable, such as clearly defining the goals of the benchmark, how those goals are implemented by the benchmark, how to interpret the results, how involved were domain experts in constructing the benchmark, etc.
 
-## University of Tübingen
+### &ldquo;Your AI Product Needs Evals&rdquo;
 
-[Beyond Benchmarks: A Novel Framework for Domain-Specific LLM Evaluation and Knowledge Mapping](https://arxiv.org/abs/2506.07658){:target="_blank"} is a research effort that explores an alternative approach to knowledge representations, like the Q&A pairs we use in this guide for benchmarks, without using LLMs for generating data.
+[Your AI Product Needs Evals](https://hamel.dev/blog/posts/evals/){:target="_blank"} is a long blog post that discusses testing of AI applications and makes many of the same points this user guide makes.
 
-## Unsloth
+
+## Specification-Driven Development
+
+[Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"}, which we discuss in [this chapter]({{site.baseurl}}/advanced-techniques/sdd/). 
+
+[SDD]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"} is a more structured approach to prompting LLMs and doing explicit &ldquo;phases&rdquo; like planning vs. task execution, so LLMs can do a better job generating production-quality code that meets our requirements. Here we list many references.
+
+### &ldquo;Vibe Coding vs. Spec-Driven Development&rdquo;
+
+RedMonk blog post [Vibe Coding vs. Spec-Driven Development](https://redmonk.com/rstephens/2025/07/31/spec-vs-vibes/){:target="redmonk-spec"} on [Specification-Driven Development]({{site.glossaryurl}}/#specification-driven-development){:target="_glossary"},
+
+### User Examples and Best Practices
+
+Several users of SDD and its precursors have blogged about their experiences.
+
+* [How I Apply Spec-Driven AI Coding](https://finfluencers.trade/blog/2025/07/22/how-i-apply-spec-driven-ai-coding/){:target="_blank"}
+  * [`spec-driven-ai-coding` repo](https://github.com/andreskull/spec-driven-ai-coding){:target="_blank"}
+  * Inspirations for this approach:
+    * [My current AI coding workflow](https://carlrannaberg.medium.com/my-current-ai-coding-workflow-f6bdc449df7f){:target="_blank"}
+    * [My LLM codegen workflow atm](https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/){:target="_blank"}
+* [Spec-Driven Development: 10 things you need to know about specs](https://tessl.io/blog/spec-driven-development-10-things-you-need-to-know-about-specs/){:target="10-things"}
+
+YouTube! videos:
+
+* [How I Code With AI Agents (Spec-Driven Development)](https://www.youtube.com/watch?v=RhaF4LVAVng){:target="youtube1"} is Owain Lewis' detailed explanation of how he uses SDD.
+* [Spec-Driven Development: AI Assisted Coding Explained](https://www.youtube.com/watch?v=mViFYTwWvcM){:target="youtube2"} from IBM provides a quick introduction of SDD and how it compares to traditional software development approaches, from IBM.
+
+### Spec Kit
+
+Spec Kit is a GitHub project for SDD:
+
+* [Spec-driven development with AI: Get started with a new open source toolkit](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/){:target="_blank"}
+* [Diving Into Spec-Driven Development With GitHub Spec Kit](https://developer.microsoft.com/blog/spec-driven-development-spec-kit){:target="_blank"}
+* [Spec Kit website](https://speckit.org/){:target="_blank"}
+* [Spec Kit repo](https://github.com/github/spec-kit){:target="_blank"}
+
+### Other SDD Toolkits
+
+* [OpenSpec](https://github.com/Fission-AI/OpenSpec){:target="openspec"} is a form of SDD designed for use with coding agents.
+* [AWS Kiro](https://kiro.dev/){:target="_blank"}, an AI IDE designed to support specification-driven development.
+* [Mellea](https://mellea.ai/){:target="mellea"}, from IBM, is an agent development framework from IBM. While not an SDD toolkit, per se, it encourages the use of a programmatic Python API to define requirements rather than arbitrary text prompts.
+
+## Statistics and Data Science Concepts
+
+### UQLM from the CVS Health Data Science Team
+
+[CVS](https://www.cvshealth.com){:target="_blank"}, the US-based retail pharmacy and healthcare services company, has a large data science team. They recently open-sourced [`uqlm`](https://github.com/cvs-health/uqlm){:target="_blank"}, where _UQLM_ stands for _Uncertainty Quantification for Language Models_. It is a Python package for UQ-based LLM hallucination detection.
+
+Among the useful tools in this repository are:
+* A [concise summary](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/awesome-synthetic-data-papers/ReadMe.MD){:target="_blank"} of best practices and tools for [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}.
+* Tuning models to [improve Chain of Thought reasoning](https://github.com/meta-llama/synthetic-data-kit/blob/main/use-cases/adding_reasoning_to_llama_3/README.md){:target="_blank"}.
+
+### &ldquo;Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations&rdquo;
+
+[Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/).
+
+## Tuning
+
+See also [Other Tools for Model Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning#other-tools-for-model-tuning).
+
+<a id="nathan-lambert"></a>
+
+### &ldquo;How to approach post-training for AI applications&rdquo;
+
+[How to approach post-training for AI applications](https://docs.google.com/presentation/d/1LWHbtz74GwKSGYZKyBVUtcyvp8lgYOi5EVpMnVDXBPs/edit#slide=id.p){:target="nl-neurips2024"}, a tutorial presented at [NeurIPS 2024](https://neurips.cc/Conferences/2024){:target="neurips"} by [Nathan Lambert](https://www.natolambert.com/){:target="nathan-lambert"}. The same content can be found in [this Interconnects blog post](https://www.interconnects.ai/p/frontier-model-post-training){:target="nl"}. [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/) discusses these ideas. See also [this Interconnects post](https://www.interconnects.ai/p/openais-reinforcement-finetuning){:target="openai-rf"}. See also the [Allen Institute of AI](#allen-institute-of-ai) entry above.
+
+### InstructLab
+
+[InstructLab](https://instructlab.ai){:target="instructlab"} is a project started by [IBM Research](https://research.ibm.com){:target="ibm"} and developed by [RedHat](https://redhat.com){:target="redhat"}. InstructLab provides conventions for organizing specific, manually-created examples into a domain hierarchy, along with tools to perform model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}, including [Synthetic Data Generation]({{site.glossaryurl}}/#synthetic-data-generation){:target="_glossary"}. Hence, InstructLab is an alternative way to generate synthetic data for [Unit Benchmarks]({{site.baseurl}}/unit-benchmarks). See also [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
+
+### Reinforcement Fine Tuning
+
+An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
+
+### Unsloth
 
 [Unsloth](https://unsloth.ai/){:target="unsloth"} is an OSS tool suite for model training and tuning. Their documentation includes guides for the following:
 * [Fine-tuning LLMs](https://docs.unsloth.ai/get-started/fine-tuning-llms-guide){:target="unsloth-ft"}
 * [Reinforcement Learning](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide){:target="unsloth-rl"}
 
-## Wikipedia
+## Miscellaneous References
+
+### &ldquo;Give Me FP32 or Give Me Death?&rdquo;
+
+_Give Me FP32 or Give Me Death? Challenges and Solutions for Reproducible Reasoning_ [paper](https://arxiv.org/abs/2506.09501){:target="_blank"} examines the influence of floating point precision on the reproducibility of inference results, even when randomness is restricted, such as using a low "temperature". Of course, the theme of our project is dealing with the inherent randomness of inference, but there are also times when limiting that randomness is important.
+
+### Merriam-Webster Dictionary
+
+The [Merriam-Webster Dictionary](https://www.merriam-webster.com/dictionary/){:target="dict"}: is quoted in our [Glossary]({{site.glossaryurl}}){:target="_glossary"} for several terms.
+
+### MLCommons Glossary
+
+The [MLCommons](https://mlcommons.org/){:target="mlcommons"} AI Safety v0.5 Benchmark Proof of Concept [Technical Glossary](https://drive.google.com/file/d/1X9Sy8eRiYgbeBBVMMqNrDEq4KzHZynpF/view?usp=sharing){:target="mlc-glossary"} is used to inform our [Glossary]({{site.glossaryurl}}){:target="_glossary"}.
+
+### Prompt Engineering Guide
+
+Elvis Saravia's [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"}, part of his [DAIR.AI](https://www.dair.ai/){:target="_blank"} learning academy, provides in depth information on [Prompt Engineering]({{site.glossaryurl}}/#prompt-engineering){:target="_glossary"}.
+
+### RAG
+
+[What is retrieval-augmented generation?](https://research.ibm.com/blog/retrieval-augmented-generation-RAG){:target="ibm-rag"} is an IBM blog post that provides a good overview of [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"}.
+
+### &ldquo;The Challenge of Understandability&rdquo;
+
+[Michael Feathers](https://michaelfeathers.silvrback.com){:target="michael-feathers"} gave a talk recently called [The Challenge of Understandability](https://www.youtube.com/watch?v=sGgkl_RnkvQ){:target="youtube"} at Codecamp Romania, 2024, which is discussed in [Abstractions Encapsulate Complexities]({{site.baseurl}}/arch-design/component-design/#abstractions-encapsulate-complexities).
+
+### Wikipedia
 
 Many [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles are used as references in our [Glossary]({{site.glossaryurl}}){:target="_glossary"} and other locations.
 
@@ -257,7 +259,3 @@ Many [Wikipedia](https://en.wikipedia.org/wiki/){:target="wikipedia"} articles a
 * [SQL injection](https://en.wikipedia.org/wiki/SQL_injection){:target="_wikipedia"}
 * [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development){:target="_wikipedia"} 
 * [Transmission Control Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol){:target="_wikipedia"}
-
-## Synthetic Data Generation
-
-* Nadas, Mihai, Laura Diosan, and Andreea Tomescu. 2025. “Synthetic Data Generation Using Large Language Models: Advances in Text and Code.” arXiv [Cs.CL]. arXiv. [http://arxiv.org/abs/2503.14023](http://arxiv.org/abs/2503.14023).

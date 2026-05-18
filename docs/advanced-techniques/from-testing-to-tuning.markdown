@@ -112,7 +112,7 @@ Here are some other tools for model tuning.
 
 ### Open Instruct
 
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the Allen Institute of AI is a tool suite for instruction tuning of models. It is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine-tuning) content discussed above. See also [InstructLab](#instructlab).
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the [Allen Institute of AI](https://allenai.org/){:target="allenai"} is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine-tuning) content discussed above. See also [InstructLab](#instructlab).
 
 ### Unsloth
 

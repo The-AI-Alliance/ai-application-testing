@@ -101,11 +101,11 @@ Several agent benchmarks, registries, competitions, and leaderboards have emerge
 
 ### CUBE 
 
-The _CUBE_ (Common Unified Benchmark Environment) projects were discussed in See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details on these projects, as well as the [References]({{site.baseurl}}/references/#servicenow). In short, they attempt to standardize techniques for building agent evaluations, along with an effort to build and catalog evaluations built to the standard.
+The _CUBE_ (Common Unified Benchmark Environment) projects were discussed in See the [Testing Agents](({{site.baseurl}}/testing-strategies/testing-agents/evaluating-agents/) chapter for more details on these projects, as well as the [References]({{site.referencesurl}}#cube---common-unified-benchmark-environment). In short, they attempt to standardize techniques for building agent evaluations, along with an effort to build and catalog evaluations built to the standard.
 
 ### DoomArena
 
-[DoomArena](https://servicenow.github.io/DoomArena/){:target="_blank"} is a framework for testing AI Agents against evolving security threats. It offers a modular, configurable, plug-in framework for threat modeling and testing the security of AI agents across multiple attack scenarios. See the [References]({{site.baseurl}}/references/#servicenow) for more details.
+[DoomArena](https://servicenow.github.io/DoomArena/){:target="_blank"} is a framework for testing AI Agents against evolving security threats. It offers a modular, configurable, plug-in framework for threat modeling and testing the security of AI agents across multiple attack scenarios. See the [References]({{site.referencesurl}}#servicenow) for more details.
 
 ### Harbor
 

@@ -132,7 +132,8 @@ endif
 
 
 # When you see ${GREEN}${RESET}, it is there to make it easier to line up 
-# multi-line descriptions!
+# multi-line description comments.
+
 define help_message
 
 Quick help for this make process.
