@@ -80,7 +80,7 @@ In our experiments, we used the models shown in **Table 1** (see also a similar 
 | Model | Parameters | Memory | Hugging Face | Ollama | Description |
 | :---- | ---------: | -----: | :----------- | :----- | :---------- |
 | `gemma4:e4b`  |  8 B | 11 GB | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} |  **Default model used in the `Makefile`.** Excellent performance, requiring about 11 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
-| `gpt-oss:20b` | 20 B | 14 GB | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} | [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/) framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116) for details. |
+| `gpt-oss:20b` | 20 B | 14 GB | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} | [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/){:target="da"} framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116){:target="lci"} for details. |
 | `qwen3.5:35b` | 35 B | 27 GB | [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires about 27 GB of memory. |
 | `llama3.2:3B` |  3 B | 7.5 GB | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. A good choice during development when overhead is more important than performance. |
 | `granite4:latest` | 3B | 7 GB | [link](https://huggingface.co/ibm-granite/granite-4.0-micro){:target="hf-granite4"} | [link](https://ollama.com/library/granite4:latest){:target="ollama-granite4"} | Another small model tuned for instruction following and tool calling. |
@@ -98,7 +98,7 @@ In our experiments, we used the models shown in **Table 1** (see also a similar 
 {: .attention}
 > We provide example results for some of these models in [`src/data/examples/ollama_chat`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat){:target="examples"}. 
 
-By default, we use `gemma4:e4b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gemma4:e4b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
+By default, we use `gemma4:e4b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116){:target="lci"}. This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gemma4:e4b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
 We find that `gemma4:e4b`, requiring about 11 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
 
@@ -441,7 +441,7 @@ We will discuss the automated tests below, in [Automated Testing: Practical Enha
 
 ### Using the ChatBot with Open WebUI
 
-If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}. We use a separate project configuration in [`src/apps/chatbot/open-webui/`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/), rather than add the dependencies to the whole project. See [`src/apps/chatbot/open-webui/README.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/README.md).
+If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}. We use a separate project configuration in [`src/apps/chatbot/open-webui/`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/){:target="repo"}, rather than add the dependencies to the whole project. See [`src/apps/chatbot/open-webui/README.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/README.md){:target="repo"}.
 
 {: tip}
 > **TIP:**
