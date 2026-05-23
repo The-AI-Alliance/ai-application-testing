@@ -33,7 +33,7 @@ With that in mind, are there more AI-native alternatives to our conventional ide
 
 Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning){:target="_glossary"}, what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldquo;building&rdquo; process? Tuning is already a standard technique used to improve models in some way. Will we arrive at a set of practices that combine incremental tuning with testing as applications evolve? 
 
-In fact, even this specific idea is changing. [Laurie Voss posted](https://www.linkedin.com/pulse/end-fine-tuning-laurie-voss-0xpac/) recently that use of fine tuning of models never became widespread outside &ldquo;elite&rdquo; users, but emerging alternative include forms of learning loops for tools that _surround_ the models, like prompt improvement. 
+In fact, even this specific idea is changing. [Laurie Voss posted](https://www.linkedin.com/pulse/end-fine-tuning-laurie-voss-0xpac/){:target="lv0"} recently that use of fine tuning of models never became widespread outside &ldquo;elite&rdquo; users, but emerging alternative include forms of learning loops for tools that _surround_ the models, like prompt improvement. 
 
 [^1]: The tests are written _before_ the code, in part to drive thinking about the design, when doing [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development){:target="_glossary"}.
 
