@@ -76,7 +76,7 @@ Today, if you want to use a third-party benchmark, you often have to adopt a too
 
 A key feature of CUBE Standard is support for tasks with multiple steps, which are required for testing agents.
 
-A complementary project is [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"} (see [references]({{site.baseurl}}/references/#evaleval-coalition)), which attempts to standardize how evaluation results are reported and catalog all relevant AI evaluations.
+A complementary project is [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"} (see [references]({{site.referencesurl}}#evaleval-coalition)), which attempts to standardize how evaluation results are reported and catalog all relevant AI evaluations.
 
 ## The Role of Simulation
 
