@@ -8,14 +8,14 @@ dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
     "fastapi>=0.136.1",
-    "uvicorn>=0.46.0",
+    "uvicorn>=0.48.0",
     "httpx>=0.28.1",
-    "deepagents>=0.5.9",
+    "deepagents>=0.6.3",
     "langchain-ollama>=1.1.0",
     "openai>=2.36.0",
-    "litellm>=1.83.0",
+    "litellm>=1.86.0",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.2.4",
+    "fastmcp>=3.3.1",
 ]
 
 [tool.setuptools.packages.find]
@@ -29,12 +29,12 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "hypothesis>=6.152.6",
+    "hypothesis>=6.152.8",
     "pytest>=9.0.3",
     "pylint>=4.0.5",
-    "black>=23.0.0",
+    "black>=26.5.1",
     "ruff>=0.1.0",
-    "ty>=0.0.35",
+    "ty>=0.0.39",
 ]
 
 [tool.ty.src]
