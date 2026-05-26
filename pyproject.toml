@@ -32,7 +32,7 @@ dev = [
     "hypothesis>=6.152.8",
     "pytest>=9.0.3",
     "pylint>=4.0.5",
-    "black>=23.0.0",
+    "black>=26.5.1",
     "ruff>=0.1.0",
     "ty>=0.0.39",
 ]
