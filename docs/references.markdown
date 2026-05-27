@@ -33,8 +33,6 @@ We discussed synthetic data generation in the [Unit Benchmarks]({{site.baseurl}}
 * Meta's [`synthetic-data-kit`](https://github.com/meta-llama/synthetic-data-kit/){:target="_blank"} provides scalable support for larger-scale data synthesis and processing (such as translating between formats), especially for model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} with Llama models. See the [Unit Benchmarks](({{site.baseurl}}/testing-strategies/unit-benchmarks/) and the [From Testing to Tuning]({{site.baseurl}}/testing-strategies/from-testing-to-tuning)) chapters for more details.
 * [Nine Open-Source Tools to Generate Synthetic Data](https://opendatascience.com/9-open-source-tools-to-generate-synthetic-data/){:target="_blank"} lists several tools that use different approaches for data generation.
 
-
-
 ## Evaluation and Testing
 
 ### Agent Development Kit - Google
@@ -195,9 +193,13 @@ Among the useful tools in this repository are:
 
 [Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations](https://arxiv.org/abs/2411.00640){:target="error-bars"} is a research paper arguing that _evaluations_ (see the [Trust and Safety Evaluation Initiative](https://the-ai-alliance.github.io/trust-safety-evals/){:target="tsei"} for more details) should use proper statistical analysis of their results. It is discussed in [Statistical Evaluation]({{site.baseurl}}/testing-strategies/statistical-evaluation/).
 
-## Tuning
+## Post-Training of Models and Agents
 
 See also [Other Tools for Model Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning#other-tools-for-model-tuning).
+
+### &ldquo;Continual learning for AI agents&rdquo;
+
+[LangChain's](http://www.langchain.com){:target="lc"} Harrison Chase wrote in [Continual learning for AI agents](https://www.langchain.com/blog/continual-learning-for-ai-agents){:target="lc-claa"} that compares a few different approaches &ldquo;post-training&rdquo; (our term) for improving application performance. You can tune models, the application harnesses that surround them (creating agents...), and/or the context used. See also [The end of fine tuning](#the-end-of-fine-tuning).
 
 <a id="nathan-lambert"></a>
 
@@ -212,6 +214,10 @@ See also [Other Tools for Model Tuning]({{site.baseurl}}/advanced-techniques/fro
 ### Reinforcement Fine Tuning
 
 An [OpenAI](https://openai.com){:target="openai"} [paper](https://openai.com/form/rft-research-program/){:target="openai-rf"} on _reinforcement fine tuning_ is discussed in [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/).
+
+### &ldquo;The end of fine tuning&rdquo;
+
+Laurie Voss' LinkedIn post [The end of fine tuning](https://www.linkedin.com/pulse/end-fine-tuning-laurie-voss-0xpac/){:target="lv0"} argues that the use of fine tuning of models has never become widespread (outside &ldquo;elite&rdquo; users). Instead, there is an emerging alternative that includes forms of learning loops for the _harnesses_ (code) that _surround_ the models. See also [Continual learning for AI agents](#continual-learning-for-ai-agents).
 
 ### Unsloth
 
