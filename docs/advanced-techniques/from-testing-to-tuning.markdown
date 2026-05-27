@@ -31,9 +31,17 @@ With that in mind, are there more AI-native alternatives to our conventional ide
 > 1. However, we should expect completely new AI-driven approaches to problem solving to emerge, especially for new AI-driven challenges.
 > 1. One possible new approach is to shift attention from the traditional cycle of evolving code and tests together, where we use the tests to ensure compliance, to a more &ldquo;active&rdquo; process of continuous [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} of models to meet evolving requirements.
 
-Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning){:target="_glossary"}, what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldquo;building&rdquo; process? Tuning is already a standard technique used to improve models in some way. Will we arrive at a set of practices that combine incremental tuning with testing as applications evolve? 
+Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning){:target="_glossary"}, what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldquo;building&rdquo; process? 
 
-In fact, even this specific idea is changing. [Laurie Voss posted](https://www.linkedin.com/pulse/end-fine-tuning-laurie-voss-0xpac/){:target="lv0"} recently that use of fine tuning of models never became widespread outside &ldquo;elite&rdquo; users, but emerging alternative include forms of learning loops for tools that _surround_ the models, like prompt improvement. 
+Tuning is already a standard technique used to improve models in some way. Will we arrive at a set of practices that combine incremental tuning with testing as applications evolve? 
+
+In what follows, we will often use _tuning_ as an umbrella term for several classes of techniques that can be used:
+
+1. [Post-Training]({{site.glossaryurl}}/#post-training){:target="_glossary"} - Continuing the same process used for [Pre-Training]({{site.glossaryurl}}/#pre-training){:target="_glossary"} to further improve a models very general capabilities. (Not as widely used as the next two techniques).
+2. [Supervised Fine Tuning]({{site.glossaryurl}}/#supervised-fine-tuning){:target="_glossary"} (SFT) - to improve general skills like instruction following.
+3. [Alignment]({{site.glossaryurl}}/#alignment){:target="_glossary"} - using [Direct Preference Optimization]({{site.glossaryurl}}/#direct-preference-optimization){:target="_glossary"} (DPO), [Reinforcement Learning with Human Feedback]({{site.glossaryurl}}/#reinforcement-learning-with-human-feedback){:target="_glossary"} (RLHF), [Constitutional AI]({{site.glossaryurl}}/#constitutional-aI){:target="_glossary"}, or similar techniques to improve alignment to  desired expectations of complex behaviors and values.
+
+However, the idea of _what_ you should tune is also changing. [Laurie Voss posted](https://www.linkedin.com/pulse/end-fine-tuning-laurie-voss-0xpac/){:target="lv0"} recently that use of fine tuning of models never became widespread outside &ldquo;elite&rdquo; users. He sees an emerging alternative that includes forms of learning loops for tools that _surround_ the models, like iterative prompt improvement. 
 
 [^1]: The tests are written _before_ the code, in part to drive thinking about the design, when doing [Test-Driven Development]({{site.glossaryurl}}/#test-driven-development){:target="_glossary"}.
 
