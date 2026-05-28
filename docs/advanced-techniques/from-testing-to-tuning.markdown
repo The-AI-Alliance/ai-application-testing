@@ -29,7 +29,7 @@ With that in mind, are there more AI-native alternatives to our conventional ide
 > 1. It is still early in the generative AI &ldquo;revolution&rdquo;.
 > 1. We tend to apply our traditional approaches to new problems. Often this works well.
 > 1. However, we should expect completely new AI-driven approaches to problem solving to emerge, especially for new AI-driven challenges.
-> 1. One possible new approach is to shift attention from the traditional cycle of evolving code and tests together, where we use the tests to ensure compliance, to a more &ldquo;active&rdquo; process of continuous [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} of models to meet evolving requirements.
+> 1. One possible new approach is to shift attention from the traditional cycle of evolving code and tests together, where we use the tests to ensure compliance, to a more &ldquo;active&rdquo; process of continuous [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"} of models, agent _harnesses_, and contexts, in order to meet evolving requirements.
 
 Our standard approach to software development involves writing software and _then_ testing that it works[^1]. Since models are [Tunable]({{site.glossaryurl}}/#tuning){:target="_glossary"}, what if instead our development cycle includes routine, incremental model tuning steps that run until satisfactory behavior is achieved? In other words, what if we go from _verifying_ desired behavior after the fact to _coercing_ the desired behavior as part of the &ldquo;building&rdquo; process? 
 
