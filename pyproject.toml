@@ -10,7 +10,7 @@ dependencies = [
     "fastapi>=0.136.1",
     "uvicorn>=0.48.0",
     "httpx>=0.28.1",
-    "deepagents>=0.6.3",
+    "deepagents>=0.6.7",
     "langchain-ollama>=1.1.0",
     "openai>=2.36.0",
     "litellm>=1.86.0",
@@ -34,7 +34,7 @@ dev = [
     "pylint>=4.0.5",
     "black>=26.5.1",
     "ruff>=0.15.15",
-    "ty>=0.0.39",
+    "ty>=0.0.42",
 ]
 
 [tool.ty.src]
