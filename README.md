@@ -43,6 +43,7 @@ uv pip install -e ".[dev]"
 
 > [!TIP]
 
+> 1. In the Ollama app's settings, set the context length to the maximum 256k.
 > 1. Try `make help` for details about the `make` process. There are also `--help` options for all the tools discussed below.
 > 1. For any `make` target, to see what commands will be executed without running them, pass the `-n` or `--dry-run` option to `make`.
 > 1. The `make` targets have only been tested on MacOS. Let us know if they don't work on Linux. The actual tools are written in Python for portability.
@@ -56,14 +57,14 @@ If you use `ollama`, download the models you want to use. For example:
 
 ```shell
 ollama serve            # in one terminal window
-ollama pull gemma4:e4b  # in another terminal window
+ollama pull gemma4:12b  # in another terminal window
 ```
 
 In our experiments, we used the models shown in **Table 1**, served by `ollama`. See also a similar table [in the user guide](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/#table-1): 
 
 | Model                        | Parameters | Memory | Notes |
 | :--------------------------- | ---------: | -----: | :---- |
-| `gemma4:e4b`                 |   8 B | 11 GB | **Default model used in the `Makefile`.** Excellent performance, requiring about 11 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
+| `gemma4:12b`                 |  12 B | 11 GB | **Default model used in the `Makefile`.** Excellent performance with multimodal support, requiring about 11 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
 | `gpt-oss:20b`                |  20 B | 14 GB | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/) framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116) for details. |
 | `qwen3.5:35b`                |  35 B | 27 GB | Excellent performance, but requires about 27 GB of memory. |
 | `llama3.2:3B`                |   3 B | 7.5 GB | A small but effective model in the Llama family. Should work on most laptops. A good choice during development when overhead is more important than performance. |
@@ -80,15 +81,15 @@ Yes, some model names use `B` and others use `b`... The **Memory** sizes are wha
 > [!NOTE]
 > We provide example results for some of these models in [`src/data/examples/ollama_chat`](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/data/examples/ollama_chat). 
 
-By default, we use `gemma4:e4b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). That is what we will show in the examples which follow. Just change the model name as appropriate for your situation. The default model is specified in the `Makefile` with the variable `MODEL`, which defaults to `ollama_chat/gemma4:e4b`. (Note the `ollama_chat/` prefix.) All the models listed above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
+By default, we use `gemma4:12b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). That is what we will show in the examples which follow. Just change the model name as appropriate for your situation. The default model is specified in the `Makefile` with the variable `MODEL`, which defaults to `ollama_chat/gemma4:12b`. (Note the `ollama_chat/` prefix.) All the models listed above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
-We find that `gemma4:e4b`, requiring about 11 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
+We find that `gemma4:12b`, requiring about 11 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
 
 We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization) versions of models. It is worth the time to experiment with different models to find the ones that work best for your development environment and production deployments.
 
 ### Changing the Default Model Used
 
-If you don't want to use the default model, `gemma4:e4b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
+If you don't want to use the default model, `gemma4:12b`, served by `ollama`, you can change the definition of `MODEL` in the `Makefile` in one of several ways.
 
 If you want to use a different inference option other than `ollama`, first see the `LiteLLM` [documentation](https://docs.litellm.ai/#basic-usage) for information about specifying models for other inference services. In most cases, it will be as simple as changing a few definitions in the `Makefile` (discussed next).
 
@@ -154,7 +155,7 @@ This target first checks the following:
 
 * The `uv` command is installed and on your path.
 * Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
-	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_e4b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:e4b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_e4b` subdirectory.
+	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_e4b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:12b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_e4b` subdirectory.
 	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_e4b/data`. 
 
 If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the corresponding paths shown in the next command.
@@ -163,7 +164,7 @@ After the setup, the `make` target runs the following command:
 
 ```shell
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
-	--model ollama_chat/gemma4:e4b \
+	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gemma4_e4b/data \
@@ -178,7 +179,7 @@ The arguments are as follows:
 
 | Argument | Purpose |
 | :------- | :------ |
-| `--model ollama_chat/gemma4:e4b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
+| `--model ollama_chat/gemma4:12b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
 | `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
 | `--data-dir .../output/ollama_chat/gemma4_e4b/data` | Where any generated data files are written. (Not used by all tools.) |
@@ -210,7 +211,7 @@ After the same setup steps as before, the following command is executed:
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
-	--model ollama_chat/gemma4:e4b \
+	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gemma4_e4b/data \
@@ -220,7 +221,7 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 > [!NOTE]
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:e4b`, the output will be in `.../output/data/ollama_chat/gemma4_e4b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `.../output/data/ollama_chat/gemma4_e4b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
@@ -268,7 +269,7 @@ After the same setup steps, the following command is executed:
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-validation.py \
-	--model ollama_chat/gemma4:e4b \
+	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
 	--data-dir .../output/ollama_chat/gemma4_e4b/data \
@@ -339,7 +340,7 @@ After the same setup steps, like output directory creation, the following comman
 
 ```shell
 cd src && time uv run python -m apps.chatbot.main \
-  --model ollama_chat/gemma4:e4b \
+  --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
   --template-dir apps/chatbot/prompts/templates \
   --data-dir data \
