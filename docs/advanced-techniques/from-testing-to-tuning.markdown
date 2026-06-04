@@ -97,6 +97,19 @@ Beyond model optimization, we also need the ability to optimize agents. Microsof
 > 
 > More investigation and summarization here, especially the concept of _graders_. Provide an example??
 
+### Direct Preference Optimization (DPO)
+
+An alternative to RL that is becoming popular. 
+
+* [paper](https://arxiv.org/abs/2305.18290)
+    * [reference implementation](https://github.com/eric-mitchell/direct-preference-optimization)
+* [explainer](https://medium.com/the-synaptic-stack/direct-preference-optimization-dpo-an-in-depth-analysis-62a3d1f343a4)
+
+Commercial guides:
+
+* [OpenAI](https://developers.openai.com/api/docs/guides/direct-preference-optimization)
+* [Microsoft](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/fine-tuning-direct-preference-optimization)
+
 ## Tuning Everything Else
 
 TODO
@@ -124,9 +137,16 @@ Here are some other tools for model tuning.
 > 
 > Revamp this list with newer tools. Expand the discussion and show one or more examples of use.
 
-### Open Instruct
+### Open Tinker
 
-[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the [Allen Institute of AI](https://allenai.org/){:target="allenai"} is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine-tuning) content discussed above. See also [InstructLab](#instructlab).
+Open Tinker support SFT and RL:
+* [website](https://open-tinker.github.io/opentinker-page/){:target="ot"}
+* [repo](https://github.com/open-tinker/OpenTinker){:target="ot-repo"}
+* [cookbook](https://tinker-docs.thinkingmachines.ai/cookbook/rl/){:target="ot-cookbook"}
+
+### Ray RLlib
+
+[Ray RLlib](https://docs.ray.io/en/latest/rllib/index.html){:target="ray"} is a mature toolkit for distributed reinforcement learning.
 
 ### Unsloth
 
@@ -134,6 +154,10 @@ Unsloth is an OSS tool suite for model training and tuning, with useful guides o
 
 * [Fine-tuning LLMs](https://docs.unsloth.ai/get-started/fine-tuning-llms-guide){:target="u-ft"}
 * [Reinforcement Learning](https://docs.unsloth.ai/get-started/reinforcement-learning-rl-guide){:target="u-rl"}
+
+### Open Instruct
+
+[Open Instruct](https://github.com/allenai/open-instruct){:target="open-instruct"} from the [Allen Institute of AI](https://allenai.org/){:target="allenai"} is mentioned by Nathan Lambert in the [Reinforcement Fine Tuning](#reinforcement-fine-tuning) content discussed above. See also [InstructLab](#instructlab).
 
 ### InstructLab
 
