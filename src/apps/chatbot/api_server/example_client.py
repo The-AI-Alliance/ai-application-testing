@@ -28,7 +28,7 @@ def example_basic_query():
     client = make_client()
 
     response = client.chat.completions.create(
-        model="ollama_chat/gemma4:e4b",
+        model="ollama_chat/gemma4:12b",
         messages=example_messages,  # ty: ignore[invalid-argument-type]
     )
 
@@ -52,7 +52,7 @@ def example_streaming_query():
     print("Assistant: ", end="", flush=True)
 
     stream = client.chat.completions.create(  # ty: ignore[no-matching-overload]
-        model="ollama_chat/gemma4:e4b", messages=example_messages, stream=True
+        model="ollama_chat/gemma4:12b", messages=example_messages, stream=True
     )
 
     for chunk in stream:
@@ -73,7 +73,7 @@ def example_conversation():
     # First turn
     print(f"\nUser: {example_messages[0]['content']}")
     response = client.chat.completions.create(
-        model="ollama_chat/gemma4:e4b",
+        model="ollama_chat/gemma4:12b",
         messages=example_messages,  # ty: ignore[invalid-argument-type]
     )
     assistant_reply = response.choices[0].message.content
@@ -91,7 +91,7 @@ def example_conversation():
     )
     print(f"\nUser: {messages[-1]['content']}")
     response = client.chat.completions.create(
-        model="ollama_chat/gemma4:e4b",
+        model="ollama_chat/gemma4:12b",
         messages=messages,  # ty: ignore[invalid-argument-type]
     )
     print(f"Assistant: {response.choices[0].message.content}")
@@ -107,7 +107,7 @@ def example_emergency_query():
 
     content = "I'm having severe chest pain and difficulty breathing"
     response = client.chat.completions.create(
-        model="ollama_chat/gemma4:e4b", messages=[{"role": "user", "content": content}]
+        model="ollama_chat/gemma4:12b", messages=[{"role": "user", "content": content}]
     )
 
     print(f"\nUser: {content}")

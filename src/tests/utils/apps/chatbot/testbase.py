@@ -527,7 +527,7 @@ class TestBase(unittest.TestCase):
         threshold of 5 samples, if available, will be used in all cases.)
         """
         self.environment = {}
-        self.environment["model"] = os.environ.get("MODEL", "ollama_chat/gemma4:e4b")
+        self.environment["model"] = os.environ.get("MODEL", "ollama_chat/gemma4:12b")
         self.environment["service_url"] = os.environ.get(
             "INFERENCE_URL", "http://localhost:11434"
         )

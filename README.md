@@ -64,7 +64,7 @@ In our experiments, we used the models shown in **Table 1**, served by `ollama`.
 
 | Model                        | Parameters | Memory | Notes |
 | :--------------------------- | ---------: | -----: | :---- |
-| `gemma4:12b`                 |  12 B | 11 GB | **Default model used in the `Makefile`.** Excellent performance with multimodal support, requiring about 11 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
+| `gemma4:12b`                 |  12 B | 8.3 GB | **Default model used in the `Makefile`.** Excellent performance with multimodal support, requiring about 8.3 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
 | `gpt-oss:20b`                |  20 B | 14 GB | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/) framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116) for details. |
 | `qwen3.5:35b`                |  35 B | 27 GB | Excellent performance, but requires about 27 GB of memory. |
 | `llama3.2:3B`                |   3 B | 7.5 GB | A small but effective model in the Llama family. Should work on most laptops. A good choice during development when overhead is more important than performance. |
@@ -83,7 +83,7 @@ Yes, some model names use `B` and others use `b`... The **Memory** sizes are wha
 
 By default, we use `gemma4:12b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). That is what we will show in the examples which follow. Just change the model name as appropriate for your situation. The default model is specified in the `Makefile` with the variable `MODEL`, which defaults to `ollama_chat/gemma4:12b`. (Note the `ollama_chat/` prefix.) All the models listed above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
-We find that `gemma4:12b`, requiring about 11 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
+We find that `gemma4:12b`, requiring about 8.3 GB of memory performs well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
 
 We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization) versions of models. It is worth the time to experiment with different models to find the ones that work best for your development environment and production deployments.
 
@@ -155,8 +155,8 @@ This target first checks the following:
 
 * The `uv` command is installed and on your path.
 * Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
-	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_e4b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:12b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_e4b` subdirectory.
-	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_e4b/data`. 
+	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_12b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:12b`. (The `:` is converted to `_`, because `:` is not an allowed character in names for some file systems.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_12b` subdirectory.
+	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_12b/data`. 
 
 If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the corresponding paths shown in the next command.
 
@@ -167,8 +167,8 @@ cd src && time uv run tools/tdd-example-refill-chatbot.py \
 	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_e4b/data \
-	--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
+	--data-dir .../output/ollama_chat/gemma4_12b/data \
+	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
 ```
 
 `TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are absolute paths. The other paths shown are relative to the `src` directory.
@@ -182,8 +182,8 @@ The arguments are as follows:
 | `--model ollama_chat/gemma4:12b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
 | `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
-| `--data-dir .../output/ollama_chat/gemma4_e4b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--data-dir .../output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
@@ -214,14 +214,14 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_e4b/data \
-	--log-file .../output/ollama_chat/gemma4_e4b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
+	--data-dir .../output/ollama_chat/gemma4_12b/data \
+	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
 ```
 
 > [!NOTE]
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `.../output/data/ollama_chat/gemma4_e4b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `.../output/data/ollama_chat/gemma4_12b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
@@ -272,8 +272,8 @@ cd src && time uv run tools/unit-benchmark-data-validation.py \
 	--model ollama_chat/gemma4:12b \
 	--service-url http://localhost:11434 \
 	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_e4b/data \
-	--log-file .../output/ollama_chat/gemma4_e4b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+	--data-dir .../output/ollama_chat/gemma4_12b/data \
+	--log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
 ```
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
@@ -363,7 +363,7 @@ The source code, etc. for this application and the automated tests are located i
 | Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit//) | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/). The AI-specific tests are executed with both ChatBot implementations. |
 | Integration Tests | [`src/tests/integration/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/) | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/) | Test Q&A data for the AI tests. |
-| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gemma4_e4b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
+| Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gemma4_12b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
 
 ### Appointment Management Feature
 
