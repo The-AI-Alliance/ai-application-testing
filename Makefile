@@ -395,11 +395,20 @@ define gem_required_message
 Ruby's 'gem' is required. See ruby-lang.org for installation instructions.
 endef
 
+define other-error-message
+
+${ERROR} ${MSG} (status = ${STATUS})!!${RESET}
+
+endef
+
 # Help and Other Information Targets
 
-.PHONY: help help-docs help-tools help-code help-tools-all help-code-all help-command-uv help-command-uvx  help-command-jq
+.PHONY: help error help-docs help-tools help-code help-tools-all help-code-all help-command-uv help-command-uvx  help-command-jq
 
 all:: help
+
+error::
+	$(error ${other-error-message})
 
 help::
 	$(info ${help_message})
@@ -536,7 +545,7 @@ run-tdd-example-refill-chatbot:: before-run
 		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-		${APP_ARGS}
+		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 run-unit-benchmark-data-synthesis:: before-run
@@ -550,7 +559,7 @@ run-unit-benchmark-data-synthesis:: before-run
 		--data-dir ${DATA_DIR} \
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-		${APP_ARGS}
+		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 run-unit-benchmark-data-validation:: before-run
@@ -564,7 +573,7 @@ run-unit-benchmark-data-validation:: before-run
 	  --data-dir ${DATA_DIR} \
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-	  ${JUST_STATS} ${APP_ARGS}
+	  ${JUST_STATS} ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${RESET}\n"
 
 before-run:: silent-before-run
@@ -592,7 +601,7 @@ langflow-pipeline::
 	  --data-dir ${DATA_DIR} \
 	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
-	  ${JUST_STATS} ${APP_ARGS}
+	  ${JUST_STATS} ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 help-lf help-langflow help-langflow-pipeline::
@@ -610,7 +619,7 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	  export DATA_DIR=${DATA_DIR} && \
 	  uv run python -m unittest discover \
 	    --start-directory tests/unit/langflow \
-	    --top-level-directory .
+	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 .PHONY: run-chatbot chatbot do-run-chatbot agent-chatbot simple-chatbot before-chatbot after-chatbot
 
@@ -627,7 +636,7 @@ do-run-chatbot::
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log \
-		--verbose ${APP_ARGS}
+		--verbose ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 agent-chatbot simple-chatbot:: 
 	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
@@ -667,7 +676,7 @@ mcp-server:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
+		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 inspect-mcp-server:: command-check-node
@@ -695,7 +704,7 @@ api-server:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
+		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 	@echo "\n${INFO} Log output:${RESET}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/$@.log${RESET}\n"
 
 help-api-server::
@@ -726,7 +735,9 @@ view-api-server-docs view-api-server-redoc::
 .PHONY: run-open-webui open-webui open-webui-preamble open-webui-setup help-open-webui remove-open-webui
 
 run-open-webui open-webui:: open-webui-preamble open-webui-setup
-	cd ${OPEN_WEBUI_DIR} && DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve
+	cd ${OPEN_WEBUI_DIR} && \
+		DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve \
+		 || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 open-webui-preamble::
 	@echo "${INFO}Running Open WebUI (https://docs.openwebui.com/getting-started/) out of directory ${OPEN_WEBUI_DIR}.${RESET}"
@@ -773,7 +784,7 @@ unit-tests-non-ai::
 	  uv run python -m unittest discover \
 	    --pattern 'test*.py' \
 	    --start-directory tests/unit \
-	    --top-level-directory .
+	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 .PHONY: unit-tests-appointments
 
@@ -783,7 +794,7 @@ unit-tests-appointments::
 	  uv run python -m unittest discover \
 	    --pattern 'test_appointment*.py' \
 	    --start-directory tests/unit/apps/chatbot \
-	    --top-level-directory .
+	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
@@ -902,7 +913,7 @@ integration-tests-dedicated:: run-command-checks
 	  export VERBOSE='True' && \
 	  uv run python -m unittest discover \
 	  	--start-directory tests/integration \
-	  	--top-level-directory .
+	  	--top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
 
 .PHONY: before-pr format-lint-type-check flt
 before-pr:: format-lint-type-check tests
