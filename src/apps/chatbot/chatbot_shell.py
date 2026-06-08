@@ -91,6 +91,3 @@ class ChatBotShell(cmd.Cmd):
 
     def close(self):
         pass
-
-
-# Made with Bob

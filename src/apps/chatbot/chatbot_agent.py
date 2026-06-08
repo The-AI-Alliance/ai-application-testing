@@ -93,6 +93,3 @@ class ChatBotAgent(ChatBot):
         parsed = self.response_parser.parse(query, response)
         self.logger.debug(f"response = <{response}>, parsed = <{parsed}>.")
         return parsed
-
-
-# Made with Bob
