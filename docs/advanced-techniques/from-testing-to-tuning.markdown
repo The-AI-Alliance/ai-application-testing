@@ -101,14 +101,14 @@ Beyond model optimization, we also need the ability to optimize agents. Microsof
 
 An alternative to RL that is becoming popular. 
 
-* [paper](https://arxiv.org/abs/2305.18290)
-    * [reference implementation](https://github.com/eric-mitchell/direct-preference-optimization)
-* [explainer](https://medium.com/the-synaptic-stack/direct-preference-optimization-dpo-an-in-depth-analysis-62a3d1f343a4)
+* [paper](https://arxiv.org/abs/2305.18290){:target="arxiv"}
+    * [reference implementation](https://github.com/eric-mitchell/direct-preference-optimization){:target="gh"}
+* [explainer](https://medium.com/the-synaptic-stack/direct-preference-optimization-dpo-an-in-depth-analysis-62a3d1f343a4){:target="_blank"}
 
 Commercial guides:
 
-* [OpenAI](https://developers.openai.com/api/docs/guides/direct-preference-optimization)
-* [Microsoft](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/fine-tuning-direct-preference-optimization)
+* [OpenAI](https://developers.openai.com/api/docs/guides/direct-preference-optimization){:target="openai"}
+* [Microsoft](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/fine-tuning-direct-preference-optimization){:target="ms"}
 
 ## Tuning Everything Else
 
