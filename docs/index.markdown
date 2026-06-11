@@ -12,7 +12,7 @@ has_children: false
 >
 > _I know how to test my traditional software, which is **deterministic** (more or less...), but I don't know how to test my AI agent applications, which are uniquely **stochastic**, and therefore **nondeterministic**._
 
-Welcome to the [The AI Alliance](https://aialliance.org){:target="aia"} project to advance the state of the art for **Testing Generative AI Agent Applications**. This guide documents the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
+Welcome to the [The AI Alliance](https://thealliance.ai){:target="aia"} project to advance the state of the art for **Testing Generative AI Agent Applications**. This guide documents the knowledge and tools you need to achieve the same testing _confidence_ for your AI applications that you have for your traditional applications.
 
 {: note}
 > **Note:**
@@ -56,7 +56,7 @@ The goals of this project are two fold:
 > 2. &ldquo;Capitalized Terms&rdquo; link to [glossary definitions]({{site.glossaryurl}}/){:target="_glossary"}.
 > 3. Most chapters have a **Highlights** section at the top that summarizes the key takeaways from that chapter. 
 > 4. Many chapters end with an **Experiments to Try** section for further exploration.
-> 5. [This AI Alliance blog post](https://www.aialliance.org/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
+> 5. [This AI Alliance blog post](https://www.thealliance.ai/blog/how-can-we-test-enterprise-ai-applications){:target="aia-blog"} summarizes the motivation for this project.
 > 6. Want to just try the tools or example application? First [set up the dependencies]({{site.baseurl}}/working-example/#setup), then [run the tools]({{site.baseurl}}/working-example/#running-with-make) or run the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application).
 
 We start with a deeper dive into [The Problems of Testing Generative AI Agent Applications]({{site.baseurl}}/testing-problems).
@@ -103,6 +103,6 @@ See also [About Us]({{site.baseurl}}/about) for more details about this project 
 	* <a href="https://the-ai-alliance.github.io/trust-safety-evals/" target="eie">Evaluation Is for Everyone</a>: Understanding _evaluation_ tools for benchmarks, such as how they work and how to use them, etc. 
 	* <a href="https://the-ai-alliance.github.io/eval-ref-stack/" target="ers">Evaluation Reference Stack</a>: An example stack of evaluation tools.
 * The AI Alliance: 
-	* [Website](https://aialliance.org){:target="aia"}
+	* [Website](https://thealliance.ai){:target="aia"}
 	* [GitHub Organization](https://the-ai-alliance.github.io/){:target="aia-gh"}
 		* [Community](https://github.com/The-AI-Alliance/community){:target="aia-community"} 
