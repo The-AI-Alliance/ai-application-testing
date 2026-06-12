@@ -253,7 +253,7 @@ While the best-known benchmarks tend to be too broad in scope and generic for ou
 
 Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"}, including data sets and tools for safety purposes. Many of the data sets and tools discussed below use this term, so we call it out here for clarity.
 
-A good place to start when searching for benchmarks is the [EvalEval Coalition catalog](https://evalcards.evalevalai.com/), discussed in the [References]({{site.baseurl}}/references/#evaleval-coalition).
+A good place to start when searching for benchmarks is the [EvalEval Coalition catalog](https://evalcards.evalevalai.com/){:target="evaleval"}, discussed in the [References]({{site.baseurl}}/references/#evaleval-coalition).
 
 Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here.
 
