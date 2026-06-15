@@ -12,8 +12,8 @@ dependencies = [
     "httpx>=0.28.1",
     "deepagents>=0.6.8",
     "langchain-ollama>=1.1.0",
-    "openai>=2.36.0",
-    "litellm>=1.88.0",
+    "openai>=2.41.1",
+    "litellm>=1.89.0",
     "levenshtein>=0.27.3",
     "fastmcp>=3.4.2",
 ]
@@ -30,11 +30,12 @@ build-backend = "setuptools.build_meta"
 [project.optional-dependencies]
 dev = [
     "hypothesis>=6.152.8",
+    "hypothesis>=6.155.2",
     "pytest>=9.1.0",
     "pylint>=4.0.5",
     "black>=26.5.1",
     "ruff>=0.15.16",
-    "ty>=0.0.42",
+    "ty>=0.0.49",
 ]
 
 [tool.ty.src]
