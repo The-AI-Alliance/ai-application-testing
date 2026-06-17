@@ -25,8 +25,9 @@ While we can't cover all tools and techniques for building agents, we have used 
 {: .tip}
 > **Highlights:**
 >
-> 1. [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"} is a technique for adding new capabilities to agents in a modular way.
-> 1. TBD - more will be added once the text below is complete. 
+> 1. Agents can manage _sessions_, interactions with users or other agents to acquire information, invoke tools or other agents to perform tasks, adapt to circumstances, and report outcomes.
+> 1. [Agent Skills]({{site.glossaryurl}}/#agent-skills){:target="_glossary"} is one technique for adding new capabilities to agents in a modular way. It is growing in popularity and it is supported by many agent tool kits.
+> 1. Since agent _sessions_ are more sophisticated than simple questions and answers, more capable testing harnesses are required to set up the sessions for tasks, run the agent to perform the tasks, then verify the outcomes.
 
 ## An Agentic ChatBot
 
@@ -70,7 +71,8 @@ Appointment handling in [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/s
 
 Here are parts of the `SKILL.md` file for appointments, with some sections elided (`...`):
 
-> ```markdown
+
+```markdown
 ---
 name: appointments
 description: Use this skill for managing patient appointments - creating, canceling, confirming, changing, and listing appointments.
@@ -111,12 +113,10 @@ The tool returns a `tuple[str,str]`. If the appointment was successfully created
 
 Return this information as JSON:
 
-```json
 {
     "appointment_id": appointment_id, 
     "message": message
 }
-```
 
 Where:
 
@@ -129,137 +129,7 @@ Where:
 - No holidays
 - One patient per time slot
 
-### cancel_appointment
-Cancels an existing appointment, specified by the appointment ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
-
-**Parameters:**
-- `appointment_id` (str): ID of the appointment to cancel
-
-**Returns:**
-The tool returns a `tuple[bool,str]`. If the appointment was successfully cancelled, the first tuple element is `True` and the second tuple element is a success message. If the appointment was not successfully cancelled, the first tuple element is `False` and the second tuple element is an error message. 
-
-Return this information as JSON:
-
-```json
-{
-    "success": True | False, 
-    "message": message
-}
-```
-
-Where:
-
-- The `success` value is the first tuple element returned, i.e., `True` or `False`.
-- The `message` value is the second tuple element returned.
-
-### change_appointment
-Changes an appointment to a new time, specified by the appointment ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
-
-**Parameters:**
-- `appointment_id` (str): ID of the appointment to change
-- `new_date_time` (str): New ISO format datetime string
-
-**Returns:**
-The tool returns a `tuple[bool,str]`. If the appointment was successfully changed, the first tuple element is `True` and the second tuple element is a success message. If the appointment was not successfully changed, the first tuple element is `False` and the second tuple element is an error message. 
-
-Return this information as JSON:
-
-```json
-{
-    "success": True | False, 
-    "message": message
-}
-```
-
-Where:
-
-- The `success` value is the first tuple element returned, i.e., `True` or `False`.
-- The `message` value is the second tuple element returned.
-
-### get_appointments
-Get all active appointments, with optional filtering.
-
-**Parameters:**
-- `patient_name` (str, optional): Whether to include past appointments (default: False)
-- `after_datetime` (str for a ISO format datetime string, optional): Only include appointments with date times equal to or after this value
-
-**Returns:**
-The tool returns a `list[dict[str,Any]]`, containing a dictionary for each appointment. The list will be empty if there are no appointments that match the filter criteria (if any).
-
-Return this information as JSON:
-
-```json
-{
-    "appointments": appointment_list
-}
-```
-
-Where:
-
-- The `appointments` value is the list returned, which will be `[]`, if empty.
-
-### get_appointments_count
-Return the number of appointments currently scheduled.
-
-**Parameters:**
-
-**Returns:**
-The tool returns an integer count of all the appointments, which may be zero.
-
-Return this information as JSON:
-
-```json
-{
-    "count": count
-}
-```
-
-Where:
-
-- The `count` is the number of appointments returned.
-
-### get_appointment_by_id
-Return a specific appointment for the specified ID. Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name and appointment date and time, if necessary.
-
-**Parameters:**
-- `appointment_id` (str): ID of the appointment to change
-
-**Returns:**
-The tool returns a `dict[str, Any]` with the appointment details, or `{}` if no appointment was found for the input `appointment_id`. 
-
-Return this information as JSON:
-
-```json
-{
-    "appointment" : dictionary_as_json 
-}
-```
-
-Where:
-
-- The `dictionary_as_json` value is the appointment dictionary converted to JSON.
-
-### get_appointment_id_for_name_and_date_time
-Retrieve the appointment ID for the specified patient name and date time.
-
-**Parameters:**
-- `patient_name` (str): The patient name for the appointment
-- `appointment_date_time` (str for a ISO format datetime string): the date time for the appointment
-
-**Returns:**
-The tool returns a `str` with the appointment ID or '' if no matching appointment was found.
-
-Return this information as JSON:
-
-```json
-{
-    "appointment_id": appointment_id
-}
-```
-
-Where:
-
-- The `appointment_id` value is the returned appointment ID, which may be ''.
+...
 
 ## Example Interactions
 
@@ -282,7 +152,7 @@ Where:
 - When listing appointments, show them in chronological order.
 - For cancellations and changes, confirm the action with the patient first.
 
-> ```
+```
 
 Most of this is self-explanatory. The `create_appointment` tool is implemented in the Python file, [`appointment_tools.py`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}. (We omit the comment block found in the definition):
 
@@ -300,7 +170,7 @@ def create_appointment(patient_name: str, appointment_time: str, reason: str) ->
         return {"success": False, "error": f"Invalid datetime format: {e}"}
 ```
 
-It calls a support function `get_appointment_manager` that retrieves a global instance of the `AppointmentManager` class mentioned above. That class just tracks appointments in a file, `output/applications.jsonl`, and makes several simplifying assumptions and constrains. Obviously a real ChatBot would use a real calendar manager.
+It calls a support function `get_appointment_manager` that retrieves a global instance of the `AppointmentManager` class mentioned above. That class just tracks appointments in a file, `output/applications.jsonl`, and makes several simplifying assumptions. Obviously a real ChatBot should use a real calendar manager.
 
 In our experience using `gemma4:12b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not quite production ready, but it illustrates possibilities.
 
@@ -310,14 +180,25 @@ Finally, see also this blog post, [I Still Prefer MCP Over Skills](https://david
 
 Let's discuss how we applied these concepts to the agent-based ChatBot implementation, [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"}. As we said above, we used [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools to provide more advanced behaviors, including [Agent Skills](#agent-skills). Recall that [Run the ChatBot Example Application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) explains how to run `ChatBotAgent`. For example, it is the default ChatBot implementation, so it is the one executed when you run `make chatbot`.
 
-TBD
+TODO
+
+## Writing Unit Benchmarks for Agents
+
+There is a fundamental difference between this new appointment agent and the other use cases we have discussed before; now our application can perform a _session_, where it prompts the user for missing information and clarifications, it invokes actions, it responds to various contingencies effectively, and it reports final outcomes. This goes beyond what can be tested using the Q&A unit benchmark approach we have used so far.
+
+We need a way to set up sessions for particular scenarios, like successfully booking a new appointment. Requirements include telling the ChatBot what information it needs from the user, which the user may or may not provide without asking for it. The ChatBot will be expected to request information it doesn't have.
+
+We need the ability to specify desired outcomes, possible constraints on what the Chatbot can do, what tools it should use (like a calendar manager), and how to report successes and failures. 
+
+If we structure this information using a consistent JSON or YAML format, then we can write a "generic", data-driven runner that performs the tests and evaluates the results. Adding more tests only requires the addition of more of these JSON/YAML definitions.
+
+We explore how to create unit benchmarks for agents in the next chapter, [Evaluating Agents](../evaluating-agents).
 
 ## Experiments to Try
 
-{: .todo}
-> **TODO:** 
-> 
-> We will complete this section once a working example is provided.
+* Run the agent ChatBot implementation using the `make chatbot` command and try prompts that involve managing appointments. (For ideas, see the tasks defined in the appointments [`SKILL.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/SKILL.md){:target="cba-gh"} file.) How well does the ChatBot handle these tasks?
+* What improvements could you make to any of the content in `SKILL.md` for appointments? For example, if you found that the ChatBot didn't handle some tasks very well, could you improve the `SKILL.md` definition in some way to make it work better? Keep in mind that some code changes might also be required in [`appointment_tools.py`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/skills/appointments/appointment_tools.py){:target="cba-gh"}.
+* Try adding new tasks.
 
 ## What's Next?
 
