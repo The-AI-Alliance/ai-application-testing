@@ -18,18 +18,16 @@ has_children: false
 {:toc}
 </details>
 
-The previous chapters discussed several agent implementation and testing tools we used, specifically [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} library and [Agent Skills](#agent-skills). 
-
-TBD - evaluation tools...
+The previous chapters discussed several agent implementation and testing tools we used, for example, [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} library and [Agent Skills](#agent-skills). 
 
 This chapter lists some other tools for implementation and evaluation that may be of interest. You can skip this chapter if you aren't interested in exploring additional tools.
 
 <a id="highlights"></a>
 
-{: .tip}
-> **Highlights:**
+{: .note}
+> **Note:**
 >
-> 1. What tools have you used? Feedback is welcome on the list hear, especially experiences with any of the tools mentioned. What tools should we add?
+> This is an area of rapid evolution and innovation. This chapter doesn't attempt to be comprehensive nor always up to date, but it will help you get started in your search for tools. We welcome feedback and suggestions.
 
 <a id="other-tools"/>
 

@@ -39,7 +39,7 @@ Agents are arguably the most rapidly evolving area of the AI ecosystem right now
 
 ## What's Next?
 
-Proceed to the first chapter [Building Agents](./building-agents/), followed by [Evaluating Agents](./evaluating-agents/), and finally [Tools for Agent Development and Testing](./agent-tools/) chapter.
+Proceed to the first chapter [Building Agents](./building-agents/), followed by [Evaluating Agents](./evaluating-agents/). Because there is an explosion of new tools emerging for building and using agents, the chapter [Tools for Agent Development and Testing](./agent-tools/) provides a partial list of options for your consideration.
 
 Then review the [highlights](#highlights) in each chapter and proceed to the [Lessons from Systems Testing]({{site.baseurl}}/testing-strategies/systems-testing/).
 

@@ -143,7 +143,7 @@ In the answer,
 The other two prompts are similarly worded for their requirements.
 
 {: .note}
-> **NOTE:** The runtime prompt template used by the ChatBot application, [`patient-chatbot.yaml`]({{site.gh_edit_repository}}/blob/main/src/apps/chatbot/prompts/templates/patient-chatbot.yaml){:target="_blank"}, integrates these three behavioral units and additional behaviors.
+> **Note:** The runtime prompt template used by the ChatBot application, [`patient-chatbot.yaml`]({{site.gh_edit_repository}}/blob/main/src/apps/chatbot/prompts/templates/patient-chatbot.yaml){:target="_blank"}, integrates these three behavioral units and additional behaviors.
 
 ### How Many Q&A Pairs Do We Need?
 

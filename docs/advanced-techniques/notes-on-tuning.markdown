@@ -39,7 +39,7 @@ This chapter contains notes on various [Tuning]({{site.glossaryurl}}/#tuning){:t
 Hugging Face's [a smol course](https://huggingface.co/learn/smol-course/unit0/1){:target="_blank"} is designed to teach all aspects of model [Tuning]({{site.glossaryurl}}/#tuning){:target="_glossary"}. It is not yet complete, but projected to be done by the end of 2025. 
 
 {: .tip}
-> **TIP:** 
+> **Tip:** 
 > 
 > This is the best place to start for practical training on tuning.
 

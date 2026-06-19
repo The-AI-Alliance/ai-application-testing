@@ -60,7 +60,7 @@ Finally, well-designed tests, like units and components themselves, are very spe
 | **Acceptance tests** | The whole application | Does this [Scenario]({{site.glossaryurl}}/#scenario){:target="_glossary"} for a [Use Case]({{site.glossaryurl}}/#use-case){:target="_glossary"} work as specified from end to end? |
 
 {: .tip}
-> **TIP:** The [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies the ideas in this chapter to an example ChatBot application.
+> **Tip:** The [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies the ideas in this chapter to an example ChatBot application.
 
 ## TDD and Generative AI
 
@@ -158,14 +158,14 @@ If the request doesn't look like a refill request, reply with this message:
 ```
 
 {: .tip}
-> **TIP:** 
+> **Tip:** 
 > 
 > Providing a few examples is known as [Few-Shot Prompting]({{site.glossaryurl}}/#few-shot-prompt){:target="_glossary"}. This technique enables [In-Context Learning]({{site.glossaryurl}}/#in-context-learning){:target="_glossary"} by providing demonstrations within the prompt that help guide the model to provide better answers. In contrast, providing no examples is known as [Zero-Shot Prompting]({{site.glossaryurl}}/#zero-shot-prompt){:target="_glossary"} and relies on the model to already be capable of providing satisfactory responses, in combination with any other information in the prompt's [Context]({{site.glossaryurl}}/#context){:target="_glossary"}. See the website [Prompt Engineering Guide](https://www.promptingguide.ai/){:target="_blank"} for more details.
 
 We tried both system prompts with a number of user prompts (details below) using the models `gpt-oss:20b`, `granite4`, `llama3.2:3B`, and `smollm2:1.7b-instruct-fp16` served locally using [Ollama](https://ollama.com/){:target="ollama"}. More details about these and other models used can be found in [Table 1]({{site.baseurl}}/working-example/#table-1) in the [Working Example]({{site.baseurl}}/working-example/) chapter.
 
 {: .tip}
-> **TIPs:** 
+> **Tips:** 
 > 
 > 1. Most models are available in different sizes. [Table 1]({{site.baseurl}}/working-example/#table-1) discusses size and performance trade offs. When you choose models, consider smaller or larger versions depending on your hardware resources. Production deployments should lean towards larger versions with better performance.
 > 1. Ollama provides many models in smaller [Quantized]({{site.glossaryurl}}/#quantized){:target="_glossary"} forms. Here we use non-quantized models with full 16-bit floating point weights. If you find that the examples are very slow on your machine, try searching for and using one of the quantized versions of models instead.
@@ -192,7 +192,7 @@ For all these queries, we executed separate queries where `_P_` was replaced wit
 For all the models, both drugs, and all refill requests, the expected answer was always returned, `Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.`, with `_P_` replaced by the drug name, although sometimes the model would use `Prozac`, which is arguably more correct, rather than `prozac` that was used in the &ldquo;user's&rdquo; prompts. 
 
 {: .tip}
-> **TIP:** 
+> **Tip:** 
 > 
 > To make handling responses more resilient, consider performing some transformations on the generated responses to remove differences that don't affect the meaning, but provide more uniformity both for verifying test results and for using results downstream in production deployments. For example, make white space consistent and convert numbers, currencies, addresses, etc. to standard formats. For test comparisons when deterministic responses are expected, converting to lower case can eliminate trivial differences.
 >
@@ -233,7 +233,7 @@ Finally, thinking in terms of a classifier suggests that we don't necessarily wa
 Then the UI that presents the response to the user could format the actual response we want to show, where the format would be specified in a configuration file, so it is easy to change the response without a code change like the system prompt. This would also make _internationalization_ easier, where a configuration file with German strings is used for a German-speaking audience, for example. 
 
 {: .note}
-> **NOTE:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support! We will need language-specific tests, too.
+> **Note:** For internationalization, we will need to choose an LLM that is properly _localized_ for each target language we intend to support! We will need language-specific tests, too.
 
 ## Creating and Using Unit Benchmarks
 
@@ -270,7 +270,7 @@ Clone the project [repo]({{site.gh_edit_repository}}/){:target="_blank"} and see
 The first tool in this guide illustrates some of the concepts required for writing automated tests for a generative AI component. Subsequent chapters and the tools they introduce will explore techniques in more depth, as well as address some of the limitations of this tool's approach.
 
 {: .tip}
-> **TIP:** 
+> **Tip:** 
 > 
 > See [A Working Example]({{site.baseurl}}/working-example), which summarizes how to run all the tools described in this guide, as well as the healthcare ChatBot example application. That chapter also discusses running the automated unit tests (a.k.a. [Unit Benchmarks]({{site.baseurl}}/testing-strategies/unit-benchmarks)) for the application, which use the synthetic data generated by this guide's tools.
 
@@ -320,7 +320,7 @@ The tool runs two experiments, each with these two templates files:
 The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same. 
 
 {: .note}
-> **NOTE:** 
+> **Note:** 
 > 
 > These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 

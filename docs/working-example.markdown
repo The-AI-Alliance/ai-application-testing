@@ -22,7 +22,7 @@ has_children: false
 > In this guide, we develop a healthcare ChatBot example application, chosen because it is a _worst case_ design challenge. Needless to say, but we will say it anyway, a ChatBot is notoriously difficult to implement successfully, because of the free-form prompts from users and the many possible responses models can generate. A healthcare ChatBot is even more challenging because of the risk the ChatBot could provide bad advice that leads to a poor patient outcome, if followed. Hence, **this example is only suitable for educational purposes**. It is not at all suitable for use in real healthcare applications and **_it must not be used_** in such a context. Use it at your own risk.
 
 {: .tip}
-> **TIP:** To see the discussion about using _unit benchmarks_ in the software development life cycle, [jump to here](#automated-testing-practical-enhancements).
+> **Tip:** To see the discussion about using _unit benchmarks_ in the software development life cycle, [jump to here](#automated-testing-practical-enhancements).
 
 ## The User Guide Tools and Exercises vs. the ChatBot Application
 
@@ -37,7 +37,7 @@ We welcome your [feedback](({{site.baseurl}}/contributing)) on our approach, as 
 ## Setup
 
 {: .note}
-> **NOTE:**
+> **Note:**
 > 
 > The `make` target processes discussed below assume you are using a MacOS or Linux shell environment like `zsh` or `bash`. However, the tools described below are written in Python, so the commands shown for running them should work on any operating system with minor adjustments, such as paths to files and directories. Let us know about your experiences: [issues]({{site.gh_edit_repository}}/issues){:target="issues"}, [discussions]({{site.gh_edit_repository}}/discussions){:target="discussions"}.
 
@@ -56,7 +56,7 @@ If `make` won't work on your machine, do the following steps yourself:
 * Install [`ollama`](https://ollama.com){:target="ollama"} for local model inference (optional).
 
 {:.tip}
-> **TIPS:**
+> **Tips:**
 > 1. Open the Ollama app settings and set the context length to 256k.
 > 1. Try `make help` for details about the `make` process. There are also `--help` options for all the tools discussed below.
 > 1. For any `make` target, to see what commands will be executed without running them, pass the `-n` or `--dry-run` option to `make`. While we try to keep this documentation consistent with the implementations. This is the best way to confirm the correct way to run the various programs.
@@ -139,7 +139,7 @@ make all-models-all-chatbot
 You can also change the list of models you regularly want to use by changing the definition of the `MODELS` variable in the `Makefile`.
 
 {: .note}
-> **NOTE:**
+> **Note:**
 >
 > See also the [LiteLLM documentation](https://docs.litellm.ai/#basic-usage){:target="litellm"} for guidance on any required modifications to the arguments passed in our Python code to the LiteLLM `completion` function. (Search for `response = completion` to find all the occurrences.) We plan to [implement automatic handling]({{site.gh_edit_repository}}/issues/20){:target="issues"} of such changes eventually.
 
@@ -150,7 +150,7 @@ Now you are set up and you can use `make` to run the tools discussed and also th
 On MacOS and Linux, using `make` is the easiest way to run the exercises. The actual commands are printed out and we repeat them below for those of you on other platforms. Hence, you can also run the Python tools directly without using `make`. 
 
 {: .tip}
-> **TIPS:**
+> **Tips:**
 >
 > 1. For all of the tool-invocation `make` commands discussed from now on, you can run each one for _all_ the models (as defined by the `Makefile` variable `MODELS`) by prefixing the target name with `all-models-`, e.g., `all-models-run-tdd-example-refill-chatbot`. You can use it for most targets, although it doesn't make sense for some of them, like the `help-*` targets and the ChatBot application, which is interactive.
 > 1. For a given model (as defined by the `Makefile` variable `MODEL`), you can run all of the tools with one command, `make all-code`. Hence, you can run all the examples for all the models discussed above using `make all-models-all-code`. (This target doesn't run the ChatBot application.)
@@ -213,7 +213,7 @@ The arguments are as follows:
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
 
 {: .note}
-> **NOTE:**
+> **Note:**
 >
 > These template files were originally designed for use with the `llm` CLI tool (see the Appendix in the repo's [`README`]({{site.gh_edit_repository}}/){:target="readme"} for details about `llm`). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used instead to invoke inference. We extract the content we need from the templates and construct the prompts we send through LiteLLM.
 
@@ -246,7 +246,7 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 ```
 
 {: .note}
-> **NOTE:**
+> **Note:**
 >
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
@@ -352,7 +352,7 @@ There are actually _two_ implementations of this application:
 A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. By default, the `Makefile` targets use `ChatBotAgent`, which is selected because the `Makefile` variable `WHICH_CHATBOT` is defined to be `agent`. This value is overridden by `*-`, but it can be overridden on the command line with the value `simple` to use the other implementation.
 
 {: .note}
-> **NOTE:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
+> **Note:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
 
 The application can be invoked in one of several ways:
 
@@ -378,7 +378,7 @@ cd src && time uv run python -m apps.chatbot.main \
 ```
 
 {: .tip}
-> **TIP:** Using the [Open WebUI](#using-the-chatbot-with-open-webui) GUI is recommended for experimenting with the ChatBot.
+> **Tip:** Using the [Open WebUI](#using-the-chatbot-with-open-webui) GUI is recommended for experimenting with the ChatBot.
 
 For help on the application, try this:
 
@@ -445,7 +445,7 @@ We will discuss the automated tests below, in [Automated Testing: Practical Enha
 If you prefer using a GUI instead of the CLI prompt for the ChatBot, an integration is provided with [Open WebUI](https://docs.openwebui.com){:target="open-webui"}. We use a separate project configuration in [`src/apps/chatbot/open-webui/`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/){:target="repo"}, rather than add the dependencies to the whole project. See [`src/apps/chatbot/open-webui/README.md`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/open-webui/README.md){:target="repo"}.
 
 {: tip}
-> **TIP:**
+> **Tip:**
 > While it is tedious to set this up, once configured this is the most effective way to experiment with the ChatBot application, especially for the more advanced use cases implemented by the _agent_ version of the ChatBot.
 
 Begin by running the API server, e.g., `make api-server`, which runs the agent-implementation of the ChatBot, by default. Then in a separate terminal window, run one of these commands:
@@ -492,6 +492,7 @@ Try it!
 
 {: .note}
 > **Note:**
+>
 > It is also possible to configure Open WebUI to use the ChatBot MCP server (discussed next). See the Open WebUI [documentation](https://docs.openwebui.com){:target="openwebui"} for details on configuring MCP servers.
 
 ### An MCP Server for the ChatBot

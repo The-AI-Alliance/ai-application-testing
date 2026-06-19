@@ -16,7 +16,7 @@ We emphasize concepts in these chapters. For the details of applying them to aut
 Finally, the end of each chapter has an **Experiments to Try** section for further exploration.
 
 {: .note }
-> **NOTES:** 
+> **Notes:** 
 > 
 > 1. These user guide chapters focus on concepts, with the [ChatBot application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) applies them to a demonstration project that uses generative AI.
 > 1. Using a [Generative AI Model]({{site.glossaryurl}}/#generative-ai-model){:target="_glossary"} can mean it is managed by the application itself, behind library APIs, or it is accessed as a remote service, such as ChatGPT, or through a protocol like [MCP]({{site.glossaryurl}}/#model-context-protocol){:target="_glossary"}. It can be part of more advanced design patterns like [Agents]({{site.glossaryurl}}/#agent){:target="_glossary"} and [RAG]({{site.glossaryurl}}/#retrieval-augmented-generation){:target="_glossary"}. Furthermore, evaluating just models is not sufficient since these other tools can modify prompts and responses. So, just as classic [Unit Tests]({{site.glossaryurl}}/#unit-test){:target="_glossary"}, [Integration Tests]({{site.glossaryurl}}/#integration-test){:target="_glossary"}, and [Acceptance Tests]({{site.glossaryurl}}/#acceptance-test){:target="_glossary"} cover individual [Units]({{site.glossaryurl}}/#unit){:target="_glossary"} to [Components]({{site.glossaryurl}}/#component){:target="_glossary"} that aggregate them, it is really necessary for our AI tests to cover not just model prompts and responses, but units and components they are part of. Nevertheless, for simplicity, we will often work with models directly.
