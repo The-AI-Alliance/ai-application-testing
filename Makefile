@@ -1,16 +1,7 @@
 # Makefile for the ai-application-testing website and repo example code.
 
-# Some Environment variables
-MAKEFLAGS             ?= --warn-undefined-variables
-MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
-UNAME                 ?= $(shell uname)
-ARCHITECTURE          ?= $(shell uname -m)
-TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
-## Used for version tagging release artifacts.
-GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
-
-# Time execution
-TIME                  ?= time  # time execution of long processes
+# Common includes. See the end of this file, too!
+include .common.mk
 
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
 APP_ARGS              ?=
@@ -40,25 +31,20 @@ MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_GEMMA4} ${MODEL_QWEN35} ${MODE
 MODEL                 ?= ${MODEL_GEMMA4}
 
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
-SRC_DIR               ?= src
-OUTPUT_DIR            ?= ${PWD}/output/${MODEL_FILE_NAME}
-OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
-OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
+
+# Overrides definition in .common.mk:
+OUTPUT_DIR            := ${PWD}/output/${MODEL_FILE_NAME}
 # DATA_DIR: Where the tools write and later read data.
 # TEST_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
-# TEST_OUTPUT_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
-DATA_DIR              ?= ${OUTPUT_DIR}/data
-TEST_DATA_DIR         ?= tests/data
-TEST_OUTPUT_DIR       ?= output/tests
-CLEAN_CODE_DIRS       ?= ${OUTPUT_DIR} ${TEST_OUTPUT_DIR}
-
+DATA_DIR              := ${OUTPUT_DIR}/data
+TEST_DATA_DIR         := ${TESTS_DIR}/data
 OPEN_WEBUI_DIR        ?= ${SRC_DIR}/apps/chatbot/open-webui
 
 # Some specific variables passed as env. vars. to the ChatBot.
 # CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
 # WHICH_CHATBOT: Which ChatBot implementation to use: 'agent' for ChatBotAgent or 'simple' for ChatBotSimple
-CONFIDENCE_THRESHOLD  ?= 0.9
-WHICH_CHATBOT         ?= agent
+CONFIDENCE_THRESHOLD        ?= 0.9
+WHICH_CHATBOT               ?= agent
 
 # Some specific variables passed as env. vars. to the test suites.
 # ACCUMULATE_TEST_ERRORS:   Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
@@ -66,11 +52,11 @@ WHICH_CHATBOT         ?= agent
 # TESTS_LOGS_DIR:           Where special AI test logs are written. RELATIVE TO ${SRC_DIR}!
 # TESTS_LOGS_FILE_TEMPLATE: A file name pattern, where "{class_name}" will be replaced with the test class name.
 # TESTS_LOGS_FILE_GLOB:     Just used for messages printed by targets.
-ACCUMULATE_TEST_ERRORS    ?= True
-RATING_THRESHOLD          ?= 4
-TESTS_LOGS_DIR            ?= tests/logs/${MODEL_FILE_NAME}
-TESTS_LOGS_FILE_TEMPLATE  ?= ${TESTS_LOGS_DIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
-TESTS_LOGS_FILE_GLOB      ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
+ACCUMULATE_TEST_ERRORS      ?= True
+RATING_THRESHOLD            ?= 4
+TESTS_LOGS_DIR              ?= tests/logs/${MODEL_FILE_NAME}
+TESTS_LOGS_FILE_TEMPLATE    ?= ${TESTS_LOGS_DIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
+TESTS_LOGS_FILE_GLOB        ?= ${TESTS_LOGS_DIR}/*-${TIMESTAMP}.jsonl
 
 # Sampling rates for different kinds of tests.
 UNIT_TEST_DATA_SAMPLE_RATE        ?= 0.25
@@ -89,394 +75,198 @@ CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_P
 
 ALL_TOOLS                   ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
 
-# Definitions for the website.
-GITHUB_PAGES_URL      ?= https://the-ai-alliance.github.io/ai-application-testing/
-DOCS_DIR              ?= docs
-SITE_DIR              ?= ${DOCS_DIR}/_site
-CLEAN_DOCS_DIRS       ?= ${SITE_DIR} ${DOCS_DIR}/.sass-cache
 
-## Override when running `make view-local` using e.g., `JEKYLL_PORT=8000 make view-local`
-JEKYLL_PORT           ?= 4000
+# When you see ${CODE}${_END} without anything between them, it is there 
+# to make it easier to line up multi-line description comments.
 
-# Colored output using tput. Adapted from
-# https://stackoverflow.com/a/53528374
-# Posted by Robert Ranjan
-# Retrieved 2026-05-18, License - CC BY-SA 4.0
-# TIP: Run `make show-colors` (This target is at the end of this file.)
+help:: help-quick
+help-quick::
+	$(info ${help-custom-message})
 
-RED=$(shell tput setaf 1)
-GREEN=$(shell tput setaf 2)
-ORANGE=$(shell tput setaf 3)
-BLUE=$(shell tput setaf 4)
-PINK=$(shell tput setaf 5)
-DARK_GREEN=$(shell tput setaf 6)
-LIGHT_GREY=$(shell tput setaf 7)
-BLACK=$(shell tput setaf 8)
-# virtually identical to RED:
-RED2=$(shell tput setaf 9)
-_END=$(shell tput sgr0)
+define help-custom-message
+${HIGHLIGHT}Quick help for this project's specific targets:${_END}
 
-ERROR        = ${RED}ERROR:
-WARN         = ${ORANGE}WARNING:
-WARNING      = ${ORANGE}WARNING:
-NOTE         = ${BLUE}NOTE:
-INFO         = ${DARK_GREEN}INFO:
-TIP          = ${BLUE}TIP:
-HIGHLIGHT    = ${BLUE}
-
-ifndef DOCS_DIR
-$(error ${ERROR} There is no ${DOCS_DIR} directory!${_END})
-endif
-ifndef SRC_DIR
-$(error ${ERROR} There is no ${SRC_DIR} directory!${_END})
-endif
-
-
-# When you see ${GREEN}${_END}, it is there to make it easier to line up 
-# multi-line description comments.
-
-define help_message
-
-Quick help for this make process.
-Try these more specific help targets:
-
-${GREEN}make help-docs${_END}          # Help on the website targets.
-${GREEN}make help-tools${_END}         # Help on the tools and example ChatBot targets.
-${GREEN}make help-code${_END}          # Synonym for "help-tools".
-
-${GREEN}make print-info${_END}         # Print the current values of some make and env. variables.
-${GREEN}make clean${_END}              # Makes clean-docs and clean-code, but not clean-setup, uninstall-uv
-endef
-
-define help_message_docs
-
-Help for the GitHub Pages-related targets.
-For running the example tools described there, see src/Makefile or run "make help-src".
-
-${GREEN}make help-docs${_END}          # Help on the website make targets.
-${GREEN}make all-docs${_END}           # Clean and locally view the document.
-${GREEN}make clean-docs${_END}         # Remove build artifacts, etc.
-${GREEN}make view-pages${_END}         # View the published GitHub pages in a browser.
-${GREEN}make view-local${_END}         # View the pages locally (requires Jekyll).
-${GREEN}${_END}                        # ${TIP} "JEKYLL_PORT=8000 make view-local" uses port 8000 instead of 4000!${_END}
-
-${GREEN}make setup-jekyll${_END}       # Install Jekyll. Make sure Ruby is installed. 
-${GREEN}${_END}                        # (Only needed for local viewing of the document.)
-${GREEN}make run-jekyll${_END}         # Used by "view-local"; assumes everything is already built.
-${GREEN}${_END}                        # ${TIP} "JEKYLL_PORT=8000 make run-jekyll" uses port 8000 instead of 4000!${_END}
+${CODE}make help-code${_END}         # Help on the tools and example ChatBot targets.
 
 endef
 
-define help_message_code
+define help-code-message
+${HIGHLIGHT}Quick help for this make process for the tools and ChatBot example app.${_END}
 
-Quick help for this make process for the tools and ChatBot example app.
-For the tools used to manage the website, run "make help-docs".
+For the tools used to manage the website, run ${CODE}make help-docs${_END}.
 
 For the following targets that run tools, there are variables defined in this Makefile
-that are used to pass arguments to the commands. Run 'make print-info-code' to see the
+that are used to pass arguments to the commands. Run ${CODE}make print-info-code${_END} to see the
 list of variables and their default definitions. Specific variables are mentioned for
 the corresponding targets:
 
-${GREEN}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, "all-tools"),
-${GREEN}${_END}                        # that is everything to the right of "all-models-", and 
-${GREEN}${_END}                        # make that target for ALL the models defined by "MODELS":
-${GREEN}${_END}                        #   ${MODELS}
-${GREEN}${_END}                        # (Not useful for model-agnostic targets, like "setup"...)
-${GREEN}${_END}                        # You can override the list of models as follows:
-${GREEN}${_END}                        #   make MODELS="..." all-models-...
-${GREEN}make all-tools${_END}          # Clean outputs and run all the tools using the model defined by "MODEL".
-${GREEN}make all-code${_END}           # Synonym for "all-tools".
-${GREEN}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first. 
-${GREEN}${_END}                        # Built by "all-tools".
-${GREEN}make run-code${_END}           # Synonym for "run-tools".
+${CODE}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
+${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and 
+${CODE}${_END}                        # make that target for ALL the models defined by ${CODE}MODELS${_END}:
+${CODE}${_END}                        #   ${CODE}${MODELS}${_END}
+${CODE}${_END}                        # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
+${CODE}${_END}                        # You can override the list of models as follows:
+${CODE}${_END}                        #   ${CODE}make MODELS="..." all-models-...${_END}
+${CODE}make all-tools${_END}          # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
+${CODE}make all-code${_END}           # Synonym for ${CODE}all-tools${_END}.
+${CODE}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first. 
+${CODE}${_END}                        # Built by ${CODE}all-tools${_END}.
+${CODE}make run-code${_END}           # Synonym for ${CODE}run-tools${_END}.
 
-${GREEN}make setup${_END}              # One-time setup tasks; e.g., builds target install-uv.
-${GREEN}make one-time-setup${_END}     # Synonym for "setup".
-${GREEN}make install-uv${_END}         # Explain how to install "uv".
-${GREEN}${_END}                        # Run "make help-command-uv" for more information.
-${GREEN}make install-jq${_END}         # Explain how to install "jq" (an optional CLI tool).
+${CODE}make setup${_END}              # One-time setup tasks; e.g., builds target ${CODE}install-uv${_END}.
+${CODE}make one-time-setup${_END}     # Synonym for ${CODE}setup${_END}.
+${CODE}make install-uv${_END}         # Explain how to install ${CODE}uv${_END}.
+${CODE}${_END}                        # Run ${CODE}make help-command-uv${_END} for more information.
+${CODE}make install-jq${_END}         # Explain how to install ${CODE}jq${_END} (an optional CLI tool).
 
-${GREEN}make build${_END}              # Build a distribution
-${GREEN}make install${_END}            # Install the code locally in development mode
+${CODE}make build${_END}              # Build a distribution.
+${CODE}make install${_END}            # Install the code locally in development mode.
 
-${GREEN}make tests${_END}              # Following convention, this target runs the unit tests only, building
-${GREEN}${_END}                        # the targets "unit-tests-non-ai", "unit-tests-ai", and "unit-tests-appointments".
-${GREEN}make test${_END}               # Synonym for "tests".
-${GREEN}make unit-tests${_END}         # Synonym for "tests".
-${GREEN}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
-${GREEN}make unit-tests-ai${_END}      # All unit tests that do involve inference invocations, which take a long time to run.
-${GREEN}make unit-tests-appointments${_END}
-${GREEN}${_END}                        # Unit tests for the appointment management tool.
-${GREEN}make unit-tests-langflow${_END}
-${GREEN}${_END}                        # Run unit tests for the Langflow components. NOT built by "tests" or "integration-tests",
-${GREEN}${_END}                        # so we don't force you to have Langflow installed.
+${CODE}make tests${_END}              # Following convention, this target runs the unit tests only, building
+${CODE}${_END}                        # the targets ${CODE}unit-tests-non-ai${_END}", ${CODE}unit-tests-ai${_END}, and ${CODE}unit-tests-appointments${_END}.
+${CODE}make test${_END}               # Synonym for ${CODE}tests${_END}.
+${CODE}make unit-tests${_END}         # Synonym for ${CODE}tests${_END}.
+${CODE}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
+${CODE}make unit-tests-ai${_END}      # All unit tests that do involve inference invocations, which take a long time to run.
+${CODE}make unit-tests-appointments${_END}
+${CODE}${_END}                        # Unit tests for the appointment management tool.
+${CODE}make unit-tests-langflow${_END}
+${CODE}${_END}                        # Run unit tests for the Langflow components. NOT built by ${CODE}tests${_END} or ${CODE}integration-tests${_END},
+${CODE}${_END}                        # so we don't force you to have Langflow installed.
 
-${GREEN}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
-${GREEN}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
-${GREEN}make integration-tests-dedicated${_END}
-${GREEN}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
+${CODE}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
+${CODE}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
+${CODE}make integration-tests-dedicated${_END}
+${CODE}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
 
-${GREEN}make all-tests${_END}          # Run the unit and integration tests.
-${GREEN}make all-tests-langflow${_END} # Run all the tests for the Langflow integration.
+${CODE}make all-tests${_END}          # Run the unit and integration tests.
+${CODE}make all-tests-langflow${_END} # Run all the tests for the Langflow integration.
 
-${GREEN}make format-lint-type-check${_END}
-${GREEN}${_END}                        # Do formating, linting, and type checking.
-${GREEN}make flt${_END}                # Synonym for format-lint-type-check.
-${GREEN}make format${_END}             # Format the Python code with 'black'.
-${GREEN}make lint${_END}               # Lint the Python code by making the ruff and pylint targets.
-${GREEN}make ruff${_END}               # Lint the Python code 'ruff'.
-${GREEN}make pylint${_END}             # Lint the Python code 'pylint'.
-${GREEN}make type-check${_END}         # Type check the Python code with 'ty'.
-${GREEN}make type-check-watch${_END}   # Type check the Python code with 'ty' in "watch" mode, so you can fix mistakes and keep it updating.
-${GREEN}make before-pr${_END}          # Make format-lint-type-check and tests. 
-${GREEN}${_END}                        # DO THIS BEFORE SUBMITTING A PR!
+${CODE}make clean-setup${_END}        # Undoes everything done by the setup target or provides
+${CODE}${_END}                        # instructions for what you must do manually in some cases.
+${CODE}make uninstall-uv${_END}       # Explain how to uninstall "uv".
 
-${GREEN}make clean-tools${_END}        # Remove build artifacts in ${OUTPUT_DIR}.
-${GREEN}make clean-code${_END}         # Synonym for "clean-tools".
-${GREEN}make clean-setup${_END}        # Undoes everything done by the setup target or provides
-${GREEN}${_END}                        # instructions for what you must do manually in some cases.
-${GREEN}make uninstall-uv${_END}       # Explain how to uninstall "uv".
+${TIP_LABEL}See also the list of common targets, like ${CODE}tests${_END} and ${CODE}lint${_END}, which are shown
+${TIP_LABEL}by ${CODE}make help${_END}.
 
 For tools run by the following targets, which invoke inference, the model 
-${MODEL} is served by ollama. The make variable MODEL specifies the model, 
+${CODE}${MODEL}${_END} is served by ollama. The make variable ${CODE}MODEL${_END} specifies the model, 
 so if you want to use a different model, invoke make as in this example:
 
-  ${HIGHLIGHT}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${_END}
+  ${CODE}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${_END}
 
-See also the description of "all-models-*" above.
+See also the description of ${CODE}all-models-*${_END} above.
 
-All the following" targets may run setup dependencies that are redundant most of the time,
-but easy to forgot when important! See also the "help-*" targets below.
+All the following targets may setup dependencies that are redundant most of the time,
+but easy to forgot when important! See also the ${CODE}help-*${_END} targets below.
 
-${GREEN}make run-tdd-example-refill-chatbot${_END}
-${GREEN}${_END}                        # Run the code for the TDD example "unit benchmark".
-${GREEN}${_END}                        # See the TDD chapter in the website for details.
-${GREEN}make run-terc${_END}           # Synonym for "run-tdd-example-refill-chatbot".
-${GREEN}make terc${_END}               # Synonym for "run-tdd-example-refill-chatbot".
+${CODE}make run-tdd-example-refill-chatbot${_END}
+${CODE}${_END}                        # Run the code for the TDD example "unit benchmark".
+${CODE}${_END}                        # See the TDD chapter in the website for details.
+${CODE}make run-terc${_END}           # Synonym for ${CODE}run-tdd-example-refill-chatbot${_END}.
+${CODE}make terc${_END}               # Synonym for ${CODE}run-tdd-example-refill-chatbot${_END}.
 
-${GREEN}make run-unit-benchmark-data-synthesis${_END}
-${GREEN}${_END}                        # Run the code for "unit benchmark" data synthesis.
-${GREEN}${_END}                        # See the Unit Benchmark chapter in the website for details.
-${GREEN}make run-ubds${_END}           # Synonym for "run-unit-benchmark-data-synthesis".
-${GREEN}make ubds${_END}               # Synonym for "run-unit-benchmark-data-synthesis".
+${CODE}make run-unit-benchmark-data-synthesis${_END}
+${CODE}${_END}                        # Run the code for "unit benchmark" data synthesis.
+${CODE}${_END}                        # See the Unit Benchmark chapter in the website for details.
+${CODE}make run-ubds${_END}           # Synonym for ${CODE}run-unit-benchmark-data-synthesis${_END}.
+${CODE}make ubds${_END}               # Synonym for ${CODE}run-unit-benchmark-data-synthesis${_END}.
 
-${GREEN}make run-unit-benchmark-data-validation${_END}
-${GREEN}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
-${GREEN}${_END}                        # See the Unit Benchmark chapter in the website for details.
-${GREEN}make run-ubdv${_END}           # Synonym for "run-unit-benchmark-data-validation".
-${GREEN}make ubdv${_END}               # Synonym for "run-unit-benchmark-data-validation".
+${CODE}make run-unit-benchmark-data-validation${_END}
+${CODE}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
+${CODE}${_END}                        # See the Unit Benchmark chapter in the website for details.
+${CODE}make run-ubdv${_END}           # Synonym for ${CODE}run-unit-benchmark-data-validation${_END}.
+${CODE}make ubdv${_END}               # Synonym for ${CODE}run-unit-benchmark-data-validation${_END}.
 
-${GREEN}make run-langflow-pipeline${_END}
-${GREEN}${_END}                        # Run the Langflow benchmark pipeline (synthesis + validation).
-${GREEN}${_END}                        # This orchestrates both synthesis and validation in a single flow.
-${GREEN}make langflow-pipeline${_END}  # Synonym for "run-langflow-pipeline".
+${CODE}make run-langflow-pipeline${_END}
+${CODE}${_END}                        # Run the Langflow benchmark pipeline (synthesis + validation).
+${CODE}${_END}                        # This orchestrates both synthesis and validation in a single flow.
+${CODE}make langflow-pipeline${_END}  # Synonym for ${CODE}run-langflow-pipeline${_END}.
 
-The following targets are for the example ChatBot application. See also the "help-*" targets next.
+The following targets are for the example ChatBot application. See also the ${CODE}help-*${_END} targets next.
 
-${GREEN}make chatbot${_END}            # Run the ${WHICH_CHATBOT} implementation of the ChatBot application.
-${GREEN}make run-chatbot${_END}        # Synonym for "chatbot".
-${GREEN}make agent-chatbot${_END}      # Run the 'agent' implementation of the ChatBot.
-${GREEN}make simple-chatbot${_END}     # Run the 'simple' implementation of the ChatBot.
+${CODE}make chatbot${_END}            # Run the ${CODE}${WHICH_CHATBOT}${_END} implementation of the ChatBot application.
+${CODE}make run-chatbot${_END}        # Synonym for ${CODE}chatbot${_END}.
+${CODE}make agent-chatbot${_END}      # Run the ${CODE}agent${_END} implementation of the ChatBot.
+${CODE}make simple-chatbot${_END}     # Run the ${CODE}simple${_END} implementation of the ChatBot.
 
-${GREEN}make mcp-server${_END}         # Run the ChatBot's MCP server.
-${GREEN}make run-mcp-server${_END}     # Synonym for "mcp-server".
-${GREEN}make api-server${_END}         # Run the ChatBot's OpenAI-compatible API server.
-${GREEN}make run-api-server${_END}     # Synonym for "api-server".
+${CODE}make mcp-server${_END}         # Run the ChatBot's MCP server.
+${CODE}make run-mcp-server${_END}     # Synonym for ${CODE}mcp-server${_END}.
+${CODE}make api-server${_END}         # Run the ChatBot's OpenAI-compatible API server.
+${CODE}make run-api-server${_END}     # Synonym for ${CODE}api-server${_END}.
 
 Tasks for help, debugging, setup, etc.
 
-${GREEN}make help-tools${_END}         # Prints this output.
-${GREEN}make help-code${_END}          # Synonym for "help-tools".
-${GREEN}make help-tools-all${_END}     # Prints this output and makes "help-terc", "help-ubds" and "help-ubdv".
-${GREEN}make help-code-all${_END}      # Synonym for "help-tools-all".
+${CODE}make help-code${_END}          # Prints this output.
+${CODE}make help-code-all${_END}      # Prints this output and makes ${CODE}help-terc${_END}, ${CODE}help-ubds${_END} and ${CODE}help-ubdv${_END}.
 
-${GREEN}make help-terc${_END}          # Synonym for "help-tdd-example-refill-chatbot".
-${GREEN}make help-tdd-example-refill-chatbot${_END}
-${GREEN}${_END}                        # Show help for the TDD example code by passing the "--help" flag.
+${CODE}make help-terc${_END}          # Synonym for ${CODE}help-tdd-example-refill-chatbot${_END}.
+${CODE}make help-tdd-example-refill-chatbot${_END}
+${CODE}${_END}                        # Show help for the TDD example code by passing the ${CODE}--help${_END} flag.
 
-${GREEN}make help-ubds${_END}          # Synonym for "help-unit-benchmark-data-synthesis".
-${GREEN}make help-unit-benchmark-data-synthesis${_END}
-${GREEN}${_END}                        # Show help for the "unit benchmark" data synthesis code by passing the "--help" flag.
+${CODE}make help-ubds${_END}          # Synonym for ${CODE}help-unit-benchmark-data-synthesis${_END}.
+${CODE}make help-unit-benchmark-data-synthesis${_END}
+${CODE}${_END}                        # Show help for the "unit benchmark" data synthesis code by passing the ${CODE}--help${_END} flag.
 
-${GREEN}make help-ubdv${_END}          # Synonym for "help-unit-benchmark-data-validation".
-${GREEN}make help-unit-benchmark-data-validation${_END}
-${GREEN}${_END}                        # Show help for the synthetic data validation code by passing the "--help" flag.
-${GREEN}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
+${CODE}make help-ubdv${_END}          # Synonym for ${CODE}help-unit-benchmark-data-validation${_END}.
+${CODE}make help-unit-benchmark-data-validation${_END}
+${CODE}${_END}                        # Show help for the synthetic data validation code by passing the ${CODE}--help${_END} flag.
+${CODE}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
 
-${GREEN}make help-langflow-pipeline${_END}
-${GREEN}${_END}                        # Show help for the Langflow pipeline by passing the "--help" flag.
-${GREEN}make help-langflow${_END}      # Synonym for "help-langflow-pipeline".
+${CODE}make help-langflow-pipeline${_END}
+${CODE}${_END}                        # Show help for the Langflow pipeline by passing the ${CODE}--help${_END} flag.
+${CODE}make help-langflow${_END}      # Synonym for ${CODE}help-langflow-pipeline${_END}.
 
-${GREEN}make help-chatbot${_END}       # Show help for the interactive ChatBot application.
-${GREEN}make help-mcp-server${_END}    # Show help for the ChatBot's MCP server.
-${GREEN}make help-api-server${_END}    # Show help for the ChatBot's OpenAI-compatible API server.
+${CODE}make help-chatbot${_END}       # Show help for the interactive ChatBot application.
+${CODE}make help-mcp-server${_END}    # Show help for the ChatBot's MCP server.
+${CODE}make help-api-server${_END}    # Show help for the ChatBot's OpenAI-compatible API server.
 
-${GREEN}make view-api-server-docs${_END}  # Open a browser showing the API server "docs".
-${GREEN}make view-api-server-redoc${_END} # Open a browser showing the API server "redoc".
+${CODE}make view-api-server-docs${_END}  # Open a browser showing the API server ${CODE}docs${_END}.
+${CODE}make view-api-server-redoc${_END} # Open a browser showing the API server ${CODE}redoc${_END}.
 
-Several CLI tools are required, like "uv", or only needed for a few special make targets, like "jq":
+Several CLI tools are required, like ${CODE}uv${_END}, or only needed for a few special make targets, like ${CODE}jq${_END}:
 
-${GREEN}make help-command-uv${_END}    # Prints specific information about "uv", including installation.
-${GREEN}make help-command-jq${_END}    # Prints specific information about "jq", including installation.
+${CODE}make help-command-uv${_END}    # Prints specific information about ${CODE}uv${_END}, including installation.
+${CODE}make help-command-jq${_END}    # Prints specific information about ${CODE}jq${_END}, including installation.
+${CODE}make help-command-node${_END}  # Prints specific information about ${CODE}node${_END}, including installation.
 endef
 
-define help_message_uv
-
-The Python environment management tool "uv" is required.
-See https://docs.astral.sh/uv/ for installation instructions.
-
-If you want to uninstall uv and you used HomeBrew to install it,
-use 'brew uninstall uv'. Otherwise, if you executed one of the
-installation commands on the website above, find the installation
-location and delete uv.
-
-endef
-
-
-define help_message_jq
-
-The CLI command 'jq' is useful, but not required, for processing JSON file.
-See https://jqlang.org/download/ for installation instructions.
-
-endef
-
-define help_message_node
-The JavaScript runtime "node" is required if you want to use the MCP server
-inspector `@modelcontextprotocol/inspector`. Otherwise, node is not used in
-this project. See https://nodejs.org/en/download/ for installation instructions.
-endef
-
-open-url-message = Try ${HIGHLIGHT}⌘+click${_END} or ${HIGHLIGHT}^+click${_END} on the URL.
-
-define gem-error-message
-
-ERROR: Did the gem command fail with a message like this?
-ERROR: 	 "You don't have write permissions for the /Library/Ruby/Gems/2.6.0 directory."
-ERROR: To run the "gem install ..." command for the MacOS default ruby installation requires "sudo".
-ERROR: Instead, use Homebrew (https://brew.sh) to install ruby and make sure "/usr/local/.../bin/gem"
-ERROR: is on your PATH before "user/bin/gem".
-ERROR:
-ERROR: Or did the gem command fail with a message like this?
-ERROR:   Bundler found conflicting requirements for the RubyGems version:
-ERROR:     In Gemfile:
-ERROR:       foo-bar (>= 3.0.0) was resolved to 3.0.0, which depends on
-ERROR:         RubyGems (>= 3.3.22)
-ERROR:   
-ERROR:     Current RubyGems version:
-ERROR:       RubyGems (= 3.3.11)
-ERROR: In this case, try "brew upgrade ruby" to get a newer version.
-
-endef
-
-define bundle-error-message
-
-ERROR: Did the bundle command fail with a message like this?
-ERROR: 	 "/usr/local/opt/ruby/bin/bundle:25:in `load': cannot load such file -- /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z/exe/bundle (LoadError)"
-ERROR: Check that the /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z directory actually exists. 
-ERROR: If not, try running the clean-jekyll command first:
-ERROR:   make clean-jekyll setup-jekyll
-ERROR: Answer "y" (yes) to the prompts and ignore any warnings that you can't uninstall a "default" gem.
-
-endef
-
-define command_check_message
-Shell command \"$$cmd\" is required for a make target. Try \"make help-command-$$cmd\" for more information, or \"make install-$$cmd\" may be able to install it. See also the project's README.md for more information.
-endef
-
-define missing_ruby_gem_or_command_error_message
-is needed by ${PWD}/Makefile. Try "gem install ..."
-endef
-
-define ruby_and_gem_required_message
-'ruby' and 'gem' are required. See ruby-lang.org for installation instructions.
-endef
-
-define gem_required_message
-Ruby's 'gem' is required. See ruby-lang.org for installation instructions.
-endef
-
-define other-error-message
-
-${ERROR} ${MSG} (status = ${STATUS})!!${_END}
-
-endef
 
 # Help and Other Information Targets
 
-.PHONY: help error help-docs help-tools help-code help-tools-all help-code-all help-command-uv help-command-uvx  help-command-jq
+.PHONY: help-code-all
 
-all:: help
+help-code-all:: help-code help-terc help-ubds help-ubdv
 
-error::
-	$(error ${other-error-message})
+.PHONY: clean-tools clean-code
 
-help::
-	$(info ${help_message})
-	@echo
+clean clean-code:: clean-tools
 
-help-tools:: help-code
-help-docs help-code::
-	$(info ${help_message_${@:help-%=%}})
-	@echo
-help-command-uv help-command-uvx::
-	$(info ${help_message_uv})
-	@echo
-help-command-jq::
-	$(info ${help_message_jq})
-	@echo
+.PHONY: print-info-tools print-info-code
 
-help-command-%::
-	@echo "${ORANGE}Sorry, no built-in help is available for CLI command '${@:help-command-%=%}'.${_END}"
-
-help-tools-all help-code-all:: help-code help-terc help-ubds help-ubdv
-
-.PHONY: clean clean-docs clean-tools clean-code clean-jekyll
-
-clean:: clean-docs clean-tools clean-jekyll
-clean-code:: clean-tools
-
-.PHONY: print-info print-info-docs print-info-tools print-info-code print-info-env
-
-print-info:: print-info-docs print-info-code print-info-env 
-print-info-docs::
-	@echo "${HIGHLIGHT}For the GitHub Pages website:${_END}"
-	@echo "  ${GREEN}GITHUB_PAGES_URL:${_END}            ${GITHUB_PAGES_URL}"
-	@echo "  ${GREEN}PWD:${_END}                         ${PWD} ('print working directory')"
-	@echo "  ${GREEN}DOCS_DIR:${_END}                    ${DOCS_DIR}"
-	@echo "  ${GREEN}SITE_DIR:${_END}                    ${SITE_DIR}"
-	@echo "  ${GREEN}JEKYLL_PORT:${_END}                 ${JEKYLL_PORT}"
-	@echo
-
-print-info-tools:: print-info-code
+print-info print-info-tools:: print-info-code 
 print-info-code::
 	@echo "${HIGHLIGHT}For the example code and tools:${_END}"
-	@echo "  ${GREEN}MODEL:${_END}                       ${MODEL} (the default)"
-	@echo "  ${GREEN}MODELS:${_END} (all we use)         ${MODELS}"
-	@echo "  ${GREEN}ALL_TOOLS:${_END}                   ${ALL_TOOLS}"
-	@echo "  ${GREEN}INFERENCE_SERVICE:${_END}           ${INFERENCE_SERVICE}"
-	@echo "  ${GREEN}INFERENCE_URL:${_END}               ${INFERENCE_URL}"
-	@echo "  ${GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${_END} ${TOOLS_PROMPTS_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_TEMPLATES_DIR:${_END}       ${CHATBOT_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_TEST_TEMPLATES_DIR:${_END}  ${CHATBOT_TEST_TEMPLATES_DIR}"
-	@echo "  ${GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CHATBOT_OUTPUT_DIR}"
-	@echo "  ${GREEN}SRC_DIR:${_END}                     ${SRC_DIR}"
-	@echo "  ${GREEN}APP_ARGS:${_END}                    ${APP_ARGS} (User hook for passing custom arguments, like '-h')"
 	@echo
-	@echo "  ${HIGHLIGHT}The following depend on the value of MODEL (${MODEL}):${_END}"
-	@echo "  ${GREEN}OUTPUT_DIR:${_END}                  ${OUTPUT_DIR}"
-	@echo "  ${GREEN}OUTPUT_LOGS_DIR:${_END}             ${OUTPUT_LOGS_DIR}"
-	@echo "  ${GREEN}TESTS_LOGS_DIR:${_END}              ${TESTS_LOGS_DIR} (relative to ${SRC_DIR})"
-	@echo "  ${GREEN}DATA_DIR:${_END}                    ${DATA_DIR}"
-	@echo "  ${GREEN}ACCUMULATE_TEST_ERRORS:${_END}      ${ACCUMULATE_TEST_ERRORS} (For tests, run all examples, then report errors. '' == False)"
+	@echo "  ${DARK_GREEN}MODEL:${_END}                       ${CODE}${MODEL}${_END} (the default)"
+	@echo "  ${DARK_GREEN}MODELS:${_END}                      ${CODE}${MODELS}${_END}"
+	@echo "  ${DARK_GREEN}${_END}                             (all of them that we explicitly list in the ${CODE}Makefile${_END})" 
+	@echo "  ${DARK_GREEN}ALL_TOOLS:${_END}                   ${CODE}${ALL_TOOLS}${_END}"
+	@echo "  ${DARK_GREEN}INFERENCE_SERVICE:${_END}           ${CODE}${INFERENCE_SERVICE}${_END}"
+	@echo "  ${DARK_GREEN}INFERENCE_URL:${_END}               ${CODE}${INFERENCE_URL}${_END}"
+	@echo "  ${DARK_GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${_END} ${CODE}${TOOLS_PROMPTS_TEMPLATES_DIR}${_END}"
+	@echo "  ${DARK_GREEN}CHATBOT_TEMPLATES_DIR:${_END}       ${CODE}${CHATBOT_TEMPLATES_DIR}${_END}"
+	@echo "  ${DARK_GREEN}CHATBOT_TEST_TEMPLATES_DIR:${_END}  ${CODE}${CHATBOT_TEST_TEMPLATES_DIR}${_END}"
+	@echo "  ${DARK_GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CODE}${CHATBOT_OUTPUT_DIR}${_END}"
+	@echo "  ${DARK_GREEN}APP_ARGS:${_END}                    ${CODE}'${APP_ARGS}'${_END} (A user hook for passing custom arguments, like ${CODE}-h${_END})"
 	@echo
-print-info-env::
-	@echo "${HIGHLIGHT}Some 'environment' settings:${_END}"
-	@echo "  ${GREEN}GIT_HASH:${_END}                    ${GIT_HASH}"
-	@echo "  ${GREEN}TIMESTAMP:${_END}                   ${TIMESTAMP}"
-	@echo "  ${GREEN}MAKEFLAGS:${_END}                   ${MAKEFLAGS}"
-	@echo "  ${GREEN}MAKEFLAGS_RECURSIVE:${_END}         ${MAKEFLAGS_RECURSIVE}"
-	@echo "  ${GREEN}UNAME:${_END}                       ${UNAME}"
-	@echo "  ${GREEN}ARCHITECTURE:${_END}                ${ARCHITECTURE}"
+	@echo "${HIGHLIGHT}The following depend on the value of MODEL (${MODEL}):${_END}"
+	@echo
+	@echo "  ${DARK_GREEN}OUTPUT_DIR:${_END}                  ${CODE}${OUTPUT_DIR}${_END}"
+	@echo "  ${DARK_GREEN}OUTPUT_LOGS_DIR:${_END}             ${CODE}${OUTPUT_LOGS_DIR}${_END}"
+	@echo "  ${DARK_GREEN}TESTS_LOGS_DIR:${_END}              ${CODE}${TESTS_LOGS_DIR}${_END} (relative to ${CODE}SRC_DIR${_END} == ${CODE}${SRC_DIR}${_END})"
+	@echo "  ${DARK_GREEN}DATA_DIR:${_END}                    ${CODE}${DATA_DIR}${_END}"
+	@echo "  ${DARK_GREEN}ACCUMULATE_TEST_ERRORS:${_END}      ${CODE}${ACCUMULATE_TEST_ERRORS}${_END} (For tests, run all examples, then report errors. Set to ${CODE}''${_END} for ${CODE}False${_END})"
 	@echo
 
 # Code Targets
@@ -512,8 +302,7 @@ all-tools all-code:: run-tools
 run-tools run-code:: 
 	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_TOOLS:%=run-%} 
 
-clean-tools clean-code:: 
-	rm -rf ${CLEAN_CODE_DIRS}   
+clean-tools:: clean-code
 
 terc run-terc:: run-tdd-example-refill-chatbot
 ubds run-ubds:: run-unit-benchmark-data-synthesis
@@ -653,7 +442,9 @@ before-chatbot:: run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT
 	@echo "${INFO} Running the \"${WHICH_CHATBOT}\" ChatBot...${_END}" && \
 	echo "\n${INFO} Log output:${_END}\n  ${HIGHLIGHT}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}\n" && \
 		[[ ${MODEL} =~ gpt-oss ]] && [[ ${WHICH_CHATBOT} = agent ]] && \
-		echo "${ERROR} ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot!${_END} (https://github.com/langchain-ai/langchain/issues/33116). Try using ${MODEL_GEMMA4}" && exit 1 || \
+		echo "${ERROR} ${MODEL} currently can't be used with the \"${WHICH_CHATBOT}\" ChatBot!${_END}" && \
+    echo " (https://github.com/langchain-ai/langchain/issues/33116). Try using model ${CODE}${MODEL_GEMMA4}${_END}." && \
+    exit 1 || \
 		echo ""
 
 after-chatbot::
@@ -758,7 +549,7 @@ remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
 
-${OUTPUT_DIR} ${TEST_OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${OUTPUT_TEST_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai 
@@ -802,7 +593,7 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-unit-tests-ai-agent unit-tests-ai-simple:: ${TEST_OUTPUT_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} 
+unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TEST_DIR} ${SRC_DIR}/${TESTS_LOGS_DIR} 
 	@echo "${INFO} Running the AI unit tests with the \"${@:unit-tests-ai-%=%}\" ChatBot...${_END}"
 	@echo "${INFO} AI test log files:${_END}"
 	@echo "  ${HIGHLIGHT}${SRC_DIR}/${TESTS_LOGS_FILE_GLOB}${_END}"
@@ -946,41 +737,6 @@ type-check-watch::
 	@echo "${INFO} Running 'ty' on the code in 'watch' mode.${_END}"
 	uv run ty check --watch ${SRC_DIR} 
 
-.PHONY: one-time-setup setup clean-setup 
-.PHONY: uninstall-uv 
-.PHONY: install-uv uv-venv install-dev-dependencies install-jq
-
-setup one-time-setup:: install-uv uv-venv install-dev-dependencies install-jq
-
-clean-setup:: uninstall-uv
-
-uninstall-uv:: 
-	$(info ${help_message_${@:uninstall-%=%}})
-	@echo "${ORANGE}  You have to uninstall ${@:uninstall-%=%} manually.${_END}"
-	
-install-uv:: 
-	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "${INFO} $$cmd is already installed${_END}" || ${MAKE} help-command-$$cmd
-
-uv-venv:: command-check-uv 
-	@test -d .venv && echo "'.venv' already exists; not running 'uv venv'." || uv venv
-	@echo "${TIP} run 'source .venv/bin/activate' if subsequent commands fail!${_END}"
-
-install-dev-dependencies::
-	uv pip install -e ".[dev]"
-
-install-jq:: help-command-jq
-
-%-error:
-	$(error ${${@}-message})
-
-# Check if a command is on the path.
-command-check-%:
-	@cmd=${@:command-check-%=%} && ${MAKE} silent-$@ || \
-		! echo "${ERROR} ${command_check_message}${_END}" || exit 1
-
-silent-command-check-%:
-	@cmd=${@:silent-command-check-%=%} && command -v $$cmd > /dev/null
 
 # The next section of this Makefile includes some convenience targets for working 
 # with the "llm" CLI tool. It is NOT required to install and use this tool.
@@ -1075,116 +831,7 @@ install::
 	@echo "${INFO} Installing the code locally in development mode...${_END}"
 	uv sync
 
-# Docs Targets - for the website.
-# These targets are only needed when you want to preview edits locally, by running
-# Jekyll. The exception is "view-pages", which opens the published site in a browser.
-
-.PHONY: all-docs clean-docs
-.PHONY: view-pages view-local setup-jekyll run-jekyll run-jekyll-message
-
-all-docs:: clean-docs view-local
-
-clean-docs::
-	rm -rf ${CLEAN_DOCS_DIRS}   
-
-view-pages::
-	@echo "${INFO} Opening ${HIGHLIGHT}${GITHUB_PAGES_URL} ...${_END}"
-	@uv run python -m webbrowser "${GITHUB_PAGES_URL}" || \
-		(echo "${ERROR} I could not open the GitHub Pages URL:\n  ${HIGHLIGHT}${GITHUB_PAGES_URL}${_END}\n" && \
-		 echo "${open-url-message}" && \
-		 exit 1 )
-
-view-local:: setup-jekyll run-jekyll
-
-# Passing --baseurl '' allows us to use `localhost:4000` rather than require
-# `localhost:4000/The-AI-Alliance/ai-application-testing` when running locally.
-run-jekyll: clean-docs run-jekyll-message
-	cd ${DOCS_DIR} && bundle exec jekyll serve --port ${JEKYLL_PORT} --baseurl '' --incremental || ( echo "ERROR: Failed to run Jekyll. Try running 'make setup-jekyll'." && exit 1 )
-
-run-jekyll-message::
-	@echo
-	@echo "${NOTE} You will see the ${HIGHLIGHT}http://127.0.0.1:${JEKYLL_PORT}/${GREEN} URL printed when ready.${_END}"
-	@echo "${open-url-message}"
-
-setup-jekyll:: ruby-installed-check command-check-ruby-bundle
-	@echo "${INFO} Updating Ruby gems required for local viewing of the docs, including jekyll.${_END}"
-	gem install jekyll bundler jemoji || ${MAKE} gem-error
-	bundle install || ${MAKE} bundle-error
-	bundle update html-pipeline || ${MAKE} bundle-error
-
-
-ruby-installed-check:
-	@command -v ruby > /dev/null || \
-		( echo "${ERROR} ${ruby_and_gem_required_message}${_END}" && exit 1 )
-	@command -v gem  > /dev/null || \
-		( echo "${ERROR} ${gem_required_message}${_END}" && exit 1 )
-
-command-check-ruby-%:
-	@command -v ${@:command-check-ruby-%=%} > /dev/null || \
-		( echo "${ERROR} Ruby command/gem \"${@:command-check-ruby-%=%}\" ${missing_ruby_gem_or_command_error_message}${_END}" && \
-			exit 1 )
-
-
-# NOTE: We call make to run these %-error targets, because if you try
-# some_command || $(error "didn't work"), the $(error ...) function is always
-# invoked, independent of the shell script logic. Hence, the only way to make
-# this invocation conditional is to use a make target invocation, as shown above.
-jekyll-error:
-	$(error "${ERROR} Failed to run Jekyll. Try running 'make setup-jekyll'.${_END}")
-ruby-missing-error:
-	$(error "${ERROR} 'ruby' is required. ${ruby_installation_message}${_END}")
-gem-missing-error:
-	$(error "${ERROR} Ruby's 'gem' is required. ${ruby_installation_message}${_END}")
-gem-error:
-	$(error ${ERROR} ${gem-error-message}${_END})
-bundle-error:
-	$(error ${ERROR} ${bundle-error-message}${_END})
-bundle-missing-error:
-	$(error "${ERROR} Ruby gem command 'bundle' is required. I tried 'gem install bundle', but it apparently didn't work!${_END}")
-
-.PHONY: show-colors show-colors-info show-colors-echo
-
-# Use this target to see the colors defined above.
-show-colors:: show-colors-info show-colors-echo
-
-show-colors-info::
-	$(info This is how the color and message definition look using $$(info ...) functions:)
-	$(info This is <${RED}RED${_END}>)
-	$(info This is <${RED2}RED2${_END}>)
-	$(info This is <${GREEN}GREEN${_END}>)
-	$(info This is <${ORANGE}ORANGE${_END}>)
-	$(info This is <${BLUE}BLUE${_END}>)
-	$(info This is <${PINK}PINK${_END}>)
-	$(info This is <${DARK_GREEN}DARK_GREEN${_END}>)
-	$(info This is <${LIGHT_GREY}LIGHT_GREY${_END}>)
-	$(info This is <${BLACK}BLACK${_END}>)
-	$(info )
-	$(info This is an ERROR:     ${ERROR} Oooops! ${_END})
-	$(info This is a  WARN:      ${WARN} Careful! ${_END})
-	$(info This is a  WARNING:   ${WARNING} Careful! ${_END})
-	$(info This is a  NOTE:      ${NOTE} Of note... ${_END})
-	$(info This is an INFO:      ${INFO} It's useful to know ${_END})
-	$(info This is a  TIP:       ${TIP} This can help... ${_END})
-	$(info This is a  HIGHLIGHT: ${HIGHLIGHT}/foo/bar/baz ${_END})
-	$(info )
-
-show-colors-echo::
-	$(info This is how the color and message definition look using echo:)
-	@echo "This is <${RED}RED${_END}>"
-	@echo "This is <${RED2}RED2${_END}>"
-	@echo "This is <${GREEN}GREEN${_END}>"
-	@echo "This is <${ORANGE}ORANGE${_END}>"
-	@echo "This is <${BLUE}BLUE${_END}>"
-	@echo "This is <${PINK}PINK${_END}>"
-	@echo "This is <${DARK_GREEN}DARK_GREEN${_END}>"
-	@echo "This is <${LIGHT_GREY}LIGHT_GREY${_END}>"
-	@echo "This is <${BLACK}BLACK${_END}>"
-	@echo
-	@echo "This is an ERROR:     ${ERROR} Oooops! ${_END}"
-	@echo "This is a  WARN:      ${WARN} Careful! ${_END}"
-	@echo "This is a  WARNING:   ${WARNING} Careful! ${_END}"
-	@echo "This is a  NOTE:      ${NOTE} Of note... ${_END}"
-	@echo "This is an INFO:      ${INFO} It's useful to know ${_END}"
-	@echo "This is a  TIP:       ${TIP} This can help... ${_END}"
-	@echo "This is a  HIGHLIGHT: ${HIGHLIGHT}/foo/bar/baz ${_END}"
-	@echo
+# Common includes. See the beginning of this file, too!
+# The reason the following are put at the end, rather than the beginning, is to 
+# control the ordering of dependencies for "global" targets, like "help".
+include .website.mk
