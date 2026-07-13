@@ -13,8 +13,8 @@ ifndef WEBSITE_DIR
 $(error ${ERROR}There is no ${WEBSITE_DIR} directory!${_END})
 endif
 
-help:: help-quick-website
-help-quick-website::
+help:: help-custom-website
+help-custom-website::
 	$(info ${help-custom-website-message})
 
 define help-custom-website-message

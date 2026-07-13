@@ -636,7 +636,7 @@ Normally, we want our unit tests to run very quickly, so we can run them frequen
 {: .highlight}
 > Running the unit test suite using local `ollama` inference with all the Q&A examples can take many hours to complete!
 
-Hence, the first unique feature supported by the test suite is an environment variable `DATA_SAMPLE_RATE`, which tells the test what percentage of the total Q&A pairs to use. For unit tests, it is set to the value of `UNIT_TEST_DATA_SAMPLE_RATE`, which is defined to be 0.1 (or 10%) in the `Makefile`. So, 10% of the Q&A pairs are used for unit tests. These runs still take tens of minutes to complete. However, since some of the Q&A data files have just a few dozen pairs, a lower limit of five is used if the calculated sample size would be less than five.
+Hence, the first unique feature supported by the test suite is an environment variable `DATA_SAMPLE_RATE`, which tells the test what percentage of the total Q&A pairs to use. For unit tests, it is set to the value of `UNIT_TESTS_DATA_SAMPLE_RATE`, which is defined to be 0.1 (or 10%) in the `Makefile`. So, 10% of the Q&A pairs are used for unit tests. These runs still take tens of minutes to complete. However, since some of the Q&A data files have just a few dozen pairs, a lower limit of five is used if the calculated sample size would be less than five.
 
 The integration tests (`integration-tests` target) run all 100% of the Q&A pairs, by default. 
 

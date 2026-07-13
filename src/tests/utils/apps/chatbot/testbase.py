@@ -545,9 +545,9 @@ class TestBaseRunner(TestBase):
             else "ChatBotSimple"
         )
         def_log_dir = "tests/logs"
-        log_file_template = os.environ.get("TESTS_LOGS_FILE_TEMPLATE")
+        log_file_template = os.environ.get("OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE")
         if not log_file_template:
-            print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
+            print("WARNING: OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE undefined. Using default value.")
             log_file_template = f"{def_log_dir}/{{TestBase.which_chatbot_name}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
         log_file_path = Path(

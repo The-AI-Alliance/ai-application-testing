@@ -28,7 +28,7 @@ WARN         = ${ORANGE}WARNING:
 WARNING      = ${ORANGE}WARNING: 
 NOTE         = ${GREEN}NOTE:    
 INFO         = ${DARK_GREEN}INFO:    
-TIP          = ${BOLD}${DARK_GREEN}TIP:     
+TIP          = ${BOLD}${PINK}TIP:     
 HIGHLIGHT    = ${BOLD}${BLUE}
 
 # "Labels" for when you just want to, e.g., "ERROR:" colored, but the rest of the line should be "normal".
@@ -38,7 +38,7 @@ WARN_LABEL      = ${BOLD}${ORANGE}WARNING:${_END}
 WARNING_LABEL   = ${BOLD}${ORANGE}WARNING:${_END} 
 NOTE_LABEL      = ${BOLD}${GREEN}NOTE:${_END}    
 INFO_LABEL      = ${BOLD}${DARK_GREEN}INFO:${_END}    
-TIP_LABEL       = ${BOLD}${DARK_GREEN}TIP:${_END}     
+TIP_LABEL       = ${BOLD}${PINK}TIP:${_END}     
 
 # For "special" strings in output:
 CODE            = ${PINK}

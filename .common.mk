@@ -5,15 +5,17 @@
 # To see them in action, try "make show-colors".
 include .console-colors.mk
 
-# Some of the following definitions may be overridden in Makefile.
-# OUTPUT_TEST_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
+# Some of the following definitions may be overridden in Makefile. Some notes:
+# TESTS_DIR: Assumed RELATIVE to ${SRC_DIR}.
+# OUTPUT_TESTS_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
 SRC_DIR               ?= src
 TESTS_DIR             ?= ${SRC_DIR}/tests
 OUTPUT_DIR            ?= ${PWD}/output
-OUTPUT_TEST_DIR       ?= ${OUTPUT_DIR}/tests
+OUTPUT_TESTS_DIR      ?= ${OUTPUT_DIR}/tests
 OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
-CLEAN_CODE_DIRS       := ${OUTPUT_DIR} ${OUTPUT_TEST_DIR}
+OUTPUT_LOGS_TESTS_DIR ?= ${OUTPUT_TESTS_DIR}/logs/${TIMESTAMP}
+CLEAN_CODE_DIRS       := ${OUTPUT_DIR} 
 CLEAN_DIRS            += ${CLEAN_CODE_DIRS}
 
 QUALITY_CHECKS        := format ruff pylint type-check tests
@@ -77,7 +79,7 @@ ${help-top-level-message}
 endef
 
 
-.PHONY: all help help-general print-info clean clean-code
+.PHONY: all help help-general help-command-not-installed print-info clean clean-code
 all:: help print-info
 
 clean::
@@ -94,9 +96,10 @@ help-general::
 
 # NOTE: help-command-% must be defined BEFORE help-% or it is ignored!
 help-command-%::
+	$(info ${INFO_LABEL}Help on ${CODE}${@:help-command-%=%}${_END}:)
 	$(info ${${@}-message})
-	$(info )
-	$(info ${INFO_LABEL}If no help is shown, then none is defined for ${CODE}${@:help-command-%=%}${_END} in this Makefile.)
+	$(info ${INFO_LABEL})
+	$(info ${INFO_LABEL}(If no help is shown, then none is defined for ${CODE}${@:help-command-%=%}${_END} in this Makefile.))
 	@true
 
 help-command-no-message::
@@ -110,6 +113,10 @@ help-%::
 	$(info )
 	@true
 
+help-command-not-installed::
+	$(info ${WARNING_LABEL}Command ${CODE}${CMD}${_END} is not installed.)
+	@true
+
 error::
 	@$(info ${ERROR_LABEL}${MSG} (exit status = ${RED}${STATUS}${_END}))
 	@$(info ${${MSG_VARIABLE}})
@@ -121,8 +128,7 @@ endef
 
 define command-check-failed-message
 ${TIP_LABEL}Installation help may be defined in this Makefile. Try ${CODE}make help-command-${CMD}${_END} 
-${TIP_LABEL}or try ${CODE}make install-${CMD}${_END}.
-${TIP_LABEL}See also the project's ${CODE}README.md${_END}.
+${TIP_LABEL}or try ${CODE}make install-${CMD}${_END}. See also the project's ${CODE}README.md${_END}.
 endef
 
 # Check if a command is on the path.
@@ -133,6 +139,10 @@ command-check-%:
 silent-command-check-%:
 	cmd=${@:silent-command-check-%=%} && echo $$cmd && command -v $$cmd > /dev/null
 
+# A default definition of a potentially useful message. Override when needed with
+# override define help-custom-targets-message
+# ...
+# endef
 define help-custom-targets-message
   ${NOTE}No custom targets defined.${_END}
 endef
@@ -170,11 +180,11 @@ tests:: unit-tests
 unit-tests:: unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
 unit-tests-prerequisite unit-tests-postrequisite::
 unit-tests-default:
-	@echo "${INFO_LABEL} $@: Running the unit tests (with coverage) in ${CODE}${SRC_DIR}/tests${_END}:"
+	@echo "${INFO_LABEL}Target ${CODE}unit-tests${_END}: Running the unit tests (with coverage) in ${CODE}${SRC_DIR}/tests${_END}:"
 	@if [ ! -d "${SRC_DIR}/tests" ]; then echo "${WARN_LABEL} No test directory ${CODE}${SRC_DIR}/tests${_END} found!"; \
 	else \
 		cd ${SRC_DIR}; \
-		echo "${INFO_LABEL} Running: ${CODE}${PYTEST_RUN_CMD} && ${PYTEST_COV_REPORT_CMD}${_END}"; \
+		echo "${INFO_LABEL}Running: ${CODE}${PYTEST_RUN_CMD} && ${PYTEST_COV_REPORT_CMD}${_END}"; \
 		${PYTEST_RUN_CMD} && ${PYTEST_COV_REPORT_CMD}; \
 	fi
 
@@ -184,34 +194,34 @@ lint:: ruff pylint
 format:: format-prerequisite format-default format-postrequisite
 format-prerequisite format-postrequisite::
 format-default:
-	@echo "${INFO_LABEL} $@: Running ${CODE}black${_END} on the code in ${CODE}${SRC_DIR}${_END}."
+	@echo "${INFO_LABEL}Target ${CODE}format${_END}: Running ${CODE}black${_END} on the code in ${CODE}${SRC_DIR}${_END}."
 	uv run black ${SRC_DIR}
 
 ruff:: ruff-prerequisite ruff-default ruff-postrequisite
 ruff-prerequisite ruff-postrequisite::
 ruff-default:
-	@echo "${INFO_LABEL} $@: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END}."
+	@echo "${INFO_LABEL}Target ${CODE}ruff${_END}: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END}."
 	uv run ruff check --fix ${SRC_DIR}
 
 pylint:: pylint-prerequisite pylint-default pylint-postrequisite
 pylint-prerequisite pylint-postrequisite::
 pylint-default:
-	@echo "${INFO_LABEL} $@: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
+	@echo "${INFO_LABEL}Target ${CODE}pylint${_END}: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
 	uv run pylint ${PYLINT_IGNORE_ARGS} ${SRC_DIR}
 
 type-check:: type-check-prerequisite type-check-default type-check-postrequisite
 type-check-prerequisite type-check-postrequisite::
 type-check-default:
-	@echo "${INFO_LABEL} $@: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END}."
+	@echo "${INFO_LABEL}Target ${CODE}type-check${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END}."
 	uv run ty check ${SRC_DIR}
 
 type-check-watch:: type-check-prerequisite type-check-watch-default type-check-postrequisite
 type-check-watch-default:
-	@echo "${INFO_LABEL} $@: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
+	@echo "${INFO_LABEL}Target ${CODE}type-check-watch${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
 	uv run ty check --watch ${SRC_DIR}
 
 .PHONY: one-time-setup clean-setup uninstall-uv 
-.PHONY: command-check-uv install-uv uv-venv install-dev-dependencies install-requirements-txt-dependencies
+.PHONY: command-check-uv install-uv uv-venv install-dev-dependencies 
 
 setup one-time-setup:: install-uv uv-venv install-dev-dependencies
 
@@ -219,7 +229,7 @@ clean-setup:: uninstall-uv
 
 install-%::
 	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "${INFO_LABEL}command ${CODE}$$cmd${_END} is already installed." || ${MAKE} help-command-$$cmd
+		echo "${INFO_LABEL}command ${CODE}$$cmd${_END} is already installed." || ${MAKE} CMD=$$cmd help-command-not-installed help-command-$$cmd
 
 uv-venv:: command-check-uv
 	@test -d .venv && echo "${INFO}Directory ${CODE}.venv${_END} already exists; not running ${CODE}uv venv${_END}." || uv venv
@@ -229,13 +239,8 @@ install-dev-dependencies::
 	uv pip install -e ".[dev]"
 
 uninstall-uv:: 
-	$(info ${help_message_${@:uninstall-%=%}})
-	@echo "${WARNING}You have to uninstall ${@:uninstall-%=%} manually.${_END}"
-
-# This target exists to support contributions that have a custom requirements.txt file
-# that needs to be used for local setup. Otherwise, it isn't used by the main uv process.
-install-requirements-txt-dependencies::
-	uv pip install --requirements requirements.txt
+	$(info ${help-command-${@}-message})
+	@true
 
 command-check-uv::
 	@command -v uv > /dev/null || ! ${MAKE} help-command-uv
@@ -249,20 +254,20 @@ install-jq:: help-command-jq
 define help-command-uv-message
 ${INFO_LABEL}The Python environment management tool ${CODE}uv${_END} is required.
 ${INFO_LABEL}See ${CODE}https://docs.astral.sh/uv/${_END} for installation instructions.
-${INFO_LABEL}
-${INFO_LABEL}If you want to uninstall uv and you used HomeBrew to install it,
-${INFO_LABEL}use ${CODE}brew uninstall uv${_END}. Otherwise, if you executed one of the
-${INFO_LABEL}installation commands on the website above, find the installation
-${INFO_LABEL}location and delete uv.
+endef
+
+define help-command-uninstall-uv-message
+${WARNING_LABEL}You have to uninstall ${CODE}uv${_END} manually.
+${INFO_LABEL}If you used HomeBrew to install it, use ${CODE}brew uninstall uv${_END}. 
+${INFO_LABEL}Otherwise, if you executed one of the installation commands from
+${INFO_LABEL}${CODE}https://docs.astral.sh/uv/${_END}, find the installation location and delete it.
 endef
 
 help-command-uvx-message = ${help-command-uv-message}
 
 define help-command-jq-message
-
 ${INFO_LABEL}The CLI command ${CODE}jq${_END} is useful, but not required, for processing JSON file.
 ${INFO_LABEL}See ${CODE}https://jqlang.org/download/${_END} for installation instructions.
-
 endef
 
 define help-command-node-message
