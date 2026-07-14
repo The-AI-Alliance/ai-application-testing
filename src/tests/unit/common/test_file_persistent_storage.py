@@ -1,17 +1,20 @@
-# Unit tests for the "collections" module using Hypothesis for property-based testing.
-# https://hypothesis.readthedocs.io/en/latest/
+"""
+Unit tests for the "collections" module using Hypothesis for property-based testing.
+https://hypothesis.readthedocs.io/en/latest/
+"""
 
 import os
 import tempfile
 import unittest
 from datetime import datetime
-from hypothesis import given, strategies as st
 from typing import Any
+
+from hypothesis import given, strategies as st
 
 from common.file_persistent_storage import FilePersistentStorage
 
 
-class TestFilePersistentStorage(unittest.TestCase):
+class TestFilePersistentStorage(unittest.TestCase): # pylint: disable=unused-variable
     """
     Test the FilePersistentStorage utility.
     """
@@ -41,7 +44,7 @@ class TestFilePersistentStorage(unittest.TestCase):
             os.unlink(self.temp_file.name)
 
     def test_initialization_creates_file(self):
-        """Test that initialization creates the JSONL file if it doesn't exist"""
+        """Check that initialization creates the JSONL file if it doesn't exist"""
         self.assertTrue(os.path.exists(self.temp_file.name))
 
     @given(

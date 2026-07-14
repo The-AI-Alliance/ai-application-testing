@@ -1,9 +1,11 @@
-# Unit tests for the "collections" module using Hypothesis for property-based testing.
-# https://hypothesis.readthedocs.io/en/latest/
+"""
+Unit tests for the "collections" module using Hypothesis for property-based testing.
+https://hypothesis.readthedocs.io/en/latest/
+"""
 
 import unittest
-from hypothesis import given, strategies as st
 from typing import Any
+from hypothesis import given, strategies as st
 
 from common.collections import (
     get_chain,
@@ -35,7 +37,10 @@ class TestCollections(unittest.TestCase):
             f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}",
         )
         # Check other expected sizes:
-        expected_dict_len = sum([1 for col in dictionary.values() if len(col) > 0])
+        expected_dict_len = 0
+        for col in dictionary.values():
+            if len(col) > 0:
+                expected_dict_len += 1
         for i in range(expected_len):
             for j in range(i + 1, expected_len):
                 leni = len(actual[i])
@@ -62,6 +67,7 @@ class TestCollections(unittest.TestCase):
 
     @given(st.integers(min_value=0, max_value=10))
     def test_get_chain_returns_value_at_end_of_chain(self, depth: int):
+        """Check that get_chain() returns the value at the end of the chain."""
         keys = [str(i) for i in range(depth)]
         root = {}
         d = root
@@ -74,6 +80,7 @@ class TestCollections(unittest.TestCase):
 
     @given(st.integers(min_value=0, max_value=3))
     def test_get_chain_can_mix_dict_and_sequence_referencing(self, depth: int):
+        """Check that get_chain() can mix dictionary and sequence referencing."""
         keys = [str(i) for i in range(depth)]
         root = {}
         d = root
@@ -94,6 +101,7 @@ class TestCollections(unittest.TestCase):
     def test_get_chain_ends_early_and_returns_None_at_first_None_value(
         self, depth: int
     ):
+        """Check that get_chain() ends early and returns None at the first None value encountered."""
         keys = [str(i) for i in range(depth)]
         keys2 = [str(i) for i in range(2 * depth)]
         root = {}
@@ -110,24 +118,27 @@ class TestCollections(unittest.TestCase):
         )
     )
     def test_get_returns_value_for_the_key(self, dictionary: dict[str, str]):
+        """Check that get returns the value for the key, when it exists."""
         for key in dictionary:
             self.assertIsNotNone(get(dictionary, key))
 
     @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-    def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key(
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key( # pylint: disable=invalid-name
         self, set: set[str]
     ):
+        """Check that get raises a ValueError if None would be returned for an unknown key."""
         dictionary = {}
         for key in set:
             with self.assertRaises(ValueError):
                 get(dictionary, key)
 
     @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-    def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored(
-        self, set: set[str]
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored( # pylint: disable=invalid-name
+        self, keyset: set[str]
     ):
+        """Check that get raises a ValueError if None would be returned for a known key with a None value."""
         dictionary = {}
-        for key in set:
+        for key in keyset:
             dictionary[key] = None
             with self.assertRaises(ValueError):
                 get(dictionary, key)
@@ -196,6 +207,7 @@ class TestCollections(unittest.TestCase):
 
     @given(st.lists(st.integers(), max_size=5))
     def test_mult_with_not_skipping_zeros(self, ints: list[int]):
+        """Check that mult() when zeros aren't skipped."""
         expected = 0
         if ints:
             expected = 1
@@ -206,6 +218,7 @@ class TestCollections(unittest.TestCase):
 
     @given(st.lists(st.integers(), max_size=5))
     def test_mult_with_skipping_zeros(self, ints: list[int]):
+        """Check that mult() when zeros are skipped."""
         ints2 = [n for n in ints if n]
         expected = 0
         if ints2:
@@ -216,7 +229,8 @@ class TestCollections(unittest.TestCase):
         self.assertEqual(expected, mult(ints, skip_zeros=True))
 
     @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
-    def test_dict_pop_returns_key_and_deletes_from_dict(self, dictionary):
+    def test_dict_pop_returns_value_for_key_and_deletes_from_dict(self, dictionary):
+        """Check that dict_pop() returns the value for the key and deletes the pair from the dictionary."""
         dlen = len(dictionary)
         keys = dictionary.keys()
         for key in list(keys):
@@ -228,7 +242,8 @@ class TestCollections(unittest.TestCase):
             self.assertEqual(dlen, len(dictionary))
 
     @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
-    def test_dict_pop_returns_None_for_nonexistent_key(self, dictionary):
+    def test_dict_pop_returns_None_for_nonexistent_key_and_leaves_dict_unchanged(self, dictionary):
+        """Check that dict_pop() returns None for a nonexistent key and leaves the dictionary unchanged."""
         dlen = len(dictionary)
         keys = dictionary.keys()
         for key in list(keys):

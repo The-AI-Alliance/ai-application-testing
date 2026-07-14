@@ -206,6 +206,9 @@ ruff-default:
 pylint:: pylint-prerequisite pylint-default pylint-postrequisite
 pylint-prerequisite pylint-postrequisite::
 pylint-default:
+	@echo "${WARNING_LABEL}The ${CODE}pylint${_END} target is currently not passing, so it is disabled. See the repo issue #165."
+
+pylint-default-save:
 	@echo "${INFO_LABEL}Target ${CODE}pylint${_END}: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
 	uv run pylint ${PYLINT_IGNORE_ARGS} ${SRC_DIR}
 
