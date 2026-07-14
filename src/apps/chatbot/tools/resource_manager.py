@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Tuple
+from typing import Any, Callable, MutableMapping, Sequence, Tuple
 from uuid import uuid4
 
 from common.file_persistent_storage import FilePersistentStorage
@@ -44,7 +44,7 @@ class ResourceManager:
             self.logger.setLevel(logging.INFO)
 
         self.storage = FilePersistentStorage(Path(resources_file), logger)
-        self.resources: dict[str, dict[str, Any]] = {}
+        self.resources: MutableMapping[str, MutableMapping[str, Any]] = {}
         if start_empty:
             self.storage.clear()
             self.logger.info("Starting 'empty' with no resource records")
@@ -63,7 +63,7 @@ class ResourceManager:
         self.resources.clear()
         self.storage.clear()
 
-    def _ignore(self, resource: dict[str, Any]) -> bool:
+    def _ignore(self, resource: MutableMapping[str, Any]) -> bool:
         """
         A hook that subclasses can override to tell methods to "ignore"
         a resource for various actions. This is designed to support the case
@@ -72,7 +72,7 @@ class ResourceManager:
         """
         return False
 
-    def _load_resources(self) -> tuple[int, int, list[str]]:
+    def _load_resources(self) -> tuple[int, int, Sequence[str]]:
         """
         Load resources from the JSONL file. `self._ignore(resource)` is called
         on all loaded resources and any of them for which `True` is returned
@@ -108,7 +108,9 @@ class ResourceManager:
                     loaded_count -= 1
         return all_count, loaded_count, errors
 
-    def _save_resources(self, resources: list[dict[str, Any]]) -> tuple[int, str]:
+    def _save_resources(
+        self, resources: Sequence[MutableMapping[str, Any]]
+    ) -> tuple[int, str]:
         """
         Append one or more resources to the JSONL file.
 
@@ -200,7 +202,7 @@ class ResourceManager:
         """
         return True, ""
 
-    def _create_resource(self, fields: dict[str, Any]) -> tuple[str, str]:
+    def _create_resource(self, fields: MutableMapping[str, Any]) -> tuple[str, str]:
         """
         Create a new resource. This method is intended to be called by
         subclass "domain-specific" methods, rather than being called directly
@@ -231,7 +233,7 @@ class ResourceManager:
         self.logger.info(success_msg)
         return resource_id, success_msg
 
-    def _is_valid_resource(self, fields: dict[str, Any]) -> tuple[bool, str]:
+    def _is_valid_resource(self, fields: MutableMapping[str, Any]) -> tuple[bool, str]:
         """
         A hook for subclasses to validate the fields for a resource.
         Args:
@@ -242,7 +244,9 @@ class ResourceManager:
         """
         return True, ""
 
-    def set_resources(self, resources: list[dict[str, Any]]) -> Tuple[int, str]:
+    def set_resources(
+        self, resources: Sequence[MutableMapping[str, Any]]
+    ) -> Tuple[int, str]:
         """
         Set the resources, replacing the current list. Normally, _create_resource() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
@@ -300,7 +304,7 @@ class ResourceManager:
                 count += 1
         return count
 
-    def get_resource_by_id(self, resource_id: str) -> dict[str, Any]:
+    def get_resource_by_id(self, resource_id: str) -> MutableMapping[str, Any]:
         """
         Get a specific resource by ID.
 
@@ -315,8 +319,8 @@ class ResourceManager:
     @classmethod
     def resource_matches_criteria(
         cls,
-        resource: dict[str, Any],
-        criteria: dict[str, Callable[[Any], bool]],
+        resource: MutableMapping[str, Any],
+        criteria: MutableMapping[str, Callable[[Any], bool]],
     ) -> bool:
         for key, matcher in criteria.items():
             if matcher and not matcher(resource[key]):
@@ -327,10 +331,10 @@ class ResourceManager:
     @classmethod
     def get_resources_by_criteria_from(
         cls,
-        resources: list[dict[str, Any]],
-        criteria: dict[str, Callable[[Any], bool]],
+        resources: Sequence[MutableMapping[str, Any]],
+        criteria: MutableMapping[str, Callable[[Any], bool]],
         sort_by_key: str = "",
-    ) -> list[dict[str, Any]]:
+    ) -> Sequence[MutableMapping[str, Any]]:
         """Support `self.get_resources_by_criteria()` and some tests."""
         found = []
         for res in resources:
@@ -344,8 +348,10 @@ class ResourceManager:
         return found
 
     def get_resources_by_criteria(
-        self, criteria: dict[str, Callable[[Any], bool]], sort_by_key: str = ""
-    ) -> list[dict[str, Any]]:
+        self,
+        criteria: MutableMapping[str, Callable[[Any], bool]],
+        sort_by_key: str = "",
+    ) -> Sequence[MutableMapping[str, Any]]:
         """
         Retrieve the resources for the specified criteria. First, locate
         the key-values in a resource for each key in `criteria`. Then, use the
@@ -355,7 +361,7 @@ class ResourceManager:
         matches. Finally,  Also, resources are ignored if `self._ignore(resource)` returns `True`.
 
         Args:
-            - criteria (dict[str,Callable[[Any],bool]]): A non-empty dictionary of
+            - criteria (MutableMapping[str,Callable[[Any],bool]]): A non-empty dictionary of
               key-value pairs for finding matches. See the method comments for
               description  of the value in `criteria`.
             - sort_by_key (str): If not empty, then sort the list by the resource
@@ -364,7 +370,7 @@ class ResourceManager:
               the unsorted list will be returned.
 
         Returns:
-            list[dict[str,Any]] with resources that match the criteria, or [] if no matches are found.
+            Sequence[MutableMapping[str,Any]] with resources that match the criteria, or [] if no matches are found.
         """
         found = ResourceManager.get_resources_by_criteria_from(
             list(self.resources.values()),
@@ -373,7 +379,9 @@ class ResourceManager:
         )
         return list(filter(lambda res: not self._ignore(res), found))
 
-    def get_resource_ids_by_criteria(self, criteria: dict[str, Any]) -> list[str]:
+    def get_resource_ids_by_criteria(
+        self, criteria: MutableMapping[str, Any]
+    ) -> Sequence[str]:
         """
         Calls `get_resources_by_criteria` to get resources for the specified criteria,
         i.e., where keys in `criteria` are found in the resources and the values found

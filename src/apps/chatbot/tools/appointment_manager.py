@@ -16,7 +16,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Optional, Tuple
+from typing import Any, Callable, MutableMapping, Optional, Sequence, Tuple
 
 
 from .resource_manager import ResourceManager
@@ -101,7 +101,7 @@ class AppointmentManager(ResourceManager):
         # for appointments...
         self.appointments = self.resources
 
-    def _ignore(self, resource: dict[str, Any]) -> bool:
+    def _ignore(self, resource: MutableMapping[str, Any]) -> bool:
         """
         Implement this hook to ignore appointment records for
         "cancelled" appointments. Used by `ResourceManager` methods.
@@ -177,7 +177,7 @@ class AppointmentManager(ResourceManager):
 
         return True, ""
 
-    def _is_valid_resource(self, fields: dict[str, Any]) -> tuple[bool, str]:
+    def _is_valid_resource(self, fields: MutableMapping[str, Any]) -> tuple[bool, str]:
         """
         For appointment "resources", the appointment date-time must be valid
         and the patient name must be non-empty.
@@ -240,13 +240,15 @@ class AppointmentManager(ResourceManager):
         )
         return self._create_resource(appointment)
 
-    def set_appointments(self, appointments: list[dict[str, Any]]) -> Tuple[int, str]:
+    def set_appointments(
+        self, appointments: Sequence[MutableMapping[str, Any]]
+    ) -> Tuple[int, str]:
         """
         Set the appointments, replacing the current list. Normally, create_appointment() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
 
         Args:
-            - appointments (list[dict[str,Any]]): list of appointments to set. They will be validated for unique keys and date times
+            - appointments (Sequence[MutableMapping[str,Any]]): list of appointments to set. They will be validated for unique keys and date times
               (with past date times allowed). Each dictionary must have an `id` key-value pair and the values
               must be unique.
 
@@ -335,12 +337,14 @@ class AppointmentManager(ResourceManager):
         )
 
     def get_appointments_by_criteria(
-        self, criteria: dict[str, Callable[[Any], bool]]
-    ) -> list[dict[str, Any]]:
+        self, criteria: MutableMapping[str, Callable[[Any], bool]]
+    ) -> Sequence[MutableMapping[str, Any]]:
         """An alias for `get_resources_by_criteria()`."""
         return self.get_resources_by_criteria(criteria)
 
-    def get_appointment_ids_by_criteria(self, criteria: dict[str, Any]) -> list[str]:
+    def get_appointment_ids_by_criteria(
+        self, criteria: MutableMapping[str, Any]
+    ) -> Sequence[str]:
         """An alias for `get_resource_ids_by_criteria()`."""
         return self.get_resource_ids_by_criteria(criteria)
 
@@ -348,7 +352,7 @@ class AppointmentManager(ResourceManager):
         self,
         patient_name: str = "",
         after_date_time: datetime = datetime.min,
-    ) -> list[dict[str, Any]]:
+    ) -> Sequence[MutableMapping[str, Any]]:
         """
         Get all appointments, possibly filtered by patient name and/or
         after a specified date-time.
@@ -360,7 +364,7 @@ class AppointmentManager(ResourceManager):
         Returns:
             List of appointment dictionaries
         """
-        criteria = {}
+        criteria: MutableMapping[str, Callable[[Any], bool]] = {}
         if patient_name:
             criteria["patient_name"] = lambda pn: pn == patient_name
         if after_date_time:
@@ -374,7 +378,7 @@ class AppointmentManager(ResourceManager):
         """Return the number of appointments currently scheduled."""
         return self.get_resources_count()
 
-    def get_appointment_by_id(self, appointment_id: str) -> dict[str, Any]:
+    def get_appointment_by_id(self, appointment_id: str) -> MutableMapping[str, Any]:
         """An alias for `get_resource_by_id()`."""
         return self.get_resource_by_id(appointment_id)
 

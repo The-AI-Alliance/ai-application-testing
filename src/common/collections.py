@@ -50,7 +50,7 @@ def get_chain(dictionary: Mapping[str, Any], keys: Sequence[str | int]) -> Any |
     d = dictionary
     for key in keys:
         if isinstance(d, Mapping) and isinstance(key, str):
-            value = d.get(key)  # ty: ignore[invalid-argument-type]
+            value = d.get(key)
             if value is None:
                 break
             else:
