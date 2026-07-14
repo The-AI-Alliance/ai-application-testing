@@ -24,7 +24,7 @@ def valid_dirs(min_size: int = 1, max_size: int = 5):
     ).map(lambda s: re.sub(r"\W", "_", s))
 
 
-class TestUtils(unittest.TestCase): # pylint: disable=unused-variable
+class TestUtils(unittest.TestCase):  # pylint: disable=unused-variable
     """
     Test the common utilities.
     """
@@ -87,12 +87,12 @@ class TestUtils(unittest.TestCase): # pylint: disable=unused-variable
 
     def test_make_parent_dirs_with_file_in_cwd_does_nothing(self):
         """Check that making making parent directories for the current working directory does nothing."""
-        do_test_make_parent_dirs(False)
+        self.do_test_make_parent_dirs(False)
 
     def test_make_parent_dirs_with_file_in_cwd_ignores_exist_ok_flag(self):
         """Check that making making parent directories for the current working directory ignores the exist_ok flag."""
-        do_test_make_parent_dirs(False)
-        do_test_make_parent_dirs(True)
+        self.do_test_make_parent_dirs(False)
+        self.do_test_make_parent_dirs(True)
 
     @given(st.lists(valid_dirs(), max_size=5))
     def test_ensure_dirs_exist_does_not_raise_for_existing_dirs(self, dirs: list[str]):

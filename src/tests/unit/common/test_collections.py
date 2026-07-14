@@ -123,7 +123,7 @@ class TestCollections(unittest.TestCase):
             self.assertIsNotNone(get(dictionary, key))
 
     @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-    def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key( # pylint: disable=invalid-name
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key(  # pylint: disable=invalid-name
         self, set: set[str]
     ):
         """Check that get raises a ValueError if None would be returned for an unknown key."""
@@ -133,7 +133,7 @@ class TestCollections(unittest.TestCase):
                 get(dictionary, key)
 
     @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-    def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored( # pylint: disable=invalid-name
+    def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored(  # pylint: disable=invalid-name
         self, keyset: set[str]
     ):
         """Check that get raises a ValueError if None would be returned for a known key with a None value."""
@@ -242,7 +242,9 @@ class TestCollections(unittest.TestCase):
             self.assertEqual(dlen, len(dictionary))
 
     @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
-    def test_dict_pop_returns_None_for_nonexistent_key_and_leaves_dict_unchanged(self, dictionary):
+    def test_dict_pop_returns_None_for_nonexistent_key_and_leaves_dict_unchanged(
+        self, dictionary
+    ):
         """Check that dict_pop() returns None for a nonexistent key and leaves the dictionary unchanged."""
         dlen = len(dictionary)
         keys = dictionary.keys()

@@ -8,36 +8,37 @@ include .console-colors.mk
 # Some of the following definitions may be overridden in Makefile. Some notes:
 # TESTS_DIR: Assumed RELATIVE to ${SRC_DIR}.
 # OUTPUT_TESTS_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
-SRC_DIR               ?= src
-TESTS_DIR             ?= ${SRC_DIR}/tests
-OUTPUT_DIR            ?= ${PWD}/output
-OUTPUT_TESTS_DIR      ?= ${OUTPUT_DIR}/tests
-OUTPUT_LOGS_ROOT_DIR  ?= ${OUTPUT_DIR}/logs
-OUTPUT_LOGS_DIR       ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
-OUTPUT_LOGS_TESTS_DIR ?= ${OUTPUT_TESTS_DIR}/logs/${TIMESTAMP}
-CLEAN_CODE_DIRS       := ${OUTPUT_DIR} 
-CLEAN_DIRS            += ${CLEAN_CODE_DIRS}
+SRC_DIR                  ?= src
+TESTS_DIR                ?= ${SRC_DIR}/tests
+OUTPUT_DIR               ?= ${PWD}/output
+OUTPUT_TESTS_DIR         ?= ${OUTPUT_DIR}/tests
+OUTPUT_LOGS_ROOT_DIR     ?= ${OUTPUT_DIR}/logs
+OUTPUT_LOGS_DIR          ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
+OUTPUT_LOGS_TESTS_DIR    ?= ${OUTPUT_TESTS_DIR}/logs/${TIMESTAMP}
+CLEAN_CODE_DIRS          := ${OUTPUT_DIR}
+CLEAN_DIRS               += ${CLEAN_CODE_DIRS}
 
-QUALITY_CHECKS        := format ruff pylint type-check tests
-PYLINT_IGNORE_ARGS    := --ignore=.venv --ignore-pattern='.*cache.*'
+QUALITY_CHECKS_NO_TESTS  := format ruff pylint type-check
+QUALITY_CHECKS           := ${QUALITY_CHECKS_NO_TESTS}
+PYLINT_IGNORE_ARGS       := --ignore=.venv --ignore-pattern='.*cache.*'
 
-PYTEST_RUN_CMD        := uv run --active coverage run -m pytest -q -v -s
-PYTEST_COV_REPORT_CMD := uv run --active coverage report -m
+PYTEST_RUN_CMD           := uv run --active coverage run -m pytest -q -v -s
+PYTEST_COV_REPORT_CMD    := uv run --active coverage report -m
 
 # The environment
-LOCAL_REPO_PATH       ?= $(shell git rev-parse --show-toplevel)
-REPO_NAME             ?= $(notdir ${LOCAL_REPO_PATH})
-MAKEFLAGS             ?= --warn-undefined-variables
-MAKEFLAGS_RECURSIVE   ?= # --print-directory (only useful for recursive makes...)
-UNAME                 ?= $(shell uname)
-ARCHITECTURE          ?= $(shell uname -m)
+LOCAL_REPO_PATH          ?= $(shell git rev-parse --show-toplevel)
+REPO_NAME                ?= $(notdir ${LOCAL_REPO_PATH})
+MAKEFLAGS                ?= --warn-undefined-variables
+MAKEFLAGS_RECURSIVE      ?= # --print-directory (only useful for recursive makes...)
+UNAME                    ?= $(shell uname)
+ARCHITECTURE             ?= $(shell uname -m)
 
 # Used for version tagging release artifacts.
-GIT_HASH              ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
-TIMESTAMP             ?= $(shell date +"%Y%m%d-%H%M%S")
+GIT_HASH                 ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
+TIMESTAMP                ?= $(shell date +"%Y%m%d-%H%M%S")
 
 # Time execution
-TIME                  ?= time  # time execution of long processes
+TIME                     ?= time  # time execution of long processes
 
 ifndef SRC_DIR
 $(error ${ERROR} There is no ${SRC_DIR} directory!${_END})
@@ -65,9 +66,9 @@ ${CODE}make pylint${_END}             # Lint the Python code with ${CODE}pylint$
 ${CODE}make type-check${_END}         # Type check the Python code with ${CODE}ty${_END}.
 ${CODE}make type-check-watch${_END}   # Type check the Python code with ${CODE}ty${_END} in "watch" mode,
 ${CODE}${_END}                        # so you can fix mistakes and keep it updating.
-${CODE}make before-pr${_END}          # Make ${CODE}format${_END}, ${CODE}lint${_END}, ${CODE}type-check${_END}, and ${CODE}tests${_END} for "src" AND
-${CODE}${_END}                        # every "contrib" directory.
+${CODE}make before-pr${_END}          # Make ${CODE}format${_END}, ${CODE}lint${_END}, ${CODE}type-check${_END}, and ${CODE}tests${_END}.
 ${CODE}${_END}                        # DO THIS BEFORE SUBMITTING A PR!
+${CODE}before-pr-no-tests${_END}      # Everything in ${CODE}before-pr${_END} except ${CODE}tests${_END}
 ${CODE}make clean${_END}              # Delete temporary artifacts under ${CODE}CLEAN_DIRS${_END} = ${CODE}${CLEAN_DIRS}${_END}.
 ${CODE}make clean-code${_END}         # Delete temporary artifacts under ${CODE}CLEAN_CODE_DIRS${_END} = ${CODE}${CLEAN_CODE_DIRS}${_END}.
 
@@ -117,6 +118,7 @@ help-command-not-installed::
 	$(info ${WARNING_LABEL}Command ${CODE}${CMD}${_END} is not installed.)
 	@true
 
+.PHONY: error
 error::
 	@$(info ${ERROR_LABEL}${MSG} (exit status = ${RED}${STATUS}${_END}))
 	@$(info ${${MSG_VARIABLE}})
@@ -163,10 +165,10 @@ print-info-env::
 	@echo "  ${DARK_GREEN}TESTS_DIR:${_END}           ${CODE}${TESTS_DIR}${_END}"
 	@echo
 
-.PHONY: before-pr do-before-pr
+.PHONY: before-pr before-pr-no-tests
 
-before-pr:: do-before-pr
-do-before-pr:: ${QUALITY_CHECKS}
+before-pr:: before-pr-no-tests tests
+before-pr-no-tests:: ${QUALITY_CHECKS}
 
 .PHONY: tests unit-tests unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
 .PHONY: format format-prerequisite format-default format-postrequisite

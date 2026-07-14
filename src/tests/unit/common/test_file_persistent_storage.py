@@ -14,7 +14,7 @@ from hypothesis import given, strategies as st
 from common.file_persistent_storage import FilePersistentStorage
 
 
-class TestFilePersistentStorage(unittest.TestCase): # pylint: disable=unused-variable
+class TestFilePersistentStorage(unittest.TestCase):  # pylint: disable=unused-variable
     """
     Test the FilePersistentStorage utility.
     """

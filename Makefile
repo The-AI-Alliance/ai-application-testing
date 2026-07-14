@@ -342,7 +342,7 @@ run-tdd-example-refill-chatbot:: before-run run-tdd-example-refill-chatbot-pream
 		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
 		--data-dir ${DATA_DIR} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		${APP_ARGS}
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-tdd-example-refill-chatbot-preamble::
@@ -358,7 +358,7 @@ run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis
 		--data-dir ${DATA_DIR} \
 		--use-cases ${USE_CASES} \
 		--log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		${APP_ARGS}
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis-preamble::
@@ -374,7 +374,7 @@ run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validati
 	  --data-dir ${DATA_DIR} \
 	  --use-cases ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/${@:run-%=%}.log \
-	  ${JUST_STATS} ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	  ${JUST_STATS} ${APP_ARGS}
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation-preamble::
@@ -404,7 +404,7 @@ langflow-pipeline:: langflow-pipeline-preamble
 	  --data-dir ${DATA_DIR} \
 	  --use-case ${USE_CASES} \
 	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
-	  ${JUST_STATS} ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	  ${JUST_STATS} ${APP_ARGS}
 	@echo "${INFO_LABEL} Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 langflow-pipeline-preamble::
@@ -425,7 +425,7 @@ all-tests-langflow unit-tests-langflow:: run-command-checks
 	  export DATA_DIR=${DATA_DIR} && \
 	  uv run python -m unittest discover \
 	    --start-directory tests/unit/langflow \
-	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	    --top-level-directory .
 
 .PHONY: run-chatbot chatbot before-chatbot before-chatbot-preamble check-model-which-chatbot do-run-chatbot agent-chatbot simple-chatbot after-chatbot
 
@@ -442,7 +442,7 @@ do-run-chatbot::
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log \
-		--verbose ${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		--verbose ${APP_ARGS}
 
 agent-chatbot simple-chatbot:: 
 	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
@@ -487,7 +487,7 @@ mcp-server:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		${APP_ARGS}
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}"
 
 inspect-mcp-server:: command-check-node
@@ -516,7 +516,7 @@ api-server:: before-chatbot
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
 		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS} || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		${APP_ARGS}
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 help-api-server::
@@ -551,8 +551,7 @@ view-api-server-docs-preamble::
 
 run-open-webui open-webui:: open-webui-preamble open-webui-setup
 	cd ${OPEN_WEBUI_DIR} && \
-		DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve \
-		 || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+		DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve
 
 open-webui-preamble::
 	@echo "${INFO_LABEL}Running Open WebUI (${CODE}https://docs.openwebui.com/getting-started/${_END}) out of directory ${CODE}${OPEN_WEBUI_DIR}${_END}."
@@ -597,7 +596,7 @@ unit-tests-non-ai::
 	  uv run python -m unittest discover \
 	    --pattern 'test*.py' \
 	    --start-directory tests/unit \
-	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	    --top-level-directory .
 
 .PHONY: unit-tests-appointments
 
@@ -607,7 +606,7 @@ unit-tests-appointments::
 	  uv run python -m unittest discover \
 	    --pattern 'test_appointment*.py' \
 	    --start-directory tests/unit/apps/chatbot \
-	    --top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	    --top-level-directory .
 
 unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
@@ -635,9 +634,8 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTP
 	  ${TIME} uv run python -m unittest discover \
 	  	--pattern 'ai_test*.py' \
 	  	--start-directory tests/unit \
-	  	--top-level-directory . ${APP_ARGS} && \
-	      ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
-	    ! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
+	  	--top-level-directory . ${APP_ARGS}
+	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
 
 # A special target for running one of the AI tests. Invoke as follows:
@@ -662,9 +660,8 @@ one-test-ai:: ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}
 	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
 	  export WHICH_CHATBOT=${WHICH_CHATBOT} && \
 	  export VERBOSE='True' && \
-	  ${TIME} uv run python -m unittest ${TEST} && \
-	      ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
-	    ! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
+	  ${TIME} uv run python -m unittest ${TEST}
+	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
 .PHONY: list-unit-tests-ai
 list-unit-tests-ai::
@@ -723,7 +720,7 @@ integration-tests-dedicated:: run-command-checks
 	  export VERBOSE='True' && \
 	  uv run python -m unittest discover \
 	  	--start-directory tests/integration \
-	  	--top-level-directory . || ${MAKE} STATUS=$$? MSG="$@ failed" error 
+	  	--top-level-directory .
 
 
 # The next section of this Makefile includes some convenience targets for working 

@@ -7,15 +7,15 @@ without requiring the actual MCP SDK to be installed.
 See also the src/tests/integration/.../test_mcp_server.py test version of this script.
 """
 
+import sys
+import logging
+from pathlib import Path
+
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from apps.chatbot import ChatBotSimple, ChatBotResponseHandler
 from apps.chatbot.mcp_server.server import create_mcp_server
-
-import sys
-import logging
-from pathlib import Path
 
 
 def test_chatbot_creation():
@@ -46,7 +46,7 @@ def test_chatbot_creation():
         print(f"  - Output dir: {chatbot.output_dir}")
         print(f"  - Confidence threshold: {chatbot.confidence_level_threshold}")
         return True
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"✗ Error creating ChatBot: {e}")
         return False
 
@@ -78,7 +78,7 @@ def test_mcp_server_creation():
         print(f"  - Server type: {type(server).__name__}")
         print(f"  - ChatBot model: {chatbot.model}")
         return True
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"✗ Error creating MCP server: {e}")
         return False
 
