@@ -29,13 +29,13 @@ ${HIGHLIGHT}Help for the GitHub Pages website targets:${_END}
 
 ${CODE}make view-pages${_END}         # View the published GitHub pages in a browser.
 ${CODE}make view-local${_END}         # View the pages locally (requires Jekyll).
-                        # Makes the targets ${CODE}setup-jekyll${_END} and ${CODE}run-jekyll${_END}.
-                        # Tip: ${CODE}make JEKYLL_PORT=8000 view-local${_END} uses port 8000 instead of 4000!
+${CODE}${_END}                        # Makes the targets ${CODE}setup-jekyll${_END} and ${CODE}run-jekyll${_END}.
+${CODE}${_END}                        # Tip: ${CODE}make JEKYLL_PORT=8000 view-local${_END} uses port 8000 instead of 4000!
 ${CODE}make setup-jekyll${_END}       # Install Jekyll. Make sure Ruby is installed.
-                        # (Only needed for local viewing of the document.)
+${CODE}${_END}                        # (Only needed for local viewing of the document.)
 ${CODE}make run-jekyll${_END}         # Used by ${CODE}view-local${_END}; assumes ${CODE}setup-jekyll${_END} is already "built".
-                        # Tip: Build this target instead of ${CODE}view-local${_END} to avoid repeating ${CODE}setup-jekyll${_END}.
-                        # Tip: ${CODE}make JEKYLL_PORT=8000 run-jekyll${_END} uses port 8000 instead of 4000!
+${CODE}${_END}                        # Tip: Build this target instead of ${CODE}view-local${_END} to avoid repeating ${CODE}setup-jekyll${_END}.
+${CODE}${_END}                        # Tip: ${CODE}make JEKYLL_PORT=8000 run-jekyll${_END} uses port 8000 instead of 4000!
 ${CODE}make clean-website${_END}      # DElete the temporary directories ${CODE}CLEAN_WEBSITE_DIRS${_END} = ${CODE}${CLEAN_WEBSITE_DIRS}${_END}.
 
 endef
@@ -136,9 +136,9 @@ endef
 
 define bundle-error-message
 
-ERROR: Did the bundle command fail with a message like this?
-ERROR: 	 "/usr/local/opt/ruby/bin/bundle:25:in `load': cannot load such file -- /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z/exe/bundle (LoadError)"
-ERROR: Check that the /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z directory actually exists.
+${ERROR_LABEL}Did the bundle command fail with a message like this?
+${ERROR_LABEL}	 "/usr/local/opt/ruby/bin/bundle:25:in `load': cannot load such file -- /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z/exe/bundle (LoadError)"
+${ERROR_LABEL}Check that the /usr/local/lib/ruby/gems/3.1.0/gems/bundler-X.Y.Z directory actually exists.
 
 endef
 
