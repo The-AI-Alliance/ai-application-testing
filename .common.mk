@@ -6,32 +6,43 @@
 include .console-colors.mk
 
 # Some of the following definitions may be overridden in Makefile. Some notes:
-# TESTS_DIR: Assumed RELATIVE to ${SRC_DIR}.
-# OUTPUT_TESTS_DIR: Where test output is written. RELATIVE to ${PWD}, NOT ${SRC_DIR}.
-SRC_DIR                  ?= src
-TESTS_DIR                ?= ${SRC_DIR}/tests
-OUTPUT_DIR               ?= ${PWD}/output
-OUTPUT_TESTS_DIR         ?= ${OUTPUT_DIR}/tests
-OUTPUT_LOGS_ROOT_DIR     ?= ${OUTPUT_DIR}/logs
-OUTPUT_LOGS_DIR          ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
-OUTPUT_LOGS_TESTS_DIR    ?= ${OUTPUT_TESTS_DIR}/logs/${TIMESTAMP}
-CLEAN_CODE_DIRS          := ${OUTPUT_DIR}
-CLEAN_DIRS               += ${CLEAN_CODE_DIRS}
+# TESTS_BASE_DIR: By default, it is UNDER ${SRC_DIR}.
+# WHICH_TESTS: By default, it equals ${TESTS_BASE_DIR}, meaning the assumption is
+# the uni-tests target should build all tests found under ${TESTS_BASE_DIR}. However,
+# some projects separate tests into unit, integration, etc. tests. So, if unit tests
+# are in a "unit" subdirectory, for example, the project Makefile should define
+# WHICH_TESTS=${TESTS_BASE_DIR}/unit AFTER including .common.mk. WHICH_TESTS can also
+# be used to specify an individual test file or test (see https://docs.pytest.org/en/stable/how-to/usage.html).
+# OUTPUT_TESTS_DIR: Where some test outputs are written by the AI-related tests,
+# but not all tests! It is RELATIVE to ${PWD}, NOT ${SRC_DIR}.
+SRC_DIR                   ?= src
+TESTS_BASE_DIR            ?= ${SRC_DIR}/tests
+WHICH_TESTS               ?= ${TESTS_BASE_DIR}
+OUTPUT_DIR                ?= ${PWD}/output
+OUTPUT_TESTS_DIR          ?= ${OUTPUT_DIR}/tests
+OUTPUT_LOGS_ROOT_DIR      ?= ${OUTPUT_DIR}/logs
+OUTPUT_LOGS_DIR           ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}
+OUTPUT_LOGS_TESTS_DIR     ?= ${OUTPUT_TESTS_DIR}/logs/${TIMESTAMP}
+CLEAN_CODE_DIRS           := ${OUTPUT_DIR}
+CLEAN_DIRS                += ${CLEAN_CODE_DIRS}
 
-QUALITY_CHECKS_NO_TESTS  := format ruff pylint type-check
-QUALITY_CHECKS           := ${QUALITY_CHECKS_NO_TESTS}
-PYLINT_IGNORE_ARGS       := --ignore=.venv --ignore-pattern='.*cache.*'
+QUALITY_CHECKS_NO_TESTS   := format ruff pylint type-check
+QUALITY_CHECKS            := ${QUALITY_CHECKS_NO_TESTS}
+PYLINT_IGNORE_ARGS        := --ignore=.venv --ignore-pattern='.*cache.*'
 
-PYTEST_RUN_CMD           := uv run --active coverage run -m pytest -q -v -s
-PYTEST_COV_REPORT_CMD    := uv run --active coverage report -m
+# Define PYTEST_*_OPT_ARGS in Makefiles to customize behavior.
+PYTEST_RUN_OPT_ARGS       ?=
+PYTEST_COV_OPT_ARGS       ?=
+PYTEST_RUN_CMD            := uv run --active coverage run -m pytest -s ${PYTEST_RUN_OPT_ARGS}
+PYTEST_COV_REPORT_CMD     := uv run --active coverage report -m ${PYTEST_COV_OPT_ARGS}
 
 # The environment
-LOCAL_REPO_PATH          ?= $(shell git rev-parse --show-toplevel)
-REPO_NAME                ?= $(notdir ${LOCAL_REPO_PATH})
-MAKEFLAGS                ?= --warn-undefined-variables
-MAKEFLAGS_RECURSIVE      ?= # --print-directory (only useful for recursive makes...)
-UNAME                    ?= $(shell uname)
-ARCHITECTURE             ?= $(shell uname -m)
+LOCAL_REPO_PATH           ?= $(shell git rev-parse --show-toplevel)
+REPO_NAME                 ?= $(notdir ${LOCAL_REPO_PATH})
+MAKEFLAGS                 ?= --warn-undefined-variables
+MAKEFLAGS_RECURSIVE       ?= # --print-directory (only useful for recursive makes...)
+UNAME                     ?= $(shell uname)
+ARCHITECTURE              ?= $(shell uname -m)
 
 # Model extension:
 # If the architecture is "arm64" (Apple Silicon), then we define a MODEL_APPENDIX=-mlx,
@@ -69,7 +80,8 @@ ${CODE}make print-info${_END}         # Print the current values of some make an
 ${HIGHLIGHT}Working with code:${_END}
 
 ${CODE}make one-time-setup${_END}     # "One time setup" of dependencies. Requires MacOS or Linux.
-${CODE}make tests${_END}              # Run the test suite.
+${CODE}make unit-tests${_END}         # Run the unit test suite.
+${CODE}make tests${_END}              # Alias for ${CODE}tests${_END}.
 ${CODE}make clean${_END}              # Remove built artifacts, etc.
 ${CODE}make format${_END}             # Format the Python code with ${CODE}black${_END}.
 ${CODE}make lint${_END}               # Lint the Python code by making the ${CODE}ruff${_END} and ${CODE}pylint${_END} targets.
@@ -166,17 +178,17 @@ print-info:: print-info-env
 print-info-env::
 	@echo "${HIGHLIGHT}Some 'environment' settings:${_END}"
 	@echo
-	@echo "  ${DARK_GREEN}MAKEFLAGS:${_END}           ${CODE}${MAKEFLAGS}${_END}"
-	@echo "  ${DARK_GREEN}MAKEFLAGS_RECURSIVE:${_END} ${MAKEFLAGS_RECURSIVE}"
-	@echo "  ${DARK_GREEN}UNAME:${_END}               ${CODE}${UNAME}${_END}"
-	@echo "  ${DARK_GREEN}ARCHITECTURE:${_END}        ${CODE}${ARCHITECTURE}${_END}"
-	@echo "  ${DARK_GREEN}MODEL_APPENDIX:${_END}      ${CODE}${MODEL_APPENDIX}${_END}"
-	@echo "  ${DARK_GREEN}TIMESTAMP:${_END}           ${CODE}${TIMESTAMP}${_END}"
-	@echo "  ${DARK_GREEN}REPO_NAME:${_END}           ${CODE}${REPO_NAME}${_END}"
-	@echo "  ${DARK_GREEN}GIT_HASH:${_END}            ${CODE}${GIT_HASH}${_END}"
-	@echo "  ${DARK_GREEN}PWD:${_END}                 ${CODE}${PWD}${_END} (current Directory)"
-	@echo "  ${DARK_GREEN}SRC_DIR:${_END}             ${CODE}${SRC_DIR}${_END}"
-	@echo "  ${DARK_GREEN}TESTS_DIR:${_END}           ${CODE}${TESTS_DIR}${_END}"
+	@echo "  ${DARK_GREEN}MAKEFLAGS:${_END}             ${CODE}${MAKEFLAGS}${_END}"
+	@echo "  ${DARK_GREEN}MAKEFLAGS_RECURSIVE:${_END}   ${CODE}${MAKEFLAGS_RECURSIVE}${_END}"
+	@echo "  ${DARK_GREEN}UNAME:${_END}                 ${CODE}${UNAME}${_END}"
+	@echo "  ${DARK_GREEN}ARCHITECTURE:${_END}          ${CODE}${ARCHITECTURE}${_END}"
+	@echo "  ${DARK_GREEN}MODEL_APPENDIX:${_END}        ${CODE}${MODEL_APPENDIX}${_END}"
+	@echo "  ${DARK_GREEN}TIMESTAMP:${_END}             ${CODE}${TIMESTAMP}${_END}"
+	@echo "  ${DARK_GREEN}REPO_NAME:${_END}             ${CODE}${REPO_NAME}${_END}"
+	@echo "  ${DARK_GREEN}GIT_HASH:${_END}              ${CODE}${GIT_HASH}${_END}"
+	@echo "  ${DARK_GREEN}PWD:${_END}                   ${CODE}${PWD}${_END} (current Directory)"
+	@echo "  ${DARK_GREEN}SRC_DIR:${_END}               ${CODE}${SRC_DIR}${_END}"
+	@echo "  ${DARK_GREEN}WHICH_TESTS:${_END}           ${CODE}${WHICH_TESTS}${_END}"
 	@echo
 
 # The idiom of targets named "*-default" is an override hook. They are declared here
@@ -201,13 +213,9 @@ tests:: unit-tests
 unit-tests:: unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
 unit-tests-prerequisite unit-tests-postrequisite::
 unit-tests-default:
-	@echo "${INFO_LABEL}Target ${CODE}unit-tests${_END}: Running the unit tests (with coverage) in ${CODE}${SRC_DIR}/tests${_END}:"
-	@if [ ! -d "${SRC_DIR}/tests" ]; then echo "${WARN_LABEL} No test directory ${CODE}${SRC_DIR}/tests${_END} found!"; \
-	else \
-		cd ${SRC_DIR}; \
-		echo "${INFO_LABEL}Running: ${CODE}${PYTEST_RUN_CMD} && ${PYTEST_COV_REPORT_CMD}${_END}"; \
-		${PYTEST_RUN_CMD} && ${PYTEST_COV_REPORT_CMD}; \
-	fi
+	@echo "${INFO_LABEL}Target ${CODE}unit-tests${_END}: Running the unit tests (with coverage): ${CODE}${WHICH_TESTS}${_END}:"
+	@echo "${INFO_LABEL}Running: ${CODE}${PYTEST_RUN_CMD} ${WHICH_TESTS} && ${PYTEST_COV_REPORT_CMD}${_END}"
+	@${PYTEST_RUN_CMD} ${WHICH_TESTS} && ${PYTEST_COV_REPORT_CMD}
 
 # Convenient short hand for the two linters.
 lint:: ruff pylint

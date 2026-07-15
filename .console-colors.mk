@@ -43,12 +43,10 @@ TIP_LABEL       = ${BOLD}${PINK}TIP:${_END}
 # For "special" strings in output:
 CODE            = ${PINK}
 
-.PHONY: show-colors show-colors-info show-colors-echo
+.PHONY: show-colors
 
 # Use this target to see the colors defined above.
-show-colors:: show-colors-info show-colors-echo
-
-show-colors-info::
+show-colors::
 	$(info This is how the color and message definition look using $$(info ...) and related output functions:)
 	$(info This is <${RED}RED${_END}>)
 	$(info This is <${RED2}RED2${_END}>)
@@ -76,34 +74,4 @@ show-colors-info::
 	$(info This is an INFO_LABEL:      ${INFO_LABEL}It's useful to know)
 	$(info This is a  TIP_LABEL:       ${TIP_LABEL}This can help...)
 	$(info "(There isn't a 'HIGHLIGHT_LABEL', because it would be empty!)")
-	$(info )
-
-show-colors-echo::
-	$(info This is how the color and message definition look using echo (should be the same!):)
-	@echo "This is <${RED}RED${_END}>"
-	@echo "This is <${RED2}RED2${_END}>"
-	@echo "This is <${GREEN}GREEN${_END}>"
-	@echo "This is <${ORANGE}ORANGE${_END}>"
-	@echo "This is <${BLUE}BLUE${_END}>"
-	@echo "This is <${PINK}PINK${_END}>"
-	@echo "This is <${DARK_GREEN}DARK_GREEN${_END}>"
-	@echo "This is <${LIGHT_GREY}LIGHT_GREY${_END}>"
-	@echo "This is <${BLACK}BLACK${_END}>"
-	@echo "This is <${BOLD}${BLACK}BOLD and BLACK${_END}>"
-	@echo
-	@echo "This is an ERROR:     ${ERROR}Oooops! ${_END}"
-	@echo "This is a  WARN:      ${WARN}Careful! ${_END}"
-	@echo "This is a  WARNING:   ${WARNING}Careful! ${_END}"
-	@echo "This is a  NOTE:      ${NOTE}Of note... ${_END}"
-	@echo "This is an INFO:      ${INFO}It's useful to know ${_END}"
-	@echo "This is a  TIP:       ${TIP}This can help... ${_END}"
-	@echo "This is a  HIGHLIGHT: ${HIGHLIGHT}foo/bar/baz ${_END}"
-	@echo
-	@echo "This is an ERROR_LABEL:     ${ERROR_LABEL}Oooops!"
-	@echo "This is a  WARN_LABEL:      ${WARN_LABEL}Careful!"
-	@echo "This is a  WARNING_LABEL:   ${WARNING_LABEL}Careful!"
-	@echo "This is a  NOTE_LABEL:      ${NOTE_LABEL}Of note..."
-	@echo "This is an INFO_LABEL:      ${INFO_LABEL}It's useful to know"
-	@echo "This is a  TIP_LABEL:       ${TIP_LABEL}This can help..."
-	@echo "(There isn't a 'HIGHLIGHT_LABEL', because it would be empty!)"
-	@echo
+	@echo  # using echo suppresses "nothing to be done ..." messages.

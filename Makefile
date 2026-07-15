@@ -5,6 +5,20 @@
 # want to set a specific value, e.g., for a quantized model, define it here
 # before the include .common.mk line.
 # MODEL_APPENDIX = ...
+
+# By default we DON'T run all the unit tests, because the AI-based tests are
+# slow and expensive, so we filter them by default using the following:
+PYTEST_RUN_OPT_ARGS ?= "-m 'not ai'"
+
+# This project further divides src/tests into src/tests/unit, src/tests/integration,
+# etc., so we define two new variables for unit and integration test locations, then
+# "predefine" WHICH_TESTS to have the default value equal to TESTS_UNIT_DIR. Several
+# targets below nest invocations of make with different definitions, e.g., to pick
+# specific tests, use TESTS_INTEGRATION_DIR, etc.
+TESTS_UNIT_DIR        ?= src/tests/unit
+TESTS_INTEGRATION_DIR ?= src/tests/integration
+WHICH_TESTS           ?= ${TESTS_UNIT_DIR}
+
 include .common.mk
 
 # Definitions for the tools and applications.
@@ -138,25 +152,26 @@ ${CODE}make install-jq${_END}         # Explain how to install ${CODE}jq${_END} 
 ${CODE}make build${_END}              # Build a distribution.
 ${CODE}make install${_END}            # Install the code locally in development mode.
 
-${CODE}make tests${_END}              # Following convention, this target runs the unit tests only, building
+${CODE}make all-tests${_END}          # Run the unit and integration tests.
+${CODE}make all-tests-langflow${_END} # Run all the tests for the Langflow integration.
+
+${CODE}make unit-tests${_END}         # Following convention, this target runs the unit tests only, building
 ${CODE}${_END}                        # the targets ${CODE}unit-tests-non-ai${_END}", ${CODE}unit-tests-ai${_END}, and ${CODE}unit-tests-appointments${_END}.
-${CODE}make test${_END}               # Synonym for ${CODE}tests${_END}.
-${CODE}make unit-tests${_END}         # Synonym for ${CODE}tests${_END}.
+${CODE}make tests${_END}              # Synonym for ${CODE}unit-tests${_END}.
 ${CODE}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
+${CODE}${_END}                        # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
 ${CODE}make unit-tests-ai${_END}      # All unit tests that do involve inference invocations, which take a long time to run.
+${CODE}${_END}                        # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
 ${CODE}make unit-tests-appointments${_END}
 ${CODE}${_END}                        # Unit tests for the appointment management tool.
 ${CODE}make unit-tests-langflow${_END}
-${CODE}${_END}                        # Run unit tests for the Langflow components. NOT built by ${CODE}tests${_END} or ${CODE}integration-tests${_END},
+${CODE}${_END}                        # Run unit tests for the Langflow components. NOT built by ${CODE}unit-tests${_END} or ${CODE}integration-tests${_END},
 ${CODE}${_END}                        # so we don't force you to have Langflow installed.
 
 ${CODE}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
 ${CODE}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
 ${CODE}make integration-tests-dedicated${_END}
 ${CODE}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
-
-${CODE}make all-tests${_END}          # Run the unit and integration tests.
-${CODE}make all-tests-langflow${_END} # Run all the tests for the Langflow integration.
 
 ${CODE}make clean-setup${_END}        # Undoes everything done by the setup target or provides
 ${CODE}${_END}                        # instructions for what you must do manually in some cases.
@@ -592,8 +607,8 @@ remove-open-webui::
 
 before-pr-default: before-pr-no-tests unit-tests-non-ai
 
-.PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai 
-.PHONY: unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
+.PHONY: all-tests note-all-tests unit-tests-ai
+.PHONY: unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
 all-tests:: note-all-tests unit-tests-non-ai integration-tests
@@ -605,27 +620,18 @@ note-all-tests::
 	@echo "${NOTE_LABEL}integration tests. We do this so we don't run those (expensive) tests 'twice'."
 	@echo
 
-test tests unit-tests:: run-command-checks unit-tests-non-ai unit-tests-ai unit-tests-appointments
-
-# The --pattern argument is unnecessary here, as we pass the default value, but it is
-# included for "symmetry" with the unit-tests-ai target.
-unit-tests-non-ai::
-	@echo "${INFO_LABEL}Running the non-AI unit tests..."
-	cd ${SRC_DIR} && \
-	  uv run python -m unittest discover \
-	    --pattern 'test*.py' \
-	    --start-directory tests/unit \
-	    --top-level-directory .
+# This is effectively an alias for the default behavior of unit-tests!
+unit-tests-non-ai:: unit-tests
 
 .PHONY: unit-tests-appointments
 
 unit-tests-appointments::
-	@echo "${INFO_LABEL}Running the appointment tool unit tests..."
-	cd ${SRC_DIR} && \
-	  uv run python -m unittest discover \
-	    --pattern 'test_appointment*.py' \
-	    --start-directory tests/unit/apps/chatbot \
-	    --top-level-directory .
+	@echo "${INFO_LABEL}Running the appointment use case unit tests..."
+	${MAKE} \
+		PYTEST_RUN_OPT_ARGS="-m 'ai and appointments'" \
+		TESTS_DIR=${TESTS_UNIT_DIR}/apps/chatbot \
+	  WHICH_CHATBOT=agent \
+		unit-tests
 
 unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
@@ -633,54 +639,19 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
+# We pass OUTPUT_LOGS_TESTS_DIRFILE_GLOB explicitly, because it might have a time stamp
+# that we want passed through!
 unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR} 
 	@echo "${INFO_LABEL}Running the AI unit tests with the ${CODE}${@:unit-tests-ai-%=%}${_END} ChatBot..."
 	@echo "${INFO_LABEL}AI test log files: ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
-		cd ${SRC_DIR} && \
-	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
-	  export MODEL=${MODEL} && \
-	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
-    export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-    export CHATBOT_TESTS_TEMPLATES_DIR=${CHATBOT_TESTS_TEMPLATES_DIR} && \
-	  export DATA_DIR=${TESTS_DATA_DIR} && \
-	  export OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE=${OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE} && \
-	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
-	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
-	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
-	  export WHICH_CHATBOT=${@:unit-tests-ai-%=%} && \
-	  export VERBOSE='True' && \
-	  ${TIME} uv run python -m unittest discover \
-	  	--pattern 'ai_test*.py' \
-	  	--start-directory tests/unit \
-	  	--top-level-directory . ${APP_ARGS}
-	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
+	${MAKE} \
+		PYTEST_RUN_OPT_ARGS="-m 'ai'" \
+	  WHICH_CHATBOT=${@:unit-tests-ai-%=%} \
+		OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} \
+		unit-tests && \
+	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
+	  ! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
-
-# A special target for running one of the AI tests. Invoke as follows:
-# make TEST=tests/.../ai_test_foo.py WHICH_CHATBOT=agent|simple one-test-ai
-# Note that src is considered the root directory for TEST.
-
-one-test-ai:: ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}
-	@echo "${INFO_LABEL}Running one AI unit test: TEST = ${TEST} ..."
-	@echo "${TIP_LABEL}Use ${CODE}make list-unit-tests-ai${_END} to see the list of tests."
-	@echo "${INFO_LABEL}AI test log files: ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
-	cd ${SRC_DIR} && \
-	  export DATA_SAMPLE_RATE=${DATA_SAMPLE_RATE} && \
-	  export MODEL=${MODEL} && \
-	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
-	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-    export CHATBOT_TESTS_TEMPLATES_DIR=${CHATBOT_TESTS_TEMPLATES_DIR} && \
-	  export DATA_DIR=${TESTS_DATA_DIR} && \
-	  export OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE=${OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE} && \
-	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
-	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
-	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
-	  export WHICH_CHATBOT=${WHICH_CHATBOT} && \
-	  export VERBOSE='True' && \
-	  ${TIME} uv run python -m unittest ${TEST}
-	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
 .PHONY: list-unit-tests-ai
 list-unit-tests-ai::
@@ -721,26 +692,21 @@ integ-tests integration-tests:: integration-tests-dedicated integration-tests-fr
 
 # This target runs all the unit-tests, the AI-related, but more exhaustively, as well as the non-AI unit tests.
 integration-tests-from-unit-tests:: run-command-checks
-	@echo "${INFO_LABEL}Running the unit tests as integration tests with 100% sampling and trying all test query examples..."
-	${MAKE} DATA_SAMPLE_RATE=${INTEGRATION_TESTS_DATA_SAMPLE_RATE} tests
+	@echo "${INFO_LABEL}Running the unit tests as integration tests with 100% sampling and trying all test query examples."
+	@echo "${INFO_LABEL}Uses the agent ChatBot."
+	${MAKE} \
+		WHICH_CHATBOT=simple \
+		DATA_SAMPLE_RATE=${INTEGRATION_TESTS_DATA_SAMPLE_RATE} \
+		unit-tests
 
+# Uses the simple ChatBot!
 integration-tests-dedicated:: run-command-checks
 	@echo "${INFO_LABEL}Running the 'dedicated' integration tests..."
-	cd ${SRC_DIR} && \
-	  export DATA_SAMPLE_RATE=${INTEGRATION_TESTS_DATA_SAMPLE_RATE} && \
-	  export MODEL=${MODEL} && \
-	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
-	  export CHATBOT_TEMPLATES_DIR=${CHATBOT_TEMPLATES_DIR} && \
-	  export DATA_DIR=${TESTS_DATA_DIR} && \
-	  export ACCUMULATE_TEST_ERRORS=${ACCUMULATE_TEST_ERRORS} && \
-	  export RATING_THRESHOLD=${RATING_THRESHOLD} && \
-	  export CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD} && \
-	  export VERBOSE='True' && \
-	  uv run python -m unittest discover \
-	  	--start-directory tests/integration \
-	  	--top-level-directory .
-
+	${MAKE} \
+	  PYTEST_RUN_OPT_ARGS= \
+		WHICH_CHATBOT=simple \
+		WHICH_TESTS=${TESTS_INTEGRATION_DIR} \
+		unit-tests
 
 .PHONY: build install
 
