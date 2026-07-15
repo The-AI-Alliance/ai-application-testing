@@ -84,7 +84,7 @@ class ModelResponseParser(ResponseParser[ModelResponse]):
         {
           "id": "chatcmpl-09f35520-2558-4a3f-8379-a717109a178c",
           "created": 1775669892,
-          "model": "ollama/gemma4:e4b",
+          "model": "ollama/gemma4:12b",
           "object": "chat.completion",
           "system_fingerprint": null,
           "choices": [
@@ -160,7 +160,7 @@ class DeepAgentResponseParser(ResponseParser[dict[str, Any]]):
               "content": "... reply ...",
               "additional_kwargs": {},
               "response_metadata": {
-                "model": "gemma4:e4b",
+                "model": "gemma4:12b",
                 "created_at": "2026-04-08T14:01:02.475545Z",
                 "done": true,
                 "done_reason": "stop",
@@ -171,7 +171,7 @@ class DeepAgentResponseParser(ResponseParser[dict[str, Any]]):
                 "eval_count": 21,
                 "eval_duration": 578368915,
                 "logprobs": null,
-                "model_name": "gemma4:e4b",
+                "model_name": "gemma4:12b",
                 "model_provider": "ollama"
               },
               "type": "ai",

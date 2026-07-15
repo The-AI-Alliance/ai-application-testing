@@ -32,7 +32,7 @@ While we can't cover all tools and techniques for building agents, we have used 
 
 This chapter introduces an agent-based ChatBot implementation, [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"}, which uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, including [Agent Skills](#agent-skills), a modular way of defining agent behaviors. (Skills are one of those promising, new agent techniques that is worth investigation.) See [Run the ChatBot Example Application]({{site.baseurl}}/working-example/#run-the-chatbot-example-application) for details on running `ChatBotAgent`. For example, this implementation is used when you run `make chatbot`.[^1]
 
-Of the many choices available to us, we picked Langchain's _Deep Agents_ toolkit for two reasons: LangChain is widely used and its _Deep Agents_ library supports [Agent Skills](#agent-skills). We also switched to `gemma4:e4b` as our default, open-weights model, when we started this implementation, because we found it worked better for this implementation than the other models we have used.
+Of the many choices available to us, we picked Langchain's _Deep Agents_ toolkit for two reasons: LangChain is widely used and its _Deep Agents_ library supports [Agent Skills](#agent-skills). We also switched to `gemma4:12b` as our default, open-weights model, when we started this implementation, because we found it worked better for this implementation than the other models we have used.
 
 [^1]: The original, _simple_ ChatBot implementation, [`ChatBotSimple`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"}, which just uses LLM inference and a thin wrapper of application code, is still available and can be run with `make simple-chatbot`.
 
@@ -302,7 +302,7 @@ def create_appointment(patient_name: str, appointment_time: str, reason: str) ->
 
 It calls a support function `get_appointment_manager` that retrieves a global instance of the `AppointmentManager` class mentioned above. That class just tracks appointments in a file, `output/applications.jsonl`, and makes several simplifying assumptions and constrains. Obviously a real ChatBot would use a real calendar manager.
 
-In our experience using `gemma4:e4b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not production ready, but it illustrates possibilities.
+In our experience using `gemma4:12b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not production ready, but it illustrates possibilities.
 
 Finally, see also this blog post, [I Still Prefer MCP Over Skills](https://david.coffee/i-still-prefer-mcp-over-skills/){:target="skills-mcp"}, which compares the pros and cons of using [MCP]({{site.glossaryurl}}/#model-context-protocol){:target="_glossary"} servers vs. skills for different purposes.
 

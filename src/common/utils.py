@@ -14,7 +14,7 @@ from .collections import get_chain
 from litellm.types.utils import ModelResponse
 
 common_defaults = {
-    "model": "ollama_chat/gemma4:e4b",
+    "model": "ollama_chat/gemma4:12b",
     "service-url": "http://localhost:11434",
     "template-dir": "prompts/templates",
     "data-dir": "data",

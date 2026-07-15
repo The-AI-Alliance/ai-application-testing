@@ -414,7 +414,7 @@ class TestBase(unittest.TestCase):
         between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum
         threshold of 5 samples, if available, will be used in all cases.)
         """
-        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:e4b")
+        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:12b")
         self.service_url = os.environ.get("INFERENCE_URL", "http://localhost:11434")
         self.template_dir = os.environ.get(
             "CHATBOT_TEMPLATES_DIR", "apps/chatbot/prompts/templates"
