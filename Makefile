@@ -1,12 +1,20 @@
 # Makefile for the ai-application-testing website and repo example code.
 
 # Common includes. See the end of this file, too!
+# See the discussion of MODEL_APPENDIX in .common.mk or README.md. If you
+# want to set a specific value, e.g., for a quantized model, define it here
+# before the include .common.mk line.
+# MODEL_APPENDIX = ...
 include .common.mk
 
 # Definitions for the tools and applications.
+# See the README.md for instructions on what definitions to change to
+# use alternatives to ollama.
 # Setting the USE_CASES to '' results in all of them being processed.
 # Invoke "make JUST_STATS=--just-stats ..." to have stats generated, not validation, too.
+# If you don't use ollama, set OLLAMA_PREFIX to be empty.
 INFERENCE_SERVICE     ?= ollama
+OLLAMA_PREFIX         ?= ollama_chat/
 PORT                  ?= 11434
 INFERENCE_URL         ?= http://localhost:${PORT}
 USE_CASES             ?= 
@@ -15,21 +23,22 @@ JUST_STATS            ?=
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
 APP_ARGS              ?=
 
-# Different models we have used. See the "all-models-*" targets:
-OLLAMA_PREFIX          = ollama_chat
-MODEL_GPT_OSS         ?= ${OLLAMA_PREFIX}/gpt-oss:20b
-MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}/gemma4:12b
-# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}/gemma4:26b
-# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}/gemma4:31b
-# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}/gemma4:e4b
-MODEL_QWEN35          ?= ${OLLAMA_PREFIX}/qwen3.5:35b
-MODEL_LLAMA32         ?= ${OLLAMA_PREFIX}/llama3.2:3B
-MODEL_SMOLLM2         ?= ${OLLAMA_PREFIX}/smollm2:1.7b-instruct-fp16
-MODEL_GRANITE4        ?= ${OLLAMA_PREFIX}/granite4:latest
-MODELS                ?= ${MODEL_GPT_OSS} ${MODEL_GEMMA4} ${MODEL_QWEN35} ${MODEL_LLAMA32} ${MODEL_SMOLLM2} ${MODEL_GRANITE4} 
+# Different models we have used. See the "all-models-*" targets.
+# MODEL_APPENDIX is set in .common.mk and will be "-mlx" when executed on
+# Apple Silicon Macs. This "appendix" is used for models that have MLX-optimized
+# variants.
+MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}gemma4:12b${MODEL_APPENDIX}
+# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}gemma4:26b${MODEL_APPENDIX}
+# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}gemma4:31b${MODEL_APPENDIX}
+# MODEL_GEMMA4          ?= ${OLLAMA_PREFIX}gemma4:e4b${MODEL_APPENDIX}
+MODEL_GPT_OSS         ?= ${OLLAMA_PREFIX}gpt-oss:20b
+MODEL_GRANITE4        ?= ${OLLAMA_PREFIX}granite4.1:8b
+MODEL_LLAMA32         ?= ${OLLAMA_PREFIX}llama3.2:3B
+MODEL_QWEN35          ?= ${OLLAMA_PREFIX}qwen3.5:35b${MODEL_APPENDIX}
+MODELS                ?= ${MODEL_GEMMA4} ${MODEL_GPT_OSS} ${MODEL_GRANITE4} ${MODEL_LLAMA32} ${MODEL_QWEN35}
+
 # Default model!
 MODEL                 ?= ${MODEL_GEMMA4}
-
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 
 # Overrides definition in .common.mk:
@@ -264,10 +273,11 @@ print-info-code::
 	@echo "  ${DARK_GREEN}${_END}                             (all of them that we explicitly list in the ${CODE}Makefile${_END})" 
 	@echo "  ${DARK_GREEN}ALL_TOOLS:${_END}                   ${CODE}${ALL_TOOLS}${_END}"
 	@echo "  ${DARK_GREEN}INFERENCE_SERVICE:${_END}           ${CODE}${INFERENCE_SERVICE}${_END}"
+	@echo "  ${DARK_GREEN}OLLAMA_PREFIX:${_END}               ${CODE}${OLLAMA_PREFIX}${_END} (ignored if not using ollama)"
 	@echo "  ${DARK_GREEN}INFERENCE_URL:${_END}               ${CODE}${INFERENCE_URL}${_END}"
 	@echo "  ${DARK_GREEN}TOOLS_PROMPTS_TEMPLATES_DIR:${_END} ${CODE}${TOOLS_PROMPTS_TEMPLATES_DIR}${_END}"
 	@echo "  ${DARK_GREEN}CHATBOT_TEMPLATES_DIR:${_END}       ${CODE}${CHATBOT_TEMPLATES_DIR}${_END}"
-	@echo "  ${DARK_GREEN}CHATBOT_TESTS_TEMPLATES_DIR:${_END}  ${CODE}${CHATBOT_TESTS_TEMPLATES_DIR}${_END}"
+	@echo "  ${DARK_GREEN}CHATBOT_TESTS_TEMPLATES_DIR:${_END} ${CODE}${CHATBOT_TESTS_TEMPLATES_DIR}${_END}"
 	@echo "  ${DARK_GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CODE}${CHATBOT_OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}APP_ARGS:${_END}                    ${CODE}'${APP_ARGS}'${_END} (A user hook for passing custom arguments, like ${CODE}-h${_END})"
 	@echo
@@ -461,7 +471,7 @@ help-chatbot::
 
 before-chatbot:: before-chatbot-preamble check-model-which-chatbot run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 check-model-which-chatbot::
-	@if [[ ! ${MODEL} = ${OLLAMA_PREFIX}/gpt-oss ]] || [[ ! ${WHICH_CHATBOT} = agent ]]; then exit 0; else \
+	@if [[ ! ${MODEL} = ${OLLAMA_PREFIX}gpt-oss ]] || [[ ! ${WHICH_CHATBOT} = agent ]]; then exit 0; else \
 		echo "${ERROR_LABEL}Model ${CODE}${MODEL}${_END} currently can't be used with the ${CODE}${WHICH_CHATBOT}${_END} ChatBot!"; \
 		echo "${ERROR_LABEL}(${CODE}https://github.com/langchain-ai/langchain/issues/33116${_END}). Try using model ${CODE}${MODEL_GEMMA4}${_END}, for example."; \
 		exit 1; \
@@ -576,6 +586,11 @@ help-open-webui::
 remove-open-webui::
 	uv tool uninstall open-webui
 	rm -rf $HOME/.open-webui
+
+# Because the full unit-tests suite is too costly to run for PRs, we use a
+# special-purpose definition of "before-pr-default".
+
+before-pr-default: before-pr-no-tests unit-tests-non-ai
 
 .PHONY: all-tests note-all-tests test tests unit-tests unit-tests-non-ai 
 .PHONY: unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple

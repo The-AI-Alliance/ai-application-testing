@@ -33,6 +33,18 @@ MAKEFLAGS_RECURSIVE      ?= # --print-directory (only useful for recursive makes
 UNAME                    ?= $(shell uname)
 ARCHITECTURE             ?= $(shell uname -m)
 
+# Model extension:
+# If the architecture is "arm64" (Apple Silicon), then we define a MODEL_APPENDIX=-mlx,
+# which Makefiles can append to variables that specify LLMs. Otherwise, this variable
+# is empty. However, it won't change the value if one was already set in the Makefile,
+# _before_ this file was included.
+
+ifeq (${ARCHITECTURE}, arm64)
+	MODEL_APPENDIX ?= -mlx
+else
+	MODEL_APPENDIX ?=
+endif
+
 # Used for version tagging release artifacts.
 GIT_HASH                 ?= $(shell git show --pretty="%H" --abbrev-commit |head -1)
 TIMESTAMP                ?= $(shell date +"%Y%m%d-%H%M%S")
@@ -153,10 +165,12 @@ endef
 print-info:: print-info-env
 print-info-env::
 	@echo "${HIGHLIGHT}Some 'environment' settings:${_END}"
+	@echo
 	@echo "  ${DARK_GREEN}MAKEFLAGS:${_END}           ${CODE}${MAKEFLAGS}${_END}"
 	@echo "  ${DARK_GREEN}MAKEFLAGS_RECURSIVE:${_END} ${MAKEFLAGS_RECURSIVE}"
 	@echo "  ${DARK_GREEN}UNAME:${_END}               ${CODE}${UNAME}${_END}"
 	@echo "  ${DARK_GREEN}ARCHITECTURE:${_END}        ${CODE}${ARCHITECTURE}${_END}"
+	@echo "  ${DARK_GREEN}MODEL_APPENDIX:${_END}      ${CODE}${MODEL_APPENDIX}${_END}"
 	@echo "  ${DARK_GREEN}TIMESTAMP:${_END}           ${CODE}${TIMESTAMP}${_END}"
 	@echo "  ${DARK_GREEN}REPO_NAME:${_END}           ${CODE}${REPO_NAME}${_END}"
 	@echo "  ${DARK_GREEN}GIT_HASH:${_END}            ${CODE}${GIT_HASH}${_END}"
@@ -165,9 +179,14 @@ print-info-env::
 	@echo "  ${DARK_GREEN}TESTS_DIR:${_END}           ${CODE}${TESTS_DIR}${_END}"
 	@echo
 
-.PHONY: before-pr before-pr-no-tests
+# The idiom of targets named "*-default" is an override hook. They are declared here
+# with a single colon (:), so Makefiles can define their own recipe for the "core" of
+# the corresponding targets, e.g., before-pr, pylint, tests, etc.
 
-before-pr:: before-pr-no-tests tests
+.PHONY: before-pr before-pr-default before-pr-no-tests
+
+before-pr:: before-pr-default
+before-pr-default: before-pr-no-tests tests
 before-pr-no-tests:: ${QUALITY_CHECKS}
 
 .PHONY: tests unit-tests unit-tests-prerequisite unit-tests-default unit-tests-postrequisite

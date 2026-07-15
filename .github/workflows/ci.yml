@@ -13,7 +13,7 @@ on:
 
 jobs:
   quality:
-    name: Format · Lint · Type-check · Tests
+    name: Format · Lint · Type-check · Some Tests
     runs-on: ubuntu-latest
 
     steps:

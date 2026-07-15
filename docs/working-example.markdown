@@ -73,13 +73,16 @@ ollama serve            # in one terminal window
 ollama pull gemma4:12b  # in another terminal window
 ```
 
-In our experiments, we used the models shown in **Table 1** (see also a similar table [here]({{site.baseurl}}/arch-design/tdd/#table-1)): 
+In our experiments, we used the models shown in **Table 1** (see also a similar table [here]({{site.baseurl}}/arch-design/tdd/#table-1)).
+
+{: .note}
+> **NOTE:** When a model is listed below and an Apple silicon-optimized variant, `*-mlx` is available, it is used when developing on such systems.
 
 <a id="table-1"></a>
 
 | Model | Parameters | Memory | Hugging Face | Ollama | Description |
 | :---- | ---------: | -----: | :----------- | :----- | :---------- |
-| `gemma4:12b`  | 12 B | 8.3 GB | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} |  **Default model used in the `Makefile`.** Excellent performance, requiring about 8.3 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
+| `gemma4:12b`  | 12 B | 7.5 GB | [link](https://huggingface.co/blog/gemma4){:target="hf-gemma4"} | [link](https://ollama.com/library/gemma4){:target="ollama-gemma4"} |  **Default model used in the `Makefile`.** Excellent performance, requiring about 7.5 GB, so it provides a good balance between performance and efficiency. The larger `gemma4` models available, `26b` and `31b` work even better, but require much more memory. |
 | `gpt-oss:20b` | 20 B | 14 GB | [link](https://huggingface.co/openai/gpt-oss-20b){:target="hf-gpt-oss"} | [link](https://ollama.com/library/gpt-oss:20b){:target="ollama-gpt-oss"} | Excellent performance, with slightly more memory required. However, at this time, this model doesn't work with the agent ChatBot implementation, which uses [LangChain's Deep Agents](https://docs.langchain.com/oss/python/deepagents/) framework. See [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116) for details. |
 | `qwen3.5:35b` | 35 B | 27 GB | [link](https://huggingface.co/models?sort=trending&search=qwen3.5){:target="hf-qwen3.5"} | [link](https://ollama.com/library/qwen3.5){:target="ollama-qwen"} | Excellent performance, but requires about 27 GB of memory. |
 | `llama3.2:3B` |  3 B | 7.5 GB | [link](https://huggingface.co/meta-llama/Llama-3.2-3B){:target="hf-llama32"} | [link](https://ollama.com/library/llama3.2:3b){:target="ollama-llama32"} | A small but effective model in the Llama family. A good choice during development when overhead is more important than performance. |
@@ -100,7 +103,7 @@ In our experiments, we used the models shown in **Table 1** (see also a similar 
 
 By default, we use `gemma4:12b` as our inference model, served by `ollama`. Previously, we used `gpt-oss:20b`, but switched due to [this LangChain issue](https://github.com/langchain-ai/langchain/issues/33116). This is specified in the `Makefile` by defining the variable `MODEL` to be `ollama_chat/gemma4:12b`. (Note the `ollama_chat/` prefix.) All the models shown above are defined in the `MODELS` variable; there are `all-models-*` targets that try all of them.
 
-We find that `gemma4:12b`, requiring about 8.3 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
+We find that `gemma4:12b`, requiring about 7.5 GB of memory performs reasonably well on a MacBook Pro with an M1 Max chips and 32GB of memory. The slightly larger `gpt-oss:20b` can be slower, especially if lots of other apps are using significant memory. 48 GB or 64 GB of memory is much better for both models and also supports larger models more easily.
 
 We encourage you to experiment with other model sizes and with different model families. Consider also [Quantized]({{site.glossaryurl}}/#quantization){:target="_glossary"} versions of models. It is worth the time to experiment with different models to find the ones that work best for your development environment and production deployments.
 
@@ -116,7 +119,8 @@ There are two ways to specify your preferred model in the `Makefile`:
 
 Edit the [`Makefile`]({{site.gh_edit_repository}}/tree/main/Makefile){:target="makefile"} and change the following definitions:
 
-* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. You can do this if you like...
+* `MODEL_APPENDIX` - If you want to use a quantized version of a model, set this variable to have the correct suffix. By default, it will be set to the value `-mlx` on Apple silicon Macs or otherwise left empty. Set this value _at the top of the `Makefile`_, before `.common.mk` is included!
+* `MODEL` - e.g., `ollama_chat/llama3.2:3B`. This will change the default for all invocations of the tools and the example ChatBot app. (The `ollama_chat/` or `ollama/` prefix is required if you are using `ollama`, with `ollama_chat/` recommended by `LiteLLM`. Note that the `Makefile` has a variable `OLLAMA_PREFIX` for defining this prefix.) For convenience, we defined several `MODEL_*` variables for different models, then refer to the one we want when defining `MODEL`. Note that `${MODEL_APPENDIX}` is appended to those definitions.
 * `INFERENCE_SERVICE` - e.g., `openai`, `anthropic`, `ollama`.
 * `INFERENCE_URL` - e.g., `http://localhost:11434` for `ollama` or `https://api.openai.com/v1` for OpenAI.
 * Others? The `LiteLLM` documentation may tell you to define other variables. You will most likely need an API key or other credentials for hosted services, like OpenAI and Anthropic. **_Do not put this information in the Makefile!_** This avoids the risk that you will accidentally commit secrets to a repo. Instead, use an environment variable or other solution described by the `LiteLLM` documentation.
