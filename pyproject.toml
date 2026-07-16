@@ -7,15 +7,15 @@ requires-python = ">=3.13"
 dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
-    "fastapi>=0.138.0",
+    "fastapi>=0.139.0",
     "uvicorn>=0.50.2",
     "httpx>=0.28.1",
     "deepagents>=0.6.12",
     "langchain-ollama>=1.1.0",
-    "openai>=2.44.0",
+    "openai>=2.45.0",
     "litellm>=1.92.0",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.3",
+    "fastmcp>=3.4.4",
 ]
 
 [tool.setuptools.packages.find]
@@ -23,7 +23,7 @@ where = ["src"]
 
 [build-system]
 requires = [
-  "setuptools>=82.0.1",
+  "setuptools>=83.0.0",
 ]
 build-backend = "setuptools.build_meta"
 
