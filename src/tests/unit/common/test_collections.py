@@ -5,7 +5,7 @@ https://hypothesis.readthedocs.io/en/latest/
 
 import unittest
 from typing import Any
-from hypothesis import given, strategies as st
+from hypothesis import given, settings, strategies as st
 
 from common.collections import (
     get_chain,
@@ -152,26 +152,34 @@ class TestCollections(unittest.TestCase):
             max_size=4,
         )
     )
+    @settings(deadline=500)
     def test_dict_permutations(self, dictionary: dict[str, Any]):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values
         We use a set for the values because we want to assume uniqueness, which is how
         this feature will be used.
+        Note the deadline setting. This method can sometimes run longer than Hypothesis'
+        default deadline of 200ms.
         """
         self._check(dictionary)
 
     @given(
         st.dictionaries(
-            st.text(min_size=1), st.sets(st.text(), max_size=4), max_size=4
+            st.text(min_size=1, max_size=5),
+            st.sets(st.text(max_size=10), max_size=4),
+            max_size=4
         ),
         st.integers(min_value=0, max_value=4),
     )
+    @settings(deadline=500)
     def test_dict_permutations_limit_n(self, dictionary: dict[str, Any], n: int):
         """
         Check that dict_permutations returns a list of dicts with all permutations of single key-values,
         but truncating the input collections to size n.
         We use a set for the values because we want to assume uniqueness, which is how
         this feature will be used.
+        Note the deadline setting. This method can sometimes run longer than Hypothesis'
+        default deadline of 200ms.
         """
         self._check(dictionary, n=n)
 

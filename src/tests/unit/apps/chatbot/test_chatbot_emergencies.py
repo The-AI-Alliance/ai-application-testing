@@ -1,9 +1,9 @@
-# Tests for the "ChatBot" module with "Other" Q&A pairs.
+# Tests for the "ChatBot" module with "Emergency" Q&A pairs.
 
+import pytest
 from tests.utils.apps.chatbot.testbase import TestBaseRunner
 
-
-class AITestChatBotOthers(TestBaseRunner):
+class AITestChatBotEmergencies(TestBaseRunner):
     """
     The prefix `AITest` and the file name prefix `ai_test_` rather than the
     conventional `test_`. Because this test suite takes a long time to run,
@@ -12,5 +12,6 @@ class AITestChatBotOthers(TestBaseRunner):
     separately.
     """
 
-    def test_chatbot_other_requests(self):
-        self.try_qna_queries("others")
+    @pytest.mark.ai
+    def test_chatbot_emergency_requests(self):
+        self.try_qna_queries("emergencies")

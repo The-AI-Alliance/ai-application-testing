@@ -8,7 +8,7 @@
 
 # By default we DON'T run all the unit tests, because the AI-based tests are
 # slow and expensive, so we filter them by default using the following:
-PYTEST_RUN_OPT_ARGS ?= "-m 'not ai'"
+PYTEST_RUN_OPT_ARGS ?= -m 'not ai'
 
 # This project further divides src/tests into src/tests/unit, src/tests/integration,
 # etc., so we define two new variables for unit and integration test locations, then
@@ -31,7 +31,7 @@ INFERENCE_SERVICE     ?= ollama
 OLLAMA_PREFIX         ?= ollama_chat/
 PORT                  ?= 11434
 INFERENCE_URL         ?= http://localhost:${PORT}
-USE_CASES             ?= 
+USE_CASES             ?=
 JUST_STATS            ?=
 
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
@@ -134,7 +134,7 @@ list of these variables and their default definitions. Specific variables are me
 some targets.
 
 ${CODE}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
-${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and 
+${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and
 ${CODE}${_END}                        # make that target for ALL the models defined by ${CODE}MODELS${_END}:
 ${CODE}${_END}                        #   ${CODE}${MODELS}${_END}
 ${CODE}${_END}                        # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
@@ -142,7 +142,7 @@ ${CODE}${_END}                        # You can override the list of models as f
 ${CODE}${_END}                        #   ${CODE}make MODELS="..." all-models-...${_END}
 ${CODE}make all-tools${_END}          # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
 ${CODE}make all-code${_END}           # Synonym for ${CODE}all-tools${_END}.
-${CODE}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first. 
+${CODE}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first.
 ${CODE}${_END}                        # Built by ${CODE}all-tools${_END}.
 ${CODE}make run-code${_END}           # Synonym for ${CODE}run-tools${_END}.
 
@@ -200,8 +200,8 @@ arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} 
 list of these variables and their default definitions. Specific variables are mentioned for
 some targets.
 
-For tools run by the following targets, which invoke inference, the model 
-${CODE}${MODEL}${_END} is served by ollama. The make variable ${CODE}MODEL${_END} specifies the model, 
+For tools run by the following targets, which invoke inference, the model
+${CODE}${MODEL}${_END} is served by ollama. The make variable ${CODE}MODEL${_END} specifies the model,
 so if you want to use a different model, invoke make as in this example:
 
   ${CODE}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${_END}
@@ -321,17 +321,17 @@ ${OUTPUT_DIR} ${OUTPUT_TESTS_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC
 # Code Targets
 
 .PHONY: all-tools all-code run-tools run-code
-.PHONY: run-terc run-tdd-example-refill-chatbot 
-.PHONY: run-ubds run-unit-benchmark-data-synthesis 
-.PHONY: run-ubdv run-unit-benchmark-data-validation 
+.PHONY: run-terc run-tdd-example-refill-chatbot
+.PHONY: run-ubds run-unit-benchmark-data-synthesis
+.PHONY: run-ubdv run-unit-benchmark-data-validation
 .PHONY: before-run silent-before-run run-command-checks save-examples post-all-models
-.PHONY: help-terc help-tdd-example-refill-chatbot 
-.PHONY: help-ubds help-unit-benchmark-data-synthesis 
-.PHONY: help-ubdv help-unit-benchmark-data-validation 
+.PHONY: help-terc help-tdd-example-refill-chatbot
+.PHONY: help-ubds help-unit-benchmark-data-synthesis
+.PHONY: help-ubdv help-unit-benchmark-data-validation
 
 # Extract the "%" as a target, then make it for all the MODELS.
 # Use the same timestamp for all of them.
-all-models-% :: 
+all-models-% ::
 	@timestamp=${TIMESTAMP}; \
 	target=${@:all-models-%=%}; \
 	echo "${INFO_LABEL} Making target \"$$target\" for all models:"; \
@@ -349,8 +349,8 @@ all-models-% ::
 	done
 
 all-tools all-code:: run-tools
-run-tools run-code:: 
-	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_TOOLS:%=run-%} 
+run-tools run-code::
+	${MAKE} TIMESTAMP=${TIMESTAMP} ${ALL_TOOLS:%=run-%}
 
 terc run-terc:: run-tdd-example-refill-chatbot run-tdd-example-refill-chatbot-preamble
 ubds run-ubds:: run-unit-benchmark-data-synthesis run-unit-benchmark-data-synthesis-preamble
@@ -368,7 +368,7 @@ ${ALL_TOOLS:%=help-%}::
 
 # LITELLM_LOG=ERROR turns off some annoying INFO messages, sufficient
 # for our purposes. See the LiteLLM docs for logging configuration details.
-# Define APP_ARGS on the command line to pass custom arguments, e.g., 
+# Define APP_ARGS on the command line to pass custom arguments, e.g.,
 #   make APP_ARGS='--help' run-tdd-example-refill-chatbot
 # just prints help.
 
@@ -422,14 +422,14 @@ run-unit-benchmark-data-validation-preamble::
 before-run:: silent-before-run
 	@echo "${TIP_LABEL}If errors occur, try ${CODE}make setup${_END} or ${CODE}make clean-setup setup${_END}, then try again."
 
-silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}  
+silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR}
 run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
 	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR}Ollama is not running!${_END}" || exit 1
 
 # Langflow targets
-.PHONY: run-langflow-pipeline langflow-pipeline langflow-pipeline-preamble help-langflow-pipeline  
+.PHONY: run-langflow-pipeline langflow-pipeline langflow-pipeline-preamble help-langflow-pipeline
 .PHONY: unit-tests-langflow all-tests-langflow
 
 run-langflow-pipeline:: langflow-pipeline
@@ -482,12 +482,12 @@ do-run-chatbot::
 		--log-file ${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log \
 		--verbose ${APP_ARGS}
 
-agent-chatbot simple-chatbot:: 
+agent-chatbot simple-chatbot::
 	${MAKE} WHICH_CHATBOT=${@:%-chatbot=%} chatbot
 
-.PHONY: help-chatbot help-agent-chatbot help-simple-chatbot 
+.PHONY: help-chatbot help-agent-chatbot help-simple-chatbot
 
-help-agent-chatbot help-simple-chatbot:: 
+help-agent-chatbot help-simple-chatbot::
 	${MAKE} WHICH_CHATBOT=${@:help-%-chatbot=%} help-chatbot
 
 help-chatbot::
@@ -536,7 +536,7 @@ inspect-mcp-server:: command-check-node
 help-mcp-server::
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
 
-.PHONY: api-server run-api-server help-api-server check-api-server 
+.PHONY: api-server run-api-server help-api-server check-api-server
 .PHONY: view-api-server-docs view-api-server-redoc view-api-server-docs-preamble
 
 run-api-server:: api-server
@@ -564,7 +564,7 @@ help-api-server::
 check-api-server::
 	@echo "${INFO_LABEL}'Sanity check' that the OpenAI-compatible API server works:"
 	@echo "${INFO_LABEL}Running the server in the background..."
-	${NOOP} ${MAKE} api-server & 
+	${NOOP} ${MAKE} api-server &
 	@echo
 	@echo "  ${HIGHLIGHT}Hit the 'return' key!${_END}"
 	@echo
@@ -572,7 +572,7 @@ check-api-server::
 	@echo
 	cd ${SRC_DIR} && ${NOOP} uv run python apps/chatbot/api_server/example_client.py
 	@echo
-	@echo " ${HIGHLIGHT}Using a hack: Find the process id for the server and kill it...${_END}" 
+	@echo " ${HIGHLIGHT}Using a hack: Find the process id for the server and kill it...${_END}"
 	@echo
 	${NOOP} kill %1
 
@@ -584,7 +584,7 @@ view-api-server-docs-preamble::
 	@echo "${INFO_LABEL}Opening ${HIGHLIGHT}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${_END}"
 	@echo "${open-url-message}"
 	@echo "${INFO_LABEL}If the URL isn't found, make sure the server is running! For example,"
-	@echo "${INFO_LABEL}run ${CODE}make api-server${_END} in another terminal window, then rerun this target." 
+	@echo "${INFO_LABEL}run ${CODE}make api-server${_END} in another terminal window, then rerun this target."
 
 .PHONY: run-open-webui open-webui open-webui-preamble open-webui-setup help-open-webui remove-open-webui
 
@@ -605,7 +605,7 @@ open-webui-setup::
 		cd ${OPEN_WEBUI_DIR} && uv venv && uv sync && uv tool install open-webui)
 	cd ${OPEN_WEBUI_DIR} && . .venv/bin/activate
 
-help-open-webui:: 
+help-open-webui::
 	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.13 --with greenlet open-webui@latest serve --help
 
 remove-open-webui::
@@ -651,11 +651,11 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 # (Note we are in the src directory so we have to tell make to go to the parent...)
 # We pass OUTPUT_LOGS_TESTS_DIRFILE_GLOB explicitly, because it might have a time stamp
 # that we want passed through!
-unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR} 
+unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}
 	@echo "${INFO_LABEL}Running the AI unit tests with the ${CODE}${@:unit-tests-ai-%=%}${_END} ChatBot..."
 	@echo "${INFO_LABEL}AI test log files: ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
 	${MAKE} \
-		PYTEST_RUN_OPT_ARGS="-m 'ai'" \
+		PYTEST_RUN_OPT_ARGS="-m ai" \
 	  WHICH_CHATBOT=${@:unit-tests-ai-%=%} \
 		OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} \
 		unit-tests && \
@@ -669,7 +669,7 @@ list-unit-tests-ai::
 
 .PHONY: post-proc-test-logs show-test-logs
 
-post-proc-test-logs:: 
+post-proc-test-logs::
 	@echo
 	@echo "${INFO_LABEL}Time-stamped JSONL log files were written to:"
 	@echo "  ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
@@ -685,12 +685,12 @@ show-test-logs::
 	@echo
 	@echo "${TIP_LABEL}Run ${CODE}make nice-ai-test-logs${_END} to make a nicely-formatted JSON file from each JSONL file."
 	@echo "${TIP_LABEL}(The ${CODE}jq${_END} CLI tool required.)"
-	@echo 
+	@echo
 
 .PHONY: nice-ai-test-logs
 
 # This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-test-logs:: silent-command-check-jq 
+nice-ai-test-logs:: silent-command-check-jq
 	@for f in ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
 	  echo "${INFO_LABEL}Writing ${CODE}$$ff${_END}:"; \
 	  jq . $$f > $$ff; \
@@ -732,7 +732,7 @@ install::
 	uv sync
 
 # Common includes. See the beginning of this file, too!
-# The reason the following are put at the end, rather than the beginning, is to 
+# The reason the following are put at the end, rather than the beginning, is to
 # control the ordering of dependencies for "global" targets, like "help".
 include .website.mk
 include .llm.mk

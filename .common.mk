@@ -33,7 +33,7 @@ PYLINT_IGNORE_ARGS        := --ignore=.venv --ignore-pattern='.*cache.*'
 # Define PYTEST_*_OPT_ARGS in Makefiles to customize behavior.
 PYTEST_RUN_OPT_ARGS       ?=
 PYTEST_COV_OPT_ARGS       ?=
-PYTEST_RUN_CMD            := uv run --active coverage run -m pytest -s ${PYTEST_RUN_OPT_ARGS}
+PYTEST_RUN_CMD            := uv run --active coverage run -m pytest -v -s ${PYTEST_RUN_OPT_ARGS}
 PYTEST_COV_REPORT_CMD     := uv run --active coverage report -m ${PYTEST_COV_OPT_ARGS}
 
 # The environment

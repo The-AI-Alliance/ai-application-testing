@@ -1,9 +1,9 @@
-# Tests for the "ChatBot" module with "Appointment" Q&A pairs.
+# Tests for the "ChatBot" module with Prescription Q&A pairs.
 
+import pytest
 from tests.utils.apps.chatbot.testbase import TestBaseRunner
 
-
-class AITestChatBotAppointments(TestBaseRunner):
+class AITestChatBotPrescriptions(TestBaseRunner):
     """
     The prefix `AITest` and the file name prefix `ai_test_` rather than the
     conventional `test_`. Because this test suite takes a long time to run,
@@ -12,5 +12,6 @@ class AITestChatBotAppointments(TestBaseRunner):
     separately.
     """
 
-    def test_chatbot_appointment_requests(self):
-        self.try_scenarios("appointments")
+    @pytest.mark.ai
+    def test_chatbot_prescription_requests(self):
+        self.try_qna_queries("prescriptions")
