@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, MutableMapping, Sequence
 
 from common.json_yaml import decode_json, encode_json
 
@@ -53,7 +53,7 @@ class FilePersistentStorage:
         """Clear the storage file of all records."""
         self.__create_file(remove_old=True)
 
-    def load(self) -> tuple[list[dict[str, Any]], list[str]]:
+    def load(self) -> tuple[Sequence[MutableMapping[str, Any]], list[str]]:
         """
         Load records from the JSONL storage file and parses them using `decode_json(line)`.
 
@@ -81,7 +81,7 @@ class FilePersistentStorage:
                             )
         return dicts, errors
 
-    def save(self, records: list[dict[str, Any]]) -> int:
+    def save(self, records: Sequence[MutableMapping[str, Any]]) -> int:
         """
         Append the list of records to the JSONL file, encoding them
         using `encode_json(record)`. To overwrite the

@@ -14,7 +14,7 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from apps.chatbot import ChatBot, ChatBotResponseHandler
+from apps.chatbot import ChatBotSimple, ChatBotResponseHandler
 from apps.chatbot.mcp_server.server import create_mcp_server
 
 
@@ -26,8 +26,8 @@ def test_chatbot_creation():
         logger = logging.getLogger("test")
         logger.setLevel(logging.INFO)
 
-        chatbot = ChatBot(
-            model="ollama_chat/gemma4:e4b",
+        chatbot = ChatBotSimple(
+            model="ollama_chat/gemma4:12b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
@@ -46,7 +46,7 @@ def test_chatbot_creation():
         print(f"  - Output dir: {chatbot.output_dir}")
         print(f"  - Confidence threshold: {chatbot.confidence_level_threshold}")
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"✗ Error creating ChatBot: {e}")
         return False
 
@@ -59,7 +59,7 @@ def test_mcp_server_creation():
         logger.setLevel(logging.INFO)
 
         result = create_mcp_server(
-            model="ollama_chat/gemma4:e4b",
+            model="ollama_chat/gemma4:12b",
             service_url="http://localhost:11434",
             template_dir="src/apps/chatbot/prompts/templates",
             data_dir="src/data",
@@ -78,7 +78,7 @@ def test_mcp_server_creation():
         print(f"  - Server type: {type(server).__name__}")
         print(f"  - ChatBot model: {chatbot.model}")
         return True
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"✗ Error creating MCP server: {e}")
         return False
 
@@ -112,9 +112,9 @@ def main():
     if passed == total:
         print("\n✓ All tests passed!")
         return 0
-    else:
-        print(f"\n✗ {total - passed} test(s) failed")
-        return 1
+
+    print(f"\n✗ {total - passed} test(s) failed")
+    return 1
 
 
 if __name__ == "__main__":

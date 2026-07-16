@@ -31,11 +31,37 @@ build-backend = "setuptools.build_meta"
 dev = [
     "hypothesis>=6.156.1",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "pylint>=4.0.6",
     "black>=26.5.1",
     "ruff>=0.15.20",
     "ty>=0.0.56",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "ai: marks tests that that are slow to execute due to AI inference (deselect with '-m \"not ai\")",
+    "appointments: marks tests that that are related to the 'appointments' use case (deselect with '-m \"not appointments\")",
+]
+testpaths = ["src/tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.black]
+line-length = 120
+target-version = ['py312']
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.main]
+init-hook = "import sys; sys.path.insert(0, 'src')"
 
 [tool.ty.src]
 include = ["src"]

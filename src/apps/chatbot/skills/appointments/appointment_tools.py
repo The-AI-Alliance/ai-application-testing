@@ -6,7 +6,7 @@ These tools are used by the Deep Agent's appointment skill.
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, Tuple
+from typing import Any, MutableMapping, Optional, Sequence, Tuple
 
 from langchain_core.tools import tool
 
@@ -130,7 +130,7 @@ def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
 @tool
 def get_appointments(
     patient_name: str = "", after_date_time: str = ""
-) -> list[dict[str, Any]]:
+) -> Sequence[MutableMapping[str, Any]]:
     """
     List all active appointments, with optional filtering.
 
@@ -163,7 +163,7 @@ def get_appointments_count() -> int:
 
 
 @tool
-def get_appointment_by_id(id: str) -> dict[str, Any]:
+def get_appointment_by_id(id: str) -> MutableMapping[str, Any]:
     """
     Return a specific appointment for the specified ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name

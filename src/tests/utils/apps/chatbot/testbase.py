@@ -414,7 +414,7 @@ class TestBase(unittest.TestCase):
         between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum
         threshold of 5 samples, if available, will be used in all cases.)
         """
-        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:e4b")
+        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:12b")
         self.service_url = os.environ.get("INFERENCE_URL", "http://localhost:11434")
         self.template_dir = os.environ.get(
             "CHATBOT_TEMPLATES_DIR", "apps/chatbot/prompts/templates"
@@ -545,9 +545,11 @@ class TestBaseRunner(TestBase):
             else "ChatBotSimple"
         )
         def_log_dir = "tests/logs"
-        log_file_template = os.environ.get("TESTS_LOGS_FILE_TEMPLATE")
+        log_file_template = os.environ.get("OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE")
         if not log_file_template:
-            print("WARNING: TESTS_LOGS_FILE_TEMPLATE undefined. Using default value.")
+            print(
+                "WARNING: OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE undefined. Using default value."
+            )
             log_file_template = f"{def_log_dir}/{{TestBase.which_chatbot_name}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
         log_file_path = Path(

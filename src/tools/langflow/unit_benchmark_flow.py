@@ -208,7 +208,7 @@ def main():
         description="Run benchmark data synthesis and validation pipeline"
     )
     parser.add_argument(
-        "-m", "--model", default="ollama_chat/gemma4:e4b", help="Model name to use"
+        "-m", "--model", default="ollama_chat/gemma4:12b", help="Model name to use"
     )
     parser.add_argument(
         "-s",
