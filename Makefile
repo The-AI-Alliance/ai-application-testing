@@ -116,19 +116,22 @@ help-custom::
 define help-custom-message
 ${HIGHLIGHT}Quick help for this project's specific targets:${_END}
 
-${CODE}make help-code${_END}         # Help on the tools and example ChatBot targets.
+${CODE}make help-code${_END}         # Help on the make processes unique to this project.
+${CODE}make help-tools${_END}        # Help on the tools and example ChatBot targets.
 
 endef
 
 define help-code-message
-${HIGHLIGHT}Quick help for this make process for the tools and ChatBot example app.${_END}
+${HIGHLIGHT}Quick help for this make process on extra targets available.${_END}
 
-For the tools used to manage the website, run ${CODE}make help-docs${_END}.
+For help on the targets for this project's tools and ChatBot apps, run ${CODE}make help-tools${_END}.
 
-For the following targets that run tools, there are variables defined in this Makefile
-that are used to pass arguments to the commands. Run ${CODE}make print-info-code${_END} to see the
-list of variables and their default definitions. Specific variables are mentioned for
-the corresponding targets:
+For help on the tools used to manage the website, run ${CODE}make help-docs${_END}.
+
+For many targets tools, there are variables defined in this Makefile that are used to pass
+arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} to see the
+list of these variables and their default definitions. Specific variables are mentioned for
+some targets.
 
 ${CODE}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
 ${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and 
@@ -177,8 +180,25 @@ ${CODE}make clean-setup${_END}        # Undoes everything done by the setup targ
 ${CODE}${_END}                        # instructions for what you must do manually in some cases.
 ${CODE}make uninstall-uv${_END}       # Explain how to uninstall "uv".
 
+Several CLI tools are required, like ${CODE}uv${_END}, or only needed for a few special make targets, like ${CODE}jq${_END}:
+
+${CODE}make help-command-uv${_END}    # Prints specific information about ${CODE}uv${_END}, including installation.
+${CODE}make help-command-jq${_END}    # Prints specific information about ${CODE}jq${_END}, including installation.
+${CODE}make help-command-node${_END}  # Prints specific information about ${CODE}node${_END}, including installation.
+
 ${TIP_LABEL}See also the list of common targets, like ${CODE}tests${_END} and ${CODE}lint${_END}, which are shown
 ${TIP_LABEL}by ${CODE}make help${_END}.
+endef
+
+define help-tools-message
+${HIGHLIGHT}Quick help for this make process for the tools and ChatBot example app.${_END}
+
+For help on the extra process targets defined in this Makefile, run ${CODE}make help-code${_END}.
+
+For many targets tools, there are variables defined in this Makefile that are used to pass
+arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} to see the
+list of these variables and their default definitions. Specific variables are mentioned for
+some targets.
 
 For tools run by the following targets, which invoke inference, the model 
 ${CODE}${MODEL}${_END} is served by ollama. The make variable ${CODE}MODEL${_END} specifies the model, 
@@ -186,10 +206,8 @@ so if you want to use a different model, invoke make as in this example:
 
   ${CODE}make MODEL=ollama_chat/llama3.2:3B run-tdd-example-refill-chatbot${_END}
 
-See also the description of ${CODE}all-models-*${_END} above.
-
-All the following targets may setup dependencies that are redundant most of the time,
-but easy to forgot when important! See also the ${CODE}help-*${_END} targets below.
+Also, many targets can be used with the target "pattern" ${CODE}all-models-*${_END}.
+It is described by ${CODE}make help-code${_END}.
 
 ${CODE}make run-tdd-example-refill-chatbot${_END}
 ${CODE}${_END}                        # Run the code for the TDD example "unit benchmark".
@@ -229,9 +247,8 @@ ${CODE}make run-api-server${_END}     # Synonym for ${CODE}api-server${_END}.
 Tasks for help, debugging, setup, etc.
 
 ${CODE}make help-tools${_END}         # Prints this output.
-${CODE}make help-code${_END}          # Same as ${CODE}help-tools${_END}.
-${CODE}make help-tools-all${_END}     # Prints this output and makes ${CODE}help-terc${_END}, ${CODE}help-ubds${_END} and ${CODE}help-ubdv${_END}.
-${CODE}make help-coce-all${_END}      # Same as ${CODE}help-tools-all${_END}.
+${CODE}make help-tools-all${_END}     # Prints this output and then makes the following targets:
+${CODE}${_END}                        # ${CODE}help-terc${_END}, ${CODE}help-ubds${_END} and ${CODE}help-ubdv${_END}, and ${CODE}help-chatbot${_END}
 
 ${CODE}make help-terc${_END}          # Synonym for ${CODE}help-tdd-example-refill-chatbot${_END}.
 ${CODE}make help-tdd-example-refill-chatbot${_END}
@@ -246,46 +263,38 @@ ${CODE}make help-unit-benchmark-data-validation${_END}
 ${CODE}${_END}                        # Show help for the synthetic data validation code by passing the ${CODE}--help${_END} flag.
 ${CODE}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
 
-${CODE}make help-langflow-pipeline${_END}
-${CODE}${_END}                        # Show help for the Langflow pipeline by passing the ${CODE}--help${_END} flag.
-${CODE}make help-langflow${_END}      # Synonym for ${CODE}help-langflow-pipeline${_END}.
-
 ${CODE}make help-chatbot${_END}       # Show help for the interactive ChatBot application.
 ${CODE}make help-mcp-server${_END}    # Show help for the ChatBot's MCP server.
 ${CODE}make help-api-server${_END}    # Show help for the ChatBot's OpenAI-compatible API server.
-
 ${CODE}make view-api-server-docs${_END}  # Open a browser showing the API server ${CODE}docs${_END}.
 ${CODE}make view-api-server-redoc${_END} # Open a browser showing the API server ${CODE}redoc${_END}.
 
-Several CLI tools are required, like ${CODE}uv${_END}, or only needed for a few special make targets, like ${CODE}jq${_END}:
-
-${CODE}make help-command-uv${_END}    # Prints specific information about ${CODE}uv${_END}, including installation.
-${CODE}make help-command-jq${_END}    # Prints specific information about ${CODE}jq${_END}, including installation.
-${CODE}make help-command-node${_END}  # Prints specific information about ${CODE}node${_END}, including installation.
+${CODE}make help-langflow-pipeline${_END}
+${CODE}${_END}                        # Show help for the Langflow pipeline by passing the ${CODE}--help${_END} flag.
+${CODE}make help-langflow${_END}      # Synonym for ${CODE}help-langflow-pipeline${_END}.
 endef
 
 
 # Help and Other Information Targets
 
-.PHONY: help-tools help-tools-all help-code-all
+.PHONY: help-tools-all
 
-help-tools:: help-code
-help-tools-all:: help-code-all
-help-code-all:: help-code help-terc help-ubds help-ubdv
+help-tools-all:: help-tools help-terc help-ubds help-ubdv help-chatbot
 
 .PHONY: clean-tools clean-code
 
 clean clean-tools:: clean-code
 
-.PHONY: print-info-tools print-info-code
+.PHONY: print-info-code
 
-print-info print-info-tools:: print-info-code 
+print-info:: print-info-code
 print-info-code::
 	@echo "${HIGHLIGHT}For the example code and tools:${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}MODEL:${_END}                       ${CODE}${MODEL}${_END} (the default)"
-	@echo "  ${DARK_GREEN}MODELS:${_END}                      ${CODE}${MODELS}${_END}"
-	@echo "  ${DARK_GREEN}${_END}                             (all of them that we explicitly list in the ${CODE}Makefile${_END})" 
+	@echo "  ${DARK_GREEN}MODELS:${_END}                      (all of them that we explicitly list in the ${CODE}Makefile${_END})"
+	@for model in ${MODELS}; do \
+	 echo "  ${DARK_GREEN}${_END}                             ${CODE}$$model${_END}"; done
 	@echo "  ${DARK_GREEN}ALL_TOOLS:${_END}                   ${CODE}${ALL_TOOLS}${_END}"
 	@echo "  ${DARK_GREEN}INFERENCE_SERVICE:${_END}           ${CODE}${INFERENCE_SERVICE}${_END}"
 	@echo "  ${DARK_GREEN}OLLAMA_PREFIX:${_END}               ${CODE}${OLLAMA_PREFIX}${_END} (ignored if not using ollama)"
@@ -482,6 +491,7 @@ help-agent-chatbot help-simple-chatbot::
 	${MAKE} WHICH_CHATBOT=${@:help-%-chatbot=%} help-chatbot
 
 help-chatbot::
+	@echo "${INFO_LABEL}Help on the ${CODE}${WHICH_CHATBOT}${_END} ChatBot:"
 	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
 
 before-chatbot:: before-chatbot-preamble check-model-which-chatbot run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
