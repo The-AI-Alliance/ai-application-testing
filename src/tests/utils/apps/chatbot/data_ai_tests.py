@@ -9,12 +9,13 @@ from __future__ import annotations
 import json
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Mapping, Sequence, Tuple, Type
+from typing import Any, Mapping, MutableMapping, Sequence, Tuple, Type
 
 from common.collections import get_chain, get
 
 from apps.chatbot import ChatBotAgent
 from apps.chatbot.tools.resource_manager import ResourceManager
+from apps.chatbot.tools.appointment_manager import AppointmentManager
 
 
 class BaseAITest(ABC):
@@ -326,15 +327,23 @@ class AppointmentScenarioTest(ScenarioTest):
         """
         Custom setup for appointment scenario tests.
         """
-        self.am = self.chatbot.appointment_manager
-        self.start_appointments = self.am.appointments.copy()
-        self.end_appointments: dict[str, dict[str, Any]] = {}
+        self.am: AppointmentManager = self.chatbot.appointment_manager
+        # For some inexplicable reason, the "ty" type checker doesn't believe that
+        # MutableMapping has a copy() method, so we do it "manually".
+        # self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = self.am.appointments.copy()
+        self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
+        for key, value in self.am.appointments.items():
+            self.start_appointments[key] = value
+        self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
 
     def _custom_end(self, result: dict[str, Any]):
         """
         Custom handling after the test has finished.
         """
-        self.end_appointments = self.am.appointments.copy()
+        # self.end_appointments = self.am.appointments.copy()
+        self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
+        for key, value in self.am.appointments.items():
+            self.end_appointments[key] = value
 
     def _custom_check_conditions(self, result: dict[str, Any]) -> None:
         for pc in self.inputs.pre_conditions:

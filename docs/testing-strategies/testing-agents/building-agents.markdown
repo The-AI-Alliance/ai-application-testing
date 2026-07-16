@@ -172,7 +172,7 @@ def create_appointment(patient_name: str, appointment_time: str, reason: str) ->
 
 It calls a support function `get_appointment_manager` that retrieves a global instance of the `AppointmentManager` class mentioned above. That class just tracks appointments in a file, `output/applications.jsonl`, and makes several simplifying assumptions. Obviously a real ChatBot should use a real calendar manager.
 
-In our experience using `gemma4:12b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not quite production ready, but it illustrates possibilities.
+In our experience using `gemma4:12b` and the LangChain Deep Agents library, a user session to manage appointments with the ChatBot works &ldquo;okay&rdquo;. The experience is not production ready, but it illustrates possibilities.
 
 Finally, see also this blog post, [I Still Prefer MCP Over Skills](https://david.coffee/i-still-prefer-mcp-over-skills/){:target="skills-mcp"}, which compares the pros and cons of using [MCP]({{site.glossaryurl}}/#model-context-protocol){:target="_glossary"} servers vs. skills for different purposes.
 
@@ -188,7 +188,7 @@ There is a fundamental difference between this new appointment agent and the oth
 
 We need a way to set up sessions for particular scenarios, like successfully booking a new appointment. Requirements include telling the ChatBot what information it needs from the user, which the user may or may not provide without asking for it. The ChatBot will be expected to request information it doesn't have.
 
-We need the ability to specify desired outcomes, possible constraints on what the Chatbot can do, what tools it should use (like a calendar manager), and how to report successes and failures. 
+We need the ability to specify desired outcomes, possible constraints on what the Chatbot can do, what tools it should use (like a calendar manager), and how to report successes and failures.
 
 If we structure this information using a consistent JSON or YAML format, then we can write a "generic", data-driven runner that performs the tests and evaluates the results. Adding more tests only requires the addition of more of these JSON/YAML definitions.
 

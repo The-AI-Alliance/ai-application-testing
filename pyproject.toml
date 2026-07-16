@@ -7,15 +7,15 @@ requires-python = ">=3.13"
 dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
-    "fastapi>=0.136.3",
-    "uvicorn>=0.49.0",
+    "fastapi>=0.139.0",
+    "uvicorn>=0.50.2",
     "httpx>=0.28.1",
-    "deepagents>=0.6.8",
+    "deepagents>=0.6.12",
     "langchain-ollama>=1.1.0",
-    "openai>=2.36.0",
-    "litellm>=1.88.0",
+    "openai>=2.45.0",
+    "litellm>=1.92.0",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.2",
+    "fastmcp>=3.4.4",
 ]
 
 [tool.setuptools.packages.find]
@@ -23,19 +23,45 @@ where = ["src"]
 
 [build-system]
 requires = [
-  "setuptools>=82.0.1",
+  "setuptools>=83.0.0",
 ]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "hypothesis>=6.152.8",
-    "pytest>=9.0.3",
-    "pylint>=4.0.5",
+    "hypothesis>=6.156.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pylint>=4.0.6",
     "black>=26.5.1",
-    "ruff>=0.15.16",
-    "ty>=0.0.42",
+    "ruff>=0.15.20",
+    "ty>=0.0.56",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "ai: marks tests that that are slow to execute due to AI inference (deselect with '-m \"not ai\")",
+    "appointments: marks tests that that are related to the 'appointments' use case (deselect with '-m \"not appointments\")",
+]
+testpaths = ["src/tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.black]
+line-length = 120
+target-version = ['py312']
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.main]
+init-hook = "import sys; sys.path.insert(0, 'src')"
 
 [tool.ty.src]
 include = ["src"]
