@@ -663,10 +663,6 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTP
 	  ! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
 
-.PHONY: list-unit-tests-ai
-list-unit-tests-ai::
-	cd ${SRC_DIR} && find . -name 'ai_test*.py'
-
 .PHONY: post-proc-test-logs show-test-logs
 
 post-proc-test-logs::

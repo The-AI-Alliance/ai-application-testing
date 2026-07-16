@@ -5,11 +5,12 @@ from tests.utils.apps.chatbot.testbase import TestBaseRunner
 
 class AITestChatBotAppointments(TestBaseRunner):
     """
-    The prefix `AITest` and the file name prefix `ai_test_` rather than the
-    conventional `test_`. Because this test suite takes a long time to run,
-    we separate invocations of the tests into `non-ai-*` and `ai-*` test
-    targets in the `Makefile`, so you can run the conventional, fast tests
-    separately.
+    The prefix `AITest` and the annotation `@pytest.mark.ai` indicates this
+    test uses AI inference and therefore it takes a long time to run. We use
+    the annotation to separate invocations of the tests into `*-tests-non-ai` and
+    `*-tests-ai` test targets in the `Makefile`, so you can run the conventional,
+    fast tests separately. In fact, the non-AI tests are what gets executed by
+    default for the `unit-tests` target and also PR checks.
     """
 
     @pytest.mark.ai

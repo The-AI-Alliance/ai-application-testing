@@ -459,6 +459,14 @@ class TestBaseRunner(TestBase):
     * Accumulating all errors and warnings vs. failing fast:
         We have found it useful to accumulate and report all found errors and warnings
         vs. the normal approach of failing fast on the first error.
+
+    NOTE: We use the prefix convention `AITest` and the annotation `@pytest.mark.ai` in
+    concrete derived classes of `TestBaseRunner` to indicate that the test uses AI inference
+    and it therefore takes a long time to run. Specifically, the annotation is used to
+    separate invocations of the tests into `*-tests-non-ai` and `*-tests-ai` test targets
+    in the `Makefile`, so you can run the conventional, fast tests separately. In fact,
+    the non-AI tests are what gets executed by default for the `unit-tests` target and
+    also PR checks.
     """
 
     total_samples_count = 0
@@ -551,7 +559,7 @@ class TestBaseRunner(TestBase):
                 "WARNING: OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE undefined. Using default value."
             )
             log_file_template = f"{def_log_dir}/{{TestBase.which_chatbot_name}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
-
+        assert False, f"cls = {cls.__dict__}"
         log_file_path = Path(
             log_file_template.format(
                 class_name=cls.__name__, which_chatbot=TestBase.which_chatbot_name
