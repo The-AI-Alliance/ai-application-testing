@@ -155,24 +155,24 @@ ${CODE}make install-jq${_END}         # Explain how to install ${CODE}jq${_END} 
 ${CODE}make build${_END}              # Build a distribution.
 ${CODE}make install${_END}            # Install the code locally in development mode.
 
-${CODE}make all-tests${_END}          # Run the unit and integration tests.
-${CODE}make all-tests-langflow${_END} # Run all the tests for the Langflow integration.
+${CODE}make all-tests${_END}          # Run the unit tests (AI and non-AI) and integration tests.
+${CODE}${_END}                        # Equivalent to ${CODE}unit-tests-non-ai${_END} and ${CODE}unit-tests-ai${_END}.
 
-${CODE}make unit-tests${_END}         # Following convention, this target runs the unit tests only, building
-${CODE}${_END}                        # the targets ${CODE}unit-tests-non-ai${_END}", ${CODE}unit-tests-ai${_END}, and ${CODE}unit-tests-appointments${_END}.
+${CODE}make unit-tests${_END}         # Following convention, this target runs the unit tests only and, by default,
+${CODE}${_END}                        # it only runs the "non-AI" unit tests by building ${CODE}unit-tests-non-ai${_END}.
 ${CODE}make tests${_END}              # Synonym for ${CODE}unit-tests${_END}.
 ${CODE}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
 ${CODE}${_END}                        # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
-${CODE}make unit-tests-ai${_END}      # All unit tests that do involve inference invocations, which take a long time to run.
+${CODE}${_END}                        # Effectively, this target is a synonym for ${CODE}unit-tests${_END}.
+${CODE}make unit-tests-ai${_END}      # All unit tests that DO involve inference invocations, which take a long time to run.
 ${CODE}${_END}                        # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
 ${CODE}make unit-tests-appointments${_END}
-${CODE}${_END}                        # Unit tests for the appointment management tool.
-${CODE}make unit-tests-langflow${_END}
-${CODE}${_END}                        # Run unit tests for the Langflow components. NOT built by ${CODE}unit-tests${_END} or ${CODE}integration-tests${_END},
-${CODE}${_END}                        # so we don't force you to have Langflow installed.
+${CODE}${_END}                        # Convenience target that runs just the AI unit tests for appointment management.
+${CODE}${_END}                        # These tests are also part of ${CODE}unit-tests-ai${_END}.
 
 ${CODE}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
 ${CODE}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
+${CODE}${_END}                        # (See https://the-ai-alliance.github.io/ai-application-testing/working-example/ for details)
 ${CODE}make integration-tests-dedicated${_END}
 ${CODE}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
 
@@ -231,6 +231,10 @@ ${CODE}make run-langflow-pipeline${_END}
 ${CODE}${_END}                        # Run the Langflow benchmark pipeline (synthesis + validation).
 ${CODE}${_END}                        # This orchestrates both synthesis and validation in a single flow.
 ${CODE}make langflow-pipeline${_END}  # Synonym for ${CODE}run-langflow-pipeline${_END}.
+${CODE}make unit-tests-langflow${_END}
+${CODE}${_END}                        # Run tests for the Langflow components, which are NOT run by ${CODE}unit-tests${_END} or
+${CODE}${_END}                        # ${CODE}integration-tests${_END}, so we don't force you to have Langflow installed
+${CODE}${_END}                        # for this optional capability.
 
 The following targets are for the example ChatBot application. See also the ${CODE}help-*${_END} targets next.
 
@@ -266,8 +270,10 @@ ${CODE}${_END}                        # Run the code for validating the syntheti
 ${CODE}make help-chatbot${_END}       # Show help for the interactive ChatBot application.
 ${CODE}make help-mcp-server${_END}    # Show help for the ChatBot's MCP server.
 ${CODE}make help-api-server${_END}    # Show help for the ChatBot's OpenAI-compatible API server.
-${CODE}make view-api-server-docs${_END}  # Open a browser showing the API server ${CODE}docs${_END}.
-${CODE}make view-api-server-redoc${_END} # Open a browser showing the API server ${CODE}redoc${_END}.
+${CODE}make view-api-server-docs${_END}
+${CODE}${_END}                        # Open a browser showing the API server ${CODE}docs${_END}.
+${CODE}make view-api-server-redoc${_END}
+${CODE}${_END}                        # Open a browser showing the API server ${CODE}redoc${_END}.
 
 ${CODE}make help-langflow-pipeline${_END}
 ${CODE}${_END}                        # Show help for the Langflow pipeline by passing the ${CODE}--help${_END} flag.
@@ -430,7 +436,7 @@ provider-server-check::
 
 # Langflow targets
 .PHONY: run-langflow-pipeline langflow-pipeline langflow-pipeline-preamble help-langflow-pipeline
-.PHONY: unit-tests-langflow all-tests-langflow
+.PHONY: unit-tests-langflow
 
 run-langflow-pipeline:: langflow-pipeline
 langflow-pipeline:: langflow-pipeline-preamble
@@ -454,7 +460,7 @@ help-lf help-langflow help-langflow-pipeline::
 	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
 	@echo
 
-all-tests-langflow unit-tests-langflow:: run-command-checks
+unit-tests-langflow:: run-command-checks
 	@echo "${INFO_LABEL} Running the langflow unit tests..."
 	cd ${SRC_DIR} && \
 	  export MODEL=${MODEL} && \

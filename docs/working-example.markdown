@@ -539,16 +539,18 @@ For more details on running the OpenAI-compatible API server, see the [`src/apps
 
 This user guide is all about solving the problem of continuing to use traditional software development life cycle (SDLC) practices, which rely heavily on deterministic behavior, with applications that use stochastic, generative AI. The ChatBot application applies the principles described in a practical way for a realistic AI project.
 
-You can run the unit and integration tests with these make targets, but **warning**, they run for a long time since they use inference!
+You can run the unit and integration tests with these make targets
+, but **warning**, they run for a long time since they use inference!
 
 ```shell
-make tests               # unit tests. Synonyms: test, unit-tests
-make integration-tests   # integration tests
+make unit-tests          # Unit tests, but OMITS the AI tests that require inference.
+make unit-tests-ai       # Just the AI tests that require inference.
+make integration-tests   # Integration tests
 ```
 
 The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory, with sub-directories for [unit tests]({{site.gh_edit_repository}}/tree/main/src/tests/unit){:target="tests-dir"}, [integration tests]({{site.gh_edit_repository}}/tree/main/src/tests/integration){:target="tests-dir"}, utilities and other special-purpose directories. Specifically, the generative AI _unit benchmarks_ are driven by four test suites in [`src/tests/unit/apps/chatbot/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="atc"}. Those tests have class names that start with `AITest` and they are annotated with `@pytest.mark.ai`, which we use to distinguish between AI-specific (i.e., using inference) and non-AI tests, because the former are slow and expensive to run. The default behavior for the `Makefile`'s `unit-tests` target, and hence the PR target `before-pr` only run the non-AI tests. You can run the AI tests by making `unit-tests-ai`.
 
-Most of the implementation for each of these AI ChatBot tests is in a `TestBase` parent class in  [`src/tests/utils/apps/chatbot/testbase.py`]({{site.gh_edit_repository}}/tree/main/src/tests/utils/apps/chatbot/testbase.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
+Most of the implementation logic for each of these AI ChatBot tests is in two parent classes, `TestBase` and `AITestBaseRunner`, in [`src/tests/utils/apps/chatbot/testbase.py`]({{site.gh_edit_repository}}/tree/main/src/tests/utils/apps/chatbot/testbase.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
 
 There are two fundamental kinds of tests, _simple_ Q&A (question and answer) pairs (with additional metadata), and _scenario_ tests for more involved agent-based interactions. They reflect the two implementations of the ChatBot, the original [ChatBotSimple](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_simple.py){:target="_blank"} and the newer, more sophisticated [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"}.
 

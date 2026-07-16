@@ -375,7 +375,7 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
 class TestBase(unittest.TestCase):
     """
     Base class for tests that need to instantiate a ChatBot, but not necessarily run inference with it.
-    Use `TestBaseRunner`, a derived class of this class, for those tests.
+    Use `AITestBaseRunner`, a derived class of this class, for those tests.
     """
 
     default_confidence_threshold: float = ChatBot.default_confidence_threshold
@@ -441,7 +441,7 @@ class TestBase(unittest.TestCase):
         self.make_chatbot()
 
 
-class TestBaseRunner(TestBase):
+class AITestBaseRunner(TestBase):
     """
     Base class for ChatBot tests. This class implements a number of extensions to normal
     TestCase behavior, which we added to address some of the challenges of testing stochastic
@@ -461,7 +461,7 @@ class TestBaseRunner(TestBase):
         vs. the normal approach of failing fast on the first error.
 
     NOTE: We use the prefix convention `AITest` and the annotation `@pytest.mark.ai` in
-    concrete derived classes of `TestBaseRunner` to indicate that the test uses AI inference
+    concrete derived classes of `AITestBaseRunner` to indicate that the test uses AI inference
     and it therefore takes a long time to run. Specifically, the annotation is used to
     separate invocations of the tests into `*-tests-non-ai` and `*-tests-ai` test targets
     in the `Makefile`, so you can run the conventional, fast tests separately. In fact,
@@ -489,17 +489,17 @@ class TestBaseRunner(TestBase):
             "default rating_threshold": self.rating_threshold,
             "default confidence_threshold": self.confidence_threshold,
         }
-        print(json.dumps(d), file=TestBaseRunner.log_file)
+        print(json.dumps(d), file=AITestBaseRunner.log_file)
 
     def tearDown(self):
         lcr_count = len(self.key_results["low_confidence_results"])
         warning_count = len(self.key_results["warnings"])
         error_count = len(self.key_results["errors"])
 
-        TestBaseRunner.total_samples_count += self.samples_count
-        TestBaseRunner.total_lcr_count += lcr_count
-        TestBaseRunner.total_warning_count += warning_count
-        TestBaseRunner.total_error_count += error_count
+        AITestBaseRunner.total_samples_count += self.samples_count
+        AITestBaseRunner.total_lcr_count += lcr_count
+        AITestBaseRunner.total_warning_count += warning_count
+        AITestBaseRunner.total_error_count += error_count
         self._dump_key_results(lcr_count, warning_count, error_count)
 
     def _get_data_file(self, use_case_name: str, kind_label: str) -> Path:
@@ -509,8 +509,8 @@ class TestBaseRunner(TestBase):
         However, only look for the second
         """
         files = [
-            TestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.jsonl",
-            TestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.json",
+            AITestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.jsonl",
+            AITestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.json",
         ]
         for file in files:
             if file.exists():
@@ -539,7 +539,7 @@ class TestBaseRunner(TestBase):
         }
         js1 = json.dumps(d)
         js = re.sub(r"\n", r"\\n", js1)  # Try to print true JSONL records
-        print(js, file=TestBaseRunner.log_file)
+        print(js, file=AITestBaseRunner.log_file)
         if not self.samples_count:
             raise ValueError("No samples were loaded!")
 
@@ -567,7 +567,7 @@ class TestBaseRunner(TestBase):
         )
         print(f"\n  ** Logging to {log_file_path} ** \n")
         os.makedirs(log_file_path.parent, exist_ok=True)
-        TestBaseRunner.log_file = log_file_path.open(
+        AITestBaseRunner.log_file = log_file_path.open(
             "a", buffering=1
         )  # append mode, because we _may_ share it across tests.
 
@@ -575,15 +575,15 @@ class TestBaseRunner(TestBase):
     def tearDownClass(cls):
         print("\nTotals:")
         print(f"Which ChatBot:          {TestBase.which_chatbot_choice}")
-        print(f"Samples count:          {TestBaseRunner.total_samples_count}")
-        print(f"Low-confidence results: {TestBaseRunner.total_lcr_count}")
-        print(f"Warning count:          {TestBaseRunner.total_warning_count}")
-        print(f"Error count:            {TestBaseRunner.total_error_count}")
+        print(f"Samples count:          {AITestBaseRunner.total_samples_count}")
+        print(f"Low-confidence results: {AITestBaseRunner.total_lcr_count}")
+        print(f"Warning count:          {AITestBaseRunner.total_warning_count}")
+        print(f"Error count:            {AITestBaseRunner.total_error_count}")
         print()
-        if TestBaseRunner.log_file:
-            TestBaseRunner.log_file.close()
-        if TestBaseRunner.total_error_count:
-            raise AssertionError(f"{TestBaseRunner.total_error_count} errors reported!")
+        if AITestBaseRunner.log_file:
+            AITestBaseRunner.log_file.close()
+        if AITestBaseRunner.total_error_count:
+            raise AssertionError(f"{AITestBaseRunner.total_error_count} errors reported!")
 
     def __try_all(
         self,
@@ -610,7 +610,7 @@ class TestBaseRunner(TestBase):
             "confidence_threshold": confidence_threshold,
             "accumulate_test_results": self.accumulate_test_results,
         }
-        print(json.dumps(d), file=TestBaseRunner.log_file)
+        print(json.dumps(d), file=AITestBaseRunner.log_file)
 
         samples = (
             self._sample(test_data, sample_rate) if sample_rate < 1.0 else test_data
