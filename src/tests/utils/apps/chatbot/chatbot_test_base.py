@@ -390,10 +390,11 @@ class ChatBotTestBase():
     default_which_chatbot_str = "agent"
     default_service_url = "http://localhost:11434"
 
-    default_chatbot_templates_dir = "apps/chatbot/prompts/templates"
-    default_chatbot_data_dir = "apps/chatbot/data"
-    default_output_dir = "../output/tests"
-    default_log_file_template = f"tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+    default_chatbot_dir = "src/apps/chatbot"
+    default_chatbot_template_dir = f"{default_chatbot_dir}/prompts/templates"
+    default_chatbot_data_dir = f"{default_chatbot_dir}/data"
+    default_output_dir = "output/tests"
+    default_log_file_template = f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
 
     default_data_sample_rate = 1.0
     default_accumulate_test_results = False
@@ -404,9 +405,9 @@ class ChatBotTestBase():
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
         service_url: str = "",
-        templates_dir: str = "",
-        data_dir: str = "",
-        output_dir: str = "",
+        template_dir: Path | None = None,
+        data_dir: Path | None = None,
+        output_dir: Path | None = None,
         log_file_path: Path | None = None,
         data_sample_rate: float | None = None,
         accumulate_test_results: bool | None = None,
@@ -459,12 +460,12 @@ class ChatBotTestBase():
         self.model: str = model if model else os.environ["MODEL"] # no default!
         self.service_url: str = service_url if service_url else os.environ.get(
             "INFERENCE_URL", ChatBotTestBase.default_service_url)
-        self.template_dir: str = templates_dir if templates_dir else os.environ.get(
-            "CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_templates_dir)
-        self.data_dir: str = data_dir if data_dir else os.environ.get(
-            "DATA_DIR", ChatBotTestBase.default_chatbot_data_dir)
-        self.output_dir: str = output_dir if output_dir else os.environ.get(
-            "OUTPUT_DIR", ChatBotTestBase.default_output_dir)
+        self.template_dir: str = template_dir if template_dir else Path(os.environ.get(
+            "CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_template_dir))
+        self.data_dir: str = data_dir if data_dir else Path(os.environ.get(
+            "DATA_DIR", ChatBotTestBase.default_chatbot_data_dir))
+        self.output_dir: str = output_dir if output_dir else Path(os.environ.get(
+            "OUTPUT_DIR", ChatBotTestBase.default_output_dir))
         self.data_sample_rate: float = data_sample_rate if data_sample_rate != None else float(
             os.environ.get("DATA_SAMPLE_RATE", ChatBotTestBase.default_data_sample_rate))
         self.accumulate_test_results: bool = accumulate_test_results if accumulate_test_results != None else bool(
@@ -477,20 +478,20 @@ class ChatBotTestBase():
             os.environ.get("VERBOSE", False))
 
         if log_file_path:
-            lfp = Path(log_file_path)
+            self.log_file_path = Path(log_file_path)
         else:
             log_file_template = os.environ.get("OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE")
             if not log_file_template:
                 log_file_template = ChatBotTestBase.default_log_file_template
-            lfp = Path(
+            self.log_file_path = Path(
                 log_file_template.format(
                     class_name=self.__class__.__name__,
                     which_chatbot=self.which_chatbot.chatbot_name()
                 )
             )
-        print(f"\n  ** Logging to {lfp} ** \n")
-        os.makedirs(lfp.parent, exist_ok=True)
-        self.log_file = lfp.open(
+        print(f"\n  ** Logging to {self.log_file_path} ** \n")
+        os.makedirs(self.log_file_path.parent, exist_ok=True)
+        self.log_file = self.log_file_path.open(
             "a", buffering=1
         )  # append mode, because we _may_ share it across tests.
 
@@ -550,9 +551,9 @@ class ChatBotTestWithInference(ChatBotTestBase):
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
         service_url: str = "",
-        templates_dir: str = "",
-        data_dir: str = "",
-        output_dir: str = "",
+        template_dir: Path | None = None,
+        data_dir: Path | None = None,
+        output_dir: Path | None = None,
         log_file_path: Path | None = None,
         data_sample_rate: float | None = None,
         accumulate_test_results: bool | None = None,
@@ -564,7 +565,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
             which_chatbot = which_chatbot,
             model = model,
             service_url = service_url,
-            templates_dir = templates_dir,
+            template_dir = template_dir,
             data_dir = data_dir,
             output_dir = output_dir,
             log_file_path = log_file_path,
@@ -584,8 +585,10 @@ class ChatBotTestWithInference(ChatBotTestBase):
             "step": "initialize",
             "model": self.model,
             "service_url": self.service_url,
-            "template_dir": self.template_dir,
-            "data_dir": self.data_dir,
+            "template_dir": str(self.template_dir),
+            "data_dir": str(self.data_dir),
+            "output_dir": str(self.output_dir),
+            "log_file_path": str(self.log_file_path),
             "accumulate_test_results": self.accumulate_test_results,
             "default sample_rate": self.data_sample_rate,
             "default rating_threshold": self.rating_threshold,

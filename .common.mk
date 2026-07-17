@@ -18,7 +18,7 @@ include .console-colors.mk
 SRC_DIR                   ?= src
 TESTS_BASE_DIR            ?= ${SRC_DIR}/tests
 WHICH_TESTS               ?= ${TESTS_BASE_DIR}
-OUTPUT_DIR                ?= ${PWD}/output
+OUTPUT_DIR                ?= output
 OUTPUT_TESTS_DIR          ?= ${OUTPUT_DIR}/tests
 OUTPUT_LOGS_ROOT_DIR      ?= ${OUTPUT_DIR}/logs
 OUTPUT_LOGS_DIR           ?= ${OUTPUT_LOGS_ROOT_DIR}/${TIMESTAMP}

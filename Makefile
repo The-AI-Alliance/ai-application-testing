@@ -67,7 +67,7 @@ export MODEL
 # Overrides definition in .common.mk:
 # DATA_DIR: Where the tools write and later read data.
 # TESTS_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
-OUTPUT_DIR            := ${PWD}/output/${MODEL_FILE_NAME}
+OUTPUT_DIR            := output/${MODEL_FILE_NAME}
 DATA_DIR              := ${OUTPUT_DIR}/data
 TESTS_DATA_DIR        := ${TESTS_DIR}/data
 
@@ -87,9 +87,9 @@ export WHICH_CHATBOT         ?= agent
 # OUTPUT_LOGS_TESTS_DIRFILE_GLOB:     Just used for messages printed by targets.
 export ACCUMULATE_TEST_ERRORS              ?= True
 export RATING_THRESHOLD                    ?= 4
-export OUTPUT_LOGS_TESTS_DIRDIR            ?= tests/logs/${MODEL_FILE_NAME}
+export OUTPUT_LOGS_TESTS_DIRDIR            ?= ${OUTPUT_DIR}/tests/logs/${MODEL_FILE_NAME}
 export OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE  ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
-export OUTPUT_LOGS_TESTS_DIRFILE_GLOB      ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/*-${TIMESTAMP}.jsonl
+export OUTPUT_LOGS_TESTS_DIRFILE_GLOB      ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/*-${TIMESTAMP}.json*
 
 # Sampling rates for different kinds of tests.
 UNIT_TESTS_DATA_SAMPLE_RATE         ?= 0.25
@@ -97,11 +97,11 @@ INTEGRATION_TESTS_DATA_SAMPLE_RATE  ?= 1.0
 export DATA_SAMPLE_RATE             ?= ${UNIT_TESTS_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-export TOOLS_PROMPTS_TEMPLATES_DIR ?= tools/prompts/templates
-export CHATBOT_TEMPLATES_DIR       ?= src/apps/chatbot/prompts/templates
-export CHATBOT_TESTS_TEMPLATES_DIR ?= tests/prompts/templates
+export TOOLS_PROMPTS_TEMPLATES_DIR ?= ${SRC_DIR}/tools/prompts/templates
+export CHATBOT_TEMPLATES_DIR       ?= ${SRC_DIR}/apps/chatbot/prompts/templates
+export CHATBOT_TESTS_TEMPLATES_DIR ?= ${SRC_DIR}/tests/prompts/templates
 export CHATBOT_DATA_DIR            ?= ${DATA_DIR}/chatbot
-export CHATBOT_OUTPUT_DIR          ?= ${PWD}/output
+export CHATBOT_OUTPUT_DIR          ?= ${OUTPUT_DIR}/chatbot
 CHATBOT_API_SERVER_HOST            ?= localhost
 CHATBOT_API_SERVER_PORT            ?= 8000
 export CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
@@ -325,13 +325,13 @@ print-info-code::
 	@echo
 	@echo "  ${DARK_GREEN}OUTPUT_DIR:${_END}                  ${CODE}${OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}OUTPUT_LOGS_DIR:${_END}             ${CODE}${OUTPUT_LOGS_DIR}${_END}"
-	@echo "  ${DARK_GREEN}OUTPUT_LOGS_TESTS_DIRDIR:${_END}              ${CODE}${OUTPUT_LOGS_TESTS_DIRDIR}${_END} (relative to ${CODE}SRC_DIR${_END} == ${CODE}${SRC_DIR}${_END})"
+	@echo "  ${DARK_GREEN}OUTPUT_LOGS_TESTS_DIRDIR:${_END}    ${CODE}${OUTPUT_LOGS_TESTS_DIRDIR}${_END} (relative to ${CODE}SRC_DIR${_END} == ${CODE}${SRC_DIR}${_END})"
 	@echo "  ${DARK_GREEN}DATA_DIR:${_END}                    ${CODE}${DATA_DIR}${_END}"
 	@echo "  ${DARK_GREEN}ACCUMULATE_TEST_ERRORS:${_END}      ${CODE}${ACCUMULATE_TEST_ERRORS}${_END} (For tests, run all examples, then report errors. Set to ${CODE}''${_END} for ${CODE}False${_END})"
 	@echo
 
 
-${OUTPUT_DIR} ${OUTPUT_TESTS_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
+${OUTPUT_DIR} ${OUTPUT_TESTS_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${OUTPUT_LOGS_TESTS_DIRDIR} ${DATA_DIR} ${CHATBOT_DATA_DIR}::
 	mkdir -p $@
 
 # Code Targets
@@ -405,7 +405,7 @@ run-tdd-example-refill-chatbot-preamble::
 
 run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis-preamble
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${NOOP} ${TIME} uv run tools/${@:run-%=%}.py \
+	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
@@ -421,7 +421,7 @@ run-unit-benchmark-data-synthesis-preamble::
 
 run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validation-preamble
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${NOOP} ${TIME} uv run tools/${@:run-%=%}.py \
+	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/${@:run-%=%}.py \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
@@ -451,7 +451,7 @@ provider-server-check::
 run-langflow-pipeline:: langflow-pipeline
 langflow-pipeline:: langflow-pipeline-preamble
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${NOOP} ${TIME} uv run python -m tools.langflow.unit_benchmark_flow \
+	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/langflow/unit_benchmark_flow.py \
 	  --model ${MODEL} \
 	  --service-url ${INFERENCE_URL} \
 	  --template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
@@ -467,19 +467,12 @@ langflow-pipeline-preamble::
 
 help-lf help-langflow help-langflow-pipeline::
 	@echo "${INFO_LABEL}Help on the Langflow unit benchmark pipeline:"
-	cd ${SRC_DIR} && uv run python -m tools.langflow.unit_benchmark_flow --help
+	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/langflow/unit_benchmark_flow.py --help
 	@echo
 
 unit-tests-langflow:: run-command-checks
 	@echo "${INFO_LABEL} Running the langflow unit tests..."
-	cd ${SRC_DIR} && \
-	  export MODEL=${MODEL} && \
-	  export INFERENCE_URL=${INFERENCE_URL} && \
-	  export TOOLS_PROMPTS_TEMPLATES_DIR=${TOOLS_PROMPTS_TEMPLATES_DIR} && \
-	  export DATA_DIR=${DATA_DIR} && \
-	  uv run python -m unittest discover \
-	    --start-directory tests/unit/langflow \
-	    --top-level-directory .
+	${MAKE} WHICH_TESTS=${SRC_DIR}/tests/unit/langflow unit-tests
 
 .PHONY: run-chatbot chatbot before-chatbot before-chatbot-preamble check-model-which-chatbot do-run-chatbot agent-chatbot simple-chatbot after-chatbot
 
@@ -487,7 +480,7 @@ run-chatbot:: chatbot
 chatbot:: before-chatbot do-run-chatbot after-chatbot
 do-run-chatbot::
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${NOOP} ${TIME} uv run python -m apps.chatbot.main \
+	${NOOP} ${TIME} uv run python ${SRC_DIR}/apps/chatbot/main.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
@@ -508,7 +501,7 @@ help-agent-chatbot help-simple-chatbot::
 
 help-chatbot::
 	@echo "${INFO_LABEL}Help on the ${CODE}${WHICH_CHATBOT}${_END} ChatBot:"
-	cd ${SRC_DIR} && uv run python -m apps.chatbot.main --help
+	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/main.py --help
 
 before-chatbot:: before-chatbot-preamble check-model-which-chatbot run-command-checks ${OUTPUT_DIR} ${CHATBOT_OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${CHATBOT_DATA_DIR}
 check-model-which-chatbot::
@@ -533,7 +526,7 @@ run-mcp-server:: mcp-server
 mcp-server:: before-chatbot
 	@echo "${INFO_LABEL}Running the ChatBot MCP Server..."
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${INSPECTOR} uv run python -m apps.chatbot.mcp_server.server \
+	${NOOP} ${INSPECTOR} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/server.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
@@ -550,7 +543,7 @@ inspect-mcp-server:: command-check-node
 	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
 
 help-mcp-server::
-	cd ${SRC_DIR} && uv run python -m apps.chatbot.mcp_server.server --help
+	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/server.py --help
 
 .PHONY: api-server run-api-server help-api-server check-api-server
 .PHONY: view-api-server-docs view-api-server-redoc view-api-server-docs-preamble
@@ -560,7 +553,7 @@ api-server:: before-chatbot
 	@echo "${INFO_LABEL}Running the ChatBot OpenAI-compatible API Server..."
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server \
+	${NOOP} ${TIME} uv run python ${SRC_DIR}/apps/chatbot/api_server/server.py \
 		--host ${CHATBOT_API_SERVER_HOST} \
 		--port ${CHATBOT_API_SERVER_PORT} \
 		--model ${MODEL} \
@@ -575,7 +568,7 @@ api-server:: before-chatbot
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
 
 help-api-server::
-	cd ${SRC_DIR} && uv run python -m apps.chatbot.api_server.server --help
+	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/api_server/server.py --help
 
 check-api-server::
 	@echo "${INFO_LABEL}'Sanity check' that the OpenAI-compatible API server works:"
@@ -586,7 +579,7 @@ check-api-server::
 	@echo
 	@echo "${INFO_LABEL}Running ${CODE}apps/chatbot//api_server/example_client.py${_END} ..."
 	@echo
-	cd ${SRC_DIR} && ${NOOP} uv run python apps/chatbot/api_server/example_client.py
+	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/api_server/example_client.py
 	@echo
 	@echo " ${HIGHLIGHT}Using a hack: Find the process id for the server and kill it...${_END}"
 	@echo
@@ -655,9 +648,7 @@ unit-tests-appointments::
 	@echo "${INFO_LABEL}Running the appointment use case unit tests..."
 	${MAKE} \
 		PYTEST_RUN_OPT_ARGS="-m 'ai and appointments'" \
-		TESTS_DIR=${TESTS_UNIT_DIR}/apps/chatbot \
-	  WHICH_CHATBOT=agent \
-		unit-tests
+		unit-tests-ai-agent
 
 unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 
@@ -665,51 +656,41 @@ unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
 # to make the "show-test-logs" target whether or not the tests pass, and also
 # effectively return success (==0) or failure (!=0) status from the tests.
 # (Note we are in the src directory so we have to tell make to go to the parent...)
-# We pass OUTPUT_LOGS_TESTS_DIRFILE_GLOB explicitly, because it might have a time stamp
-# that we want passed through!
-unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}
+# We pass TIMESTAMP explicitly, because we don't want it to change from one step to
+# the next!
+unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${OUTPUT_LOGS_TESTS_DIRDIR}
 	@echo "${INFO_LABEL}Running the AI unit tests with the ${CODE}${@:unit-tests-ai-%=%}${_END} ChatBot..."
-	@echo "${INFO_LABEL}AI test log files: ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
-	${MAKE} \
+	@echo "${INFO_LABEL}AI test log files: ${CODE}${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
+	${NOOP} ${MAKE} \
+		TIMESTAMP=${TIMESTAMP} \
 		PYTEST_RUN_OPT_ARGS="-m ai" \
 	  WHICH_CHATBOT=${@:unit-tests-ai-%=%} \
-		OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} \
-		unit-tests && pwd || pwd
-		# && \
-	  #${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
-	  #! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
-
+		unit-tests; \
+		success=$$?; \
+	  ${MAKE} TIMESTAMP=${TIMESTAMP} post-proc-test-logs; \
+	  exit $$success
 
 .PHONY: post-proc-test-logs show-test-logs
 
 post-proc-test-logs::
+	@command -v jq > /dev/null; \
+	if [ $$? -ne 0 ]; \
+		then echo "CLI tool ${CODE}jq${_END} not found, so we won't convert output JSONL files to JSON..."; \
+		else echo "Converting JSONL log files to JSON..."; \
+			for f in ${OUTPUT_LOGS_TESTS_DIRDIR}/*.jsonl; \
+				do ff=$${f%l}; \
+				if [ ! -f $$ff ]; \
+					then echo "${INFO_LABEL}Generating ${CODE}$$ff${_END} from ${CODE}$$f${_END}:"; \
+		  		jq . $$f > $$ff; \
+		  	fi; \
+			done; \
+	fi
+	@echo "${INFO_LABEL}Contents of ${CODE}${OUTPUT_LOGS_TESTS_DIRDIR}/*.json*:${_END}"
+	@ls -l ${OUTPUT_LOGS_TESTS_DIRDIR}/*.json*
 	@echo
-	@echo "${INFO_LABEL}Time-stamped JSONL log files were written to:"
-	@echo "  ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
+	@echo "${INFO_LABEL}See in particular your time-stamped JSON log files:"
+	@echo "  ${CODE}${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
 	@echo "${INFO_LABEL}(They may be empty!)"
-	@echo "${INFO_LABEL}The corresponding ${CODE}*.json${_END} files (if any) were generated"
-	@echo "${INFO_LABEL}using ${CODE}jq${_END} and target ${CODE}nice-ai-test-logs${_END}. They are easier to read."
-	@echo "${INFO_LABEL}"
-	@echo "${INFO_LABEL}  ${CODE}${MAKE} nice-ai-test-logs${_END}"
-	@echo "${INFO_LABEL}  ${CODE}${MAKE} show-test-logs${_END}"
-
-show-test-logs::
-	@ls -l ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}/*.json*
-	@echo
-	@echo "${TIP_LABEL}Run ${CODE}make nice-ai-test-logs${_END} to make a nicely-formatted JSON file from each JSONL file."
-	@echo "${TIP_LABEL}(The ${CODE}jq${_END} CLI tool required.)"
-	@echo
-
-.PHONY: nice-ai-test-logs
-
-# This target nicely formats the AI-related test logs into more readable JSON. Requires jq
-nice-ai-test-logs:: silent-command-check-jq
-	@for f in ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}/*.jsonl; do ff=$${f%l}; [[ -f $$ff  ]] || \
-	  echo "${INFO_LABEL}Writing ${CODE}$$ff${_END}:"; \
-	  jq . $$f > $$ff; \
-	done
-	@echo "${INFO_LABEL}Contents of ${CODE}${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}/*.json*:${_END}"
-	@ls -l ${SRC_DIR}/${OUTPUT_LOGS_TESTS_DIRDIR}/*.json*
 
 integ-tests integration-tests:: integration-tests-dedicated integration-tests-from-unit-tests
 
@@ -722,7 +703,7 @@ integration-tests-from-unit-tests:: run-command-checks
 		DATA_SAMPLE_RATE=${INTEGRATION_TESTS_DATA_SAMPLE_RATE} \
 		unit-tests
 
-# Uses the simple ChatBot!
+# Uses the simple ChatBot for now!
 integration-tests-dedicated:: run-command-checks
 	@echo "${INFO_LABEL}Running the 'dedicated' integration tests..."
 	${MAKE} \
