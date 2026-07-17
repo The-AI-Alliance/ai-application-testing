@@ -137,11 +137,10 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
             lines = file.readlines()
             try:
                 objs = decode_json("".join(lines))
-                tests = kind.from_dict(objs)
-                if isinstance(tests, list):
-                    return tests
+                if isinstance(objs, list):
+                    return [kind.from_dict(obj) for obj in objs]
                 else:
-                    return [tests]
+                    return [kind.from_dict(objs)]
             except ValueError as err:
                 raise ValueError(f"Error parsing JSON in file {path}") from err
         if not len(tests):
@@ -590,9 +589,9 @@ class ChatBotTestWithInference(ChatBotTestBase):
             "output_dir": str(self.output_dir),
             "log_file_path": str(self.log_file_path),
             "accumulate_test_results": self.accumulate_test_results,
-            "default sample_rate": self.data_sample_rate,
-            "default rating_threshold": self.rating_threshold,
-            "default confidence_threshold": self.confidence_threshold,
+            "data_sample_rate": self.data_sample_rate,
+            "rating_threshold": self.rating_threshold,
+            "confidence_threshold": self.confidence_threshold,
         }
         print(json.dumps(d), file=self.log_file)
 
@@ -662,7 +661,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
             "which_chatbot": self.which_chatbot.chatbot_name(),
             "use_case": use_case_name,
             "file_name": str(test_data_path),
-            "sample_rate": self.sample_rate,
+            "data_sample_rate": self.data_sample_rate,
             "rating_threshold": self.rating_threshold,
             "confidence_threshold": self.confidence_threshold,
             "accumulate_test_results": self.accumulate_test_results,
@@ -670,11 +669,11 @@ class ChatBotTestWithInference(ChatBotTestBase):
         print(json.dumps(d), file=self.log_file)
 
         samples = (
-            self._sample(test_data, sample_rate) if sample_rate < 1.0 else test_data
+            self._sample(test_data, self.data_sample_rate) if self.data_sample_rate < 1.0 else test_data
         )
         self.samples_count = len(samples)
         if not self.samples_count:
-            raise ValueError(f"No samples! test data size = {len(test_data)} * sample rate = {sample_rate} => no samples!")
+            raise ValueError(f"No samples! test data size = {len(test_data)} * data sample rate = {self.data_sample_rate} => no samples!")
 
         last_time = time.time()
         allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
@@ -781,7 +780,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
         """
         minimum_n = 5
         n = len(collection)
-        self.assertTrue(n > 0, f"Collection has no elements! {collection}")
+        assert n > 0, f"Collection has no elements! {collection}"
         samples = collection
         if n > minimum_n and sample_rate < 1.0:
             # The samples will be unsorted, but that's okay, as we would like to catch subtle differences
