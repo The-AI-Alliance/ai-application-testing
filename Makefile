@@ -27,12 +27,19 @@ include .common.mk
 # Setting the USE_CASES to '' results in all of them being processed.
 # Invoke "make JUST_STATS=--just-stats ..." to have stats generated, not validation, too.
 # If you don't use ollama, set OLLAMA_PREFIX to be empty.
+
 INFERENCE_SERVICE     ?= ollama
 OLLAMA_PREFIX         ?= ollama_chat/
 PORT                  ?= 11434
 INFERENCE_URL         ?= http://localhost:${PORT}
 USE_CASES             ?=
 JUST_STATS            ?=
+
+# NOTE: Export variables that we want to be visible inside apps as environment variables:
+
+export INFERENCE_SERVICE
+export INFERENCE_URL
+
 
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
 APP_ARGS              ?=
@@ -55,19 +62,22 @@ MODELS                ?= ${MODEL_GEMMA4} ${MODEL_GPT_OSS} ${MODEL_GRANITE4} ${MO
 MODEL                 ?= ${MODEL_GEMMA4}
 MODEL_FILE_NAME       ?= $(subst :,_,${MODEL})
 
+export MODEL
+
 # Overrides definition in .common.mk:
-OUTPUT_DIR            := ${PWD}/output/${MODEL_FILE_NAME}
 # DATA_DIR: Where the tools write and later read data.
 # TESTS_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
+OUTPUT_DIR            := ${PWD}/output/${MODEL_FILE_NAME}
 DATA_DIR              := ${OUTPUT_DIR}/data
 TESTS_DATA_DIR        := ${TESTS_DIR}/data
+
 OPEN_WEBUI_DIR        ?= ${SRC_DIR}/apps/chatbot/open-webui
 
 # Some specific variables passed as environment variables to the ChatBot.
 # CONFIDENCE_THRESHOLD: What's the minimum confidence (out of 1.0, meaning 100%) for a response that we trust it?
 # WHICH_CHATBOT: Which ChatBot implementation to use: 'agent' for ChatBotAgent or 'simple' for ChatBotSimple
-CONFIDENCE_THRESHOLD  ?= 0.9
-WHICH_CHATBOT         ?= agent
+export CONFIDENCE_THRESHOLD  ?= 0.9
+export WHICH_CHATBOT         ?= agent
 
 # Some specific variables passed as environment variables to the test suites.
 # ACCUMULATE_TEST_ERRORS:   Should I run ALL prompts, then report accumulated errors? Leave EMPTY for False, non-empty for True!
@@ -75,26 +85,26 @@ WHICH_CHATBOT         ?= agent
 # OUTPUT_LOGS_TESTS_DIRDIR:           (Override definition) Where special AI test logs are written. RELATIVE TO ${SRC_DIR}!
 # OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE: A file name pattern, where "{class_name}" will be replaced with the test class name.
 # OUTPUT_LOGS_TESTS_DIRFILE_GLOB:     Just used for messages printed by targets.
-ACCUMULATE_TEST_ERRORS              ?= True
-RATING_THRESHOLD                    ?= 4
-OUTPUT_LOGS_TESTS_DIRDIR            ?= tests/logs/${MODEL_FILE_NAME}
-OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE  ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
-OUTPUT_LOGS_TESTS_DIRFILE_GLOB      ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/*-${TIMESTAMP}.jsonl
+export ACCUMULATE_TEST_ERRORS              ?= True
+export RATING_THRESHOLD                    ?= 4
+export OUTPUT_LOGS_TESTS_DIRDIR            ?= tests/logs/${MODEL_FILE_NAME}
+export OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE  ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/{which_chatbot}-{class_name}-${TIMESTAMP}.jsonl
+export OUTPUT_LOGS_TESTS_DIRFILE_GLOB      ?= ${OUTPUT_LOGS_TESTS_DIRDIR}/*-${TIMESTAMP}.jsonl
 
 # Sampling rates for different kinds of tests.
 UNIT_TESTS_DATA_SAMPLE_RATE         ?= 0.25
 INTEGRATION_TESTS_DATA_SAMPLE_RATE  ?= 1.0
-DATA_SAMPLE_RATE                    ?= ${UNIT_TESTS_DATA_SAMPLE_RATE}
+export DATA_SAMPLE_RATE             ?= ${UNIT_TESTS_DATA_SAMPLE_RATE}
 
 # These directories will be relative to where the tools and apps are executed.
-TOOLS_PROMPTS_TEMPLATES_DIR ?= tools/prompts/templates
-CHATBOT_TEMPLATES_DIR       ?= apps/chatbot/prompts/templates
-CHATBOT_TESTS_TEMPLATES_DIR ?= tests/prompts/templates
-CHATBOT_DATA_DIR            ?= ${DATA_DIR}/chatbot
-CHATBOT_OUTPUT_DIR          ?= ${PWD}/output
-CHATBOT_API_SERVER_HOST     ?= localhost
-CHATBOT_API_SERVER_PORT     ?= 8000
-CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
+export TOOLS_PROMPTS_TEMPLATES_DIR ?= tools/prompts/templates
+export CHATBOT_TEMPLATES_DIR       ?= src/apps/chatbot/prompts/templates
+export CHATBOT_TESTS_TEMPLATES_DIR ?= tests/prompts/templates
+export CHATBOT_DATA_DIR            ?= ${DATA_DIR}/chatbot
+export CHATBOT_OUTPUT_DIR          ?= ${PWD}/output
+CHATBOT_API_SERVER_HOST            ?= localhost
+CHATBOT_API_SERVER_PORT            ?= 8000
+export CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
 ALL_TOOLS                   ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
 
@@ -369,7 +379,7 @@ help-ubdv:: help-unit-benchmark-data-validation
 ${ALL_TOOLS:%=help-%}::
 	@echo "${INFO_LABEL}Help on ${CODE}${@:help-%=%}.py${_END}:"
 	@echo
-	cd ${SRC_DIR} && uv run tools/${@:help-%=%}.py --help
+	uv run ${SRC_DIR}/tools/${@:help-%=%}.py --help
 	@echo
 
 # LITELLM_LOG=ERROR turns off some annoying INFO messages, sufficient
@@ -380,7 +390,7 @@ ${ALL_TOOLS:%=help-%}::
 
 run-tdd-example-refill-chatbot:: before-run run-tdd-example-refill-chatbot-preamble
 	export LITELLM_LOG=ERROR; \
-	cd ${SRC_DIR} && ${NOOP} ${TIME} uv run tools/${@:run-%=%}.py \
+	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/${@:run-%=%}.py \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
@@ -664,9 +674,10 @@ unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${SRC_DIR}/${OUTP
 		PYTEST_RUN_OPT_ARGS="-m ai" \
 	  WHICH_CHATBOT=${@:unit-tests-ai-%=%} \
 		OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} \
-		unit-tests && \
-	  ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
-	  ! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
+		unit-tests && pwd || pwd
+		# && \
+	  #${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs || \
+	  #! ${MAKE} OUTPUT_LOGS_TESTS_DIRFILE_GLOB=${OUTPUT_LOGS_TESTS_DIRFILE_GLOB} --directory .. post-proc-test-logs
 
 
 .PHONY: post-proc-test-logs show-test-logs

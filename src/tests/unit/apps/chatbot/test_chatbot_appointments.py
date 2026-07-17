@@ -1,9 +1,9 @@
 # Tests for the "ChatBot" module with "Appointment" Q&A pairs.
 
 import pytest
-from tests.utils.apps.chatbot.testbase import AITestBaseRunner
+from tests.utils.apps.chatbot.chatbot_test_base import AIChatBotTestRunner
 
-class AITestChatBotAppointments(AITestBaseRunner):
+class AITestChatBotAppointments(AIChatBotTestRunner):
     """
     The prefix `AITest` and the annotation `@pytest.mark.ai` indicates this
     test uses AI inference and therefore it takes a long time to run. We use

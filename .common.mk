@@ -214,8 +214,10 @@ unit-tests:: unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
 unit-tests-prerequisite unit-tests-postrequisite::
 unit-tests-default:
 	@echo "${INFO_LABEL}Target ${CODE}unit-tests${_END}: Running the unit tests (with coverage): ${CODE}${WHICH_TESTS}${_END}:"
-	@echo "${INFO_LABEL}Running: ${CODE}${PYTEST_RUN_CMD} ${WHICH_TESTS} && ${PYTEST_COV_REPORT_CMD}${_END}"
-	@${PYTEST_RUN_CMD} ${WHICH_TESTS} && ${PYTEST_COV_REPORT_CMD}
+	@echo "${INFO_LABEL}Running: ${CODE}${PYTEST_RUN_CMD} ${WHICH_TESTS}${_END}:"
+	${PYTEST_RUN_CMD} ${WHICH_TESTS}
+	@echo "${INFO_LABEL}Running: ${CODE}${PYTEST_COV_REPORT_CMD}${_END}:"
+	${PYTEST_COV_REPORT_CMD}
 
 # Convenient short hand for the two linters.
 lint:: ruff pylint

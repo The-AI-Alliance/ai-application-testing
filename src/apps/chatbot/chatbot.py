@@ -19,7 +19,7 @@ class ChatBot(ABC):
     """
 
     default_confidence_threshold: float = 0.9
-    default_template_file = "patient-chatbot.yaml"
+    default_template_file = "chatbot-template.yaml"
 
     def __init__(
         self,

@@ -6,12 +6,13 @@ for property-based testing. https://hypothesis.readthedocs.io/en/latest/
 import json
 import logging
 import os
+import pytest
 import random
 import re
 import time
-import unittest
 from abc import ABC, abstractmethod
 from datetime import datetime
+from enum import StrEnum, auto
 from io import StringIO, TextIOWrapper
 from pathlib import Path
 from typing import Any, Sequence, TypeVar
@@ -371,26 +372,136 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
 
         return metadata, errors, warnings, lowConfidenceResults
 
+# class syntax
+class WhichChatBot(StrEnum):
+    SIMPLE = auto()
+    AGENT = auto()
 
-class TestBase(unittest.TestCase):
+    def chatbot_name(self):
+        return f"ChatBot{self.capitalize()}"
+
+class ChatBotTestBase():
     """
-    Base class for tests that need to instantiate a ChatBot, but not necessarily run inference with it.
-    Use `AITestBaseRunner`, a derived class of this class, for those tests.
+    Base class for tests that need to instantiate a ChatBot, but not to run
+    inference with it, which is expensive. Use the derived class,
+    `ChatBotTestWithInference`, for tests that make inference calls.
     """
 
-    default_confidence_threshold: float = ChatBot.default_confidence_threshold
-    default_rating_threshold: int = 4
-    log_file_name: str = ""
-    log_file: TextIOWrapper | None = None
-    which_chatbot_choice: str = ""
-    which_chatbot_name: str = ""
+    default_which_chatbot_str = "agent"
+    default_service_url = "http://localhost:11434"
+
+    default_chatbot_templates_dir = "apps/chatbot/prompts/templates"
+    default_chatbot_data_dir = "apps/chatbot/data"
+    default_output_dir = "../output/tests"
+    default_log_file_template = f"tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+
+    default_data_sample_rate = 1.0
+    default_accumulate_test_results = False
+    default_rating_threshold = 4
+    default_confidence_threshold = ChatBot.default_confidence_threshold
+
+    def __init__(self,
+        which_chatbot: WhichChatBot | None = None,
+        model: str = "",
+        service_url: str = "",
+        templates_dir: str = "",
+        data_dir: str = "",
+        output_dir: str = "",
+        log_file_path: Path | None = None,
+        data_sample_rate: float | None = None,
+        accumulate_test_results: bool | None = None,
+        rating_threshold: int = 0,
+        confidence_threshold: float = 0.0,
+        verbose: bool | None = None,
+        ):
+        """
+        Initialize the ChatBot and ChatBotShell. The default values for the arguments shown
+        used to indicate that corresponding environment variables should be read to determine
+        the values.
+
+        Some of the values here, like `rating_threshold` and `data_sample_rate`
+        will only be needed by derived classes that invoke inference. However, these values are
+        initialized by this class, rather than the derived classes, because they are needed to
+        construct ChatBot instances. See `ChatBotTestWithInference` for a description of these
+        parameters.
+
+        When the default values for input arguments are used, corresponding environment variable
+        definitions are used instead to initialize the values.
+
+        Here is the mapping of the arguments to environment variables and the default values
+        the will be used if a valid input isn't provided _and_ the environment variable isn't
+        set. Note that all paths shown are _relative_ to `src`.
+
+        | Argument | Environment Variable | Default Value |
+        | :------- | :------------------- | :------------ |
+        | `which_chatbot` | `WHICH_CHATBOT` | `WhichChatBot.AGENT` |
+        | `model` | `MODEL` | None - will raise an exception if not provided! |
+        | `service_url` | `INFERENCE_URL` | http://localhost:11434 |
+        | `template_dir` | `CHATBOT_TEMPLATES_DIR` | `apps/chatbot/prompts/templates` |
+        | `data_dir` | `DATA_DIR` | `apps/chatbot/data` |
+        | `output_dir` | `OUTPUT_DIR` | `../output/tests` |
+        | `data_sample_rate` | `DATA_SAMPLE_RATE` | 1.0 |
+        | `accumulate_test_results` | `ACCUMULATE_TEST_ERRORS` | `False` |
+        | `rating_threshold` | `RATING_THRESHOLD` | 4 (out of 5) |
+        | `confidence_threshold` | `CONFIDENCE_THRESHOLD` | 0.9 |
+        | `verbose` | `VERBOSE` | `False` |
+
+        Finally, if the `log_file_path` isn't specified, a _template_ is used, either
+        the value of the environment variable `OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE` or
+        `tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl`.
+
+        This is a special-purpose, custom "log" file. We also use the Python `logging` framework
+        for "general" logging.
+        """
+        self.which_chatbot: WhichChatBot = which_chatbot if which_chatbot else WhichChatBot(
+            os.environ.get(
+                "WHICH_CHATBOT", ChatBotTestBase.default_which_chatbot_str).lower())
+        self.model: str = model if model else os.environ["MODEL"] # no default!
+        self.service_url: str = service_url if service_url else os.environ.get(
+            "INFERENCE_URL", ChatBotTestBase.default_service_url)
+        self.template_dir: str = templates_dir if templates_dir else os.environ.get(
+            "CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_templates_dir)
+        self.data_dir: str = data_dir if data_dir else os.environ.get(
+            "DATA_DIR", ChatBotTestBase.default_chatbot_data_dir)
+        self.output_dir: str = output_dir if output_dir else os.environ.get(
+            "OUTPUT_DIR", ChatBotTestBase.default_output_dir)
+        self.data_sample_rate: float = data_sample_rate if data_sample_rate != None else float(
+            os.environ.get("DATA_SAMPLE_RATE", ChatBotTestBase.default_data_sample_rate))
+        self.accumulate_test_results: bool = accumulate_test_results if accumulate_test_results != None else bool(
+            os.environ.get("ACCUMULATE_TEST_ERRORS", ChatBotTestBase.default_accumulate_test_results))
+        self.rating_threshold: int = rating_threshold if rating_threshold > 0 else int(
+            os.environ.get("RATING_THRESHOLD", ChatBotTestBase.default_rating_threshold))
+        self.confidence_threshold: float = confidence_threshold if confidence_threshold > 0.0 else float(
+            os.environ.get("CONFIDENCE_THRESHOLD", ChatBotTestBase.default_confidence_threshold))
+        self.verbose: bool = verbose if verbose != None else bool(
+            os.environ.get("VERBOSE", False))
+
+        if log_file_path:
+            lfp = Path(log_file_path)
+        else:
+            log_file_template = os.environ.get("OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE")
+            if not log_file_template:
+                log_file_template = ChatBotTestBase.default_log_file_template
+            lfp = Path(
+                log_file_template.format(
+                    class_name=self.__class__.__name__,
+                    which_chatbot=self.which_chatbot.chatbot_name()
+                )
+            )
+        print(f"\n  ** Logging to {lfp} ** \n")
+        os.makedirs(lfp.parent, exist_ok=True)
+        self.log_file = lfp.open(
+            "a", buffering=1
+        )  # append mode, because we _may_ share it across tests.
+
+        self.make_chatbot()
 
     def make_chatbot(self):
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
 
         chatbot_class = (
-            ChatBotAgent if TestBase.which_chatbot_choice == "agent" else ChatBotSimple
+            ChatBotAgent if self.which_chatbot == WhichChatBot.AGENT else ChatBotSimple
         )
         self.chatbot = chatbot_class(
             model=self.model,
@@ -406,46 +517,12 @@ class TestBase(unittest.TestCase):
         )
         self.shell = ChatBotShell(self.chatbot, stdout=StringIO())
 
-    def setUp(self):
-        """
-        Initialize the ChatBot and ChatBotShell. Track the number of confident and "low-confidence" results.
-        By default, all test data prompts are executed, which can be too slow and expensive for frequent
-        unit tests. Override the environment variable `DATA_SAMPLE_RATE` when invoking tests with a value
-        between 0.0 (none) and 1.0 (all) to control the amount of test data prompts sampled. (A minimum
-        threshold of 5 samples, if available, will be used in all cases.)
-        """
-        self.model = os.environ.get("MODEL", "ollama_chat/gemma4:12b")
-        self.service_url = os.environ.get("INFERENCE_URL", "http://localhost:11434")
-        self.template_dir = os.environ.get(
-            "CHATBOT_TEMPLATES_DIR", "apps/chatbot/prompts/templates"
-        )
-        self.data_dir = os.environ.get("DATA_DIR", "data")
-        self.output_dir = os.environ.get("OUTPUT_DIR", "../output/tests")
-        self.accumulate_test_results: bool = bool(
-            os.environ.get("ACCUMULATE_TEST_ERRORS", False)
-        )
-        self.sample_rate: float = float(os.environ.get("DATA_SAMPLE_RATE", 1.0))
-        self.rating_threshold: int = int(
-            os.environ.get("RATING_THRESHOLD", TestBase.default_rating_threshold)
-        )
-        self.confidence_threshold: float = float(
-            os.environ.get(
-                "CONFIDENCE_THRESHOLD", TestBase.default_confidence_threshold
-            )
-        )
-        self.verbose: bool = bool(os.environ.get("VERBOSE", False))
 
-        self.samples_count: int = 0
-        self.key_results = {"low_confidence_results": [], "errors": [], "warnings": []}
-
-        self.make_chatbot()
-
-
-class AITestBaseRunner(TestBase):
+class ChatBotTestWithInference(ChatBotTestBase):
     """
-    Base class for ChatBot tests. This class implements a number of extensions to normal
-    TestCase behavior, which we added to address some of the challenges of testing stochastic
-    AI behaviors. The features include the following:
+    A support class for ChatBot tests that invoke inference. This class implements a number
+    of extensions to normal test behavior, which we added to address some of the challenges
+    of testing stochastic AI behaviors. The features include the following:
 
     * A _confidence threshold_:
         * Minimal testing is done on a response if the confidence score included in the
@@ -461,7 +538,7 @@ class AITestBaseRunner(TestBase):
         vs. the normal approach of failing fast on the first error.
 
     NOTE: We use the prefix convention `AITest` and the annotation `@pytest.mark.ai` in
-    concrete derived classes of `AITestBaseRunner` to indicate that the test uses AI inference
+    concrete derived classes of `ChatBotTestWithInference` to indicate that the test uses AI inference
     and it therefore takes a long time to run. Specifically, the annotation is used to
     separate invocations of the tests into `*-tests-non-ai` and `*-tests-ai` test targets
     in the `Makefile`, so you can run the conventional, fast tests separately. In fact,
@@ -469,38 +546,89 @@ class AITestBaseRunner(TestBase):
     also PR checks.
     """
 
-    total_samples_count = 0
-    total_lcr_count = 0
-    total_error_count = 0
-    total_warning_count = 0
-    benchmark_data_dir = Path("tests/data")
+    def __init__(self,
+        which_chatbot: WhichChatBot | None = None,
+        model: str = "",
+        service_url: str = "",
+        templates_dir: str = "",
+        data_dir: str = "",
+        output_dir: str = "",
+        log_file_path: Path | None = None,
+        data_sample_rate: float | None = None,
+        accumulate_test_results: bool | None = None,
+        rating_threshold: int = 0,
+        confidence_threshold: float = 0.0,
+        verbose: bool | None = None,
+        ):
+        super().__init__(
+            which_chatbot = which_chatbot,
+            model = model,
+            service_url = service_url,
+            templates_dir = templates_dir,
+            data_dir = data_dir,
+            output_dir = output_dir,
+            log_file_path = log_file_path,
+            data_sample_rate = data_sample_rate,
+            accumulate_test_results = accumulate_test_results,
+            rating_threshold = rating_threshold,
+            confidence_threshold = confidence_threshold,
+            verbose = verbose,
+        )
 
-    def setUp(self):
-        super().setUp()
+        self.samples_count = 0
+        self.low_confidence_results = []
+        self.errors = []
+        self.warnings = []
 
         d = {
-            "step": "setUp",
+            "step": "initialize",
             "model": self.model,
             "service_url": self.service_url,
             "template_dir": self.template_dir,
             "data_dir": self.data_dir,
             "accumulate_test_results": self.accumulate_test_results,
-            "default sample_rate": self.sample_rate,
+            "default sample_rate": self.data_sample_rate,
             "default rating_threshold": self.rating_threshold,
             "default confidence_threshold": self.confidence_threshold,
         }
-        print(json.dumps(d), file=AITestBaseRunner.log_file)
+        print(json.dumps(d), file=self.log_file)
 
-    def tearDown(self):
-        lcr_count = len(self.key_results["low_confidence_results"])
-        warning_count = len(self.key_results["warnings"])
-        error_count = len(self.key_results["errors"])
+    def finish(self):
+        """Call after all the test samples have been executed."""
+        lcr_count      = len(self.low_confidence_results)
+        warnings_count = len(self.warnings)
+        errors_count   = len(self.errors)
+        print("\nTotals:")
+        print(f"Which ChatBot:                {self.which_chatbot.chatbot_name()}")
+        print(f"Samples count:                {self.samples_count}")
+        print(f"Low-confidence results count: {lcr_count}")
+        print(f"Warning count:                {warnings_count}")
+        print(f"Error count:                  {errors_count}")
+        print()
+        lcrs = [lcr.dict() for lcr in self.low_confidence_results]
+        d = {
+            "step": "finish",
+            "samples_count": self.samples_count,
+            "low_confidence_results": {
+                "count": lcr_count,
+                "results": lcrs,
+            },
+            "warnings": {
+                "count": warnings_count,
+                "warnings": self.warnings,
+            },
+            "errors": {
+                "count": errors_count,
+                "errors": self.errors,
+            },
+        }
+        js1 = json.dumps(d)
+        js = re.sub(r"\n", r"\\n", js1)  # Try to print true JSONL records
+        print(js, file=self.log_file)
 
-        AITestBaseRunner.total_samples_count += self.samples_count
-        AITestBaseRunner.total_lcr_count += lcr_count
-        AITestBaseRunner.total_warning_count += warning_count
-        AITestBaseRunner.total_error_count += error_count
-        self._dump_key_results(lcr_count, warning_count, error_count)
+        if self.log_file:
+            self.log_file.close()
+        assert len(self.error) == 0, f"{len(self.error)} errors reported!"
 
     def _get_data_file(self, use_case_name: str, kind_label: str) -> Path:
         """
@@ -509,170 +637,92 @@ class AITestBaseRunner(TestBase):
         However, only look for the second
         """
         files = [
-            AITestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.jsonl",
-            AITestBaseRunner.benchmark_data_dir / f"{use_case_name}-{kind_label}.json",
+            self.data_dir / f"{use_case_name}-{kind_label}.jsonl",
+            self.data_dir / f"{use_case_name}-{kind_label}.json",
         ]
         for file in files:
             if file.exists():
                 return file
-        self.fail(
-            f"Data files {files} don't exist for use case {use_case_name} and {kind_label} tests!"
-        )
+        assert False, f"Data files {files} don't exist for use case {use_case_name} and {kind_label} tests!"
 
-    def _dump_key_results(self, lcr_count: int, warning_count: int, error_count: int):
-        lcrs = [lcr.dict() for lcr in self.key_results["low_confidence_results"]]
-        d = {
-            "step": "tearDown",
-            "samples_count": self.samples_count,
-            "low_confidence_results": {
-                "count": lcr_count,
-                "results": lcrs,
-            },
-            "warnings": {
-                "count": warning_count,
-                "warnings": self.key_results["warnings"],
-            },
-            "errors": {
-                "count": error_count,
-                "errors": self.key_results["errors"],
-            },
-        }
-        js1 = json.dumps(d)
-        js = re.sub(r"\n", r"\\n", js1)  # Try to print true JSONL records
-        print(js, file=AITestBaseRunner.log_file)
-        if not self.samples_count:
-            raise ValueError("No samples were loaded!")
-
-    @classmethod
-    def setUpClass(cls):
-        # Determine which ChatBot implementation to use based on environment variable
-        TestBase.which_chatbot_choice = os.environ.get("WHICH_CHATBOT", "agent").lower()
-        TestBase.which_chatbot_name = (
-            "ChatBotAgent"
-            if TestBase.which_chatbot_choice == "agent"
-            else "ChatBotSimple"
-        )
-        def_log_dir = "tests/logs"
-        log_file_template = os.environ.get("OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE")
-        if not log_file_template:
-            print(
-                "WARNING: OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE undefined. Using default value."
-            )
-            log_file_template = f"{def_log_dir}/{{TestBase.which_chatbot_name}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
-        assert False, f"cls = {cls.__dict__}"
-        log_file_path = Path(
-            log_file_template.format(
-                class_name=cls.__name__, which_chatbot=TestBase.which_chatbot_name
-            )
-        )
-        print(f"\n  ** Logging to {log_file_path} ** \n")
-        os.makedirs(log_file_path.parent, exist_ok=True)
-        AITestBaseRunner.log_file = log_file_path.open(
-            "a", buffering=1
-        )  # append mode, because we _may_ share it across tests.
-
-    @classmethod
-    def tearDownClass(cls):
-        print("\nTotals:")
-        print(f"Which ChatBot:          {TestBase.which_chatbot_choice}")
-        print(f"Samples count:          {AITestBaseRunner.total_samples_count}")
-        print(f"Low-confidence results: {AITestBaseRunner.total_lcr_count}")
-        print(f"Warning count:          {AITestBaseRunner.total_warning_count}")
-        print(f"Error count:            {AITestBaseRunner.total_error_count}")
-        print()
-        if AITestBaseRunner.log_file:
-            AITestBaseRunner.log_file.close()
-        if AITestBaseRunner.total_error_count:
-            raise AssertionError(f"{AITestBaseRunner.total_error_count} errors reported!")
-
-    def __try_all(
+    def __try_all_samples(
         self,
         method: str,
         use_case_name: str,
         test_data_path: Path,
         test_data: Sequence[BaseAITest],
         query_runner: QueryRunner,
-        sample_rate: float,
-        rating_threshold: int,
-        confidence_threshold: float,
     ):
         """Template method supporting `try_qna_queries` and `try_scenarios`."""
-        if not sample_rate > 0.0:
-            sample_rate = self.sample_rate
-
         d = {
             "step": method,
-            "which_chatbot": TestBase.which_chatbot_choice,
+            "which_chatbot": self.which_chatbot.chatbot_name(),
             "use_case": use_case_name,
             "file_name": str(test_data_path),
-            "sample_rate": sample_rate,
-            "rating_threshold": rating_threshold,
-            "confidence_threshold": confidence_threshold,
+            "sample_rate": self.sample_rate,
+            "rating_threshold": self.rating_threshold,
+            "confidence_threshold": self.confidence_threshold,
             "accumulate_test_results": self.accumulate_test_results,
         }
-        print(json.dumps(d), file=AITestBaseRunner.log_file)
+        print(json.dumps(d), file=self.log_file)
 
         samples = (
             self._sample(test_data, sample_rate) if sample_rate < 1.0 else test_data
         )
+        self.samples_count = len(samples)
+        if not self.samples_count:
+            raise ValueError(f"No samples! test data size = {len(test_data)} * sample rate = {sample_rate} => no samples!")
 
         last_time = time.time()
         allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
 
+        sample_number = 0
         for test_prompt in samples:
-            self.samples_count += 1
+            sample_number += 1
             metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(
-                test_prompt,
+                test_prompt
             )
             if errors:
                 me = errors | metadata  # print the error data first.
-                self.key_results["errors"].append(me)
+                self.errors.append(me)
                 if self.verbose:
                     print(me)
             if warnings:
                 mw = warnings | metadata  # print the warning data first.
-                self.key_results["warnings"].append(mw)
+                self.warnings.append(mw)
                 if self.verbose:
                     print(mw)
 
             if lowConfidenceResults:
-                self.key_results["low_confidence_results"].extend(lowConfidenceResults)
+                self.low_confidence_results.extend(lowConfidenceResults)
                 if self.verbose:
                     print(lowConfidenceResults)
 
-            lcr_count = len(self.key_results["low_confidence_results"])
-            warning_count = len(self.key_results["warnings"])
-            error_count = len(self.key_results["errors"])
+            lcr_count = len(self.low_confidence_results)
+            warnings_count = len(self.warnings)
+            errors_count = len(self.errors)
             if not self.accumulate_test_results:
-                self.assertEqual(
-                    0,
-                    error_count,
-                    f"{error_count} errors for test prompt: {test_prompt}",
-                )
+                assert errors_count == 0, f"{errors_count} errors for test prompt #{sample_number}: {test_prompt}"
 
             # Logic to detect when it appears the system has deadlocked in some way.
             # If so, then error out.
             now = time.time()
             difference = int(last_time - now)
-            self.assertLess(
-                difference,
-                allowed_time_delta,
-                f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}",
-            )
+            assert difference <= allowed_time_delta, \
+                f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}"
             last_time = now
 
             # Show we aren't dead by printing counts...
             print(
-                f"({self.samples_count},{lcr_count},{warning_count},{error_count}) ",
+                f"({sample_number},{lcr_count},{warnings_count},{errors_count}) ",
                 end="",
             )
+
+        self.finish()
 
     def try_qna_queries(
         self,
         use_case_name: str,
-        sample_rate: float = 0.0,
-        rating_threshold: int = TestBase.default_rating_threshold,
-        confidence_threshold: float = TestBase.default_confidence_threshold,
     ):
         """
         Loop through the sampled test Q&A pairs and try them, i.e., the _simple_
@@ -684,25 +734,19 @@ class AITestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "qna")
         data_loader = QnADataLoader()
         data = data_loader.load_data(file_path)
-        runner = QnAQueryRunner(self.chatbot, rating_threshold, confidence_threshold)
+        runner = QnAQueryRunner(self.chatbot, self.rating_threshold, self.confidence_threshold)
 
-        self.__try_all(
+        self.__try_all_samples(
             method="try_qna_queries",
             use_case_name=use_case_name,
             test_data_path=file_path,
             test_data=data,
             query_runner=runner,
-            sample_rate=sample_rate,
-            rating_threshold=rating_threshold,
-            confidence_threshold=confidence_threshold,
         )
 
     def try_scenarios(
         self,
         use_case_name: str,
-        sample_rate: float = 0.0,
-        rating_threshold: int = TestBase.default_rating_threshold,
-        confidence_threshold: float = TestBase.default_confidence_threshold,
     ):
         """
         Loop through the "session" test data for testing _agent skills_.
@@ -714,19 +758,14 @@ class AITestBaseRunner(TestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
-        runner = ScenarioQueryRunner(
-            self.chatbot, rating_threshold, confidence_threshold
-        )
+        runner = ScenarioQueryRunner(self.chatbot)
 
-        self.__try_all(
+        self.__try_all_samples(
             method="try_scenarios",
             use_case_name=use_case_name,
             test_data_path=file_path,
             test_data=data,
             query_runner=runner,
-            sample_rate=sample_rate,
-            rating_threshold=rating_threshold,
-            confidence_threshold=confidence_threshold,
         )
 
     def _sample(self, collection: Sequence[Any], sample_rate: float) -> Sequence[Any]:
