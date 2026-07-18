@@ -69,12 +69,12 @@ class TestAppointmentTools(unittest.TestCase):
         logger.setLevel(logging.CRITICAL)  # suppress almost everything...
 
         self.tool = get_appointment_manager(file_path, logger=logger, make_new=make_new)
-        self.assertEqual(file_path, self.tool.storage.storage_path)
+        assert file_path == self.tool.storage.storage_path
         return self.tool
 
     def _clear(self):
         self.tool.clear()
-        self.assertEqual({}, self.tool.appointments)
+        assert {} == self.tool.appointments
 
     def setUp(self):
         # Create a temporary file for testing
@@ -91,8 +91,8 @@ class TestAppointmentTools(unittest.TestCase):
     def _check_file(self, file: Path | str = ""):
         if not file:
             file = Path(self.temp_file.name)
-        self.assertTrue(os.path.exists(file))
-        self.assertEqual(str(file), str(self.tool.storage.storage_path))
+        assert os.path.exists(file)
+        assert str(file) == str(self.tool.storage.storage_path)
 
     def test_get_appointment_manager_instantiates_a_manager(self):
         self._check_file()
@@ -104,21 +104,21 @@ class TestAppointmentTools(unittest.TestCase):
         new_tool = get_appointment_manager(
             self.tool.storage.storage_path, logger=self.tool.logger, make_new=True
         )
-        self.assertIsNot(original_tool, new_tool)
+        assert original_tool is not new_tool
 
     def test_get_appointment_manager_does_not_instantiate_a_new_manager_even_with_diff_arguments(
         self,
     ):
         original_tool = self.tool
         same_tool = get_appointment_manager("toss.jsonl", logger=None)
-        self.assertIs(original_tool, same_tool)
+        assert original_tool is same_tool
 
     def test_get_appointment_manager_does_not_instantiate_a_new_manager_with_no_arguments(
         self,
     ):
         original_tool = self.tool
         same_tool = get_appointment_manager()
-        self.assertIs(original_tool, same_tool)
+        assert original_tool is same_tool
 
     def test_initialization_creates_file(self):
         """Test that initialization creates the appointments file if it doesn't exist"""
@@ -148,30 +148,25 @@ class TestAppointmentTools(unittest.TestCase):
         self.assertIn("id", actual, str(actual))
         self.assertTrue(actual.get("success", True), str(actual))
 
-        self.assertEqual(
+        assert
             appointment_date_time,
             actual.get("appointment_date_time"),
             f"appointment_date_time expected: {appointment_date_time}, actual: {actual}",
         )
         if changed_at:
             actual_changed_at = actual.get("changed_at", datetime(1970, 1, 1))
-            self.assertTrue(
-                changed_at >= actual_changed_at,
-                f"changed_at expected: {changed_at}, actual: {actual}",
-            )
-        self.assertEqual(
-            patient_name,
-            actual.get("patient_name"),
-            f"patient_name expected: {patient_name}, actual: {actual}",
-        )
-        self.assertEqual(
-            reason, actual.get("reason"), f"reason expected: {reason}, actual: {actual}"
-        )
+            assert changed_at >= actual_changed_at, \
+                f"changed_at expected: {changed_at}, actual: {actual}"
+
+        assert patient_name == actual.get("patient_name"), \
+            f"patient_name expected: {patient_name}, actual: {actual}"
+        assert reason == actual.get("reason"), \
+            f"reason expected: {reason}, actual: {actual}"
 
     def _results_list_expected(
         self, expected: list[dict[str, Any]], actual: list[dict[str, Any]]
     ):
-        self.assertEqual(len(expected), len(actual))
+        assert len(expected) == len(actual)
         expected2 = sorted(expected, key=lambda a: a["appointment_date_time"])
         actual2 = sorted(actual, key=lambda a: a["appointment_date_time"])
         for i in range(len(expected2)):
@@ -184,8 +179,8 @@ class TestAppointmentTools(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()) as fout:
             with contextlib.redirect_stderr(io.StringIO()) as ferr:
                 success, message = tool.run(params)
-                self.assertEqual("", fout.getvalue())
-                self.assertEqual("", ferr.getvalue())
+                assert "" fout.getvalue()
+                assert "" ferr.getvalue()
                 return success, message
 
     def _check_success(
@@ -203,21 +198,18 @@ class TestAppointmentTools(unittest.TestCase):
                 "reason": reason,
             },
         )
-        self.assertNotEqual(
-            "",
-            id,
+        assert "" != id, \
             f"{msg}, dict: {appointment_dict}, all: {all}, appointments: {get_appointments.run({})}",
-        )
-        self.assertNotEqual("", msg, "Returned message is empty!")
+        assert "" != msg, "Returned message is empty!"
         after_count = get_appointments_count.run({})
-        self.assertEqual(before_count + 1, after_count)
+        assert before_count + 1 == after_count
         id = get_appointment_id_for_name_and_date_time.run(
             {
                 "patient_name": patient_name,
                 "appointment_date_time": appointment_date_time,
             }
         )
-        self.assertNotEqual("", id)
+        assert "" != id
         appt = get_appointment_by_id.run({"id": id})
         self._result_expected(appointment_dict, appt)
         return appt
@@ -235,10 +227,10 @@ class TestAppointmentTools(unittest.TestCase):
                 "reason": reason,
             },
         )
-        self.assertEqual("", id, msg)
-        self.assertNotEqual("", msg, "Returned message is empty!")
+        assert "" == id, msg
+        assert "" != msg, "Returned message is empty!"
         after_count = get_appointments_count.run({})
-        self.assertEqual(before_count, after_count)
+        assert before_count == after_count
 
     def _check_appointments_lists(
         self,
@@ -248,17 +240,14 @@ class TestAppointmentTools(unittest.TestCase):
         """
         Test that two lists of appointments are identical.
         """
-        self.assertEqual(len(expected_appointments), len(actual_appointments))
+        assert len(expected_appointments) == len(actual_appointments)
         for i in range(len(expected_appointments)):
             ea = expected_appointments[i]
             aa = actual_appointments[i]
-            self.assertEqual(ea["id"], aa["id"])
-            self.assertEqual(
-                ea["appointment_date_time"],
-                aa["appointment_date_time"],
-            )
-            self.assertEqual(ea["patient_name"], aa["patient_name"])
-            self.assertEqual(ea["reason"], aa["reason"])
+            assert ea["id"] == aa["id"])
+            assert ea["appointment_date_time"] == aa["appointment_date_time"]
+            assert ea["patient_name"] == aa["patient_name"]
+            assert ea["reason"] == aa["reason"]
 
     @given(appointment_dicts())
     def test_create_appointment_succeeds_if_datetime_in_the_future_on_the_hour_and_slot_is_open(
@@ -332,11 +321,11 @@ class TestAppointmentTools(unittest.TestCase):
         before_count = get_appointments_count.run({})
         success, msg = self._capture_output(cancel_appointment, {"id": id})
         after_count = get_appointments_count.run({})
-        self.assertTrue(success, msg)
-        self.assertNotEqual("", msg)
-        self.assertEqual(before_count - 1, after_count)
+        assert success, msg
+        assert "" != msg
+        assert before_count - 1 == after_count
         appt = get_appointment_by_id.run({"id": id})
-        self.assertEqual({}, appt)
+        assert {} == appt
 
     @given(st.uuids())
     def test_cancel_nonexistent_appointment_fails(self, uuid):
@@ -344,10 +333,10 @@ class TestAppointmentTools(unittest.TestCase):
         self._clear()
         before_count = get_appointments_count.run({})
         success, msg = self._capture_output(cancel_appointment, {"id": str(uuid)})
-        self.assertFalse(success, msg)
-        self.assertNotEqual("", msg)
+        assert !success, msg
+        assert "" != msg
         after_count = get_appointments_count.run({})
-        self.assertEqual(before_count, after_count)
+        assert before_count == after_count
 
     @given(appointment_dicts(), appointment_future_work_datetimes())
     def test_change_appointment_successful_if_it_exists(
@@ -371,7 +360,7 @@ class TestAppointmentTools(unittest.TestCase):
         success, msg = self._capture_output(
             change_appointment, {"id": id, "new_date_time": new_date_time.isoformat()}
         )
-        self.assertTrue(success, msg)
+        assert success msg
         updated = get_appointment_by_id.run({"id": id})
         self._result_expected(
             appointment_dict,
@@ -446,7 +435,7 @@ class TestAppointmentTools(unittest.TestCase):
         for d in appointment_dicts_lists:
             appointment = self._check_success(d, all=appointment_dicts_lists)
             ids.append(appointment["id"])
-        self.assertEqual(len(appointment_dicts_lists), get_appointments_count.run({}))
+        assert len(appointment_dicts_lists) == get_appointments_count.run({})
 
     @given(appointment_dicts())
     def test_get_appointment_by_id_returns_nonempty_dict_if_it_exists(
@@ -464,7 +453,7 @@ class TestAppointmentTools(unittest.TestCase):
         self._clear()
         appointment2 = self._check_success(appointment_dict)
         appointment = get_appointment_by_id.run({"id": appointment2["id"] + "bad"})
-        self.assertEqual({}, appointment)
+        assert {} == appointment
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_nonempty_id_if_match_exists(
@@ -480,7 +469,7 @@ class TestAppointmentTools(unittest.TestCase):
                 ].isoformat(),
             }
         )
-        self.assertEqual(appointment2["id"], id)
+        assert appointment2["id"] == id
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_empty_id_if_match_does_not_exist(
@@ -494,13 +483,13 @@ class TestAppointmentTools(unittest.TestCase):
         id = get_appointment_id_for_name_and_date_time.run(
             {"patient_name": name + "bad", "appointment_date_time": dt.isoformat()}
         )
-        self.assertEqual("", id, f"{name+'bad'}, {appointment_dict}")
+        assert "" == id, f"{name+'bad'}, {appointment_dict}"
 
         bad_dt = dt + timedelta(seconds=10)
         id = get_appointment_id_for_name_and_date_time.run(
             {"patient_name": name, "appointment_date_time": bad_dt.isoformat()}
         )
-        self.assertEqual("", id, f"{bad_dt}, {appointment_dict}")
+        assert "" == id, f"{bad_dt}, {appointment_dict}"
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_matching_values(
@@ -513,7 +502,7 @@ class TestAppointmentTools(unittest.TestCase):
         name = appointment["patient_name"]
         dt = appointment["appointment_date_time"]
         id = self.tool.get_appointment_id_for_name_and_date_time(name, dt)
-        self.assertEqual(expected_id, id)
+        assert expected_id == id
 
     @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_empty_for_nonmatching_values(
@@ -525,29 +514,29 @@ class TestAppointmentTools(unittest.TestCase):
         name = appointment["patient_name"]
         dt = appointment["appointment_date_time"]
         id1 = self.tool.get_appointment_id_for_name_and_date_time(name + "bad", dt)
-        self.assertEqual("", id1)
+        assert "" == id1
         id2 = self.tool.get_appointment_id_for_name_and_date_time(
             name, dt + timedelta(seconds=10)
         )
-        self.assertEqual("", id2)
+        assert "" == id2
 
     def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(
         self,
     ):
-        with self.assertRaises(ValueError):
-            get_appointment_id_for_name_and_date_time.run(
-                {
-                    "patient_name": "",
-                    "appointment_date_time": datetime.now().isoformat(),
+        paramss = [
+                ["", datetime.now().isoformat()],
+                ["John Doe", ""],
+        ]
+        for params in paramss:
+            try:
+                d = {
+                    "patient_name": params[0],
+                    "appointment_date_time": params[1],
                 }
-            )
-        with self.assertRaises(ValueError):
-            get_appointment_id_for_name_and_date_time.run(
-                {
-                    "patient_name": "John Doe",
-                    "appointment_date_time": "",
-                }
-            )
+                get_appointment_id_for_name_and_date_time.run(d)
+                assert False, f"ValueError not thrown for d = {d}"
+            except ValueError:
+                pass
 
     @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(
@@ -559,7 +548,7 @@ class TestAppointmentTools(unittest.TestCase):
         for d in appointment_dicts_lists:
             appointment = self._check_success(d, all=appointment_dicts_lists)
             ids.append(appointment["id"])
-        self.assertEqual(len(appointment_dicts_lists), len(self.tool.appointments))
+        assert len(appointment_dicts_lists), len(self.tool.appointments))
 
         # Create new instance and verify appointments exist.
         old_tool = self.tool
@@ -567,7 +556,7 @@ class TestAppointmentTools(unittest.TestCase):
 
         # Create new instance and verify appointments exist.
         new_tool = self._make_manager()
-        self.assertIsNot(old_tool, new_tool)
+        assert old_tool is not new_tool
         second_appointments = new_tool.get_appointments()
 
         # Check that they both have the same list of appointments.
@@ -583,9 +572,9 @@ class TestAppointmentTools(unittest.TestCase):
             self._check_success(d, all=appointment_dicts_lists)
             for d in appointment_dicts_lists
         ]
-        self.assertEqual(len(apmts), get_appointments_count.run({}))
+        assert len(apmts), get_appointments_count.run({}))
         self._clear()
-        self.assertEqual(0, get_appointments_count.run({}))
+        assert 0, get_appointments_count.run({}))
 
 
 if __name__ == "__main__":

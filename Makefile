@@ -143,58 +143,61 @@ arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} 
 list of these variables and their default definitions. Specific variables are mentioned for
 some targets.
 
-${CODE}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
-${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and
-${CODE}${_END}                        # make that target for ALL the models defined by ${CODE}MODELS${_END}:
-${CODE}${_END}                        #   ${CODE}${MODELS}${_END}
-${CODE}${_END}                        # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
-${CODE}${_END}                        # You can override the list of models as follows:
-${CODE}${_END}                        #   ${CODE}make MODELS="..." all-models-...${_END}
-${CODE}make all-tools${_END}          # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
-${CODE}make all-code${_END}           # Synonym for ${CODE}all-tools${_END}.
-${CODE}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first.
-${CODE}${_END}                        # Built by ${CODE}all-tools${_END}.
-${CODE}make run-code${_END}           # Synonym for ${CODE}run-tools${_END}.
+${CODE}make all-models-*${_END}         # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
+${CODE}${_END}                          # that is everything to the right of ${CODE}all-models-${_END}, and
+${CODE}${_END}                          # make that target for ALL the models defined by ${CODE}MODELS${_END}:
+${CODE}${_END}                          #   ${CODE}${MODELS}${_END}
+${CODE}${_END}                          # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
+${CODE}${_END}                          # You can override the list of models as follows:
+${CODE}${_END}                          #   ${CODE}make MODELS="..." all-models-...${_END}
+${CODE}make all-tools${_END}            # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
+${CODE}make all-code${_END}             # Synonym for ${CODE}all-tools${_END}.
+${CODE}make run-tools${_END}            # Run all the tools (but not the ChatBot app) without cleaning first.
+${CODE}${_END}                          # Built by ${CODE}all-tools${_END}.
+${CODE}make run-code${_END}             # Synonym for ${CODE}run-tools${_END}.
 
-${CODE}make setup${_END}              # One-time setup tasks; e.g., builds target ${CODE}install-uv${_END}.
-${CODE}make one-time-setup${_END}     # Synonym for ${CODE}setup${_END}.
-${CODE}make install-uv${_END}         # Explain how to install ${CODE}uv${_END}.
-${CODE}${_END}                        # Run ${CODE}make help-command-uv${_END} for more information.
-${CODE}make install-jq${_END}         # Explain how to install ${CODE}jq${_END} (an optional CLI tool).
+${CODE}make setup${_END}                # One-time setup tasks; e.g., builds target ${CODE}install-uv${_END}.
+${CODE}make one-time-setup${_END}       # Synonym for ${CODE}setup${_END}.
+${CODE}make install-uv${_END}           # Explain how to install ${CODE}uv${_END}.
+${CODE}${_END}                          # Run ${CODE}make help-command-uv${_END} for more information.
+${CODE}make install-jq${_END}           # Explain how to install ${CODE}jq${_END} (an optional CLI tool).
 
-${CODE}make build${_END}              # Build a distribution.
-${CODE}make install${_END}            # Install the code locally in development mode.
+${CODE}make build${_END}                # Build a distribution.
+${CODE}make install${_END}              # Install the code locally in development mode.
 
-${CODE}make all-tests${_END}          # Run the unit tests (AI and non-AI) and integration tests.
-${CODE}${_END}                        # Equivalent to ${CODE}unit-tests-non-ai${_END} and ${CODE}unit-tests-ai${_END}.
+${CODE}make all-tests${_END}            # Run the unit tests (AI and non-AI) and integration tests.
+${CODE}${_END}                          # Equivalent to ${CODE}unit-tests-non-ai${_END} and ${CODE}unit-tests-ai${_END}.
 
-${CODE}make unit-tests${_END}         # Following convention, this target runs the unit tests only and, by default,
-${CODE}${_END}                        # it only runs the "non-AI" unit tests by building ${CODE}unit-tests-non-ai${_END}.
-${CODE}make tests${_END}              # Synonym for ${CODE}unit-tests${_END}.
-${CODE}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
-${CODE}${_END}                        # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
-${CODE}${_END}                        # Effectively, this target is a synonym for ${CODE}unit-tests${_END}.
-${CODE}make unit-tests-ai${_END}      # All unit tests that DO involve inference invocations, which take a long time to run.
-${CODE}${_END}                        # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
-${CODE}make unit-tests-appointments${_END}
-${CODE}${_END}                        # Convenience target that runs just the AI unit tests for appointment management.
-${CODE}${_END}                        # These tests are also part of ${CODE}unit-tests-ai${_END}.
+${CODE}make unit-tests${_END}           # Following convention, this target runs the unit tests only and, by default,
+${CODE}${_END}                          # it only runs the "non-AI" unit tests by building ${CODE}unit-tests-non-ai${_END}.
+${CODE}make tests${_END}                # Synonym for ${CODE}unit-tests${_END}.
+${CODE}make unit-tests-non-ai${_END}    # All unit tests that don't involve inference invocations.
+${CODE}${_END}                          # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
+${CODE}${_END}                          # Effectively, this target is a synonym for ${CODE}unit-tests${_END}.
+${CODE}make unit-tests-ai${_END}        # All unit tests that DO involve inference invocations, which take a long time to run.
+${CODE}${_END}                          # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
+${CODE}make unit-tests-qna${_END}       # Convenience target that runs just the AI unit tests involving QnA pairs.
+${CODE}${_END}                          # These all have the ${CODE}pytest${_END} marks ${CODE}ai${_END} and  ${CODE}qna${_END} for filtering.
+${CODE}make unit-tests-scenario${_END}  # Convenience target that runs just the AI unit tests involving scenario interactions.
+${CODE}${_END}                          # These all have the ${CODE}pytest${_END} marks ${CODE}scenario${_END} and  ${CODE}qna${_END} for filtering.
+${CODE}make unit-tests-simple${_END}    # Effectively a synonym for ${CODE}unit-tests-qna${_END}.
+${CODE}make unit-tests-agent${_END}     # Effectively a synonym for ${CODE}unit-tests-scenario${_END}.
 
-${CODE}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
-${CODE}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
-${CODE}${_END}                        # (See https://the-ai-alliance.github.io/ai-application-testing/working-example/ for details)
+${CODE}make integration-tests${_END}    # Run the integration tests, including "dedicated" integration tests
+${CODE}${_END}                          # and all unit tests with more "exhaustive" sample data flags.
+${CODE}${_END}                          # (See https://the-ai-alliance.github.io/ai-application-testing/working-example/ for details)
 ${CODE}make integration-tests-dedicated${_END}
-${CODE}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
+${CODE}${_END}                          # The "dedicated" integration tests, omitting the unit tests.
 
-${CODE}make clean-setup${_END}        # Undoes everything done by the setup target or provides
-${CODE}${_END}                        # instructions for what you must do manually in some cases.
-${CODE}make uninstall-uv${_END}       # Explain how to uninstall "uv".
+${CODE}make clean-setup${_END}          # Undoes everything done by the setup target or provides
+${CODE}${_END}                          # instructions for what you must do manually in some cases.
+${CODE}make uninstall-uv${_END}         # Explain how to uninstall "uv".
 
 Several CLI tools are required, like ${CODE}uv${_END}, or only needed for a few special make targets, like ${CODE}jq${_END}:
 
-${CODE}make help-command-uv${_END}    # Prints specific information about ${CODE}uv${_END}, including installation.
-${CODE}make help-command-jq${_END}    # Prints specific information about ${CODE}jq${_END}, including installation.
-${CODE}make help-command-node${_END}  # Prints specific information about ${CODE}node${_END}, including installation.
+${CODE}make help-command-uv${_END}      # Prints specific information about ${CODE}uv${_END}, including installation.
+${CODE}make help-command-jq${_END}      # Prints specific information about ${CODE}jq${_END}, including installation.
+${CODE}make help-command-node${_END}    # Prints specific information about ${CODE}node${_END}, including installation.
 
 ${TIP_LABEL}See also the list of common targets, like ${CODE}tests${_END} and ${CODE}lint${_END}, which are shown
 ${TIP_LABEL}by ${CODE}make help${_END}.
@@ -626,8 +629,8 @@ remove-open-webui::
 
 before-pr-default: before-pr-no-tests unit-tests-non-ai
 
-.PHONY: all-tests note-all-tests unit-tests-ai
-.PHONY: unit-tests-non-ai unit-tests-ai unit-tests-ai-agent unit-tests-ai-simple
+.PHONY: all-tests note-all-tests unit-tests-non-ai
+.PHONY: unit-tests-ai unit-tests-ai-scenario unit-tests-ai-qna  unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
 
 all-tests:: note-all-tests unit-tests-non-ai integration-tests
@@ -644,27 +647,33 @@ unit-tests-non-ai:: unit-tests
 
 .PHONY: unit-tests-appointments
 
-unit-tests-appointments::
-	@echo "${INFO_LABEL}Running the appointment use case unit tests..."
-	${MAKE} \
-		PYTEST_RUN_OPT_ARGS="-m 'ai and appointments'" \
-		unit-tests-ai-agent
+unit-tests-ai:: unit-tests-ai-qna unit-tests-ai-scenario
 
-unit-tests-ai:: unit-tests-ai-agent unit-tests-ai-simple
+unit-tests-scenario unit-tests-agent::
+	@echo "${INFO_LABEL}Running the 'scenario' use case unit tests with the 'agent' ChatBot."
+	@${MAKE} \
+		PYTEST_RUN_OPT_ARGS="-m 'ai and scenario'" \
+	  WHICH_CHATBOT=agent \
+		do-unit-tests-ai
 
-# The "funky" ending command line, "uv run ... && make ... || ! make ...", is a hack
-# to make the "show-test-logs" target whether or not the tests pass, and also
-# effectively return success (==0) or failure (!=0) status from the tests.
-# (Note we are in the src directory so we have to tell make to go to the parent...)
+unit-tests-qna unit-tests-simple::
+	@echo "${INFO_LABEL}Running the 'QnA' use case unit tests with the 'simple' ChatBot."
+	@${MAKE} \
+		PYTEST_RUN_OPT_ARGS="-m 'ai and qna'" \
+	  WHICH_CHATBOT=simple \
+		do-unit-tests-ai
+
+# We capture the success or failure status of the "uv" command, post-process the
+# JSONL log files, then exit with the same status.
 # We pass TIMESTAMP explicitly, because we don't want it to change from one step to
 # the next!
-unit-tests-ai-agent unit-tests-ai-simple:: ${OUTPUT_TESTS_DIR} ${OUTPUT_LOGS_TESTS_DIRDIR}
-	@echo "${INFO_LABEL}Running the AI unit tests with the ${CODE}${@:unit-tests-ai-%=%}${_END} ChatBot..."
-	@echo "${INFO_LABEL}AI test log files: ${CODE}${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
+do-unit-tests-ai:: ${OUTPUT_TESTS_DIR} ${OUTPUT_LOGS_TESTS_DIRDIR}
+	@echo "${INFO_LABEL}Using the pytest filter \"${PYTEST_RUN_OPT_ARGS}\"."
+	@echo "${INFO_LABEL}Special log files: ${CODE}${OUTPUT_LOGS_TESTS_DIRFILE_GLOB}${_END}"
 	${NOOP} ${MAKE} \
 		TIMESTAMP=${TIMESTAMP} \
-		PYTEST_RUN_OPT_ARGS="-m ai" \
-	  WHICH_CHATBOT=${@:unit-tests-ai-%=%} \
+		PYTEST_RUN_OPT_ARGS="${PYTEST_RUN_OPT_ARGS}" \
+	  WHICH_CHATBOT=${WHICH_CHATBOT} \
 		unit-tests; \
 		success=$$?; \
 	  ${MAKE} TIMESTAMP=${TIMESTAMP} post-proc-test-logs; \

@@ -41,7 +41,8 @@ dev = [
 [tool.pytest.ini_options]
 markers = [
     "ai: marks tests that that are slow to execute due to AI inference (deselect with '-m \"not ai\")",
-    "appointments: marks tests that that are related to the 'appointments' use case (deselect with '-m \"not appointments\")",
+    "scenario: marks AI tests that that exercise 'scenarios' and require the agent ChatBot (deselect with '-m \"not scenarios\")",
+    "qna: marks AI tests that that exercise 'question and answer' (QnA) interactions and work with either ChatBot implementation (deselect with '-m \"not qna\")",
 ]
 testpaths = ["src/tests"]
 pythonpath = ["src"]

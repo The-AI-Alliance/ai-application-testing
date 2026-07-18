@@ -6,7 +6,7 @@ from pathlib import Path
 from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
 
 @pytest.mark.ai
-@pytest.mark.appointments
+@pytest.mark.scenario
 def test_chatbot_appointment_requests():
     """
     The annotation `@pytest.mark.ai` indicates this test uses AI inference and
@@ -16,8 +16,8 @@ def test_chatbot_appointment_requests():
     In fact, the non-AI tests are what gets executed by default for the `unit-tests`
     target and also PR checks.
 
-    This method is also annotated with `@pytest.mark.appointments`, because we
-    have a special make target to run it by itself.
+    This method is also annotated with `@pytest.mark.scenario`, indicating this
+    use case is based on interactive scenarios.
     """
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
     cbtb = ChatBotTestWithInference(data_dir = Path(data_dir))

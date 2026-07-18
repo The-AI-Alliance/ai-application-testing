@@ -231,36 +231,28 @@ class ScenarioTest(BaseAITest):
         Parse a nested dictionary loaded from a scenario test data file
         and construct a ScenarioTest instance from it.
         """
-        scenario = get(obj, "scenario")
-        inputs = get(obj, "inputs")
-        outputs = get(obj, "outputs")
-        successes = [
-            (s.get("text"), s.get("post_conditions")) for s in get(outputs, "successes")
-        ]
-        failures = [
-            (f.get("text"), f.get("post_conditions")) for f in get(outputs, "failures")
-        ]
-
+        scenario = obj.get("scenario", "")
+        inputs1 = obj.get("inputs", {})
         inputs = ScenarioTest.Inputs(
-            required_information=get(inputs, "required-information"),
-            pre_conditions=get(inputs, "pre-conditions"),
+            required_information=inputs1.get("required-information", []),
+            pre_conditions=inputs1.get("pre-conditions", []),
         )
-        successes = [
-            ScenarioTest.Success(
-                text=get(s, "text"),
-                post_conditions=get(s, "post_conditions"),
-            )
-            for s in get(outputs, "successes")
-        ]
-        failures = [
-            ScenarioTest.Failure(
-                text=get(f, "text"),
-                post_conditions=get(f, "post_conditions"),
-            )
-            for f in get(outputs, "failures")
-        ]
-
-        initial_queries = get(obj, "initial-queries")
+        outputs = obj.get("outputs")
+        successes = []
+        for s in outputs.get("successes", []):
+            successes.append(
+                ScenarioTest.Success(
+                    text=s.get("text", ""),
+                    post_conditions=s.get("post-conditions", []),
+                ))
+        failures = []
+        for f in get(outputs, "failures", []):
+            failures.append(
+                ScenarioTest.Failure(
+                    text=f.get("text", ""),
+                    post_conditions=f.get("post-conditions", []),
+                ))
+        initial_queries = obj.get("initial-queries", [])
 
         return cls(
             scenario=scenario,

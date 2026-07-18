@@ -9,6 +9,7 @@ import os
 import pytest
 import random
 import re
+import sys
 import time
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -719,6 +720,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
                 f"({sample_number},{lcr_count},{warnings_count},{errors_count}) ",
                 end="",
             )
+            sys.stdout.flush()  # make sure the previous output isn't buffered...
 
         self.finish()
 
@@ -736,7 +738,10 @@ class ChatBotTestWithInference(ChatBotTestBase):
         file_path = self._get_data_file(use_case_name, "qna")
         data_loader = QnADataLoader()
         data = data_loader.load_data(file_path)
-        runner = QnAQueryRunner(self.chatbot, self.rating_threshold, self.confidence_threshold)
+        runner = QnAQueryRunner(
+            self.chatbot,
+            self.rating_threshold,
+            self.confidence_threshold)
 
         self.__try_all_samples(
             method="try_qna_queries",
@@ -760,7 +765,10 @@ class ChatBotTestWithInference(ChatBotTestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
-        runner = ScenarioQueryRunner(self.chatbot)
+        runner = ScenarioQueryRunner(
+            self.chatbot,
+            self.rating_threshold,
+            self.confidence_threshold)
 
         self.__try_all_samples(
             method="try_scenarios",
