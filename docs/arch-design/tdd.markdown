@@ -284,11 +284,11 @@ This target runs the following command:
 
 ```shell
 cd src && time uv run tools/tdd-example-refill-chatbot.py \
-  --model ollama_chat/gpt-oss:20b \
+  --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
   --template-dir tools/prompts/templates \
-  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
-  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
+  --data-dir .../output/ollama_chat/gemma4_12b/data \
+  --log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/tdd-example-refill-chatbot.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
@@ -300,11 +300,11 @@ The `time` command returns how much system, user, and "wall clock" times were us
 
 | Argument | Purpose |
 | :------- | :------ |
-| `--model ollama_chat/gpt-oss:20b` | The model to use. |
+| `--model ollama_chat/gemma4:12b` | The model to use. |
 | `--service-url http://localhost:11434` | Only used for `ollama`; the local URL for the `ollama` server. |
 | `--template-dir tools/prompts/templates` | Where we have prompt templates we use for all the examples. (See also the Appendix below.) |
-| `--data-dir .../output/ollama_chat/gpt-oss_20b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where detailed log entries are captured. |
+| `--data-dir .../output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/tdd-example-refill-chatbot.log` | Where detailed log entries are captured. |
 
 {: .tip}
 > **Tips:**
@@ -324,7 +324,7 @@ The only difference is the second file contains embedded examples in the prompt,
 > 
 > These template files are designed for use with the `llm` CLI (see the Appendix in [`README.md`]({{site.gh_edit_repository}}/){:target="_blank"}). In our Python tools, [LiteLLM](https://docs.litellm.ai/#basic-usage){:target="_blank"} is used to invoke inference and we extract the content we need from these files and use it to construct the prompts we send through LiteLLM.
 
-This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output in the repo:
+This program passes a number of hand-written prompts that are either prescription refill requests or something else, then checks what was returned by the model. You can see example output, for early runs with `gpt-oss:20b` and `llama3.2:3B`, in the repo:
 
 * [`gpt-oss_20b`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat/gpt-oss_20b/tdd-example-refill-chatbot.out){:target="_blank"} 
 * [`llama3.2_3B`]({{site.gh_edit_repository}}/blob/main/src/data/examples/ollama_chat/llama3.2_3B/tdd-example-refill-chatbot.out){:target="_blank"} 

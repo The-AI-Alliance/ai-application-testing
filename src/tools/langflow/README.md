@@ -28,12 +28,12 @@ make run-langflow-pipeline
 
 # Or showing the default arguments the make target uses:
 cd src
-uv run python -m tools.langflow.unit_benchmark_flow \
-    --model ollama_chat/gpt-oss:20b \
+uv run python src/tools/langflow/unit_benchmark_flow.py \
+    --model ollama_chat/gemma4:12b \
     --service-url http://localhost:11434 \
-    --template-dir tools/prompts/templates \
-    --data-dir .../output/ollama_chat/gpt-oss_20b/data \
-    --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/langflow-pipeline.log \
+    --template-dir src/tools/prompts/templates \
+    --data-dir output/ollama_chat/gemma4_12b/data \
+    --log-file output/ollama_chat/gemma4_12b/logs/TIMESTAMP/langflow-pipeline.log \
 ```
 
 Here, `TIMESTAMP` will be the current time in the format `YYYYMMDD-HHMMSS`.

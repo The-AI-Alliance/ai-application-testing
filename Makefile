@@ -484,13 +484,13 @@ chatbot:: before-chatbot do-run-chatbot after-chatbot
 do-run-chatbot::
 	export LITELLM_LOG=ERROR; \
 	${NOOP} ${TIME} uv run python ${SRC_DIR}/apps/chatbot/main.py \
+		--which-chatbot ${WHICH_CHATBOT} \
 		--model ${MODEL} \
 		--service-url ${INFERENCE_URL} \
 		--template-dir ${CHATBOT_TEMPLATES_DIR} \
 		--data-dir ${CHATBOT_DATA_DIR} \
 		--output-dir ${CHATBOT_OUTPUT_DIR} \
 		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--which-chatbot ${WHICH_CHATBOT} \
 		--log-file ${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log \
 		--verbose ${APP_ARGS}
 

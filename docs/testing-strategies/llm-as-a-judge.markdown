@@ -137,17 +137,16 @@ After some setup, the following command is executed, which uses the same argumen
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-validation.py \
-  --model ollama_chat/gpt-oss:20b \
+  --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
   --template-dir tools/prompts/templates \
-  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
-  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-validation.log
+  --data-dir .../output/ollama_chat/gemma4_12b/data \
+  --log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
 
-
-In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"} directory:
+In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory. We saved the output of example runs under the same [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"} directory (for `gpt-oss:20b` and `llama3.2:3B`, which were used before the recent adoption of `gemma4`):
 
 | Validation Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |
@@ -156,7 +155,7 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 | `synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl` | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} | [example]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/llama3.2_3B/data/synthetic-q-and-a_patient-chatbot-prescription-refills-data-validation.jsonl){:target="_blank"} |
 
 These files rate each Q&A pair from 1 (bad) to 5 (great) and provide reasoning for each rating.
-Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gpt-oss_20b/unit-benchmark-data-validation.out` for `gpt-oss:20b`. (Example output files are also saved to [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for a test runs with `gpt-oss:20b` and `llama3.2:3B`:
+Also, summary statistics are written by the tool to `stdout` and to the output file `temp/output/ollama_chat/gemma4_12b/unit-benchmark-data-validation.out` for `gemma4:12b`. (Example output files are also saved to [`src/data/examples`]({{site.gh_edit_repository}}/tree/main/src/data/examples/){:target="_blank"}.) We show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. Here are the statistics for earlier test runs with `gpt-oss:20b` and `llama3.2:3B`:
 
 **`gpt-oss:20b`**
 

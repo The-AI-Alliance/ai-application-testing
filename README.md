@@ -120,8 +120,11 @@ Edit the [`Makefile`](https://github.com/The-AI-Alliance/ai-application-testing/
 On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models served by `ollama`, for example:
 
 ```shell
-make MODEL=ollama_chat/llama3.2:3B chatbot
+make MODEL=ollama_chat/qwen3.5:35b chatbot
 ```
+
+> ![TIP]
+> If you explicitly define `MODEL` like this, the `MODEL_APPENDIX` value discussed above is not used. So, for Mac silicon machines you probably want to use `MODEL=ollama_chat/qwen3.5:35b-mlx`.
 
 If you want to try _all_ the `ollama`-served models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
 
@@ -165,26 +168,30 @@ make terc
 This target first checks the following:
 
 * The `uv` command is installed and on your path.
-* Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
-	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_12b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:12b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_12b` subdirectory.
-	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_12b/data`.
+* One or more output directories are created if they don't exist.
 
-If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the corresponding paths shown in the next command.
+Then the tool command is executed. If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories (TIP: use `make -n run-terc` to see the paths) or modify the corresponding paths shown in the next command.
 
-After the setup, the `make` target runs the following command:
+After the setup, the `make` target runs a command similar to the following (we occasionally &ldquo;tweak&rdquo; the paths shown):
 
 ```shell
-cd src && time uv run tools/tdd-example-refill-chatbot.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
+time uv run python src/tools/tdd-example-refill-chatbot.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log \
+  ${APP_ARGS}
 ```
 
-`TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are absolute paths. The other paths shown are relative to the `src` directory.
+`TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are paths where data and log output are written, respectively. Note that all paths are relative to the repository's root directory. `APP_ARGS` is a hook for the user to pass additional arguments to any of our tools. For example, try the following command (which produces the same output as `make help-terc`):
 
-The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself or on a system without this command. It returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run `tools/tdd-example-refill-chatbot.py`. 
+```shell
+make APP_ARGS=--help run-terc
+```
+
+
+The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself or on a system without this command. It returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run `tdd-example-refill-chatbot.py`.
 
 The arguments are as follows:
 
@@ -192,9 +199,9 @@ The arguments are as follows:
 | :------- | :------ |
 | `--model ollama_chat/gemma4:12b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
-| `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
-| `--data-dir .../output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--template-dir src/tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
+| `--data-dir output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml) and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml). The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter](https://the-ai-alliance.github.io/ai-application-testing/arch-design/tdd/).
 
@@ -218,21 +225,22 @@ make run-ubds
 make ubds
 ```
 
-After the same setup steps as before, the following command is executed:
+After the same setup steps described above for `tdd-example-refill-chatbot`, the following command is executed:
 
 ```shell
-cd src && time uv run tools/unit-benchmark-data-synthesis.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
+time uv run python src/tools/unit-benchmark-data-synthesis.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log \
+  ${APP_ARGS}
 ```
 
 > [!NOTE]
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `.../output/data/ollama_chat/gemma4_12b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `output/data/ollama_chat/gemma4_12b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
@@ -276,15 +284,16 @@ make run-ubdv
 make ubdv
 ```
 
-After the same setup steps, the following command is executed:
+After the same setup steps described above, the following command is executed:
 
 ```shell
-cd src && time uv run tools/unit-benchmark-data-validation.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+time uv run python src/tools/unit-benchmark-data-validation.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+  ${APP_ARGS}
 ```
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
@@ -296,7 +305,7 @@ In this case, the `--data-dir` argument specifies where to read the previously-g
 (See examples in [`src/data/examples/ollama_chat`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat).)
 
 These files &ldquo;rate&rdquo; each Q&A pair from 1 (bad) to 5 (great).
-Also, summary statistics are written to `stdout` and to the output file `.../output/ollama_chat/<model>/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. For simplicity, we used the same model as the _teacher_ that we used for generation, but for real use, consider using a different model. 
+Also, summary statistics are written to `stdout` and to the output file `output/ollama_chat/<model>/unit-benchmark-data-validation.out`. Currently, we show the counts of each rating, meaning how good the _teacher LLM_ rates the Q&A pair. For simplicity, we used the same model as the _teacher_ that we used for generation, but for real use, consider using a different model.
 
 From one of our test runs, the following table was printed:
 
@@ -310,7 +319,7 @@ Totals:                                                                         
 
 Total count: 475 (includes errors), total errors: 3
 
-The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.jsonl` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/).
+The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.jsonl` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/) for early runs with `gpt-oss:20b`.
 
 Note that the emergency Q&A pairs had the greatest ambiguities, where the teacher model didn't think that many of the Q&A pairs represented real emergencies (lowest scores) or the situation was "ambiguous" (middle scores). 
 
@@ -342,25 +351,44 @@ A command-line argument `--which-chatbot` is used with a shared code base to sel
 The application can be invoked in one of several ways:
 
 ```shell
-make chatbot               # Run the interactive ChatBot with a simple, command-line "UX".
+make agent-chatbot         # Run the interactive agent (default) ChatBot.
+make simple-chatbot        # Run the interactive "simple" ChatBot.
+make chatbot               # By default, runs the interactive agent ChatBot.
 make run-chatbot           # Synonym for "chatbot".
-make help-chatbot          # Show help for the ChatBot.
 ```
 
-After the same setup steps, like output directory creation, the following command is executed, which you can run directly, where we show the values for arguments as defined by `Makefile` variables:
+Both ChatBot implementations present a simple CLI prompt for user queries.
+
+Making `chatbot` or `agent-chatbot` starts with similar setup steps discussed previously, then executes the following command:
 
 ```shell
-cd src && time uv run python -m apps.chatbot.main \
+time uv run python src/apps/chatbot/main.py \
+  --which-chatbot agent \
   --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
-  --template-dir apps/chatbot/prompts/templates \
-  --data-dir data \
+  --template-dir src/apps/chatbot/prompts/templates \
+  --output-dir output/ollama_chat/gemma4_12b/ \
+  --data-dir output/ollama_chat/gemma4_12b/data \
   --confidence-threshold 0.9 \
-  --which-chatbot agent \
-  --log-file .../logs/.../chatbot.log
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/agent-chatbot.log \
+  --verbose \
+  ${APP_ARGS}
 ```
 
-A simple prompt is presented where you can enter "patient prompts" and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
+The command for `make simple-chatbot` is similar, with `simple` substituted where you see `agent`.
+
+A simple CLI prompt is presented where you enter "patient prompts" and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
+
+> [!TIP]
+> Using the [Open WebUI](#using-the-chatbot-with-open-webui) GUI is recommended for experimenting with the ChatBot.
+
+For help on the application, try this:
+
+```shell
+make help-chatbot          # Help on the interactive ChatBot, agent implementation by default.
+make help-agent-chatbot    # Help on the agent implementation ChatBot, explicitly.
+make help-simple-chatbot   # Help on the "simple" implementation ChatBot.
+```
 
 The arguments are similar to the previously-discussed arguments, with a new argument `--confidence-threshold`, which we will explain below.
 
@@ -368,10 +396,10 @@ The source code, etc. for this application and the automated tests are located i
 
 | Content | Location | Notes |
 | :------ | :------- | :---- |
-| Source code       | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/) | Main source code for the ChatBot and the MCP server. |
+| Source code       | [`src/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/) | Main source code for the two ChatBot implementations and the MCP server. |
 | Agent Skills      | [`src/apps/chatbot/skills`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/skills/) | Skills for the Deep Agent implementation, including the appointment management skill. |
 | Prompt Templates  | [`src/apps/chatbot/prompts/templates`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/apps/chatbot/prompts/templates/) | The prompts used by the ChatBot application and related tests. There are different prompts for the "simple" vs. "agent" implementations. |
-| Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit//) | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/). The AI-specific tests are executed with both ChatBot implementations. |
+| Unit Tests        | [`src/tests/unit/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/) | Conventional unit tests and AI-specific tests for the chatbot in [`src/tests/unit/apps/chatbot`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/unit/apps/chatbot/). The AI-specific tests are executed with both ChatBot implementations. |
 | Integration Tests | [`src/tests/integration/`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/integration/) | The `make` target `integration-tests` also runs the unit tests in a more _exhaustive_ way, as discussed below. |
 | Test Data         | [`src/tests/data`](https://github.com/The-AI-Alliance/ai-application-testing/tree/main/src/tests/data/) | Test Q&A data for the AI tests. |
 | Test Logs         | `src/tests/logs/${MODEL_FILE_NAME}` | Special log output for easier examination of AI-related test results, where `MODEL_FILE_NAME` will be `ollama_chat/gemma4_12b`, by default. It is computed from the value of the `MODEL` variable, where any colons are replaced with underscores. |
@@ -397,18 +425,23 @@ The appointment data is stored in a JSONL file (`data/appointments.jsonl`) that 
 
 #### Testing the Appointment Feature
 
-Unit tests for the appointment tool can be run with:
+Unit tests for the appointment tool can be run with the following `make` target:
 
 ```shell
-make unit-tests-appointments
+make unit-tests-scenario
 ```
 
-These tests verify all appointment operations including creation, cancellation, confirmation, rescheduling, and validation of business rules.
+This target uses a `pytest` marker, `scenario`, which is defined in `pyproject.toml` and used as an annotation in any test involving scenarios. Currently, only the appointments feature is implemented this way.
 
+Similarly, there is a marker `qna` for the other question-and-answer capabilities. It runs tests currently for the _emergency_, _prescription_, and _other_ capabilities.
+
+```shell
+make unit-tests-qna
+```
 
 ### An MCP Server for the ChatBot
 
-Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python src/apps/chatbot/mcp_server/server.py`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 
 ```shell
@@ -426,7 +459,7 @@ For more details on running the MCP server, see the [`src/apps/chatbot/mcp_serve
 
 ### An OpenAI-compatible API Server for the ChatBot
 
-Similarly, running the OpenAI-compatible API server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
+Similarly, running the OpenAI-compatible API server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python src/apps/chatbot/api_server/server.py`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
@@ -448,7 +481,7 @@ Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an
 
 ## Automated Testing: Practical Enhancements 
 
-A number of practical enhancements have been adopted to better support long-running tests that require lots of inference, which we call &ldquo;AI tests&rdquo;, and more conventional, faster tests. The details are described in the section titled [Automated Testing: Practical Enhancements](https://the-ai-alliance.github.io/ai-application-testing/working-example/#automated-testing-practical-enhancements) in the user guide's chapter, [The Working Example and Tools](https://the-ai-alliance.github.io/ai-application-testing/working-example/).
+A number of practical enhancements have been adopted to better support long-running tests that require lots of inference, which we call &ldquo;AI tests&rdquo;, as well as the more conventional, faster tests that don't use inference. The details are described in the section titled [Automated Testing: Practical Enhancements](https://the-ai-alliance.github.io/ai-application-testing/working-example/#automated-testing-practical-enhancements) in the user guide's chapter, [The Working Example and Tools](https://the-ai-alliance.github.io/ai-application-testing/working-example/).
 
 ## Getting Involved
 

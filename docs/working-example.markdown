@@ -130,8 +130,11 @@ Edit the [`Makefile`]({{site.gh_edit_repository}}/tree/main/Makefile){:target="m
 On invocation, you can dynamically change values, such as the `MODEL` used with `ollama`. This is the easiest way to do &ldquo;one-off&rdquo; experiments with different models. For example:
 
 ```shell
-make MODEL=ollama_chat/llama3.2:3B chatbot
+make MODEL=ollama_chat/qwen3.5:35b chatbot
 ```
+
+{. .tip}
+> **TIP:** If you explicitly define `MODEL` like this, the `MODEL_APPENDIX` value discussed above is not used. So, for Mac silicon machines you probably want to use `MODEL=ollama_chat/qwen3.5:35b-mlx`.
 
 If you want to try _all_ the models mentioned above with one command, use `make all-models-...`, where `...` is one of the other make targets, like `all-code`, which runs all the tool invocations for a single model, e.g.,
 
@@ -178,26 +181,25 @@ make terc
 This target first checks the following:
 
 * The `uv` command is installed and on your path.
-* Two directories defined by `make` variables exist. If not, they are created with `mkdir -p`, where the option `-p` ensures that missing parent directories are also created:
-	* `OUTPUT_LOG_DIR`, where most output is written, which is `temp/output/ollama_chat/gemma4_12b/logs`, when `MODEL` is defined to be `ollama_chat/gemma4:12b`. (The `:` is converted to `_`, because `:` is not an allowed character in MacOS file system names.) Because `MODEL` has a `/`, we end up with a directory `ollama_chat` that contains a `gemma4_12b` subdirectory.
-	* `OUTPUT_DATA_DIR`, where data files are written, which is `temp/output/ollama_chat/gemma4_12b/data`.
+* One or more output directories are created if they don't exist.
 
-If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories or modify the corresponding paths shown in the next command.
+Then the tool command is executed. If you don't use the `make` command, make sure you have `uv` installed and either manually create the same directories (TIP: use `make -n run-terc` to see the paths) or modify the corresponding paths shown in the next command.
 
-After the setup, the `make` target runs the following command:
+After the setup, the `make` target runs a command similar to the following (we occasionally &ldquo;tweak&rdquo; the paths shown):
 
 ```shell
-cd src && time uv run tools/tdd-example-refill-chatbot.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log
+time uv run python src/tools/tdd-example-refill-chatbot.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log \
+  ${APP_ARGS}
 ```
 
 `TIMESTAMP` will be the current time when the `uv` command started, of the form `YYYYMMDD-HHMMSS`, and the values passed for `--data-dir` and `--log-file` are absolute paths. The other paths shown are relative to the `src` directory.
 
-The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself or on a system without this command. It returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run `tools/tdd-example-refill-chatbot.py`. 
+The `time` command prints execution time information for the `uv` command. It is optional and you can omit it when running this command directly yourself or on a system without this command. It returns how much system, user, and "wall clock" times were used for execution on MacOS and Linux systems. Note that `uv` is used to run `tdd-example-refill-chatbot.py`.
 
 The arguments are as follows:
 
@@ -207,11 +209,11 @@ The arguments are as follows:
 | :------- | :------ |
 | `--model ollama_chat/gemma4:12b` | The model to use, defined by the `make` variable `MODEL`, as discussed above. |
 | `--service-url http://localhost:11434` | The `ollama` local server URL. Some other inference services may also require this argument. |
-| `--template-dir tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
-| `--data-dir .../output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
-| `--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
+| `--template-dir src/tools/prompts/templates` | Where we keep prompt templates we use for all the examples. |
+| `--data-dir output/ollama_chat/gemma4_12b/data` | Where any generated data files are written. (Not used by all tools.) |
+| `--log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/tdd-example-refill-chatbot.log` | Where log output is captured. |
 
-**Table 2:** Arguments passed to `tools/tdd-example-refill-chatbot.py`.
+**Table 2:** Arguments passed to `src/tools/tdd-example-refill-chatbot.py`.
 
 The `tdd-example-refill-chatbot.py` tool runs two experiments, one with the template file [`q-and-a_patient-chatbot-prescriptions.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions.yaml){:target="_blank"} and the other with [`q-and-a_patient-chatbot-prescriptions-with-examples.yaml`]({{site.gh_edit_repository}}/tree/main/src/tools/prompts/templates/q-and-a_patient-chatbot-prescriptions-with-examples.yaml){:target="_blank"}. The only difference is the second file contains embedded examples in the prompt, so in principal the results should be better, but in fact, they are often the same, as discussed in the [TDD chapter]({{site.baseurl}}/arch-design/tdd/).
 
@@ -237,15 +239,16 @@ make run-ubds
 make ubds
 ```
 
-After the same setup steps as before, the following command is executed:
+After the same setup steps described above for `tdd-example-refill-chatbot`, the following command is executed:
 
 ```shell
-cd src && time uv run tools/unit-benchmark-data-synthesis.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log
+time uv run python src/tools/unit-benchmark-data-synthesis.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/unit-benchmark-data-synthesis.log \
+  ${APP_ARGS}
 ```
 
 {: .note}
@@ -253,7 +256,7 @@ cd src && time uv run tools/unit-benchmark-data-synthesis.py \
 >
 > If you run the previous tool command, then this one, the two values for `TIMESTAMP` will be different. However, when you make `all-code` or any `all-models-*` target, the _same_ value will be used for `TIMESTAMP` for all the invocations.
 
-The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `.../output/data/ollama_chat/gemma4_12b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
+The arguments are the same as before, e.g., the `--data-dir` argument specifies the location where the Q&A pairs are written, one file per unit benchmark, with subdirectories for each model used. For example, after running this tool with `ollama_chat/gemma4:12b`, the output will be in `output/data/ollama_chat/gemma4_12b`, as discussed previously. This directory will have the following files of synthetic Q&A pairs:
 
 * `synthetic-q-and-a_patient-chatbot-emergency-data.jsonl`
 * `synthetic-q-and-a_patient-chatbot-non-prescription-refills-data.jsonl`
@@ -289,15 +292,16 @@ make run-ubdv
 make ubdv
 ```
 
-After the same setup steps, the following command is executed:
+After the same setup steps described above, the following command is executed:
 
 ```shell
-cd src && time uv run tools/unit-benchmark-data-validation.py \
-	--model ollama_chat/gemma4:12b \
-	--service-url http://localhost:11434 \
-	--template-dir tools/prompts/templates \
-	--data-dir .../output/ollama_chat/gemma4_12b/data \
-	--log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+time uv run python src/tools/unit-benchmark-data-validation.py \
+  --model ollama_chat/gemma4:12b \
+  --service-url http://localhost:11434 \
+  --template-dir src/tools/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
+  --log-file output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-validation.log \
+  ${APP_ARGS}
 ```
 
 In this case, the `--data-dir` argument specifies where to read the previously-generated Q&A files, and for each file, a corresponding &ldquo;validation&rdquo; file is written back to the same directory:
@@ -327,7 +331,7 @@ Totals:                                                                         
 
 Total count: 475 (includes errors), total errors: 3
 
-The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.jsonl` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}.
+The teacher model is asked to provide _reasoning_ for its ratings. It is instructive to look at the output `*-validation.jsonl` files that we saved in [`src/data/examples/ollama_chat/gpt-oss_20b/data/`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"} for early runs with `gpt-oss:20b`.
 
 Note that the emergency Q&A pairs had the greatest ambiguities, where the teacher model didn't think that many of the Q&A pairs represented real emergencies (lowest scores) or the situation was "ambiguous" (middle scores). 
 
@@ -352,33 +356,36 @@ There are actually _two_ implementations of this application:
 * [`ChatBotSimple`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_simple.py){:target="cba-gh"} - A "simple" implementation that just uses LLM inference wrapped with some custom Python code, but without agent tools. This is the first version of the ChatBot that we started with while developing the initial content of this guide.
 * [`ChatBotAgent`]({{site.gh_edit_repository}}/tree/main/src/apps/chatbot/chatbot_agent.py){:target="cba-gh"} - A more advanced "agent" implementation that uses [Langchain's _Deep Agents_](https://www.langchain.com/deep-agents){:target="lcda"} tools for more advanced behaviors, like using _agent skills_ to define new behaviors.
 
-A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. By default, the `Makefile` targets use `ChatBotAgent`, which is selected because the `Makefile` variable `WHICH_CHATBOT` is defined to be `agent`. This value is overridden by `*-`, but it can be overridden on the command line with the value `simple` to use the other implementation.
-
-{: .note}
-> **NOTE:** The test suite for the ChatBot application demonstrates how to apply the ideas and techniques discussed in this guide to actual projects. 
+A command-line argument `--which-chatbot` is used with a shared code base to select which implementation to use. By default, the `Makefile` targets use `ChatBotAgent`, which is selected because the `Makefile` variable `WHICH_CHATBOT` is defined to be `agent`. This value can be overridden on the command line with the value `simple` to use the other implementation.
 
 The application can be invoked in one of several ways:
 
 ```shell
-make chatbot               # Run the interactive ChatBot, agent implementation by default.
+make agent-chatbot         # Run the interactive agent (default) ChatBot.
+make simple-chatbot        # Run the interactive "simple" ChatBot.
+make chatbot               # By default, runs the interactive agent ChatBot.
 make run-chatbot           # Synonym for "chatbot".
-make agent-chatbot         # Run the agent implementation ChatBot, explicitly.
-make simple-chatbot        # Run the "simple" implementation ChatBot.
 ```
 
-After the same setup steps, like output directory creation, the following command is executed, which you could also run directly, where we show the values for arguments as defined by `Makefile` variables:
+Making `chatbot` or `agent-chatbot` starts with similar setup steps discussed previously, then executes the following command:
 
 ```shell
-cd src && time uv run python -m apps.chatbot.main \
+time uv run python src/apps/chatbot/main.py \
+  --which-chatbot agent \
   --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
-  --template-dir tools/prompts/templates \
-  --data-dir data \
-  --output-dir output \
+  --template-dir src/apps/chatbot/prompts/templates \
+  --output-dir output/ollama_chat/gemma4_12b/ \
+  --data-dir output/ollama_chat/gemma4_12b/data \
   --confidence-threshold 0.9 \
-  --which-chatbot agent \
-  --log-file .../logs/.../chatbot.log
+  --log-file output/ollama_chat/gemma4_12b/logs/${TIMESTAMP}/agent-chatbot.log \
+  --verbose \
+  ${APP_ARGS}
 ```
+
+The command for `make simple-chatbot` is similar, with `simple` substituted where you see `agent`.
+
+A simple CLI prompt is presented where you enter "patient prompts" and see the replies. If you prefer a nicer GUI interface, see [Using the ChatBot with Open WebUI](#using-the-chatbot-with-open-webui) below.
 
 {: .tip}
 > **TIP:** Using the [Open WebUI](#using-the-chatbot-with-open-webui) GUI is recommended for experimenting with the ChatBot.
@@ -390,8 +397,6 @@ make help-chatbot          # Help on the interactive ChatBot, agent implementati
 make help-agent-chatbot    # Help on the agent implementation ChatBot, explicitly.
 make help-simple-chatbot   # Help on the "simple" implementation ChatBot.
 ```
-
-A text prompt is presented where you can enter &ldquo;patient prompts&rdquo; and see the replies. 
 
 The arguments are similar to the previously-discussed arguments, with two new arguments, `--output-dir`, for writing some output during execution, and `--confidence-threshold`, to set how the confident the application needs to be in its answers before or else it should default to &ldquo;safe&rdquo;, generic handling. We discuss this concept in more detail below.
 
@@ -432,14 +437,19 @@ The appointment data is stored in a JSONL file (`data/appointments.jsonl`) that 
 
 #### Testing the Appointment Feature
 
-Unit tests for the appointment tool can be run with:
+Unit tests for the appointment tool can be run with the following `make` target:
 
 ```shell
-make unit-tests-appointments
+make unit-tests-scenario
 ```
 
-These tests verify all appointment operations including creation, cancellation, confirmation, rescheduling, and validation of business rules using Test-Driven Development (TDD) principles.
+This target uses a `pytest` marker, `scenario`, which is defined in `pyproject.toml` and used as an annotation in any test involving scenarios, which is currently only the appointments feature.
 
+Similarly, there is a marker `qna` for the other question-and-answer capabilities. It runs tests currently for the _emergency_, _prescription_, and _other_ capabilities.
+
+```shell
+make unit-tests-qna
+```
 
 We will discuss the automated tests below, in [Automated Testing: Practical Enhancements](#automated-testing-practical-enhancements).
 
@@ -499,7 +509,7 @@ Try it!
 
 ### An MCP Server for the ChatBot
 
-Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python -m apps.chatbot.mcp_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
+Running the MCP server is very similar. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot. The only difference is the Python module invoked: `uv run python src/apps/chatbot/mcp_server/server.py`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make mcp-server            # Run the MCP server for the ChatBot (Also runs the ChatBot, so don't run both!)
@@ -517,7 +527,7 @@ For more details on running the MCP server, see the [`src/apps/chatbot/mcp_serve
 
 ### An OpenAI-compatible API Server for the ChatBot
 
-An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python -m apps.chatbot.api_server.server`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
+An OpenAI-compatible API server is provided. Running it is very similar to running the MCP server. Since it runs the ChatBot for you, it takes the same arguments as the ChatBot, plus two additional options we will discuss shortly. The only other difference is the Python module invoked: `uv run python src/apps/chatbot/api_server/server.py`. The same `--which-chatbot` argument is used to select the ChatBot implementation.
 
 ```shell
 make api-server            # Run the OpenAI-compatible API server for the ChatBot (Also runs the ChatBot, so don't run both!)
@@ -539,22 +549,33 @@ For more details on running the OpenAI-compatible API server, see the [`src/apps
 
 This user guide is all about solving the problem of continuing to use traditional software development life cycle (SDLC) practices, which rely heavily on deterministic behavior, with applications that use stochastic, generative AI. The ChatBot application applies the principles described in a practical way for a realistic AI project.
 
+A number of practical enhancements have been adopted to better support long-running tests that require lots of inference, which we call &ldquo;AI tests&rdquo;, as well as the more conventional, faster tests that don't use inference.
+
 You can run the unit and integration tests with these make targets
-, but **warning**, they run for a long time since they use inference!
+, but **warning**, those targets that use inference run for a long time!
 
 ```shell
-make unit-tests          # Unit tests, but OMITS the AI tests that require inference.
+make unit-tests          # Unit tests: OMITS the AI tests that require inference.
 make unit-tests-ai       # Just the AI tests that require inference.
+make unit-tests-qna      # Just the AI tests that use the simple Chatbot for questions and answers.
+make unit-tests-scenario # Just the AI tests that use the agent Chatbot for interactive "scenarios".
 make integration-tests   # Integration tests
 ```
 
-The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory, with sub-directories for [unit tests]({{site.gh_edit_repository}}/tree/main/src/tests/unit){:target="tests-dir"}, [integration tests]({{site.gh_edit_repository}}/tree/main/src/tests/integration){:target="tests-dir"}, utilities and other special-purpose directories. Specifically, the generative AI _unit benchmarks_ are driven by four test suites in [`src/tests/unit/apps/chatbot/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="atc"}. Those tests have class names that start with `AITest` and they are annotated with `@pytest.mark.ai`, which we use to distinguish between AI-specific (i.e., using inference) and non-AI tests, because the former are slow and expensive to run. The default behavior for the `Makefile`'s `unit-tests` target, and hence the PR target `before-pr` only run the non-AI tests. You can run the AI tests by making `unit-tests-ai`. We also use marks `@pytest.mark.scenario` and `@pytest.mark.qna` to indicate _scenario_ vs. _QnA_ pair tests.
+{. .note}
+> **NOTE:** The `before-pr` make target performs various quality checks we require before merging PRs, like formatting source with `black`, linting with `ruff` and `pylint`, type checking with `ty`, and making the `unit-tests` target, which means that the AI-related tests are _not_ invoked for the PR process.
+
+The automated tests are found in the [`src/tests`]({{site.gh_edit_repository}}/tree/main/src/tests/){:target="tests-dir"} directory, with sub-directories for [unit tests]({{site.gh_edit_repository}}/tree/main/src/tests/unit){:target="tests-dir"}, [integration tests]({{site.gh_edit_repository}}/tree/main/src/tests/integration){:target="tests-dir"}, utilities and other special-purpose directories. Specifically, the generative AI _unit benchmarks_ are driven by four test suites in [`src/tests/unit/apps/chatbot/`]({{site.gh_edit_repository}}/tree/main/src/tests/unit/apps/chatbot/){:target="atc"}. Those tests have class names that start with `AITest` and they are annotated with `@pytest.mark.ai`, which we use to distinguish between AI-specific (i.e., using inference) and non-AI tests, because the former are slow and expensive to run. The default behavior for the `Makefile`'s `unit-tests` target, and hence the PR target `before-pr` only run the non-AI tests. You can run the AI tests by making `unit-tests-ai`.
 
 Most of the implementation logic for each of these AI ChatBot tests is in two parent classes, `ChatBotTestBase` and `ChatBotTestWithInference`, in [`src/tests.utils.apps.chatbot.chatbot_test_base.py`]({{site.gh_edit_repository}}/tree/main/src/tests.utils.apps.chatbot.chatbot_test_base.py){:target="testbase"}. This is the code that implements the [_unit benchmarks_]({{site.baseurl}}/testing-strategies/unit-benchmarks) for this project.
 
 There are two fundamental kinds of tests, _simple_ Q&A (question and answer) pairs (with additional metadata), and _scenario_ tests for more involved agent-based interactions. They reflect the two implementations of the ChatBot, the original [ChatBotSimple](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_simple.py){:target="_blank"} and the newer, more sophisticated [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"}.
 
-Let's start with the Q&A tests. The data files for these tests were adapted from the example tool outputs found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"}. However, _we made a lot of changes reflecting what we learned while iterating on the development of the ChatBot application!_ 
+We use `pytest` marks `@pytest.mark.scenario` and `@pytest.mark.qna` to indicate _scenario_ vs. _QnA_ pair tests. They have corresponding `make` targets `unit-tests-scenario` and `unit-tests-qna`, respectively. (The marks are defined in `pyproject.toml`.)
+
+### Q&A (or QnA) Tests
+
+Let's start with the Q&A tests. The data files for these tests were adapted from the example tool outputs found in [`src/data/examples/ollama_chat/gpt-oss_20b/data`]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat/gpt-oss_20b/data/){:target="examples"} for early runs with `gpt-oss:20b`. However, _we made a lot of changes reflecting what we learned while iterating on the development of the ChatBot application!_
 
 These Q&A test data files in JSONL format are in the [`src/tests/data`]({{site.gh_edit_repository}}/tree/main/src/tests/data/){:target="test-data"} directory. There are four files (at the time of this writing) for user queries that we classify into four, broad use cases:
 
@@ -623,6 +644,8 @@ The `label` returned by the ChatBot should correspond to the use case file name!
 
 You can see from the query that it's reasonable to interpret the query as an appointment or prescription query. It is really both, but we &ldquo;force&rdquo; the ChatBot to choose and return only one `label`.
 
+### Scenario Tests
+
 The _scenario_ tests are handled similarly, but have more complicated data, structured as JSON arrays in JSON files, as opposed to JSONL. At this time, only the appointments use case has an agent-based implementation and corresponding test set.
 
 <a id="table-8"></a>
@@ -634,6 +657,8 @@ The _scenario_ tests are handled similarly, but have more complicated data, stru
 **Table 8:** Use case test data files for _scenario_ (agent-based tests.
 
 Note that these tests require the [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"} implementation, while the Q&A tests can be executed by both the original [ChatBotSimple](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_simple.py){:target="_blank"} and [ChatBotAgent](https://github.com/The-AI-Alliance/ai-application-testing/blob/main/src/apps/chatbot/chatbot_agent.py){:target="_blank"} implementations.
+
+The appointments tests (and any subsequently-implemented scenario tests) are executed using `make unit-tests-scenario`.
 
 #### Dealing with Slow and Expensive Inference
 

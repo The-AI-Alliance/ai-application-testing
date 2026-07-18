@@ -28,11 +28,11 @@ This will install:
 ### Using Python Module
 
 ```bash
-cd src && uv run python -m apps.chatbot.api_server.server \
-  --model ollama_chat/gpt-oss:20b \
+uv run python src/apps/chatbot/api_server/server.py \
+  --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
-  --template-dir apps/chatbot/prompts/templates \
-  --data-dir data \
+  --template-dir src/apps/chatbot/prompts/templates \
+  --data-dir output/ollama_chat/gemma4_12b/data \
   --confidence-threshold 0.9 \
   --host 0.0.0.0 \
   --port 8000
@@ -105,7 +105,7 @@ An example response:
   "object": "list",
   "data": [
     {
-      "id": "ollama_chat/gpt-oss:20b",
+      "id": "ollama_chat/gemma4:12b",
       "object": "model",
       "created": 1234567890,
       "owned_by": "patient-chatbot"
@@ -119,7 +119,7 @@ An example response:
 
 ```shell
 curl --request POST --header "Content-Type: application/json" --data '{
-    "model": "ollama_chat/gpt-oss:20b",
+    "model": "ollama_chat/gemma4:12b",
     "messages": [
       {
         "role": "user",
@@ -142,7 +142,7 @@ A non-streaming response:
   "id": "chatcmpl-4e73d300326e4f0b9ac3a451",
   "object": "chat.completion",
   "created": 1772988862,
-  "model": "ollama_chat/gpt-oss:20b",
+  "model": "ollama_chat/gemma4:12b",
   "choices": [
     {
       "index": 0,
@@ -164,15 +164,15 @@ A non-streaming response:
 A streaming response, when `stream: true`, in which case the server returns _Server-Sent Events_ (SSE):
 
 ```
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gpt-oss:20b","choices":[{"index":0,"delta":{"content":"Sure, "},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gemma4:12b","choices":[{"index":0,"delta":{"content":"Sure, "},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gpt-oss:20b","choices":[{"index":0,"delta":{"content":"I "},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gemma4:12b","choices":[{"index":0,"delta":{"content":"I "},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gpt-oss:20b","choices":[{"index":0,"delta":{"content":"have "},"finish_reason":null}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gemma4:12b","choices":[{"index":0,"delta":{"content":"have "},"finish_reason":null}]}
 
 ...
 
-data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gpt-oss:20b","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","created":1234567890,"model":"ollama_chat/gemma4:12b","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
 
 data: [DONE]
 ```
@@ -190,7 +190,7 @@ client = OpenAI(
 
 # Non-streaming
 response = client.chat.completions.create(
-    model="ollama_chat/gpt-oss:20b",
+    model="ollama_chat/gemma4:12b",
     messages=[
         {"role": "user", "content": "I need a refill for my blood pressure medication"}
     ]
@@ -199,7 +199,7 @@ print(response.choices[0].message.content)
 
 # Streaming
 stream = client.chat.completions.create(
-    model="ollama_chat/gpt-oss:20b",
+    model="ollama_chat/gemma4:12b",
     messages=[
         {"role": "user", "content": "I need a refill for my blood pressure medication"}
     ],
@@ -219,7 +219,7 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(
     base_url="http://localhost:8000/v1",
     api_key="not-needed",
-    model="ollama_chat/gpt-oss:20b"
+    model="ollama_chat/gemma4:12b"
 )
 
 response = llm.invoke("I need a refill for my blood pressure medication")
@@ -233,7 +233,7 @@ Run the integration tests:
 ```bash
 make integration-tests # run all the integration tests
 # or
-cd src && uv run python -m pytest tests/integration/apps/chatbot/api_server/test_api_server.py -v
+uv run python -m pytest src/tests/integration/apps/chatbot/api_server/test_api_server.py -v
 ```
 
 ## Interactive API Documentation
@@ -287,7 +287,7 @@ The API server is built on top of the existing ChatBot implementation:
 
 While this server implements the OpenAI API format, there are some differences:
 
-1. **Model Names**: Uses LiteLLM model naming (e.g., `ollama_chat/gpt-oss:20b`)
+1. **Model Names**: Uses LiteLLM model naming (e.g., `ollama_chat/gemma4:12b`)
 2. **Response Content**: Responses are tailored for healthcare chatbot use cases
 3. **Confidence Thresholds**: Applies confidence-based response filtering
 4. **Session Management**: Maintains conversation history internally

@@ -189,18 +189,18 @@ After some setup, the following command is executed:
 
 ```shell
 cd src && time uv run tools/unit-benchmark-data-synthesis.py \
-  --model ollama_chat/gpt-oss:20b \
+  --model ollama_chat/gemma4:12b \
   --service-url http://localhost:11434 \
   --template-dir tools/prompts/templates \
-  --data-dir .../output/ollama_chat/gpt-oss_20b/data \
-  --log-file .../output/ollama_chat/gpt-oss_20b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
+  --data-dir .../output/ollama_chat/gemma4_12b/data \
+  --log-file .../output/ollama_chat/gemma4_12b/logs/TIMESTAMP/unit-benchmark-data-synthesis.log
 ```
 
 Where `TIMESTAMP` is of the form `YYYYMMDD-HHMMSS` and the values passed for `--data-dir` and `--log-file` are absolute paths.
 
 Recall that a different model can be specified, i.e., `make MODEL=ollama_chat/llama3.2:3B`run-unit-benchmark-data-synthesis`. (See the project README and also in [Running the TDD Tool]({{site.baseurl}}/arch-design/tdd/#running-the-tdd-tool).) 
 
-Note the arguments for where log output is captured (`--log-file`) and the data Q&A pairs files are written (`--data-dir`). Specifically, the following data files are written, examples of which can be found [in the repository]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B`):
+Note the arguments for where log output is captured (`--log-file`) and the data Q&A pairs files are written (`--data-dir`). Specifically, the following data files are written, examples of which can be found [in the repository]({{site.gh_edit_repository}}/tree/main/src/data/examples/ollama_chat){:target="_blank"} (for both `gpt-oss:20b` and `llama3.2:3B` - models we used before the recent adoption of `gemma4`):
 
 | Synthetic Data File | `gpt-oss:20b` | `llama3.2:3B` |
 | :---- | :---- | :---- |

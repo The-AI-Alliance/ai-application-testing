@@ -37,11 +37,11 @@ You can run the MCP server as a standalone process. For example:
 
 ```bash
 cd src
-uv run python -m apps.chatbot.mcp_server.server \
-  --model "ollama_chat/gpt-oss:20b" \
+uv run python src/apps/chatbot/mcp_server/server.py \
+  --model "ollama_chat/gemma4:12b" \
   --service-url "http://localhost:11434" \
   --template-dir "apps/chatbot/prompts/templates" \
-  --data-dir "data" \
+  --data-dir output/ollama_chat/gemma4_12b/data \
   --confidence-threshold 0.9
 ```
 
@@ -62,7 +62,7 @@ To use this MCP server with MCP clients, add it to the appropriate MCP configura
         "python",
         "-m",
         "apps.chatbot.mcp_server.server",
-        "--model", "ollama_chat/gpt-oss:20b",
+        "--model", "ollama_chat/gemma4:12b",
         "--service-url", "http://localhost:11434",
         "--template-dir", "apps/chatbot/prompts/templates",
         "--data-dir", "data",
@@ -136,7 +136,7 @@ The MCP server uses the same `ChatBot` class from the main application (`apps.ch
 
 All command-line options from the main ChatBot application are supported:
 
-- `--model` / `-m`: LLM model to use (default: "ollama_chat/gpt-oss:20b")
+- `--model` / `-m`: LLM model to use (default: "ollama_chat/gemma4:12b")
 - `--service-url` / `-s`: Inference service URL (default: "http://localhost:11434")
 - `--template-dir` / `-t`: Prompt template directory (default: "src/apps/chatbot/prompts/templates")
 - `--data-dir` / `-d`: Directory with some data (default: "src/data")
@@ -186,7 +186,7 @@ Run the integration tests:
 ```bash
 make integration-tests # run all the integration tests
 # or
-cd src && uv run python -m pytest tests/integration/apps/chatbot/mcp_server/test_mcp_server.py -v
+uv run python -m pytest src/tests/integration/apps/chatbot/mcp_server/test_mcp_server.py -v
 ```
 
 
