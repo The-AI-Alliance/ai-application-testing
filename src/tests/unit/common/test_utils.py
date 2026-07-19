@@ -6,12 +6,14 @@ https://hypothesis.readthedocs.io/en/latest/
 
 import re
 import shutil
+from datetime import datetime, timedelta
 from pathlib import Path
 from hypothesis import given, strategies as st
 from typing import Any, Callable
 
 from common.utils import (
     all_use_cases,
+    datetimes_approx_equal,
     ensure_dirs_exist,
     make_parent_dirs,
     model_dir_name,
@@ -44,6 +46,28 @@ def test_expected_fail():
     except AssertionError:
         pass
 
+@given(st.datetimes(), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
+def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_approx_equal(dt, ns):
+    for n in ns:
+        delta = timedelta(seconds=n)
+        dt2 = dt + delta
+        eql, msg = datetimes_approx_equal(dt, dt2, delta)
+        assert eql
+        assert msg == ""
+
+@given(st.datetimes(), st.lists(st.integers(min_value=1, max_value=4), min_size=0, max_size=3))
+def test_datetimes_approx_equal_returns_false_and_non_empty_string_if_not_datetimes_approx_equal(dt, ns):
+    for n in ns:
+        delta = timedelta(seconds=n)
+        delta1 = timedelta(seconds=n+1)
+        dtp = dt + delta1
+        eqlp, msgp = datetimes_approx_equal(dt, dtp, delta)
+        assert not eqlp
+        assert msgp != ""
+        dtm = dt - delta1
+        eqlm, msgm = datetimes_approx_equal(dt, dtm, delta)
+        assert not eqlm
+        assert msgm != ""
 
 use_cases = all_use_cases()
 use_cases_names = list(use_cases.keys())

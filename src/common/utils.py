@@ -4,10 +4,10 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from importlib import metadata
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Mapping, Tuple
 
 from .collections import get_chain
 
@@ -43,6 +43,20 @@ class ExpectedFail():
             assert False, f"Exception of type {type(unexpected_err).__name__} (\"{unexpected_err}\") received. Expected {self.expected_type.__name__}."
         else:
             assert False, f"No exception occurred. Expected exception of type {self.expected_type.__name__}."
+
+def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> Tuple[bool, str]:
+    """
+    Are the input date equal within the specified timedelta, delta?
+    """
+    # If delta is negative, convert it to positive so the logic below works!
+    delta_neg = -delta
+    if delta_neg > delta:
+        delta = delta_neg
+    close = datetime1 == datetime2 or ( datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2 )
+    msg = ""
+    if not close:
+        msg = f"{datetime1} == {datetime2} NOT within +- {delta}"
+    return close, msg
 
 def setup(
     tool: str,

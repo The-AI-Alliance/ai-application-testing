@@ -15,7 +15,6 @@ from common.collections import (
     mult,
 )
 
-
 class TestCollections(unittest.TestCase):
     """
     Test the collections utilities.
