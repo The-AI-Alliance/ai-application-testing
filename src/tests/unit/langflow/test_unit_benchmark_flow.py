@@ -1,7 +1,7 @@
 """Unit tests for the benchmark flow orchestrator."""
 
-import unittest
 import logging
+import pytest
 import tempfile
 import os
 from pathlib import Path
@@ -15,10 +15,10 @@ from tools.langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
 # TODO: Move this to an integration test and replace the mocks with real calls to Langflow.
 
 
-class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
+class TestUnitBenchmarkFlowOrchestrator():
     """Test cases for UnitBenchmarkFlowOrchestrator."""
 
-    def setUp(self):
+    def init(self):
         """Set up test fixtures."""
         self.temp_dir = tempfile.mkdtemp()
         self.model_name = "test_model"
@@ -46,23 +46,18 @@ class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
             logger=self.logger,
         )
 
-    def tearDown(self):
-        """Clean up test fixtures."""
-        import shutil
-
-        if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)
-
     def test_initialization(self):
         """Test orchestrator initialization."""
-        self.assertEqual(self.orchestrator.model_name, self.model_name)
-        self.assertEqual(self.orchestrator.service_url, self.service_url)
-        self.assertEqual(self.orchestrator.template_dir, self.template_dir)
-        self.assertEqual(self.orchestrator.data_dir, self.data_dir)
-        self.assertIsNone(self.orchestrator.synthesis_results)
-        self.assertIsNone(self.orchestrator.validation_results)
+        self.init()
+        assert self.orchestrator.model_name == self.model_name
+        assert self.orchestrator.service_url == self.service_url
+        assert self.orchestrator.template_dir == self.template_dir
+        assert self.orchestrator.data_dir == self.data_dir
+        assert not self.orchestrator.synthesis_results
+        assert not self.orchestrator.validation_results
 
     # TODO eliminate the mocks and make real test doubles.
+    # Also convert the unittest calls (e.g., assertEqual) to pytest equivalents.
     # @patch('tools.langflow.unit_benchmark_flow.BenchMarkDataSynthesizer')
     # def test_run_synthesis_all_cases(self, mock_synthesizer_class):
     #     """Test running synthesis for all use cases."""
@@ -198,6 +193,3 @@ class TestUnitBenchmarkFlowOrchestrator(unittest.TestCase):
     #         self.assertEqual(result['status'], 'error')
     #         self.assertIn('Synthesis failed', result['message'])
 
-
-if __name__ == "__main__":
-    unittest.main()

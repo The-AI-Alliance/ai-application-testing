@@ -4,8 +4,8 @@ https://hypothesis.readthedocs.io/en/latest/
 """
 
 import os
+import pytest
 import tempfile
-import unittest
 from datetime import datetime
 from typing import Any
 
@@ -14,38 +14,23 @@ from hypothesis import given, strategies as st
 from common.file_persistent_storage import FilePersistentStorage
 
 
-class TestFilePersistentStorage(unittest.TestCase):  # pylint: disable=unused-variable
-    """
-    Test the FilePersistentStorage utility.
-    """
+class TestFilePersistentStorageUtil():  # pylint: disable=unused-variable
 
-    def _make_tool(
-        self, file_name: str = "", clear: bool = True
-    ) -> FilePersistentStorage:
-        if not file_name:
-            file_name = self.temp_file.name
-        self.tool = FilePersistentStorage(file_name)
-        if clear:
-            self.tool.clear()
-        return self.tool
-
-    def setUp(self):
+    def init(self):
         """Set up test fixtures"""
         # Create a temporary file for testing
         self.temp_file = tempfile.NamedTemporaryFile(
-            mode="w", delete=False, suffix=".jsonl"
+            mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
         )
         self.temp_file.close()
-        self._make_tool()
-
-    def tearDown(self):
-        """Clean up test fixtures"""
-        if os.path.exists(self.temp_file.name):
-            os.unlink(self.temp_file.name)
+        self.tool = FilePersistentStorage(self.temp_file.name)
+        self.tool.clear()
+        return self.tool
 
     def test_initialization_creates_file(self):
         """Check that initialization creates the JSONL file if it doesn't exist"""
-        self.assertTrue(os.path.exists(self.temp_file.name))
+        self.init()
+        assert os.path.exists(self.temp_file.name)
 
     @given(
         st.lists(
@@ -68,15 +53,15 @@ class TestFilePersistentStorage(unittest.TestCase):  # pylint: disable=unused-va
         """
         Check that saving, then reloading dictionaries works as expected.
         """
-        self.tool.clear()
+        self.init()
         for d in lst:
             d["timestamp"] = dt
         count = self.tool.save(lst)
-        self.assertEqual(len(lst), count)
+        assert len(lst) == count
 
         lst2, errors = self.tool.load()
-        self.assertEqual(lst, lst2, f"list: {lst}, list2: {lst2}")
-        self.assertEqual(0, len(errors), str(errors))
+        assert lst == lst2, f"list: {lst}, list2: {lst2}"
+        assert 0 == len(errors), str(errors)
 
     @given(
         st.lists(
@@ -98,16 +83,12 @@ class TestFilePersistentStorage(unittest.TestCase):  # pylint: disable=unused-va
         """
         Check that saving, then reloading dictionaries works as expected.
         """
-        self.tool.clear()
+        self.init()
         self.tool.save(lst)
         count = self.tool.save(lst)
-        self.assertEqual(len(lst), count)
+        assert len(lst) == count
 
         self.tool.clear()
         lst2, errors = self.tool.load()
-        self.assertEqual([], lst2, f"list2: {lst2}")
-        self.assertEqual(0, len(errors), str(errors))
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert [] == lst2, f"list2: {lst2}"
+        assert 0 == len(errors), str(errors)
