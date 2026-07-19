@@ -97,9 +97,6 @@ class AppointmentManager(ResourceManager):
             - logger (logging.Logger): Optional logger instance
         """
         super().__init__(appointments_file, start_empty, logger)
-        # Create an alias for "self.resources" that is more appropriate
-        # for appointments...
-        self.appointments = self.resources
 
     def _ignore(self, resource: MutableMapping[str, Any]) -> bool:
         """
@@ -269,12 +266,12 @@ class AppointmentManager(ResourceManager):
         Returns:
             True with success message or False with a failure message with reasons for the failure.
         """
-        if appointment_id not in self.appointments:
+        if appointment_id not in self.get_resources():
             error_msg = f"There is no appointment with ID {appointment_id}."
             self.logger.error(error_msg)
             return False, error_msg
 
-        appointment = self.appointments[appointment_id]
+        appointment = self.get_resources()[appointment_id]
         appointment["status"] = "cancelled"
         appointment["cancelled_at"] = datetime.now()
 
@@ -282,7 +279,7 @@ class AppointmentManager(ResourceManager):
         self._save_resources([appointment])
 
         # Remove from active appointments
-        del self.appointments[appointment_id]
+        del self.get_resources()[appointment_id]
 
         success_msg = f"Appointment {appointment_id} is now cancelled."
         self.logger.info(success_msg)
@@ -301,7 +298,7 @@ class AppointmentManager(ResourceManager):
         Returns:
             True with a success message or False a failure message with reasons for the failure.
         """
-        if appointment_id not in self.appointments:
+        if appointment_id not in self.get_resources():
             error_msg = f"No appointment with ID {appointment_id} was found."
             self.logger.error(error_msg)
             return False, error_msg
@@ -319,7 +316,7 @@ class AppointmentManager(ResourceManager):
             self.logger.error(error_msg)
             return False, error_msg
 
-        appointment = self.appointments[appointment_id]
+        appointment = self.get_resources()[appointment_id]
         old_time = appointment["appointment_date_time"]
         appointment["appointment_date_time"] = new_date_time
         appointment["changed_at"] = datetime.now()
@@ -435,7 +432,7 @@ class AppointmentManager(ResourceManager):
                 return found[0]
             case n:
                 raise ValueError(
-                    f"Logic error. {n} > 1 appointments found for {patient_name} at {appointment_date_time}. Should be 0 or 1. appointments = {self.appointments}"
+                    f"Logic error. {n} > 1 appointments found for {patient_name} at {appointment_date_time}. Should be 0 or 1. appointments = {self.get_resources()}"
                 )
 
     def __str__(self) -> str:

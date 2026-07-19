@@ -19,7 +19,10 @@ class FilePersistentStorageError(Exception):
 
 class FilePersistentStorage:
     def __init__(
-        self, storage_path: Path | str, logger: Optional[logging.Logger] = None
+        self,
+        storage_path: Path | str,
+        logger: Optional[logging.Logger] = None,
+        remove_old: bool = False
     ):
         """
         Initialize the appointment tool.
@@ -36,7 +39,7 @@ class FilePersistentStorage:
             self.logger.setLevel(logging.INFO)
 
         # Create file if it doesn't exist
-        self.__create_file(remove_old=False)
+        self.__create_file(remove_old=remove_old)
 
     def __create_file(self, remove_old: bool = False):
         """

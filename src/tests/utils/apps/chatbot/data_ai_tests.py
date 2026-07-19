@@ -287,9 +287,9 @@ class AppointmentScenarioTest(ScenarioTest):
         self.am: AppointmentManager = self.chatbot.appointment_manager
         # For some inexplicable reason, the "ty" type checker doesn't believe that
         # MutableMapping has a copy() method, so we do it "manually".
-        # self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = self.am.appointments.copy()
+        # self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = self.am.get_appointments().copy()
         self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
-        for key, value in self.am.appointments.items():
+        for key, value in self.am.get_appointments().items():
             self.start_appointments[key] = value
         self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
 
@@ -297,9 +297,8 @@ class AppointmentScenarioTest(ScenarioTest):
         """
         Custom handling after the test has finished.
         """
-        # self.end_appointments = self.am.appointments.copy()
         self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
-        for key, value in self.am.appointments.items():
+        for key, value in self.am.get_appointments().items():
             self.end_appointments[key] = value
 
     def _custom_check_conditions(self, result: dict[str, Any]) -> None:

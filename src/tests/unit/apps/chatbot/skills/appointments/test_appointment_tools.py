@@ -42,7 +42,7 @@ from tests.common.hypothesis.appointments import (
 )
 
 
-class TestAppointmentToolsUtil():
+class AppointmentToolsTestUtil():
     """
     Supports test cases for the _skills_ tools in `appointment_tools.py`.
     A few notes about unit tests for these tools. Although the tool definitions look
@@ -69,8 +69,7 @@ class TestAppointmentToolsUtil():
             mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
         )
         self.temp_file.close()
-        self.tool = self.make_manager()
-        print(f"id, tool = {id(self.tool)}, {self.tool}")
+        self.tool = self.make_manager(make_new=True)
 
     def make_manager(self, make_new=True) -> AppointmentManager:
         file_path = Path(self.temp_file.name)
@@ -83,7 +82,7 @@ class TestAppointmentToolsUtil():
 
     def clear(self):
         self.tool.clear()
-        assert {} == self.tool.appointments
+        assert {} == self.tool.get_resources()
 
     def check_file(self, file: Path | str = ""):
         if not file:
@@ -149,7 +148,6 @@ class TestAppointmentToolsUtil():
     def successfully_add_valid_appointment(
         self, appointment_dict: dict[str, Any], all: list[dict[str, Any]] = []
     ) -> dict[str, Any]:
-        self.clear()
         before_count = get_appointments_count.run({})
         patient_name = appointment_dict["patient_name"]
         appointment_date_time = appointment_dict["appointment_date_time"].isoformat()
@@ -163,7 +161,7 @@ class TestAppointmentToolsUtil():
             },
         )
         assert "" != id, \
-            f"{msg}, dict: {appointment_dict}, all: {all}, appointments: {get_appointments.run({})}"
+            f"{msg}, dict: {appointment_dict},\nall: {all},\nexisting appointments: {get_appointments.run({})}"
         assert "" != msg, "Returned message is empty!"
         after_count = get_appointments_count.run({})
         assert before_count + 1 == after_count
@@ -198,24 +196,22 @@ class TestAppointmentToolsUtil():
 
     def check_appointments_lists(
         self,
-        expected_appointments: Sequence[Mapping[str, Any]],
-        actual_appointments: Sequence[Mapping[str, Any]],
+        expected_appointments: Mapping[str, Any],
+        actual_appointments: Mapping[str, Any],
     ):
         """
         Test that two lists of appointments are identical.
         """
         assert len(expected_appointments) == len(actual_appointments)
-        for i in range(len(expected_appointments)):
-            ea = expected_appointments[i]
-            aa = actual_appointments[i]
+        for key in expected_appointments:
+            ea = expected_appointments[key]
+            aa = actual_appointments[key]
             assert ea["id"] == aa["id"]
             assert ea["appointment_date_time"] == aa["appointment_date_time"]
             assert ea["patient_name"] == aa["patient_name"]
             assert ea["reason"] == aa["reason"]
 
 class TestAppointmentTools():
-    testutil = TestAppointmentToolsUtil()
-
     @given(appointment_dicts())
     def test_create_appointment_succeeds_if_datetime_in_the_future_on_the_hour_and_slot_is_open(self,
         appointment_dict: dict[str, Any]
@@ -224,8 +220,8 @@ class TestAppointmentTools():
         Test successful creation of an appointment with a valid time, assuming
         no other appointments exist.
         """
-        TestAppointmentTools.testutil.clear()
-        TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        test_util.successfully_add_valid_appointment(appointment_dict)
 
     @given(appointment_dicts(datetime_strategy=past_work_datetimes))
     def test_create_appointment_fails_if_datetime_in_the_past(self,
@@ -234,8 +230,8 @@ class TestAppointmentTools():
         """
         Test failure to create an appointment with a past datetime.
         """
-        TestAppointmentTools.testutil.clear()
-        TestAppointmentTools.testutil.fail_to_add_invalid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        test_util.fail_to_add_invalid_appointment(appointment_dict)
 
     @given(appointment_dicts(datetime_strategy=appointment_future_non_work_datetimes))
     def test_create_appointment_fails_if_datetime_in_the_future_but_not_a_work_hour(self,
@@ -244,8 +240,8 @@ class TestAppointmentTools():
         """
         Test failure to create an appointment with a future, non-work datetime.
         """
-        TestAppointmentTools.testutil.clear()
-        TestAppointmentTools.testutil.fail_to_add_invalid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        test_util.fail_to_add_invalid_appointment(appointment_dict)
 
     @given(
         appointment_dicts(
@@ -260,33 +256,33 @@ class TestAppointmentTools():
         """
         Test failure to create an appointment with a future, off-hour work time.
         """
-        TestAppointmentTools.testutil.clear()
-        TestAppointmentTools.testutil.fail_to_add_invalid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        test_util.fail_to_add_invalid_appointment(appointment_dict)
 
     @given(appointment_dicts())
     def test_create_appointment_duplicate_time_fails(self,
         appointment_dict: dict[str, Any]
     ):
         """Test that creating two appointments at the same time fails"""
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
 
         # First appointment should succeed
-        TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util.successfully_add_valid_appointment(appointment_dict)
 
         # Second appointment at same time should fail
-        TestAppointmentTools.testutil.fail_to_add_invalid_appointment(appointment_dict)
+        test_util.fail_to_add_invalid_appointment(appointment_dict)
 
     @given(appointment_dicts())
     def test_cancel_appointment_succeeds_if_it_exists(self,
         appointment_dict: dict[str, Any]
     ):
         """Test canceling an existing appointment"""
-        TestAppointmentTools.testutil.clear()
-        appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment = test_util.successfully_add_valid_appointment(appointment_dict)
         id = appointment["id"]
 
         before_count = get_appointments_count.run({})
-        success, msg = TestAppointmentTools.testutil.capture_output(cancel_appointment, {"id": id})
+        success, msg = test_util.capture_output(cancel_appointment, {"id": id})
         after_count = get_appointments_count.run({})
         assert success, msg
         assert "" != msg
@@ -297,9 +293,9 @@ class TestAppointmentTools():
     @given(st.uuids())
     def test_cancel_nonexistent_appointment_fails(self,uuid):
         """Test that canceling a non-existent appointment fails"""
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
         before_count = get_appointments_count.run({})
-        success, msg = TestAppointmentTools.testutil.capture_output(cancel_appointment, {"id": str(uuid)})
+        success, msg = test_util.capture_output(cancel_appointment, {"id": str(uuid)})
         assert not success, msg
         assert "" != msg
         after_count = get_appointments_count.run({})
@@ -314,8 +310,8 @@ class TestAppointmentTools():
         There is a slight chance the randomly generated new_date_time
         will equal the existing datetime, but we allow this.
         """
-        TestAppointmentTools.testutil.clear()
-        appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment = test_util.successfully_add_valid_appointment(appointment_dict)
         if appointment["appointment_date_time"] == new_date_time:
             match new_date_time.hour:
                 case 16:
@@ -324,12 +320,12 @@ class TestAppointmentTools():
                     new_date_time = new_date_time + timedelta(hours=1)
 
         id = appointment["id"]
-        success, msg = TestAppointmentTools.testutil.capture_output(
+        success, msg = test_util.capture_output(
             change_appointment, {"id": id, "new_date_time": new_date_time.isoformat()}
         )
         assert success, msg
         updated = get_appointment_by_id.run({"id": id})
-        TestAppointmentTools.testutil.result_expected(
+        test_util.result_expected(
             appointment_dict,
             updated,
             appointment_date_time=new_date_time,
@@ -341,24 +337,24 @@ class TestAppointmentTools():
         appointment_dicts: list[dict[str, Any]]
     ):
         """Test that appointments persist across tool instances"""
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
         ids = []
         for d in appointment_dicts:
-            appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
+            appointment = test_util.successfully_add_valid_appointment(d, all=appointment_dicts)
             ids.append(appointment["id"])
 
         appointments = get_appointments.run({})
-        TestAppointmentTools.testutil.results_list_expected(appointment_dicts, appointments)
+        test_util.results_list_expected(appointment_dicts, appointments)
 
     @given(appointment_dicts_lists().filter(lambda lst: len(lst) > 0))
     def test_get_appointments_with_patient_name_filter_returns_appointments_for_that_patient(self,
         appointment_dicts: list[dict[str, Any]]
     ):
         """Test that appointments persist across tool instances"""
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
         ids = []
         for d in appointment_dicts:
-            appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
+            appointment = test_util.successfully_add_valid_appointment(d, all=appointment_dicts)
             ids.append(appointment["id"])
 
         patient_name = appointment_dicts[0]["patient_name"]
@@ -368,17 +364,17 @@ class TestAppointmentTools():
             )
         )
         appointments = get_appointments.run({"patient_name": patient_name})
-        TestAppointmentTools.testutil.results_list_expected(expected_list, appointments)
+        test_util.results_list_expected(expected_list, appointments)
 
     @given(appointment_dicts_lists().filter(lambda lst: len(lst) > 0))
     def test_get_appointments_with_date_time_lower_bound_returns_appointments_later_than_that_date_time(self,
         appointment_dicts: list[dict[str, Any]]
     ):
         """Test that appointments persist across tool instances"""
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
         ids = []
         for d in appointment_dicts:
-            appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
+            appointment = test_util.successfully_add_valid_appointment(d, all=appointment_dicts)
             ids.append(appointment["id"])
 
         # Pick an entry in the middle:
@@ -391,16 +387,16 @@ class TestAppointmentTools():
             )
         )
         appointments = get_appointments.run({"after_date_time": date_time.isoformat()})
-        TestAppointmentTools.testutil.results_list_expected(expected_list, appointments)
+        test_util.results_list_expected(expected_list, appointments)
 
     @given(appointment_dicts_lists())
     def test_get_appointments_count_returns_the_number_of_appointments(self,
         appointment_dicts: list[dict[str, Any]]
     ):
-        TestAppointmentTools.testutil.clear()
+        test_util = AppointmentToolsTestUtil()
         ids = []
         for d in appointment_dicts:
-            appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
+            appointment = test_util.successfully_add_valid_appointment(d, all=appointment_dicts)
             ids.append(appointment["id"])
         actual_count = get_appointments_count.run({})
         assert len(appointment_dicts) == actual_count
@@ -409,17 +405,17 @@ class TestAppointmentTools():
     def test_get_appointment_by_id_returns_nonempty_dict_if_it_exists(self,
         appointment_dict: dict[str, Any]
     ):
-        TestAppointmentTools.testutil.clear()
-        appointment2 = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment2 = test_util.successfully_add_valid_appointment(appointment_dict)
         appointment = get_appointment_by_id.run({"id": appointment2["id"]})
-        TestAppointmentTools.testutil.result_expected(appointment_dict, appointment)
+        test_util.result_expected(appointment_dict, appointment)
 
     @given(appointment_dicts())
     def test_get_appointment_by_id_returns_empty_dict_if_key_does_not_exist(self,
         appointment_dict: dict[str, Any]
     ):
-        TestAppointmentTools.testutil.clear()
-        appointment2 = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment2 = test_util.successfully_add_valid_appointment(appointment_dict)
         appointment = get_appointment_by_id.run({"id": appointment2["id"] + "bad"})
         assert {} == appointment
 
@@ -427,8 +423,8 @@ class TestAppointmentTools():
     def test_get_appointment_id_for_name_and_date_time_returns_nonempty_id_if_match_exists(self,
         appointment_dict: dict[str, Any]
     ):
-        TestAppointmentTools.testutil.clear()
-        appointment2 = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment2 = test_util.successfully_add_valid_appointment(appointment_dict)
         id = get_appointment_id_for_name_and_date_time.run(
             {
                 "patient_name": appointment_dict["patient_name"],
@@ -439,12 +435,12 @@ class TestAppointmentTools():
         )
         assert appointment2["id"] == id
 
-    @given(appointment_dicts_lists())
+    @given(appointment_dicts())
     def test_get_appointment_id_for_name_and_date_time_returns_empty_id_if_match_does_not_exist(self,
         appointment_dict: dict[str, Any]
     ):
-        TestAppointmentTools.testutil.clear()
-        appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment = test_util.successfully_add_valid_appointment(appointment_dict)
         name = appointment["patient_name"]
         dt = appointment["appointment_date_time"]
 
@@ -464,12 +460,12 @@ class TestAppointmentTools():
         appointment_dict: dict[str, Any]
     ):
         """Test that get_appointment returns existing appointments."""
-        TestAppointmentTools.testutil.tool.clear()
-        appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment = test_util.successfully_add_valid_appointment(appointment_dict)
         expected_id = appointment["id"]
         name = appointment["patient_name"]
         dt = appointment["appointment_date_time"]
-        id = TestAppointmentTools.testutil.tool.get_appointment_id_for_name_and_date_time(name, dt)
+        id = test_util.tool.get_appointment_id_for_name_and_date_time(name, dt)
         assert expected_id == id
 
     @given(appointment_dicts())
@@ -477,20 +473,18 @@ class TestAppointmentTools():
         appointment_dict: dict[str, Any]
     ):
         """Test that get_appointment returns existing appointments."""
-        TestAppointmentTools.testutil.tool.clear()
-        appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(appointment_dict)
+        test_util = AppointmentToolsTestUtil()
+        appointment = test_util.successfully_add_valid_appointment(appointment_dict)
         name = appointment["patient_name"]
         dt = appointment["appointment_date_time"]
-        id1 = TestAppointmentTools.testutil.tool.get_appointment_id_for_name_and_date_time(name + "bad", dt)
+        id1 = test_util.tool.get_appointment_id_for_name_and_date_time(name + "bad", dt)
         assert "" == id1
-        id2 = TestAppointmentTools.testutil.tool.get_appointment_id_for_name_and_date_time(
+        id2 = test_util.tool.get_appointment_id_for_name_and_date_time(
             name, dt + timedelta(seconds=10)
         )
         assert "" == id2
 
-    def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(self,
-        util
-    ):
+    def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(self):
         paramss = [
                 ["", datetime.now().isoformat()],
                 ["John Doe", ""],
@@ -506,66 +500,75 @@ class TestAppointmentTools():
             except ValueError:
                 pass
 
+    def _add_apmts(self, appointment_dicts: list[dict[str, Any]]) -> tuple[AppointmentToolsTestUtil, list[str]]:
+        test_util = AppointmentToolsTestUtil()
+        assert 0 == len(test_util.tool.get_resources())
+        assert 0 == get_appointments_count.run({})
+        ids = []
+        date_times = [d["appointment_date_time"] for d in appointment_dicts]
+        date_times_set = set(date_times)
+        assert len(date_times) == len(date_times_set)
+        for d in appointment_dicts:
+            appointment = test_util.successfully_add_valid_appointment(d, all=appointment_dicts)
+            ids.append(appointment["id"])
+        assert len(appointment_dicts) == len(test_util.tool.get_resources())
+        return test_util, ids
+
     @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(self,
         appointment_dicts: list[dict[str, Any]]
     ):
         """Test that appointments persist across tool instances"""
-        TestAppointmentTools.testutil.clear()
-        ids = []
-        for d in appointment_dicts:
-            appointment = TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
-            ids.append(appointment["id"])
-        assert len(appointment_dicts) == len(TestAppointmentTools.testutil.tool.appointments)
+        test_util, ids = self._add_apmts(appointment_dicts)
 
         # Create new instance and verify appointments exist.
-        old_tool = TestAppointmentTools.testutil.tool
-        first_appointments = old_tool.get_appointments()
+        old_tool = test_util.tool
+        first_appointments = old_tool.get_resources()
 
         # Create new instance and verify appointments exist.
-        new_tool = TestAppointmentTools.testutil.make_manager()
+        new_tool = test_util.make_manager()
         assert old_tool is not new_tool
-        second_appointments = new_tool.get_appointments()
+        second_appointments = new_tool.get_resources()
 
         # Check that they both have the same list of appointments.
-        TestAppointmentTools.testutil.check_appointments_lists(first_appointments, second_appointments)
+        test_util.check_appointments_lists(first_appointments, second_appointments)
 
     @given(appointment_dicts_lists().filter(lambda lst: len(lst) > 0))
-    def testclear_erases_appointments(
+    def test_clear_erases_appointments(self,
         appointment_dicts: list[dict[str, Any]]
     ):
         """Test that appointments persist across tool instances"""
-        TestAppointmentTools.testutil.clear()
-        apmts = [
-            TestAppointmentTools.testutil.successfully_add_valid_appointment(d, all=appointment_dicts)
-            for d in appointment_dicts
-        ]
-        assert len(apmts) == get_appointments_count.run({})
-        TestAppointmentTools.testutil.clear()
+        test_util, ids = self._add_apmts(appointment_dicts)
+        test_util.clear()
         assert 0 == get_appointments_count.run({})
 
     def test_get_appointment_manager_instantiates_a_manager(self):
-        TestAppointmentTools.testutil.check_file()
+        test_util = AppointmentToolsTestUtil()
+        test_util.check_file()
 
     def test_get_appointment_manager_instantiates_a_new_manager_when_make_new_is_true(self):
-        original_tool = TestAppointmentTools.testutil.tool
+        test_util = AppointmentToolsTestUtil()
+        original_tool = test_util.tool
         new_tool = get_appointment_manager(
-            TestAppointmentTools.testutil.tool.storage.storage_path, logger=TestAppointmentTools.testutil.tool.logger, make_new=True
+            test_util.tool.storage.storage_path, logger=test_util.tool.logger, make_new=True
         )
         assert original_tool is not new_tool
-        TestAppointmentTools.testutil.tool = new_tool # Update the utility!!
+        test_util.tool = new_tool # Update the utility!!
 
     def test_get_appointment_manager_does_not_instantiate_a_new_manager_even_with_diff_arguments(self):
-        original_tool = TestAppointmentTools.testutil.tool
+        test_util = AppointmentToolsTestUtil()
+        original_tool = test_util.tool
         same_tool = get_appointment_manager("toss.jsonl", logger=None)
         assert original_tool is same_tool
 
     def test_get_appointment_manager_does_not_instantiate_a_new_manager_with_no_arguments(self):
-        original_tool = TestAppointmentTools.testutil.tool
+        test_util = AppointmentToolsTestUtil()
+        original_tool = test_util.tool
         same_tool = get_appointment_manager()
         assert original_tool is same_tool
 
     def test_initialization_creates_file(self):
         """Test that initialization creates the appointments file if it doesn't exist"""
-        TestAppointmentTools.testutil.check_file()
+        test_util = AppointmentToolsTestUtil()
+        test_util.check_file()
 

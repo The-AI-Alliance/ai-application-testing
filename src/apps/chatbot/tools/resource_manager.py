@@ -43,10 +43,9 @@ class ResourceManager:
             self.logger = logging.getLogger(self.__class__.__name__)
             self.logger.setLevel(logging.INFO)
 
-        self.storage = FilePersistentStorage(Path(resources_file), logger)
+        self.storage = FilePersistentStorage(Path(resources_file), logger, remove_old=start_empty)
         self.resources: MutableMapping[str, MutableMapping[str, Any]] = {}
         if start_empty:
-            self.storage.clear()
             self.logger.info("Starting 'empty' with no resource records")
         else:
             all_count, loaded_count, errors = self._load_resources()
@@ -62,6 +61,10 @@ class ResourceManager:
         """Remove all resources and clear the persistent records."""
         self.resources.clear()
         self.storage.clear()
+
+    def get_resources(self):
+        """Use this method instead of referencing `self.resources` directly!!"""
+        return self.resources
 
     def _ignore(self, resource: MutableMapping[str, Any]) -> bool:
         """
@@ -99,7 +102,12 @@ class ResourceManager:
             if not self._ignore(resource):
                 id = resource.get("id")
                 if id:
-                    self.resources[id] = resource
+                    if id in self.resources:
+                        error_msg = f"self.resources already has an entry for {id} (self.resources[id]). SKIPPING new one!"
+                        self.logger.error(error_msg)
+                        errors.append(error_msg)
+                    else:
+                        self.resources[id] = resource
                 else:
                     error_msg = f"resource doesn't have an id! resource = {resource}."
                     self.logger.error(error_msg)
