@@ -12,6 +12,7 @@ import sys
 import time
 import uuid
 import json
+from pathlib import Path
 from typing import List, Optional, Dict, Any, AsyncGenerator
 
 from fastapi import FastAPI, HTTPException
@@ -160,9 +161,9 @@ class APIServer:
         self.chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
-            template_dir=self.template_dir,
-            data_dir=self.data_dir,
-            output_dir=self.output_dir,
+            template_dir=Path(self.template_dir),
+            data_dir=Path(self.data_dir),
+            output_dir=Path(self.output_dir),
             confidence_level_threshold=self.confidence_level_threshold,
             response_handler=ChatBotResponseHandler(
                 confidence_level_threshold=self.confidence_level_threshold,

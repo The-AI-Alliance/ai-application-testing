@@ -26,6 +26,24 @@ timestamp_str_fmt = "%Y:%m:%d %H:%M:%S"
 timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S"
 
 
+class ExpectedFail():
+    def __init__(self, expected_type: type[BaseException]):
+        self.expected_type = expected_type
+    def __call__(self, block: Callable[[],Any], verbose: bool = False):
+        unexpected_err = None
+        try:
+            block()
+        except self.expected_type as err:
+            if verbose:
+                print(f"Okay: expected exception type {type(err).__name__} received: {err}.")
+            return
+        except BaseException as err:
+            unexpected_err = err
+        if unexpected_err:
+            assert False, f"Exception of type {type(unexpected_err).__name__} (\"{unexpected_err}\") received. Expected {self.expected_type.__name__}."
+        else:
+            assert False, f"No exception occurred. Expected exception of type {self.expected_type.__name__}."
+
 def setup(
     tool: str,
     description: str,
@@ -228,14 +246,14 @@ def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
         return dirs
 
 
-def ensure_dirs_exist(*dirs):
+def ensure_dirs_exist(*dirs) -> bool:
     missing_dirs = []
     for dir in dirs:
         if not os.path.isdir(dir):
             missing_dirs.append(dir)
     if len(missing_dirs) > 0:
         raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
-
+    return True # most callers will ignore this...
 
 def make_full_prompt(
     prompt: str, system_prompt: Any, session: list[tuple[str, str]] = []

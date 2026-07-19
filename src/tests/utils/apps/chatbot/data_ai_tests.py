@@ -237,7 +237,7 @@ class ScenarioTest(BaseAITest):
             required_information=inputs1.get("required-information", []),
             pre_conditions=inputs1.get("pre-conditions", []),
         )
-        outputs = obj.get("outputs")
+        outputs = obj.get("outputs", {})
         successes = []
         for s in outputs.get("successes", []):
             successes.append(

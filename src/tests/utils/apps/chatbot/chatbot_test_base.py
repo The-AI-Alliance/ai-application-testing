@@ -26,7 +26,7 @@ from apps.chatbot import (
     ChatBotShell,
 )
 from common.collections import dict_pop
-from common.json_yaml import decode_json
+from common.json_yaml import decode_json_dict, decode_json_list
 
 from .data_ai_tests import BaseAITest, QnATest, ScenarioTest
 
@@ -88,13 +88,15 @@ class QnADataLoader(TestDataLoader[QnATest]):
         if not path.exists():
             raise FileNotFoundError(path)
 
+        # TODO: Use extract_jsonl_list isntead of looping through the lines
+        # and calling decode_json_dict??
         tests = []
         with path.open("r") as file:
             for line in file:
                 ls = line.strip()
                 if ls:
                     try:
-                        obj = decode_json(ls)
+                        obj = decode_json_dict(ls)
                         query = dict_pop(obj, "query")
                         labels = dict_pop(obj, "labels")
                         actions = dict_pop(obj, "actions")
@@ -137,11 +139,8 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
         with path.open("r") as file:
             lines = file.readlines()
             try:
-                objs = decode_json("".join(lines))
-                if isinstance(objs, list):
-                    return [kind.from_dict(obj) for obj in objs]
-                else:
-                    return [kind.from_dict(objs)]
+                objs = decode_json_list("".join(lines))
+                return [kind.from_dict(obj) for obj in objs]
             except ValueError as err:
                 raise ValueError(f"Error parsing JSON in file {path}") from err
         if not len(tests):
@@ -460,11 +459,11 @@ class ChatBotTestBase():
         self.model: str = model if model else os.environ["MODEL"] # no default!
         self.service_url: str = service_url if service_url else os.environ.get(
             "INFERENCE_URL", ChatBotTestBase.default_service_url)
-        self.template_dir: str = template_dir if template_dir else Path(os.environ.get(
+        self.template_dir: Path = template_dir if template_dir else Path(os.environ.get(
             "CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_template_dir))
-        self.data_dir: str = data_dir if data_dir else Path(os.environ.get(
+        self.data_dir: Path = data_dir if data_dir else Path(os.environ.get(
             "DATA_DIR", ChatBotTestBase.default_chatbot_data_dir))
-        self.output_dir: str = output_dir if output_dir else Path(os.environ.get(
+        self.output_dir: Path = output_dir if output_dir else Path(os.environ.get(
             "OUTPUT_DIR", ChatBotTestBase.default_output_dir))
         self.data_sample_rate: float = data_sample_rate if data_sample_rate != None else float(
             os.environ.get("DATA_SAMPLE_RATE", ChatBotTestBase.default_data_sample_rate))
@@ -631,7 +630,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
 
         if self.log_file:
             self.log_file.close()
-        assert len(self.error) == 0, f"{len(self.error)} errors reported!"
+        assert len(self.errors) == 0, f"{len(self.errors)} errors reported!"
 
     def _get_data_file(self, use_case_name: str, kind_label: str) -> Path:
         """

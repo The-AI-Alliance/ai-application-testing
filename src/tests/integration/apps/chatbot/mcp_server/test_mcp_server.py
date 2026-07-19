@@ -30,7 +30,7 @@ def test_chatbot_creation():
 
 def test_mcp_server_creation():
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
-    cbtb = ChatBotTestBase(data_dir = data_dir)
+    cbtb = ChatBotTestBase(data_dir = Path(data_dir))
     """Test that MCP server can be created with FastMCP."""
     logger = logging.getLogger("test")
     logger.setLevel(logging.INFO)
@@ -38,9 +38,9 @@ def test_mcp_server_creation():
     result = create_mcp_server(
         model=cbtb.chatbot.model,
         service_url=cbtb.chatbot.service_url,
-        template_dir=cbtb.chatbot.template_dir,
-        data_dir=cbtb.chatbot.data_dir,
-        output_dir=cbtb.chatbot.output_dir,
+        template_dir=str(cbtb.chatbot.template_dir),
+        data_dir=str(cbtb.chatbot.data_dir),
+        output_dir=str(cbtb.chatbot.output_dir),
         confidence_level_threshold=cbtb.chatbot.confidence_level_threshold,
         logger=logger,
     )

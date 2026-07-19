@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Any
 
 from litellm import completion
@@ -13,15 +14,15 @@ class ChatBotSimple(ChatBot):
     Simple ChatBot implementation using direct LiteLLM completion calls.
     """
 
-    default_template_file = "patient-chatbot-simple.yaml"
+    default_template_file = Path("patient-chatbot-simple.yaml")
 
     def __init__(
         self,
         model: str,
         service_url: str,
-        template_dir: str,
-        data_dir: str,
-        output_dir: str,
+        template_dir: Path,
+        data_dir: Path,
+        output_dir: Path,
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,

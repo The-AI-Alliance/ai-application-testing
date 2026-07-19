@@ -29,7 +29,8 @@ def get_appointment_manager(
     Idempotent: Creates and an instance only if one of the following is true:
     1. It doesn't already exist.
     2. `make_new` is True.
-    Otherwise, the existing instance is returned.
+    Otherwise, the existing instance is returned, even if different arguments
+    for logger and file_path are passed!
 
     Args:
         - file_path (Path): Ignored unless a new manager is to be created.
@@ -57,9 +58,8 @@ def get_appointment_manager(
         logger = _def_appointment_manager_logger  # assign the default logger
 
     _appointment_manager = AppointmentManager(fp, logger=logger)
-    logger.info(f"Created a new AppointmentManager({fp}, logger).")
+    logger.info(f"Created a new AppointmentManager({fp}, logger) (id = {hex(id(_appointment_manager))}).")
     return _appointment_manager
-
 
 @tool
 def create_appointment(

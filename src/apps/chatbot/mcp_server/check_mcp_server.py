@@ -29,9 +29,9 @@ def test_chatbot_creation():
         chatbot = ChatBotSimple(
             model="ollama_chat/gemma4:12b",
             service_url="http://localhost:11434",
-            template_dir="src/apps/chatbot/prompts/templates",
-            data_dir="src/data",
-            output_dir="output/chatbot",
+            template_dir=Path("src/apps/chatbot/prompts/templates"),
+            data_dir=Path("src/data"),
+            output_dir=Path("output/chatbot"),
             confidence_level_threshold=0.9,
             response_handler=ChatBotResponseHandler(
                 confidence_level_threshold=0.9, logger=logger

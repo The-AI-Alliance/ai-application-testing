@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 from typing import Any, Optional, MutableMapping, Sequence
 
-from common.json_yaml import decode_json, encode_json
+from common.json_yaml import decode_json_dict, encode_json
 
 
 class FilePersistentStorageError(Exception):
@@ -55,7 +55,7 @@ class FilePersistentStorage:
 
     def load(self) -> tuple[Sequence[MutableMapping[str, Any]], list[str]]:
         """
-        Load records from the JSONL storage file and parses them using `decode_json(line)`.
+        Load records from the JSONL storage file and parses them using `decode_json_dict(line)`.
 
         Returns:
             A tuple of lists. The first list has dictionaries successfully parsed
@@ -72,7 +72,7 @@ class FilePersistentStorage:
                     line = line.strip()
                     if line:
                         try:
-                            d = decode_json(line)
+                            d = decode_json_dict(line)
                             dicts.append(d)
                         except json.JSONDecodeError as e:
                             errors.append(line)

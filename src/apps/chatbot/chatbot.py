@@ -25,13 +25,13 @@ class ChatBot(ABC):
         self,
         model: str,
         service_url: str,
-        template_dir: str,
-        data_dir: str,
-        output_dir: str,
+        template_dir: Path,
+        data_dir: Path,
+        output_dir: Path,
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,
-        template_file: str = "",
+        template_file: Path = Path(""),
     ):
         """
         Initialize the ChatBot base class.

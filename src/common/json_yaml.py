@@ -7,7 +7,7 @@ import yaml
 from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Mapping, MutableMapping
+from typing import Any, Mapping, MutableMapping, Sequence
 
 
 def load_yaml(path: Path) -> Mapping[str, Any]:
@@ -39,19 +39,48 @@ def_datetime_encoder = DatetimeEncoder()
 def_datetime_decoder = DatetimeDecoder()
 
 
-def encode_json(dct: Mapping[str, Any]) -> str:
+def encode_json(dct: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> str:
     """Create a JSON string from the input object."""
     return def_datetime_encoder.encode(dct)
 
-
-def decode_json(text: Any) -> MutableMapping[str, Any]:
-    """Parse a JSON string, returning a dictionary or raise a ValueError error string if parsing fails."""
+def decode_json_dict(text: Any) -> MutableMapping[str, Any]:
+    """
+    Parse a JSON string, returning a dictionary or raise a ValueError
+    if the input string fails to parse or the returned object is not a
+    dictionary.  Although the JSONDecoder.decode() method that is called handles
+    both lists and dictionaries uniformly, we have two separate methods,
+    this one and `decode_json_list`, so we can type them more specifically!
+    """
     try:
         obj = def_datetime_decoder.decode(text)
+        if not isinstance(obj, MutableMapping):
+            raise ValueError(
+                f"decode_json_dict called with a string that is not a dictionary!? type: {type(obj)}, obj = <{obj}>"
+            )
         return obj
     except (JSONDecodeError, TypeError) as err:
         raise ValueError(
             f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})"
+        ) from err
+
+def decode_json_list(text: Any) -> Sequence[MutableMapping[str, Any]]:
+    """
+    Parse a JSON string, returning a list or raise a ValueError
+    if the input string fails to parse or the returned object is not a
+    list. Although the JSONDecoder.decode() method that is called handles
+    both lists and dictionaries uniformly, we have two separate methods,
+    this one and `decode_json_dict`, so we can type them more specifically!
+    """
+    try:
+        obj = def_datetime_decoder.decode(text)
+        if not isinstance(obj, Sequence):
+            raise ValueError(
+                f"decode_json_list called with a string that is not a list!? type: {type(obj)}, obj = <{obj}>"
+            )
+        return obj
+    except (JSONDecodeError, TypeError) as err:
+        raise ValueError(
+            f"JSONDecodeError or TypeError {err}: text not JSON? type: {type(text)}, text = <{text}>"
         ) from err
 
 
@@ -81,7 +110,7 @@ def extract_jsonl_list(text: str) -> tuple[list[str], list[str]]:
     errors = []
     for s in fixed:
         try:
-            decode_json(s)
+            decode_json_dict(s)
             # It parsed! Use s
             jsonls.append(s)
         except ValueError:

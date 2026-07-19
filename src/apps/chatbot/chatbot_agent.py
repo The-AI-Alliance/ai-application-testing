@@ -22,15 +22,15 @@ class ChatBotAgent(ChatBot):
     See: https://docs.langchain.com/oss/python/deepagents/overview
     """
 
-    default_template_file = "patient-chatbot-agent.yaml"
+    default_template_file = Path("patient-chatbot-agent.yaml")
 
     def __init__(
         self,
         model: str,
         service_url: str,
-        template_dir: str,
-        data_dir: str,
-        output_dir: str,
+        template_dir: Path,
+        data_dir: Path,
+        output_dir: Path,
         confidence_level_threshold: float,
         response_handler: ResponseHandler,
         logger: logging.Logger,

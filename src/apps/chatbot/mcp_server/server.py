@@ -8,10 +8,10 @@ chatbot functionality through the Model Context Protocol.
 import logging
 import os
 import sys
-
-from fastmcp import FastMCP
+from pathlib import Path
 from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
 from common.utils import setup
+from fastmcp import FastMCP
 
 
 def create_mcp_server(
@@ -48,9 +48,9 @@ def create_mcp_server(
     chatbot = chatbot_class(
         model=model,
         service_url=service_url,
-        template_dir=template_dir,
-        data_dir=data_dir,
-        output_dir=output_dir,
+        template_dir=Path(template_dir),
+        data_dir=Path(data_dir),
+        output_dir=Path(output_dir),
         confidence_level_threshold=confidence_level_threshold,
         response_handler=ChatBotResponseHandler(
             confidence_level_threshold=confidence_level_threshold, logger=logger
