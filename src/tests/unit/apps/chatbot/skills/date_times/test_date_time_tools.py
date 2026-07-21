@@ -51,6 +51,7 @@ from tests.common.hypothesis.datetimes import (
 
 one_second = timedelta(seconds=1)
 
+
 def _capture_output(tool: StructuredTool, params: dict[str, Any]) -> Any:
     with contextlib.redirect_stdout(io.StringIO()) as fout:
         with contextlib.redirect_stderr(io.StringIO()) as ferr:
@@ -63,27 +64,30 @@ def _capture_output(tool: StructuredTool, params: dict[str, Any]) -> Any:
                 assert "" != ferr.getvalue()
             return success, message
 
+
 def test_now_returns_current_datetime():
     now_dt = now.run({})
     expected_dt = datetime.now()
     is_eql, msg = datetimes_approx_equal(expected_dt, now_dt, one_second)
     assert is_eql, msg
 
+
 @given(non_weekend_dates())
 def test_is_weekday_returns_true_for_week_days(week_day):
     assert is_week_day.run({"a_date_time": week_day})
+
 
 @given(weekend_dates())
 def test_is_weekday_returns_false_for_weekend_days(weekend_day):
     assert not is_week_day.run({"a_date_time": weekend_day})
 
+
 @given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
-def test_datetime_to_str_returns_properly_formatted_string_based_on_desired_format(
-    dt, fmt
-):
+def test_datetime_to_str_returns_properly_formatted_string_based_on_desired_format(dt, fmt):
     expected = dt.strftime(fmt)
     actual = datetime_to_str.run({"a_date_time": dt, "output_format": fmt})
     assert expected == actual, f"dt: {dt}, fmt: {fmt}"
+
 
 @given(st.datetimes())
 def test_datetime_to_str_uses_a_default_format(dt):
@@ -91,13 +95,13 @@ def test_datetime_to_str_uses_a_default_format(dt):
     actual = datetime_to_str.run({"a_date_time": dt})
     assert expected == actual, f"dt: {dt}, fmt: {def_friendly_date_time_format}"
 
+
 @given(st.dates(), st.sampled_from(friendly_date_formats))
-def test_date_to_str_returns_properly_formatted_string_based_on_desired_format(
-    d, fmt
-):
+def test_date_to_str_returns_properly_formatted_string_based_on_desired_format(d, fmt):
     expected = d.strftime(fmt)
     actual = date_to_str.run({"a_date": d, "output_format": fmt})
     assert expected == actual, f"d: {d}, fmt: {fmt}"
+
 
 @given(st.dates())
 def test_date_to_str_uses_a_default_format(d):
@@ -105,13 +109,13 @@ def test_date_to_str_uses_a_default_format(d):
     actual = date_to_str.run({"a_date": d})
     assert expected == actual, f"d: {d}, fmt: {def_friendly_date_format}"
 
+
 @given(st.times(), st.sampled_from(friendly_time_formats))
-def test_time_to_str_returns_properly_formatted_string_based_on_desired_format(
-    t, fmt
-):
+def test_time_to_str_returns_properly_formatted_string_based_on_desired_format(t, fmt):
     expected = t.strftime(fmt)
     actual = time_to_str.run({"a_time": t, "output_format": fmt})
     assert expected == actual, f"t: {t}, fmt: {fmt}"
+
 
 @given(st.times())
 def test_time_to_str_uses_a_default_format(t):
@@ -119,25 +123,22 @@ def test_time_to_str_uses_a_default_format(t):
     actual = time_to_str.run({"a_time": t})
     assert expected == actual, f"t: {t}, fmt: {def_friendly_time_format}"
 
+
 @given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
-def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(
-    dt, fmt
-):
+def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
     import locale
 
     current_locale = locale.getlocale()
     locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
     dt_str = dt.strftime(fmt)
-    actual, error = str_to_datetime.run(
-        {"a_date_time_str": dt_str, "input_format": fmt}
-    )
+    actual, error = str_to_datetime.run({"a_date_time_str": dt_str, "input_format": fmt})
     # We actually need to compare strings, not dts, because a returned datetime might have "missing"
     # hours, minutes, seconds, etc., depending on fmt.
     actual_str = actual.strftime(fmt)
-    assert dt_str == actual_str, \
-        f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
+    assert dt_str == actual_str, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
     assert "" == error
     locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
+
 
 @given(st.datetimes())
 def test_str_to_datetime_can_parse_iso_formatted_strings(dt):
@@ -146,11 +147,13 @@ def test_str_to_datetime_can_parse_iso_formatted_strings(dt):
     assert dt == actual, f"dt: {dt}"
     assert "" == error
 
+
 def test_str_to_datetime_returns_an_error_string_for_invalid_date_time_strings():
     for s in ["", "bad", "hello!"]:
         actual, error = str_to_datetime.run({"a_date_time_str": s})
         assert not actual
         assert "" != error
+
 
 @given(st.dates())
 def test_str_to_date_can_parse_friendly_formatted_date_strings(d):
@@ -164,10 +167,10 @@ def test_str_to_date_can_parse_friendly_formatted_date_strings(d):
         # We actually need to compare strings, not ds, because a returned datetime might have "missing"
         # hours, minutes, seconds, etc., depending on fmt.
         actual_str = actual.strftime(fmt)
-        assert d_str == actual_str, \
-            f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
+        assert d_str == actual_str, f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
         assert "" == error
     locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
+
 
 @given(st.dates())
 def test_str_to_date_can_parse_iso_formatted_strings(d):
@@ -175,4 +178,3 @@ def test_str_to_date_can_parse_iso_formatted_strings(d):
     actual, error = str_to_date.run({"a_date_str": d_iso})
     assert d == actual, f"d: {d}"
     assert "" == error
-

@@ -492,7 +492,7 @@ In particular, see the AI Alliance [CONTRIBUTING](https://github.com/The-AI-Alli
 > [!TIP]
 > Before submitting a PR, build the `make` target `before-pr`:
 > ```shell
-> make before-pr   # Equivalent to 'make tests format lint type-check'
+> make before-pr   # Equivalent to 'make format lint type-check unit-tests'
 > ```
 
 ### Licenses

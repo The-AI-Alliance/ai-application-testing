@@ -56,9 +56,7 @@ class ChatBotShell(cmd.Cmd):
                 response = self.chatbot.query(line)
             if isinstance(response, str):
                 print(f"Something went wrong: {response}")
-                print(
-                    "Try your query again or report an issue to the development team:"
-                )
+                print("Try your query again or report an issue to the development team:")
                 print("  https://github.com/The-AI-Alliance/ai-application-testing")
             else:
                 answer = response.get("reply_to_user", "")

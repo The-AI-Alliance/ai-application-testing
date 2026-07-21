@@ -100,9 +100,7 @@ def is_week_day(a_date_time: datetime) -> bool:
 
 
 @tool
-def datetime_to_str(
-    a_date_time: datetime, output_format: str = def_friendly_date_time_format
-) -> str:
+def datetime_to_str(a_date_time: datetime, output_format: str = def_friendly_date_time_format) -> str:
     """
     Format the input `a_date_time` as a string using the input `format`.
     """
@@ -149,9 +147,7 @@ def _str_to_object[DT](
 
     # If here, none of our "friendly formats" worked. Try ISO...
     def err_msg():
-        input_format_msg = (
-            "" if not format else f"""input format "{input_format}", nor other """
-        )
+        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
         return f"""I could not parse string "{a_date_time_str}" with {input_format_msg}formats, {friendly_formats}, nor using fromisoformat()."""
 
     try:
@@ -165,9 +161,7 @@ def _str_to_object[DT](
 
 
 @tool
-def str_to_datetime(
-    a_date_time_str: str, input_format: str = ""
-) -> tuple[Optional[datetime], str]:
+def str_to_datetime(a_date_time_str: str, input_format: str = "") -> tuple[Optional[datetime], str]:
     """
     Using the input `a_date_time_str` string, format and return a `datetime` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -182,9 +176,7 @@ def str_to_datetime(
     Returns:
         a tuple with the constructed `datetime` and an empty string or `None` and an error message.
     """
-    return _str_to_object(
-        a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt
-    )
+    return _str_to_object(a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt)
 
 
 @tool
@@ -203,9 +195,7 @@ def str_to_date(a_date_str: str, input_format: str = "") -> tuple[Optional[date]
     Returns:
         a tuple with the constructed `date` and an empty string or `None` and an error message.
     """
-    return _str_to_object(
-        a_date_str, input_format, friendly_date_formats, lambda dt: dt.date()
-    )
+    return _str_to_object(a_date_str, input_format, friendly_date_formats, lambda dt: dt.date())
 
 
 @tool
@@ -224,9 +214,7 @@ def str_to_time(a_time_str: str, input_format: str = "") -> tuple[Optional[time]
     Returns:
         a tuple with the constructed `time` and an empty string or `None` and an error message.
     """
-    return _str_to_object(
-        a_time_str, input_format, friendly_time_formats, lambda dt: dt.time()
-    )
+    return _str_to_object(a_time_str, input_format, friendly_time_formats, lambda dt: dt.time())
 
 
 @tool

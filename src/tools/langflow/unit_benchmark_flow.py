@@ -158,9 +158,7 @@ class UnitBenchmarkFlowOrchestrator:
                 "message": "Synthesis skipped; just calculating statistics.",
             }
         elif self.just_validation:
-            self.logger.info(
-                "Just running validation; skipping data synthesis... (assumes data files already exist!)"
-            )
+            self.logger.info("Just running validation; skipping data synthesis... (assumes data files already exist!)")
             self.synthesis_results = {
                 "status": "success",
                 "message": "Synthesis skipped; just running validation.",
@@ -186,12 +184,8 @@ class UnitBenchmarkFlowOrchestrator:
         else:
             self.validation_results = self.run_validation()
 
-        syn_msg = self.synthesis_results.get(
-            "message", "No synthesis message available!"
-        )
-        val_msg = self.validation_results.get(
-            "message", "No validation message available!"
-        )
+        syn_msg = self.synthesis_results.get("message", "No synthesis message available!")
+        val_msg = self.validation_results.get("message", "No validation message available!")
         return {
             "status": "success",
             "message": f"Synthesis: {syn_msg} Validation:{val_msg}",
@@ -204,12 +198,8 @@ def main():
     """Main entry point for running the benchmark flow."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Run benchmark data synthesis and validation pipeline"
-    )
-    parser.add_argument(
-        "-m", "--model", default="ollama_chat/gemma4:12b", help="Model name to use"
-    )
+    parser = argparse.ArgumentParser(description="Run benchmark data synthesis and validation pipeline")
+    parser.add_argument("-m", "--model", default="ollama_chat/gemma4:12b", help="Model name to use")
     parser.add_argument(
         "-s",
         "--service-url",
@@ -231,23 +221,15 @@ def main():
         help="Specific use case to generate (default: all)",
     )
 
-    parser.add_argument(
-        "--just-synthesis", action="store_true", help="Only run the synthesis step."
-    )
+    parser.add_argument("--just-synthesis", action="store_true", help="Only run the synthesis step.")
     parser.add_argument(
         "--just-validation",
         action="store_true",
         help="Only run the validation step. Assumes the synthesized data already exists.",
     )
-    parser.add_argument(
-        "--just-stats", action="store_true", help="Only compute validation statistics"
-    )
-    parser.add_argument(
-        "-l", "--log-file", default="logs/benchmark-flow.log", help="Log file path"
-    )
-    parser.add_argument(
-        "--log-level", type=int, default=logging.INFO, help="Logging level"
-    )
+    parser.add_argument("--just-stats", action="store_true", help="Only compute validation statistics")
+    parser.add_argument("-l", "--log-file", default="logs/benchmark-flow.log", help="Log file path")
+    parser.add_argument("--log-level", type=int, default=logging.INFO, help="Logging level")
 
     args = parser.parse_args()
 

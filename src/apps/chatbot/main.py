@@ -64,9 +64,7 @@ def main():
         data_dir=args.data_dir,
         output_dir=args.output_dir,
         confidence_level_threshold=args.confidence_threshold,
-        response_handler=ChatBotResponseHandler(
-            confidence_level_threshold=args.confidence_threshold, logger=logger
-        ),
+        response_handler=ChatBotResponseHandler(confidence_level_threshold=args.confidence_threshold, logger=logger),
         logger=logger,
     )
     shell = ChatBotShell(chatbot, verbose=args.verbose)

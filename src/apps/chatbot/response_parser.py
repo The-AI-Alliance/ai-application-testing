@@ -33,9 +33,7 @@ class ResponseParser(ABC, Generic[RESPONSE]):
         except JSONDecodeError:
             return {"text": content4}
 
-    def _make_full_response(
-        self, query: str, content: str, response_dict: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _make_full_response(self, query: str, content: str, response_dict: dict[str, Any]) -> dict[str, Any]:
         """
         Tries to parse the response content to extract the content
         we expect to find.

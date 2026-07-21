@@ -34,8 +34,8 @@ dev = [
     "pytest-cov>=7.1.0",
     "pylint>=4.0.6",
     "black>=26.5.1",
-    "ruff>=0.15.20",
-    "ty>=0.0.56",
+    "ruff>=0.15.21",
+    "ty>=0.0.59",
 ]
 
 [tool.pytest.ini_options]
@@ -52,11 +52,11 @@ python_functions = ["test_*"]
 
 [tool.black]
 line-length = 120
-target-version = ['py312']
+target-version = ['py313']
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py313"
 
 [tool.pylint.format]
 max-line-length = 120

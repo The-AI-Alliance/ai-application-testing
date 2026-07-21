@@ -29,9 +29,7 @@ from common.utils import setup, get_package_version
 class Message(BaseModel):
     """A chat message."""
 
-    role: str = Field(
-        ..., description="The role of the message author (system, user, or assistant)"
-    )
+    role: str = Field(..., description="The role of the message author (system, user, or assistant)")
     content: str = Field(..., description="The content of the message")
 
 
@@ -39,18 +37,10 @@ class ChatCompletionRequest(BaseModel):
     """Request body for chat completions endpoint."""
 
     model: str = Field(..., description="ID of the model to use")
-    messages: List[Message] = Field(
-        ..., description="List of messages in the conversation"
-    )
-    temperature: Optional[float] = Field(
-        default=1.0, ge=0.0, le=2.0, description="Sampling temperature"
-    )
-    max_tokens: Optional[int] = Field(
-        default=None, description="Maximum tokens to generate"
-    )
-    stream: Optional[bool] = Field(
-        default=False, description="Whether to stream responses"
-    )
+    messages: List[Message] = Field(..., description="List of messages in the conversation")
+    temperature: Optional[float] = Field(default=1.0, ge=0.0, le=2.0, description="Sampling temperature")
+    max_tokens: Optional[int] = Field(default=None, description="Maximum tokens to generate")
+    stream: Optional[bool] = Field(default=False, description="Whether to stream responses")
     n: Optional[int] = Field(default=1, description="Number of completions to generate")
     stop: Optional[List[str]] = Field(default=None, description="Stop sequences")
 
@@ -150,9 +140,7 @@ class APIServer:
         self.logger = logger
         self.version = get_package_version(self.logger)
         if not self.version:
-            self.version = (
-                "0.1.0"  # An error occurred that was logged by get_package_version()
-            )
+            self.version = "0.1.0"  # An error occurred that was logged by get_package_version()
 
         # Determine which ChatBot implementation to use
         chatbot_class = ChatBotAgent if which_chatbot == "agent" else ChatBotSimple
@@ -233,17 +221,13 @@ class APIServer:
             and returns responses in the same format.
             """
             if self.logger:
-                self.logger.info(
-                    f"POST /v1/chat/completions called with model: {request.model}"
-                )
+                self.logger.info(f"POST /v1/chat/completions called with model: {request.model}")
 
             try:
                 # Extract the user message (last message with role 'user')
                 user_messages = [msg for msg in request.messages if msg.role == "user"]
                 if not user_messages:
-                    raise HTTPException(
-                        status_code=400, detail="No user message found in request"
-                    )
+                    raise HTTPException(status_code=400, detail="No user message found in request")
 
                 user_query = user_messages[-1].content
 
@@ -267,9 +251,7 @@ class APIServer:
                     self.logger.error(error_msg)
                 raise HTTPException(status_code=500, detail=error_msg)
 
-    async def _create_completion(
-        self, request: ChatCompletionRequest, user_query: str
-    ) -> ChatCompletionResponse:
+    async def _create_completion(self, request: ChatCompletionRequest, user_query: str) -> ChatCompletionResponse:
         """Create a non-streaming chat completion."""
 
         # Query the chatbot
@@ -309,9 +291,7 @@ class APIServer:
             ),
         )
 
-    async def _stream_completion(
-        self, request: ChatCompletionRequest, user_query: str
-    ) -> AsyncGenerator[str, None]:
+    async def _stream_completion(self, request: ChatCompletionRequest, user_query: str) -> AsyncGenerator[str, None]:
         """Stream a chat completion response."""
 
         # Query the chatbot
@@ -349,9 +329,7 @@ class APIServer:
                 choices=[
                     {
                         "index": 0,
-                        "delta": {
-                            "content": word + (" " if i < len(words) - 1 else "")
-                        },
+                        "delta": {"content": word + (" " if i < len(words) - 1 else "")},
                         "finish_reason": None,
                     }
                 ],

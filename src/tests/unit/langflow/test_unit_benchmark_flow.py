@@ -1,7 +1,6 @@
 """Unit tests for the benchmark flow orchestrator."""
 
 import logging
-import pytest
 import tempfile
 import os
 from pathlib import Path
@@ -15,7 +14,7 @@ from tools.langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
 # TODO: Move this to an integration test and replace the mocks with real calls to Langflow.
 
 
-class TestUnitBenchmarkFlowOrchestrator():
+class TestUnitBenchmarkFlowOrchestrator:
     """Test cases for UnitBenchmarkFlowOrchestrator."""
 
     def init(self):
@@ -192,4 +191,3 @@ class TestUnitBenchmarkFlowOrchestrator():
     #         # Verify
     #         self.assertEqual(result['status'], 'error')
     #         self.assertIn('Synthesis failed', result['message'])
-

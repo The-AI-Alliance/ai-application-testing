@@ -10,9 +10,7 @@ def get(dictionary: Mapping[str, Any], key: str, default: Any | None = None) -> 
     """
     value = dictionary.get(key, default)
     if value is None:
-        raise ValueError(
-            f"No value for key {key} and default value is None in {dictionary}."
-        )
+        raise ValueError(f"No value for key {key} and default value is None in {dictionary}.")
     else:
         return value
 
@@ -68,9 +66,7 @@ def get_chain(dictionary: Mapping[str, Any], keys: Sequence[str | int]) -> Any |
     return value
 
 
-def dict_permutations(
-    dictionary: dict[str, Any], max_size: int = -1
-) -> list[dict[str, Any]]:
+def dict_permutations(dictionary: dict[str, Any], max_size: int = -1) -> list[dict[str, Any]]:
     """
     From an input dictionary, where the values are collections, return an array of dictionaries
     with all permutations of the same keys and individual values from the value collections.

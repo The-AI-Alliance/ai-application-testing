@@ -70,15 +70,11 @@ class TDDExampleRefillChatbot:
         self.logger.info(
             "Comparisons ignore case, remove leading '-', and '*' around words (Markdown-style formatting)."
         )
-        self.logger.info(
-            f"Levenshtein ratio used, with values above {self.lev_threshold} interpreted as 'equal'."
-        )
+        self.logger.info(f"Levenshtein ratio used, with values above {self.lev_threshold} interpreted as 'equal'.")
 
         for_label = self.queries_responses.get(label)
         if not for_label:
-            self.logger.error(
-                f"No queries and expected responses are known for key {label}."
-            )
+            self.logger.error(f"No queries and expected responses are known for key {label}.")
             sys.exit(1)
         else:
             queries = for_label.get("queries", [])
@@ -91,9 +87,7 @@ class TDDExampleRefillChatbot:
                 sys.exit(1)
 
             for template_name in self.template_names:
-                self.logger.info(
-                    f"  Using template {template_name} in {self.template_dir}:"
-                )
+                self.logger.info(f"  Using template {template_name} in {self.template_dir}:")
                 template = load_yaml(Path(self.template_dir, template_name + ".yaml"))
 
                 for query in queries:
@@ -107,9 +101,7 @@ class TDDExampleRefillChatbot:
                                 model=self.model_name,
                                 messages=[
                                     {
-                                        "content": make_full_prompt(
-                                            query_with_drug, template["system"]
-                                        ),
+                                        "content": make_full_prompt(query_with_drug, template["system"]),
                                         "role": "user",
                                     }
                                 ],
@@ -136,9 +128,7 @@ class TDDExampleRefillChatbot:
                                 else:
                                     errors += 1
                                     resp_str = f'Lev. ratio = {ratio} > {self.lev_threshold}, actual = "{actual}", expected = "{expected}" (full response: "{response}")'
-                                    self.logger.warning(
-                                        f"{prefix_str} FAILURE! ({resp_str})"
-                                    )
+                                    self.logger.warning(f"{prefix_str} FAILURE! ({resp_str})")
 
                         except OpenAIError as e:
                             self.logger.error(f"OpenAIError thrown: {e}")
@@ -147,9 +137,7 @@ class TDDExampleRefillChatbot:
                 self.logger.info(f"Total queries = {count}, errors = {errors}")
 
             if errors > 0:
-                self.logger.warning(
-                    f'"{label}" run had errors, but we will continue running.'
-                )
+                self.logger.warning(f'"{label}" run had errors, but we will continue running.')
 
 
 def main():
@@ -170,14 +158,10 @@ def main():
     )
 
     if args.lev_threshold < 0.0 or args.lev_threshold > 1.0:
-        logger.error(
-            f"The Levenshtein ratio threshold must be between 0.0 and 1.0, inclusive: {args.lev_threshold}"
-        )
+        logger.error(f"The Levenshtein ratio threshold must be between 0.0 and 1.0, inclusive: {args.lev_threshold}")
         sys.exit(1)
 
-    tdd = TDDExampleRefillChatbot(
-        args.model, args.lev_threshold, args.service_url, args.template_dir, logger
-    )
+    tdd = TDDExampleRefillChatbot(args.model, args.lev_threshold, args.service_url, args.template_dir, logger)
     tdd.trial(
         "refill",
     )

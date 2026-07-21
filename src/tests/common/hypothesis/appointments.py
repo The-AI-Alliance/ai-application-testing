@@ -30,9 +30,7 @@ def appointment_non_work_hours():
 
 def appointment_future_work_datetimes(minute_strategy=on_the_hour_minutes):
     return future_work_datetimes(
-        date_strategy=lambda: work_dates(
-            date_strategy=future_dates, holidays=AppointmentManager.USA_HOLIDAYS
-        ),
+        date_strategy=lambda: work_dates(date_strategy=future_dates, holidays=AppointmentManager.USA_HOLIDAYS),
         hour_strategy=appointment_work_hours,
         minute_strategy=minute_strategy,
     )
@@ -40,9 +38,7 @@ def appointment_future_work_datetimes(minute_strategy=on_the_hour_minutes):
 
 def appointment_future_non_work_datetimes(minute_strategy=on_the_hour_minutes):
     return future_work_datetimes(
-        date_strategy=lambda: work_dates(
-            date_strategy=future_dates, holidays=AppointmentManager.USA_HOLIDAYS
-        ),
+        date_strategy=lambda: work_dates(date_strategy=future_dates, holidays=AppointmentManager.USA_HOLIDAYS),
         hour_strategy=appointment_non_work_hours,
         minute_strategy=minute_strategy,
     )
@@ -53,9 +49,7 @@ def appointment_dicts(
     patient_name_strategy=person_names,
     reason_strategy=st.text,
 ):
-    return st.tuples(
-        datetime_strategy(), patient_name_strategy(), reason_strategy()
-    ).map(
+    return st.tuples(datetime_strategy(), patient_name_strategy(), reason_strategy()).map(
         lambda t: AppointmentManager.make_appointment_dict(
             appointment_date_time=t[0],
             patient_name=t[1],

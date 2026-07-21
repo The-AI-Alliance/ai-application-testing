@@ -60,9 +60,7 @@ class ChatBot(ABC):
         self.confidence_level_threshold = confidence_level_threshold
         self.version = get_package_version(self.logger)
         if not self.version:
-            self.version = (
-                "0.1.0"  # An error occurred that was logged by get_package_version()
-            )
+            self.version = "0.1.0"  # An error occurred that was logged by get_package_version()
 
         errors = []
         if not self.model:
@@ -91,9 +89,7 @@ class ChatBot(ABC):
                 logger=self.logger,
             )
 
-        template_filename = (
-            template_file if template_file else self.default_template_file
-        )
+        template_filename = template_file if template_file else self.default_template_file
         self.template_file = Path(template_dir, template_filename)
         if self.logger:
             self.logger.info(f"Using template file: {self.template_file}")
@@ -113,9 +109,7 @@ class ChatBot(ABC):
             self.logger.info(f"  template_dir:               {self.template_dir}")
             self.logger.info(f"  data_dir:                   {self.data_dir}")
             self.logger.info(f"  output_dir:                 {self.output_dir}")
-            self.logger.info(
-                f"  confidence_level_threshold: {self.confidence_level_threshold}"
-            )
+            self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
 
     def query(self, query: str) -> dict[str, Any]:

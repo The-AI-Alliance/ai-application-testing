@@ -5,6 +5,7 @@ import pytest
 from pathlib import Path
 from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
 
+
 @pytest.mark.ai
 @pytest.mark.scenario
 def test_chatbot_appointment_requests():
@@ -20,5 +21,5 @@ def test_chatbot_appointment_requests():
     use case is based on interactive scenarios.
     """
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
-    cbtb = ChatBotTestWithInference(data_dir = Path(data_dir))
+    cbtb = ChatBotTestWithInference(data_dir=Path(data_dir))
     cbtb.try_scenarios("appointments")

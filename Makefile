@@ -15,8 +15,9 @@ PYTEST_RUN_OPT_ARGS ?= -m 'not ai'
 # "predefine" WHICH_TESTS to have the default value equal to TESTS_UNIT_DIR. Several
 # targets below nest invocations of make with different definitions, e.g., to pick
 # specific tests, use TESTS_INTEGRATION_DIR, etc.
-TESTS_UNIT_DIR        ?= src/tests/unit
-TESTS_INTEGRATION_DIR ?= src/tests/integration
+# NOTE: the definitions are relative to ${SRC_DIR} (== src)!
+TESTS_UNIT_DIR        ?= tests/unit
+TESTS_INTEGRATION_DIR ?= tests/integration
 WHICH_TESTS           ?= ${TESTS_UNIT_DIR}
 
 include .common.mk
@@ -475,7 +476,7 @@ help-lf help-langflow help-langflow-pipeline::
 
 unit-tests-langflow:: run-command-checks
 	@echo "${INFO_LABEL} Running the langflow unit tests..."
-	${MAKE} WHICH_TESTS=${SRC_DIR}/tests/unit/langflow unit-tests
+	${MAKE} WHICH_TESTS=tests/unit/langflow unit-tests
 
 .PHONY: run-chatbot chatbot before-chatbot before-chatbot-preamble check-model-which-chatbot do-run-chatbot agent-chatbot simple-chatbot after-chatbot
 

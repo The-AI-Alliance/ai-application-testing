@@ -162,11 +162,7 @@ class AppointmentManager(ResourceManager):
             )
 
         # Check if it's on the hour
-        if (
-            a_date_time.minute != 0
-            or a_date_time.second != 0
-            or a_date_time.microsecond != 0
-        ):
+        if a_date_time.minute != 0 or a_date_time.second != 0 or a_date_time.microsecond != 0:
             return (
                 False,
                 "Allowed date-times must be scheduled on the hour (e.g., 10:00, 11:00).",
@@ -214,9 +210,7 @@ class AppointmentManager(ResourceManager):
         else:
             return True, ""
 
-    def create_appointment(
-        self, patient_name: str, appointment_date_time: datetime, reason: str
-    ) -> Tuple[str, str]:
+    def create_appointment(self, patient_name: str, appointment_date_time: datetime, reason: str) -> Tuple[str, str]:
         """
         Create a new appointment.
 
@@ -235,11 +229,9 @@ class AppointmentManager(ResourceManager):
             reason=reason,
             status="scheduled",
         )
-        return self._create_resource(appointment)
+        return self.create_resource(appointment)
 
-    def set_appointments(
-        self, appointments: Sequence[MutableMapping[str, Any]]
-    ) -> Tuple[int, str]:
+    def set_appointments(self, appointments: Sequence[MutableMapping[str, Any]]) -> Tuple[int, str]:
         """
         Set the appointments, replacing the current list. Normally, create_appointment() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
@@ -266,28 +258,22 @@ class AppointmentManager(ResourceManager):
         Returns:
             True with success message or False with a failure message with reasons for the failure.
         """
-        if appointment_id not in self.get_resources():
+        appointment = self.get_resource_by_id(appointment_id)
+        if not appointment or not len(appointment):
             error_msg = f"There is no appointment with ID {appointment_id}."
             self.logger.error(error_msg)
             return False, error_msg
 
-        appointment = self.get_resources()[appointment_id]
         appointment["status"] = "cancelled"
         appointment["cancelled_at"] = datetime.now()
 
-        # Save the updated status
-        self._save_resources([appointment])
-
-        # Remove from active appointments
-        del self.get_resources()[appointment_id]
-
+        # Persist the updated status.
+        self._persist_resources([appointment])
         success_msg = f"Appointment {appointment_id} is now cancelled."
         self.logger.info(success_msg)
         return True, success_msg
 
-    def change_appointment(
-        self, appointment_id: str, new_date_time: datetime
-    ) -> Tuple[bool, str]:
+    def change_appointment(self, appointment_id: str, new_date_time: datetime) -> Tuple[bool, str]:
         """
         Change an appointment to a new time.
 
@@ -298,7 +284,8 @@ class AppointmentManager(ResourceManager):
         Returns:
             True with a success message or False a failure message with reasons for the failure.
         """
-        if appointment_id not in self.get_resources():
+        appointment = self.get_resource_by_id(appointment_id)
+        if not appointment or not len(appointment):
             error_msg = f"No appointment with ID {appointment_id} was found."
             self.logger.error(error_msg)
             return False, error_msg
@@ -310,20 +297,17 @@ class AppointmentManager(ResourceManager):
             unique_datetime_key="appointment_date_time",
         )
         if not is_valid:
-            error_msg = (
-                f"I could not change the appointment {appointment_id}. {error_msg}"
-            )
+            error_msg = f"I could not change the appointment {appointment_id}. {error_msg}"
             self.logger.error(error_msg)
             return False, error_msg
 
-        appointment = self.get_resources()[appointment_id]
         old_time = appointment["appointment_date_time"]
         appointment["appointment_date_time"] = new_date_time
         appointment["changed_at"] = datetime.now()
         appointment["previous_time"] = old_time
 
         # Save the updated appointment
-        self._save_resources([appointment])
+        self._persist_resources([appointment])
 
         self.logger.info(
             f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
@@ -339,9 +323,7 @@ class AppointmentManager(ResourceManager):
         """An alias for `get_resources_by_criteria()`."""
         return self.get_resources_by_criteria(criteria)
 
-    def get_appointment_ids_by_criteria(
-        self, criteria: MutableMapping[str, Any]
-    ) -> Sequence[str]:
+    def get_appointment_ids_by_criteria(self, criteria: MutableMapping[str, Any]) -> Sequence[str]:
         """An alias for `get_resource_ids_by_criteria()`."""
         return self.get_resource_ids_by_criteria(criteria)
 
@@ -351,8 +333,8 @@ class AppointmentManager(ResourceManager):
         after_date_time: datetime = datetime.min,
     ) -> Sequence[MutableMapping[str, Any]]:
         """
-        Get all appointments, possibly filtered by patient name and/or
-        after a specified date-time.
+        Get all appointments, optionally filtered by patient name and/or
+        those appointments scheduled at or after a specified date-time.
 
         Args:
             - patient_name (str): Only return appointments for this patient (default: all patients)
@@ -361,15 +343,16 @@ class AppointmentManager(ResourceManager):
         Returns:
             List of appointment dictionaries
         """
+        if not patient_name and after_date_time == datetime.min:
+            return self.get_resources()
+
         criteria: MutableMapping[str, Callable[[Any], bool]] = {}
         if patient_name:
             criteria["patient_name"] = lambda pn: pn == patient_name
         if after_date_time:
             criteria["appointment_date_time"] = lambda dt: dt >= after_date_time
 
-        return self.get_resources_by_criteria(
-            criteria, sort_by_key="appointment_date_time"
-        )
+        return self.get_resources_by_criteria(criteria, sort_by_key="appointment_date_time")
 
     def get_appointments_count(self) -> int:
         """Return the number of appointments currently scheduled."""
@@ -379,9 +362,7 @@ class AppointmentManager(ResourceManager):
         """An alias for `get_resource_by_id()`."""
         return self.get_resource_by_id(appointment_id)
 
-    def get_appointment_id_for_name_and_date_time(
-        self, patient_name: str, appointment_date_time: datetime
-    ) -> str:
+    def get_appointment_id_for_name_and_date_time(self, patient_name: str, appointment_date_time: datetime) -> str:
         """
         Retrieve the appointment ID for the specified patient and date time.
         There are restrictions on the arguments, as the assumption is that
@@ -405,9 +386,7 @@ class AppointmentManager(ResourceManager):
         if not patient_name:
             errors.append("The patient_name argument can't be empty!")
         if not self._is_valid_date_time(appointment_date_time):
-            errors.append(
-                f"The appointment_date_time argument '{appointment_date_time}' is invalid!"
-            )
+            errors.append(f"The appointment_date_time argument '{appointment_date_time}' is invalid!")
         if errors:
             raise ValueError(" ".join(errors))
 
@@ -417,10 +396,7 @@ class AppointmentManager(ResourceManager):
         one_second = timedelta(seconds=1)
 
         def dt_eq(dt: datetime) -> bool:
-            return (
-                dt >= appointment_date_time - one_second
-                and dt <= appointment_date_time + one_second
-            )
+            return dt >= appointment_date_time - one_second and dt <= appointment_date_time + one_second
 
         criteria["appointment_date_time"] = dt_eq
 
@@ -445,7 +421,5 @@ class AppointmentManager(ResourceManager):
     def from_json(text: Any) -> AppointmentManager:
         """Attempt to parse a JSON object, returning an instance."""
         am = AppointmentManager.def_json_decoder.decode(text)
-        assert isinstance(
-            am, AppointmentManager
-        ), f"Not an AppointmentManager! am = {am}"
+        assert isinstance(am, AppointmentManager), f"Not an AppointmentManager! am = {am}"
         return am

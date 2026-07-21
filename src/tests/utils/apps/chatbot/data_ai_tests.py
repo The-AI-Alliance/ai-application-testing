@@ -62,9 +62,7 @@ class QnATest(BaseAITest):
         if not self.labels:
             errors.append("empty labels")
         if rating < 0 or rating > 5:
-            errors.append(
-                f"invalid rating {self.rating} (not between 0 and 5, inclusive)"
-            )
+            errors.append(f"invalid rating {self.rating} (not between 0 and 5, inclusive)")
         if errors:
             raise ValueError(f"Invalid inputs: {', '.join(errors)}")
 
@@ -84,9 +82,7 @@ class ScenarioTest(BaseAITest):
         }
 
     class Inputs:
-        def __init__(
-            self, required_information: list[dict[str, str]], pre_conditions: list[str]
-        ):
+        def __init__(self, required_information: list[dict[str, str]], pre_conditions: list[str]):
             self.required_information = required_information
             self.pre_conditions = pre_conditions
 
@@ -180,15 +176,11 @@ class ScenarioTest(BaseAITest):
             label = get(info, "label")
             value_str: str = captures.get("label")
             if not value_str:
-                self.errors["required-information"].append(
-                    f"{label}: value not captured"
-                )
+                self.errors["required-information"].append(f"{label}: value not captured")
             else:
                 value, err_msg = self._parse_value(label, value_str)
                 if err_msg:
-                    self.errors["required-information"].append(
-                        f"{label}: value type error: {err_msg}"
-                    )
+                    self.errors["required-information"].append(f"{label}: value type error: {err_msg}")
                 else:
                     captures[label] = value
 
@@ -244,14 +236,16 @@ class ScenarioTest(BaseAITest):
                 ScenarioTest.Success(
                     text=s.get("text", ""),
                     post_conditions=s.get("post-conditions", []),
-                ))
+                )
+            )
         failures = []
         for f in get(outputs, "failures", []):
             failures.append(
                 ScenarioTest.Failure(
                     text=f.get("text", ""),
                     post_conditions=f.get("post-conditions", []),
-                ))
+                )
+            )
         initial_queries = obj.get("initial-queries", [])
 
         return cls(
@@ -289,8 +283,8 @@ class AppointmentScenarioTest(ScenarioTest):
         # MutableMapping has a copy() method, so we do it "manually".
         # self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = self.am.get_appointments().copy()
         self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
-        for key, value in self.am.get_appointments().items():
-            self.start_appointments[key] = value
+        for appointment in self.am.get_appointments():
+            self.start_appointments[appointment["id"]] = appointment
         self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
 
     def _custom_end(self, result: dict[str, Any]):
@@ -298,44 +292,29 @@ class AppointmentScenarioTest(ScenarioTest):
         Custom handling after the test has finished.
         """
         self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
-        for key, value in self.am.get_appointments().items():
-            self.end_appointments[key] = value
+        for appointment in self.am.get_appointments():
+            self.end_appointments[appointment["id"]] = appointment
 
     def _custom_check_conditions(self, result: dict[str, Any]) -> None:
         for pc in self.inputs.pre_conditions:
             match pc:
                 case "appointment-at-date-time-for-patient":
-                    self.check_appointment_at_date_time_for_patient(
-                        True, True, "pre-conditions", result
-                    )
+                    self.check_appointment_at_date_time_for_patient(True, True, "pre-conditions", result)
                 case "no-appointment-at-date-time-for-patient":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, True, "pre-conditions", result
-                    )
+                    self.check_appointment_at_date_time_for_patient(False, True, "pre-conditions", result)
                 case "no-appointment-at-date-time":
-                    self.check_appointment_at_date_time_for_patient(
-                        False, False, "pre-conditions", result
-                    )
+                    self.check_appointment_at_date_time_for_patient(False, False, "pre-conditions", result)
 
         s_or_f = self.successes if result["succeeded"] else self.failures
         for sf in s_or_f:
             for pc in sf.post_conditions:
                 match pc:
-                    case (
-                        "appointment-at-date-time-for-patient"
-                        | "appointment-at-new-date-time-for-patient"
-                    ):
-                        self.check_appointment_at_date_time_for_patient(
-                            True, True, "post-conditions", result
-                        )
+                    case "appointment-at-date-time-for-patient" | "appointment-at-new-date-time-for-patient":
+                        self.check_appointment_at_date_time_for_patient(True, True, "post-conditions", result)
                     case "no-appointment-at-date-time-for-patient":
-                        self.check_appointment_at_date_time_for_patient(
-                            False, True, "post-conditions", result
-                        )
+                        self.check_appointment_at_date_time_for_patient(False, True, "post-conditions", result)
                     case "no-appointment-at-date-time":
-                        self.check_appointment_at_date_time_for_patient(
-                            False, False, "post-conditions", result
-                        )
+                        self.check_appointment_at_date_time_for_patient(False, False, "post-conditions", result)
                     case "appointments-unchanged":
                         self.appointments_unchanged(result)
                     case "before-appointments-count":
@@ -352,11 +331,7 @@ class AppointmentScenarioTest(ScenarioTest):
         which_conditions: str,
         result: dict[str, Any],
     ):
-        appointments = (
-            self.start_appointments
-            if which_conditions == "pre-conditions"
-            else self.end_appointments
-        )
+        appointments = self.start_appointments if which_conditions == "pre-conditions" else self.end_appointments
         run_criteria = True
         criteria = {}
         captures = result.get("captures")
@@ -378,30 +353,22 @@ class AppointmentScenarioTest(ScenarioTest):
                 adt = get_chain(captures, ["appointment-date-time", "value"])
                 errors = get_chain(captures, ["appointment-date-time", "errors"])
                 if errors:
-                    self.errors[which_conditions].append(
-                        f"appointment-date-time: {errors}"
-                    )
+                    self.errors[which_conditions].append(f"appointment-date-time: {errors}")
                     run_criteria = False
                 elif adt:
                     criteria["appointment-date-time"] = adt
                 else:
-                    self.errors[which_conditions].append(
-                        "appointment-date-time is empty"
-                    )
+                    self.errors[which_conditions].append("appointment-date-time is empty")
                     run_criteria = False
 
                 if run_criteria:
-                    found = ResourceManager.get_resources_by_criteria_from(
-                        list(appointments.values()), criteria
-                    )
+                    found = ResourceManager.get_resources_by_criteria_from(list(appointments.values()), criteria)
                     if found and not should_find:
                         self.errors[which_conditions].append(
                             f"Found appointment, but not expected for criteria {criteria}"
                         )
                     if not found and should_find:
-                        self.errors[which_conditions].append(
-                            f"No appointment found for criteria {criteria}"
-                        )
+                        self.errors[which_conditions].append(f"No appointment found for criteria {criteria}")
 
     def check_appointments_count(self, delta: int, result: dict[str, Any]):
         len_start = len(self.start_appointments)

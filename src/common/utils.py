@@ -26,10 +26,11 @@ timestamp_str_fmt = "%Y:%m:%d %H:%M:%S"
 timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S"
 
 
-class ExpectedFail():
+class ExpectedFail:
     def __init__(self, expected_type: type[BaseException]):
         self.expected_type = expected_type
-    def __call__(self, block: Callable[[],Any], verbose: bool = False):
+
+    def __call__(self, block: Callable[[], Any], verbose: bool = False):
         unexpected_err = None
         try:
             block()
@@ -40,9 +41,12 @@ class ExpectedFail():
         except BaseException as err:
             unexpected_err = err
         if unexpected_err:
-            assert False, f"Exception of type {type(unexpected_err).__name__} (\"{unexpected_err}\") received. Expected {self.expected_type.__name__}."
+            assert (
+                False
+            ), f'Exception of type {type(unexpected_err).__name__} ("{unexpected_err}") received. Expected {self.expected_type.__name__}.'
         else:
             assert False, f"No exception occurred. Expected exception of type {self.expected_type.__name__}."
+
 
 def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> Tuple[bool, str]:
     """
@@ -52,11 +56,12 @@ def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: time
     delta_neg = -delta
     if delta_neg > delta:
         delta = delta_neg
-    close = datetime1 == datetime2 or ( datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2 )
+    close = datetime1 == datetime2 or (datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2)
     msg = ""
     if not close:
         msg = f"{datetime1} == {datetime2} NOT within +- {delta}"
     return close, msg
+
 
 def setup(
     tool: str,
@@ -65,9 +70,7 @@ def setup(
     add_arguments: Callable[[argparse.ArgumentParser], Any | None] = lambda ap: None,
     omit_arguments: set[str] = set(),
 ) -> tuple[argparse.Namespace, logging.Logger]:
-    parser = parser_with_common_args(
-        tool, description, epilog=epilog, omit_arguments=omit_arguments
-    )
+    parser = parser_with_common_args(tool, description, epilog=epilog, omit_arguments=omit_arguments)
     add_arguments(parser)
     args = parser.parse_args()
     logger = make_logger(args.log_file, name=tool, level=args.log_level)
@@ -163,9 +166,7 @@ def logging_level_to_string(logger: logging.Logger, level: int = -1):
     return logging.getLevelName(level)
 
 
-def log_args(
-    logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""
-):
+def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""):
     ns = now_str(fmt=timestamp_str_fmt)
     logging.info(f" ({ns}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
@@ -193,9 +194,7 @@ def get_package_version(logger: logging.Logger) -> str | None:
             )
             version = None
     except metadata.PackageNotFoundError as pnfe:
-        logger.error(
-            f"Could not determine the package version {pnfe}. Try running 'uv pip install -e .'"
-        )
+        logger.error(f"Could not determine the package version {pnfe}. Try running 'uv pip install -e .'")
         version = None
     return version
 
@@ -235,9 +234,7 @@ def get_default_log_level(ignored: str) -> int:
     return logging.INFO
 
 
-def make_logger(
-    log_file: str, name: str = "__name__", level: int = logging.INFO
-) -> logging.Logger:
+def make_logger(log_file: str, name: str = "__name__", level: int = logging.INFO) -> logging.Logger:
     make_parent_dirs(log_file)
     logging.basicConfig(filename=log_file, level=level)
     logger = logging.getLogger(name)
@@ -267,11 +264,10 @@ def ensure_dirs_exist(*dirs) -> bool:
             missing_dirs.append(dir)
     if len(missing_dirs) > 0:
         raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
-    return True # most callers will ignore this...
+    return True  # most callers will ignore this...
 
-def make_full_prompt(
-    prompt: str, system_prompt: Any, session: list[tuple[str, str]] = []
-) -> str:
+
+def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str, str]] = []) -> str:
     ss = ["SESSION:"]
     for query, reply in session:
         ss.append(f"query: {query}")

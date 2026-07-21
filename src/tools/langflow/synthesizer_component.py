@@ -18,9 +18,7 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
     """Langflow component wrapper for UnitBenchmarkFlowOrchestrator."""
 
     display_name = "Unit Benchmark Data Synthesis"
-    description = (
-        "Synthesize and validate Q&A benchmark data for testing a healthcare ChatBot."
-    )
+    description = "Synthesize and validate Q&A benchmark data for testing a healthcare ChatBot."
     name = "UnitBenchmarkDataSynthesizerValidator"
     icon = "code"
 
@@ -104,11 +102,7 @@ class UnitBenchmarkDataSynthesizerComponent(Component):
             data={
                 "status": results.get("status", "'status' unknown!"),
                 "message": results.get("message", "'message' unknown!"),
-                "synthesis_results": results.get(
-                    "synthesis_results", "No synthesis results available!"
-                ),
-                "validation_results": results.get(
-                    "validation_results", "No validation results available!"
-                ),
+                "synthesis_results": results.get("synthesis_results", "No synthesis results available!"),
+                "validation_results": results.get("validation_results", "No validation results available!"),
             }
         )

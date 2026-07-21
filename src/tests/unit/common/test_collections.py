@@ -3,7 +3,6 @@ Unit tests for the "collections" module using Hypothesis for property-based test
 https://hypothesis.readthedocs.io/en/latest/
 """
 
-import pytest
 from typing import Any
 from hypothesis import given, settings, strategies as st
 
@@ -16,6 +15,7 @@ from common.collections import (
 )
 from common.utils import ExpectedFail
 
+
 def _check(dictionary: dict[str, Any], n: int = -1):
     actual = dict_permutations(dictionary, max_size=n)
 
@@ -26,8 +26,7 @@ def _check(dictionary: dict[str, Any], n: int = -1):
 
     lens = [_length(col) for col in dictionary.values()]
     expected_len = mult(lens, skip_zeros=True)
-    assert expected_len == len(actual), \
-        f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}"
+    assert expected_len == len(actual), f"actual: {actual}, d: {dictionary}, n: {n}, lens: {lens}"
     # Check other expected sizes:
     expected_dict_len = 0
     for col in dictionary.values():
@@ -37,17 +36,14 @@ def _check(dictionary: dict[str, Any], n: int = -1):
         for j in range(i + 1, expected_len):
             leni = len(actual[i])
             lenj = len(actual[j])
-            assert expected_dict_len == leni, \
-                f"i={i}: {expected_dict_len} != {leni}, {actual[i]}"
-            assert expected_dict_len == lenj, \
-                f"j={j}: {expected_dict_len} != {lenj}, {actual[j]}"
+            assert expected_dict_len == leni, f"i={i}: {expected_dict_len} != {leni}, {actual[i]}"
+            assert expected_dict_len == lenj, f"j={j}: {expected_dict_len} != {lenj}, {actual[j]}"
             assert actual[i] != actual[j], f"{i}, {j}: {actual[i]}, d = {dictionary}"
 
     # Adding one or more keys with empty values doesn't add to the permutations:
-    actual2 = dict_permutations(
-        dictionary | {"empty-1": [], "empty-2": []}, max_size=n
-    )
+    actual2 = dict_permutations(dictionary | {"empty-1": [], "empty-2": []}, max_size=n)
     assert expected_len == len(actual2)
+
 
 @given(st.integers(min_value=0, max_value=10))
 def test_get_chain_returns_value_at_end_of_chain(depth: int):
@@ -61,6 +57,7 @@ def test_get_chain_returns_value_at_end_of_chain(depth: int):
     d[str(depth)] = depth
     keys.append(str(depth))
     assert depth == get_chain(root, keys), f"{depth}: {keys}, {d}"
+
 
 @given(st.integers(min_value=0, max_value=3))
 def test_get_chain_can_mix_dict_and_sequence_referencing(depth: int):
@@ -77,10 +74,9 @@ def test_get_chain_can_mix_dict_and_sequence_referencing(depth: int):
     assert 0 == get_chain(root, keys + [0, "zero"]), f"{depth}: {keys}, {root}"
     assert 1 == get_chain(root, keys + [1, "one"]), f"{depth}: {keys}, {root}"
 
+
 @given(st.integers(min_value=0, max_value=10))
-def test_get_chain_ends_early_and_returns_None_at_first_None_value(
-    depth: int
-):
+def test_get_chain_ends_early_and_returns_none_at_first_none_value(depth: int):
     """Check that get_chain() ends early and returns None at the first None value encountered."""
     keys = [str(i) for i in range(depth)]
     keys2 = [str(i) for i in range(2 * depth)]
@@ -92,37 +88,37 @@ def test_get_chain_ends_early_and_returns_None_at_first_None_value(
     d[str(depth)] = None
     assert not get_chain(root, keys2), f"{depth}: {keys2}, {d}"
 
-@given(
-    st.dictionaries(
-        st.text(min_size=1, max_size=10), st.text(max_size=10), max_size=4
-    )
-)
+
+@given(st.dictionaries(st.text(min_size=1, max_size=10), st.text(max_size=10), max_size=4))
 def test_get_returns_value_for_the_key(dictionary: dict[str, str]):
     """Check that get returns the value for the key, when it exists."""
     for key in dictionary:
         get(dictionary, key)
 
+
 @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-def test_get_raises_a_ValueError_if_None_would_be_returned_for_an_unknown_key(  # pylint: disable=invalid-name
-    set: set[str]
+def test_get_raises_a_value_error_if_none_would_be_returned_for_an_unknown_key(  # pylint: disable=invalid-name
+    set: set[str],
 ):
     """Check that get raises a ValueError if None would be returned for an unknown key."""
     dictionary = {}
     ef = ExpectedFail(ValueError)
     for key in set:
-        ef(lambda : get(dictionary, key))
+        ef(lambda: get(dictionary, key))
+
 
 @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-def test_get_raises_a_ValueError_if_None_would_be_returned_for_a_known_key_with_None_value_default_ignored(  # pylint: disable=invalid-name
-    keyset: set[str]
+def test_get_raises_a_value_error_if_none_would_be_returned_for_a_known_key_with_none_value_default_ignored(  # pylint: disable=invalid-name
+    keyset: set[str],
 ):
     """Check that get raises a ValueError if None would be returned for a known key with a None value."""
     dictionary = {}
     ef = ExpectedFail(ValueError)
     for key in keyset:
         dictionary[key] = None
-        ef(lambda : get(dictionary, key))
-        ef(lambda : get(dictionary, key, "hello!"))
+        ef(lambda: get(dictionary, key))
+        ef(lambda: get(dictionary, key, "hello!"))
+
 
 @given(
     st.dictionaries(
@@ -142,12 +138,9 @@ def test_dict_permutations(dictionary: dict[str, Any]):
     """
     _check(dictionary)
 
+
 @given(
-    st.dictionaries(
-        st.text(min_size=1, max_size=5),
-        st.sets(st.text(max_size=10), max_size=4),
-        max_size=4
-    ),
+    st.dictionaries(st.text(min_size=1, max_size=5), st.sets(st.text(max_size=10), max_size=4), max_size=4),
     st.integers(min_value=0, max_value=4),
 )
 @settings(deadline=500)
@@ -161,6 +154,7 @@ def test_dict_permutations_limit_n(dictionary: dict[str, Any], n: int):
     default deadline of 200ms.
     """
     _check(dictionary, n=n)
+
 
 def test_dict_permutations_limit_n_special_cases():
     """
@@ -192,6 +186,7 @@ def test_dict_permutations_limit_n_special_cases():
     expected1 = [{"k1": "v11", "k2": "v21"}]
     assert expected1 == actual1
 
+
 @given(st.lists(st.integers(), max_size=5))
 def test_mult_with_not_skipping_zeros(ints: list[int]):
     """Check that mult() when zeros aren't skipped."""
@@ -202,6 +197,7 @@ def test_mult_with_not_skipping_zeros(ints: list[int]):
             expected *= n
 
     assert expected == mult(ints)
+
 
 @given(st.lists(st.integers(), max_size=5))
 def test_mult_with_skipping_zeros(ints: list[int]):
@@ -214,6 +210,7 @@ def test_mult_with_skipping_zeros(ints: list[int]):
             expected *= n
 
     assert expected == mult(ints, skip_zeros=True)
+
 
 @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
 def test_dict_pop_returns_value_for_key_and_deletes_from_dict(dictionary):
@@ -228,16 +225,17 @@ def test_dict_pop_returns_value_for_key_and_deletes_from_dict(dictionary):
         dlen -= 1
         assert dlen == len(dictionary)
 
+
 @given(st.dictionaries(st.text(min_size=1, max_size=5), st.integers()))
-def test_dict_pop_returns_None_for_nonexistent_key_and_leaves_dict_unchanged(
-    dictionary
-):
+def test_dict_pop_returns_none_for_nonexistent_key_and_leaves_dict_unchanged(dictionary):
     """Check that dict_pop() returns None for a nonexistent key and leaves the dictionary unchanged."""
     dlen = len(dictionary)
     keys = dictionary.keys()
     for key in list(keys):
         key2 = key + key
         if key2 in dictionary:  # just in case...
-            key2 = key2 + key2
+            key2 = key2 + "--" + key2
         actual_value = dict_pop(dictionary, key2)
+        assert actual_value is None
         assert key2 not in dictionary
+        assert dlen == len(dictionary)

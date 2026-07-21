@@ -187,9 +187,7 @@ class TestChatCompletions:
         assert "choices" in first_chunk
 
         # Check that we have content in at least one chunk
-        has_content = any(
-            chunk["choices"][0].get("delta", {}).get("content") for chunk in chunks
-        )
+        has_content = any(chunk["choices"][0].get("delta", {}).get("content") for chunk in chunks)
         assert has_content
 
         # Check last chunk has finish_reason
@@ -240,9 +238,7 @@ class TestAPIServerIntegration:
         reply = data["choices"][0]["message"]["content"]
 
         # The reply should mention refill or prescription
-        assert any(
-            word in reply.lower() for word in ["refill", "prescription", "medication"]
-        )
+        assert any(word in reply.lower() for word in ["refill", "prescription", "medication"])
 
     def test_emergency_query(self, client):
         """Test an emergency query through the API."""
@@ -265,9 +261,7 @@ class TestAPIServerIntegration:
         """Test an appointment query through the API."""
         request_data = {
             "model": "ollama_chat/gemma4:12b",
-            "messages": [
-                {"role": "user", "content": "I'd like to schedule an appointment"}
-            ],
+            "messages": [{"role": "user", "content": "I'd like to schedule an appointment"}],
             "stream": False,
         }
 

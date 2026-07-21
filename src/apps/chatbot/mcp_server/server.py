@@ -52,9 +52,7 @@ def create_mcp_server(
         data_dir=Path(data_dir),
         output_dir=Path(output_dir),
         confidence_level_threshold=confidence_level_threshold,
-        response_handler=ChatBotResponseHandler(
-            confidence_level_threshold=confidence_level_threshold, logger=logger
-        ),
+        response_handler=ChatBotResponseHandler(confidence_level_threshold=confidence_level_threshold, logger=logger),
         logger=logger,
     )
 

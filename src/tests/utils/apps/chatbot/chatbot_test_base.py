@@ -6,7 +6,6 @@ for property-based testing. https://hypothesis.readthedocs.io/en/latest/
 import json
 import logging
 import os
-import pytest
 import random
 import re
 import sys
@@ -14,7 +13,7 @@ import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import StrEnum, auto
-from io import StringIO, TextIOWrapper
+from io import StringIO
 from pathlib import Path
 from typing import Any, Sequence, TypeVar
 
@@ -101,19 +100,13 @@ class QnADataLoader(TestDataLoader[QnATest]):
                         labels = dict_pop(obj, "labels")
                         actions = dict_pop(obj, "actions")
                         rating = dict_pop(obj, "rating")
-                        reason = dict_pop(
-                            obj, "reason"
-                        )  # Not all records have this, so None will be returned.
+                        reason = dict_pop(obj, "reason")  # Not all records have this, so None will be returned.
                         # What's left in obj at this point are "substitution" keywords, if any,
                         # that we expect to find in the inference results.
-                        qnat = QnATest(
-                            query, labels, actions, rating, reason, keywords=obj
-                        )
+                        qnat = QnATest(query, labels, actions, rating, reason, keywords=obj)
                         tests.append(qnat)
                     except ValueError as err:
-                        raise ValueError(
-                            f"From file {path}, error parsing line: <{line}>"
-                        ) from err
+                        raise ValueError(f"From file {path}, error parsing line: <{line}>") from err
         if not len(tests):
             raise ValueError(f"No Q&A pairs were loaded from {path}!")
         return tests
@@ -140,11 +133,11 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
             lines = file.readlines()
             try:
                 objs = decode_json_list("".join(lines))
+                if not len(objs):
+                    raise ValueError(f"No scenario tests were loaded from {path}!")
                 return [kind.from_dict(obj) for obj in objs]
             except ValueError as err:
                 raise ValueError(f"Error parsing JSON in file {path}") from err
-        if not len(tests):
-            raise ValueError(f"No scenario tests were loaded from {path}!")
 
 
 class QueryRunner[TESTDATUM](ABC):
@@ -166,11 +159,7 @@ class QueryRunner[TESTDATUM](ABC):
         pass
 
     def _check_label(self, expected: Sequence[str], actual: str) -> str:
-        return (
-            ""
-            if actual in expected
-            else f"""label '{actual}' not in expected: {expected}."""
-        )
+        return "" if actual in expected else f"""label '{actual}' not in expected: {expected}."""
 
 
 class QnAQueryRunner(QueryRunner[QnATest]):
@@ -185,9 +174,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
     def run_query(
         self,
         test_prompt: QnATest,
-    ) -> tuple[
-        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
-    ]:
+    ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]]:
         """
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum,
@@ -215,9 +202,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
         metadata["answer"] = answer
         try:
             if isinstance(answer, str) or answer.get("error"):
-                errors["query_failure"] = (
-                    f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
-                )
+                errors["query_failure"] = f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
                 return metadata, errors, warnings, lowConfidenceResults
 
             actual_query = str(answer.get("query"))
@@ -232,13 +217,9 @@ class QnAQueryRunner(QueryRunner[QnATest]):
 
             if isinstance(actual_actions, str):
                 actual_actions = re.split(r"\s*,\s*", actual_reply.get("actions", ""))
-            actual_keywords = dict(
-                [(key, actual_reply.get(key, "")) for key in exp_keywords]
-            )
+            actual_keywords = dict([(key, actual_reply.get(key, "")) for key in exp_keywords])
             # We have seen the occasional confidence scores at the content level, rather than inside the reply.
-            actual_confidence = actual_reply.get(
-                "confidence", actual_content.get("confidence", 1.0)
-            )
+            actual_confidence = actual_reply.get("confidence", actual_content.get("confidence", 1.0))
             # actual_text = actual_reply.get('text', '')
 
             # We have seen subtle punctuation changes in prompts...
@@ -279,9 +260,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
                     # these labels!
                     exp_rtu = ChatBotResponseHandler.fixed_replies[actual_label]
                     if exp_rtu != actual_rtu:
-                        errors["unexpected reply_to_user"] = (
-                            f"<{exp_rtu}> != <{actual_rtu}>"
-                        )
+                        errors["unexpected reply_to_user"] = f"<{exp_rtu}> != <{actual_rtu}>"
                 else:
                     # For the other label cases, IF there are expected actions, do the actual actions contain
                     # at least one item in the expected actions? This is not a rigorous requirement, but should
@@ -306,9 +285,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
                 missing_kvs = {}
                 for key, value in exp_keywords.items():
                     if len(value) == 0:
-                        warnings["unexpected keywords"] = (
-                            f"BUG: keyword {key} has zero-length value array!"
-                        )
+                        warnings["unexpected keywords"] = f"BUG: keyword {key} has zero-length value array!"
                         continue
                     if len(value) > 1:
                         warnings["unexpected keywords"] = (
@@ -339,9 +316,7 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
     def run_query(
         self,
         test_prompt: ScenarioTest,
-    ) -> tuple[
-        dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]
-    ]:
+    ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]]:
         """
         run a scenario session.
         """
@@ -371,6 +346,7 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
 
         return metadata, errors, warnings, lowConfidenceResults
 
+
 # class syntax
 class WhichChatBot(StrEnum):
     SIMPLE = auto()
@@ -379,7 +355,8 @@ class WhichChatBot(StrEnum):
     def chatbot_name(self):
         return f"ChatBot{self.capitalize()}"
 
-class ChatBotTestBase():
+
+class ChatBotTestBase:
     """
     Base class for tests that need to instantiate a ChatBot, but not to run
     inference with it, which is expensive. Use the derived class,
@@ -393,14 +370,17 @@ class ChatBotTestBase():
     default_chatbot_template_dir = f"{default_chatbot_dir}/prompts/templates"
     default_chatbot_data_dir = f"{default_chatbot_dir}/data"
     default_output_dir = "output/tests"
-    default_log_file_template = f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+    default_log_file_template = (
+        f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+    )
 
     default_data_sample_rate = 1.0
     default_accumulate_test_results = False
     default_rating_threshold = 4
     default_confidence_threshold = ChatBot.default_confidence_threshold
 
-    def __init__(self,
+    def __init__(
+        self,
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
         service_url: str = "",
@@ -413,7 +393,7 @@ class ChatBotTestBase():
         rating_threshold: int = 0,
         confidence_threshold: float = 0.0,
         verbose: bool | None = None,
-        ):
+    ):
         """
         Initialize the ChatBot and ChatBotShell. The default values for the arguments shown
         used to indicate that corresponding environment variables should be read to determine
@@ -453,28 +433,47 @@ class ChatBotTestBase():
         This is a special-purpose, custom "log" file. We also use the Python `logging` framework
         for "general" logging.
         """
-        self.which_chatbot: WhichChatBot = which_chatbot if which_chatbot else WhichChatBot(
-            os.environ.get(
-                "WHICH_CHATBOT", ChatBotTestBase.default_which_chatbot_str).lower())
-        self.model: str = model if model else os.environ["MODEL"] # no default!
-        self.service_url: str = service_url if service_url else os.environ.get(
-            "INFERENCE_URL", ChatBotTestBase.default_service_url)
-        self.template_dir: Path = template_dir if template_dir else Path(os.environ.get(
-            "CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_template_dir))
-        self.data_dir: Path = data_dir if data_dir else Path(os.environ.get(
-            "DATA_DIR", ChatBotTestBase.default_chatbot_data_dir))
-        self.output_dir: Path = output_dir if output_dir else Path(os.environ.get(
-            "OUTPUT_DIR", ChatBotTestBase.default_output_dir))
-        self.data_sample_rate: float = data_sample_rate if data_sample_rate != None else float(
-            os.environ.get("DATA_SAMPLE_RATE", ChatBotTestBase.default_data_sample_rate))
-        self.accumulate_test_results: bool = accumulate_test_results if accumulate_test_results != None else bool(
-            os.environ.get("ACCUMULATE_TEST_ERRORS", ChatBotTestBase.default_accumulate_test_results))
-        self.rating_threshold: int = rating_threshold if rating_threshold > 0 else int(
-            os.environ.get("RATING_THRESHOLD", ChatBotTestBase.default_rating_threshold))
-        self.confidence_threshold: float = confidence_threshold if confidence_threshold > 0.0 else float(
-            os.environ.get("CONFIDENCE_THRESHOLD", ChatBotTestBase.default_confidence_threshold))
-        self.verbose: bool = verbose if verbose != None else bool(
-            os.environ.get("VERBOSE", False))
+        self.which_chatbot: WhichChatBot = (
+            which_chatbot
+            if which_chatbot
+            else WhichChatBot(os.environ.get("WHICH_CHATBOT", ChatBotTestBase.default_which_chatbot_str).lower())
+        )
+        self.model: str = model if model else os.environ["MODEL"]  # no default!
+        self.service_url: str = (
+            service_url if service_url else os.environ.get("INFERENCE_URL", ChatBotTestBase.default_service_url)
+        )
+        self.template_dir: Path = (
+            template_dir
+            if template_dir
+            else Path(os.environ.get("CHATBOT_TEMPLATES_DIR", ChatBotTestBase.default_chatbot_template_dir))
+        )
+        self.data_dir: Path = (
+            data_dir if data_dir else Path(os.environ.get("DATA_DIR", ChatBotTestBase.default_chatbot_data_dir))
+        )
+        self.output_dir: Path = (
+            output_dir if output_dir else Path(os.environ.get("OUTPUT_DIR", ChatBotTestBase.default_output_dir))
+        )
+        self.data_sample_rate: float = (
+            data_sample_rate
+            if data_sample_rate is not None
+            else float(os.environ.get("DATA_SAMPLE_RATE", ChatBotTestBase.default_data_sample_rate))
+        )
+        self.accumulate_test_results: bool = (
+            accumulate_test_results
+            if accumulate_test_results is not None
+            else bool(os.environ.get("ACCUMULATE_TEST_ERRORS", ChatBotTestBase.default_accumulate_test_results))
+        )
+        self.rating_threshold: int = (
+            rating_threshold
+            if rating_threshold > 0
+            else int(os.environ.get("RATING_THRESHOLD", ChatBotTestBase.default_rating_threshold))
+        )
+        self.confidence_threshold: float = (
+            confidence_threshold
+            if confidence_threshold > 0.0
+            else float(os.environ.get("CONFIDENCE_THRESHOLD", ChatBotTestBase.default_confidence_threshold))
+        )
+        self.verbose: bool = verbose if verbose is not None else bool(os.environ.get("VERBOSE", False))
 
         if log_file_path:
             self.log_file_path = Path(log_file_path)
@@ -484,8 +483,7 @@ class ChatBotTestBase():
                 log_file_template = ChatBotTestBase.default_log_file_template
             self.log_file_path = Path(
                 log_file_template.format(
-                    class_name=self.__class__.__name__,
-                    which_chatbot=self.which_chatbot.chatbot_name()
+                    class_name=self.__class__.__name__, which_chatbot=self.which_chatbot.chatbot_name()
                 )
             )
         print(f"\n  ** Logging to {self.log_file_path} ** \n")
@@ -500,9 +498,7 @@ class ChatBotTestBase():
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
 
-        chatbot_class = (
-            ChatBotAgent if self.which_chatbot == WhichChatBot.AGENT else ChatBotSimple
-        )
+        chatbot_class = ChatBotAgent if self.which_chatbot == WhichChatBot.AGENT else ChatBotSimple
         self.chatbot = chatbot_class(
             model=self.model,
             service_url=self.service_url,
@@ -546,7 +542,8 @@ class ChatBotTestWithInference(ChatBotTestBase):
     also PR checks.
     """
 
-    def __init__(self,
+    def __init__(
+        self,
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
         service_url: str = "",
@@ -559,20 +556,20 @@ class ChatBotTestWithInference(ChatBotTestBase):
         rating_threshold: int = 0,
         confidence_threshold: float = 0.0,
         verbose: bool | None = None,
-        ):
+    ):
         super().__init__(
-            which_chatbot = which_chatbot,
-            model = model,
-            service_url = service_url,
-            template_dir = template_dir,
-            data_dir = data_dir,
-            output_dir = output_dir,
-            log_file_path = log_file_path,
-            data_sample_rate = data_sample_rate,
-            accumulate_test_results = accumulate_test_results,
-            rating_threshold = rating_threshold,
-            confidence_threshold = confidence_threshold,
-            verbose = verbose,
+            which_chatbot=which_chatbot,
+            model=model,
+            service_url=service_url,
+            template_dir=template_dir,
+            data_dir=data_dir,
+            output_dir=output_dir,
+            log_file_path=log_file_path,
+            data_sample_rate=data_sample_rate,
+            accumulate_test_results=accumulate_test_results,
+            rating_threshold=rating_threshold,
+            confidence_threshold=confidence_threshold,
+            verbose=verbose,
         )
 
         self.samples_count = 0
@@ -597,9 +594,9 @@ class ChatBotTestWithInference(ChatBotTestBase):
 
     def finish(self):
         """Call after all the test samples have been executed."""
-        lcr_count      = len(self.low_confidence_results)
+        lcr_count = len(self.low_confidence_results)
         warnings_count = len(self.warnings)
-        errors_count   = len(self.errors)
+        errors_count = len(self.errors)
         print("\nTotals:")
         print(f"Which ChatBot:                {self.which_chatbot.chatbot_name()}")
         print(f"Samples count:                {self.samples_count}")
@@ -668,12 +665,12 @@ class ChatBotTestWithInference(ChatBotTestBase):
         }
         print(json.dumps(d), file=self.log_file)
 
-        samples = (
-            self._sample(test_data, self.data_sample_rate) if self.data_sample_rate < 1.0 else test_data
-        )
+        samples = self._sample(test_data, self.data_sample_rate) if self.data_sample_rate < 1.0 else test_data
         self.samples_count = len(samples)
         if not self.samples_count:
-            raise ValueError(f"No samples! test data size = {len(test_data)} * data sample rate = {self.data_sample_rate} => no samples!")
+            raise ValueError(
+                f"No samples! test data size = {len(test_data)} * data sample rate = {self.data_sample_rate} => no samples!"
+            )
 
         last_time = time.time()
         allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
@@ -681,9 +678,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
         sample_number = 0
         for test_prompt in samples:
             sample_number += 1
-            metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(
-                test_prompt
-            )
+            metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(test_prompt)
             if errors:
                 me = errors | metadata  # print the error data first.
                 self.errors.append(me)
@@ -710,8 +705,9 @@ class ChatBotTestWithInference(ChatBotTestBase):
             # If so, then error out.
             now = time.time()
             difference = int(last_time - now)
-            assert difference <= allowed_time_delta, \
-                f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}"
+            assert (
+                difference <= allowed_time_delta
+            ), f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}"
             last_time = now
 
             # Show we aren't dead by printing counts...
@@ -737,10 +733,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
         file_path = self._get_data_file(use_case_name, "qna")
         data_loader = QnADataLoader()
         data = data_loader.load_data(file_path)
-        runner = QnAQueryRunner(
-            self.chatbot,
-            self.rating_threshold,
-            self.confidence_threshold)
+        runner = QnAQueryRunner(self.chatbot, self.rating_threshold, self.confidence_threshold)
 
         self.__try_all_samples(
             method="try_qna_queries",
@@ -764,10 +757,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
         file_path = self._get_data_file(use_case_name, "scenario")
         data_loader = ScenarioDataLoader()
         data = data_loader.load_data(file_path)
-        runner = ScenarioQueryRunner(
-            self.chatbot,
-            self.rating_threshold,
-            self.confidence_threshold)
+        runner = ScenarioQueryRunner(self.chatbot, self.rating_threshold, self.confidence_threshold)
 
         self.__try_all_samples(
             method="try_scenarios",

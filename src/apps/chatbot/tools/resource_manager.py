@@ -19,8 +19,12 @@ class ResourceManager:
     A simple tool for managing "resources" using local file storage for persistence.
 
     Resources are stored in a JSONL file where each line is a JSON object
-    representing a resource instance. The method return values are designed to work
-    with LLMs in an agent context.
+    representing a resource instance. The method return values are designed
+    support LLMs in an agent context.
+
+    In memory, the resources are stored as a mapping of the resource id as the
+    key and the resource as the value, for efficient lookup by id, but most
+    methods just accept or return sequences of resource values.
     """
 
     def __init__(
@@ -49,29 +53,151 @@ class ResourceManager:
             self.logger.info("Starting 'empty' with no resource records")
         else:
             all_count, loaded_count, errors = self._load_resources()
-            self.logger.info(
-                f"Loaded {loaded_count} resource records (out of {all_count} read)"
-            )
+            self.logger.info(f"Loaded {loaded_count} resource records (out of {all_count} read)")
             if errors:
-                self.logger.error(
-                    f"Errors while loading resource records: {', '.join(errors)}"
-                )
+                self.logger.error(f"Errors while loading resource records: {', '.join(errors)}")
 
     def clear(self):
         """Remove all resources and clear the persistent records."""
         self.resources.clear()
         self.storage.clear()
 
-    def get_resources(self):
-        """Use this method instead of referencing `self.resources` directly!!"""
-        return self.resources
+    def get_resources(self) -> Sequence[MutableMapping[str, Any]]:
+        """
+        Use this method instead of referencing `self.resources` directly!!
+
+        Returns:
+            A mapping of ids to maps, one map for each resource, where the
+            resource map also has the id as a member.
+        """
+        return list(self.resources.values())
+
+    def get_resources_count(self) -> int:
+        """
+        Return the number of resources, ignoring those where
+        `self._ignore(resource)` returns `True`.
+        """
+        count = 0
+        for resource in self.resources.values():
+            if not self._ignore(resource):
+                count += 1
+        return count
+
+    def get_resource_by_id(self, resource_id: str) -> MutableMapping[str, Any]:
+        """
+        Get a specific resource by ID.
+
+        Args:
+            resource_id: ID of the resource
+
+        Returns:
+            Resource dictionary or {} if not found
+        """
+        return self.resources.get(resource_id, {})
+
+    @classmethod
+    def resource_matches_criteria(
+        cls,
+        resource: MutableMapping[str, Any],
+        criteria: MutableMapping[str, Callable[[Any], bool]],
+    ) -> bool:
+        for key, matcher in criteria.items():
+            if matcher and not matcher(resource[key]):
+                return False
+        # If here, we have a match!
+        return True
+
+    @classmethod
+    def get_resources_by_criteria_from(
+        cls,
+        resources: Sequence[MutableMapping[str, Any]],
+        criteria: MutableMapping[str, Callable[[Any], bool]],
+        sort_by_key: str = "",
+    ) -> Sequence[MutableMapping[str, Any]]:
+        """
+        Like `self.get_resources_by_criteria()` but you can pass
+        in an arbitrary sequence of resources.
+        """
+        found = []
+        for res in resources:
+            if ResourceManager.resource_matches_criteria(
+                res,
+                criteria,
+            ):
+                found.append(res)
+        if sort_by_key:
+            found.sort(key=lambda res: res[sort_by_key])
+        return found
+
+    def get_resources_by_criteria(
+        self,
+        criteria: MutableMapping[str, Callable[[Any], bool]],
+        sort_by_key: str = "",
+    ) -> Sequence[MutableMapping[str, Any]]:
+        """
+        Retrieve the resources for the specified criteria. First, locate
+        the key-values in a resource for each key in `criteria`. Then, use the
+        criteria's corresponding value, `v`, to see if the resource's corresponding value
+        matches. if `v` is `None`, we assume a match. Otherwise, `v` is called with the
+        resource's corresponding value and if `True` is returned, then the value
+        matches. Finally,  Also, resources are ignored if `self._ignore(resource)` returns `True`.
+
+        Args:
+            - criteria (MutableMapping[str,Callable[[Any],bool]]): A non-empty dictionary of
+              key-value pairs for finding matches. See the method comments for
+              description  of the value in `criteria`.
+            - sort_by_key (str): If not empty, then sort the list by the resource
+              values that correspond to key `sort_by_key`. If this key doesn't exist
+              in all the resources, then the resulting `KeyError` will be logged and
+              the unsorted list will be returned.
+
+        Returns:
+            Sequence[MutableMapping[str,Any]] with resources that match the criteria, or [] if no matches are found.
+        """
+        found = ResourceManager.get_resources_by_criteria_from(
+            list(self.resources.values()),
+            criteria,
+            sort_by_key,
+        )
+        return list(filter(lambda res: not self._ignore(res), found))
+
+    def get_resource_ids_by_criteria(self, criteria: MutableMapping[str, Any]) -> Sequence[str]:
+        """
+        Calls `get_resources_by_criteria` to get resources for the specified criteria,
+        i.e., where keys in `criteria` are found in the resources and the values found
+        match the corresponding `criteria` value. For the found resources, just the ids
+        are returned.
+
+        Args:
+            criteria (dict[str,Any]): A non-empty dictionary of key-value pairs for finding matches
+
+        Returns:
+            list[str] with IDs for the resources that match the criteria, or [] if no matches are found.
+        """
+        found = self.get_resources_by_criteria(criteria)
+        return [resource["id"] for resource in found]
+
+    def remove_resource_by_id(self, resource_id: str, write_to_storage: bool = True):
+        """
+        Remove a resource. This means it is logically no longer part
+        of the collection of resources. If no matching resource is found
+        for the input `resource_id`, a `ValueError` is raised. If the flag
+        `write_to_storage` is true, then the storage file is rewriting with
+        the remaining collection of resources.
+        """
+        if resource_id not in self.resources:
+            raise ValueError(f"ID {resource_id} not in the resources.")
+        del self.resources[resource_id]
+        if write_to_storage:
+            self.save_resources()
 
     def _ignore(self, resource: MutableMapping[str, Any]) -> bool:
         """
         A hook that subclasses can override to tell methods to "ignore"
-        a resource for various actions. This is designed to support the case
-        where updates are made to a resource in the persistent file, but older
-        versions exist in the file, etc.
+        a resource for various actions. This is designed to support a few
+        scenarios. One scenario is when updates to a resource are written
+        to the persistent file, but older versions of the resource exist
+        earlier in the file and we want to ignore them.
         """
         return False
 
@@ -82,28 +208,30 @@ class ResourceManager:
         are ignored.
 
         Returns:
-            A tuple `(all_count, loaded_count, list[messages])`, where `all_count` is the count of all
-            resource records in storage, `loaded_count` is <= `all_count` is the number
-            successfully parsed and not filtered out by `self._ignore()`, and `list[messages]`
-            are error messages or [] if no errors occurred.
+            A tuple `(all_count, loaded_count, list[messages])`, where `all_count`
+            is the count of all resource records in storage, `loaded_count`, which
+            is <= `all_count`, is the number of resources that were successfully
+            parsed and not filtered out by `self._ignore()`, and `list[messages]`
+            are error messages, one per resource parse error, or [] if no errors
+            occurred.
         """
         resources, errors = self.storage.load()
         loaded_count = len(resources)
         error_count = len(errors)
         all_count = loaded_count + error_count
         if errors:
-            self.logger.error(
-                f"{error_count} records out of {all_count} failed to parse: {errors}"
-            )
+            self.logger.error(f"{error_count} records out of {all_count} failed to parse: {errors}")
 
         self.resources = {}
         for resource in resources:
-            # Only load non-cancelled resources and those with ids.
+            # Only load "non-ignorable" resources and those with ids.
             if not self._ignore(resource):
                 id = resource.get("id")
                 if id:
                     if id in self.resources:
-                        error_msg = f"self.resources already has an entry for {id} (self.resources[id]). SKIPPING new one!"
+                        error_msg = (
+                            f"self.resources already has an entry for {id} (self.resources[id]). SKIPPING new one!"
+                        )
                         self.logger.error(error_msg)
                         errors.append(error_msg)
                     else:
@@ -116,9 +244,7 @@ class ResourceManager:
                     loaded_count -= 1
         return all_count, loaded_count, errors
 
-    def _save_resources(
-        self, resources: Sequence[MutableMapping[str, Any]]
-    ) -> tuple[int, str]:
+    def _persist_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> tuple[int, str]:
         """
         Append one or more resources to the JSONL file.
 
@@ -186,11 +312,7 @@ class ResourceManager:
                 else:
                     dtm1 = dt - one_second
                     dtp1 = dt + one_second
-                    if (
-                        not self._ignore(resource)
-                        and dtm1 < a_date_time
-                        and dtp1 > a_date_time
-                    ):
+                    if not self._ignore(resource) and dtm1 < a_date_time and dtp1 > a_date_time:
                         return (
                             False,
                             f"""The time slot {a_date_time} for key "{unique_datetime_key}" is already reserved.""",
@@ -210,12 +332,11 @@ class ResourceManager:
         """
         return True, ""
 
-    def _create_resource(self, fields: MutableMapping[str, Any]) -> tuple[str, str]:
+    def create_resource(self, fields: MutableMapping[str, Any]) -> tuple[str, str]:
         """
-        Create a new resource. This method is intended to be called by
-        subclass "domain-specific" methods, rather than being called directly
-        by users. Calls `_is_valid_resource()` to perform any validation required
-        on the input `fields`.
+        Create a new resource. Calls `_is_valid_resource()` to perform any
+        validation required on the input `fields`. Writes the resource to
+        the storage file.
 
         Args:
             - fields (dict[str,Any]): The dictionary to use to create the resource record.
@@ -229,14 +350,20 @@ class ResourceManager:
         """
         success, message = self._is_valid_resource(fields)
         if not success:
-            self.logger.error(f"_create_resource(): {message}")
+            self.logger.error(f"create_resource(): {message}")
             return "", message
 
         # Create the resource and save it to the persistent file.
         resource_id = str(uuid4())
         fields["id"] = resource_id
         self.resources[resource_id] = fields
-        self._save_resources([fields])
+        actual_count, error_msg = self._persist_resources([fields])
+        if actual_count != 1 or error_msg != "":
+            del self.resources[resource_id]
+            msg = f"Failed to persist the new resource, so no changes made! Error: {error_msg}"
+            self.logger.error(msg)
+            return "", msg
+
         success_msg = f"Resource created at {datetime.now()} with ID {resource_id}."
         self.logger.info(success_msg)
         return resource_id, success_msg
@@ -252,11 +379,22 @@ class ResourceManager:
         """
         return True, ""
 
-    def set_resources(
-        self, resources: Sequence[MutableMapping[str, Any]]
-    ) -> Tuple[int, str]:
+    def save_resources(self):
         """
-        Set the resources, replacing the current list. Normally, _create_resource() should be used.
+        Save the current resource collection to storage, overwriting
+        the existing contents.
+        """
+        resources = self.get_resources()
+        len_resources = len(resources)
+        actual_count, error_msg = self._persist_resources(resources)
+        if actual_count != len_resources or error_msg != "":
+            raise ValueError(
+                f"Failed to write the current list of resources. {actual_count}/{len_resources} written. Errors: {error_msg}"
+            )
+
+    def set_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> Tuple[int, str]:
+        """
+        Set the resources, _replacing_ the current list. Normally, create_resource() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
 
         Args:
@@ -278,6 +416,7 @@ class ResourceManager:
                 0,
                 f"{len(ids) - len(unique)} out of {len(ids)} ids are not unique! {ids}",
             )
+        len_resources = len(ids)
 
         # Validate the resource records
         errors = []
@@ -289,118 +428,18 @@ class ResourceManager:
             else:
                 errors.append(f""" "{resource}" -> Error: {message}""")
         if errors:
-            error_msg = f"{len(errors)} resources are invalid: [{", ".join(errors)}]"
+            error_msg = f"{len(errors)} resources are invalid: [{", ".join(errors)}]. No resources changed!"
             self.logger.error(error_msg)
             return 0, error_msg
 
         # All good at this point!
         # Save to memory and file
         self.clear()
+        actual_count, error_msg = self._persist_resources(resources)
+        if actual_count != len_resources or error_msg != "":
+            msg = f"Failed to persist all the new resources ({actual_count} out of {len_resources}). File is now out of sync with the in memory self.resources (unchanged)! Error: {error_msg}"
+            self.logger.error(msg)
+            return 0, msg
         self.resources = dict([(a["id"], a) for a in resources])
-        self._save_resources(resources)
-        self.logger.info(f"Records replaced with {len(self.resources)} new resources.")
+        self.logger.info(f"Records replaced with {len_resources} new resources.")
         return len(self.resources), ""
-
-    def get_resources_count(self) -> int:
-        """
-        Return the number of resources, ignoring those where
-        `self._ignore(resource)` returns `True`.
-        """
-        count = 0
-        for resource in self.resources.values():
-            if not self._ignore(resource):
-                count += 1
-        return count
-
-    def get_resource_by_id(self, resource_id: str) -> MutableMapping[str, Any]:
-        """
-        Get a specific resource by ID.
-
-        Args:
-            resource_id: ID of the resource
-
-        Returns:
-            Resource dictionary or {} if not found
-        """
-        return self.resources.get(resource_id, {})
-
-    @classmethod
-    def resource_matches_criteria(
-        cls,
-        resource: MutableMapping[str, Any],
-        criteria: MutableMapping[str, Callable[[Any], bool]],
-    ) -> bool:
-        for key, matcher in criteria.items():
-            if matcher and not matcher(resource[key]):
-                return False
-        # If here, we have a match!
-        return True
-
-    @classmethod
-    def get_resources_by_criteria_from(
-        cls,
-        resources: Sequence[MutableMapping[str, Any]],
-        criteria: MutableMapping[str, Callable[[Any], bool]],
-        sort_by_key: str = "",
-    ) -> Sequence[MutableMapping[str, Any]]:
-        """Support `self.get_resources_by_criteria()` and some tests."""
-        found = []
-        for res in resources:
-            if ResourceManager.resource_matches_criteria(
-                res,
-                criteria,
-            ):
-                found.append(res)
-        if sort_by_key:
-            found.sort(key=lambda res: res[sort_by_key])
-        return found
-
-    def get_resources_by_criteria(
-        self,
-        criteria: MutableMapping[str, Callable[[Any], bool]],
-        sort_by_key: str = "",
-    ) -> Sequence[MutableMapping[str, Any]]:
-        """
-        Retrieve the resources for the specified criteria. First, locate
-        the key-values in a resource for each key in `criteria`. Then, use the
-        criteria's corresponding value, `v`, to see if the resource's corresponding value
-        matches. if `v` is `None`, we assume a match. Otherwise, `v` is called with the
-        resource's corresponding value and if `True` is returned, then the value
-        matches. Finally,  Also, resources are ignored if `self._ignore(resource)` returns `True`.
-
-        Args:
-            - criteria (MutableMapping[str,Callable[[Any],bool]]): A non-empty dictionary of
-              key-value pairs for finding matches. See the method comments for
-              description  of the value in `criteria`.
-            - sort_by_key (str): If not empty, then sort the list by the resource
-              values that correspond to key `sort_by_key`. If this key doesn't exist
-              in all the resources, then the resulting `KeyError` will be logged and
-              the unsorted list will be returned.
-
-        Returns:
-            Sequence[MutableMapping[str,Any]] with resources that match the criteria, or [] if no matches are found.
-        """
-        found = ResourceManager.get_resources_by_criteria_from(
-            list(self.resources.values()),
-            criteria,
-            sort_by_key,
-        )
-        return list(filter(lambda res: not self._ignore(res), found))
-
-    def get_resource_ids_by_criteria(
-        self, criteria: MutableMapping[str, Any]
-    ) -> Sequence[str]:
-        """
-        Calls `get_resources_by_criteria` to get resources for the specified criteria,
-        i.e., where keys in `criteria` are found in the resources and the values found
-        match the corresponding `criteria` value. For the found resources, just the ids
-        are returned.
-
-        Args:
-            criteria (dict[str,Any]): A non-empty dictionary of key-value pairs for finding matches
-
-        Returns:
-            list[str] with IDs for the resources that match the criteria, or [] if no matches are found.
-        """
-        found = self.get_resources_by_criteria(criteria)
-        return [resource["id"] for resource in found]

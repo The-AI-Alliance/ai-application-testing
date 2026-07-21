@@ -4,7 +4,6 @@ https://hypothesis.readthedocs.io/en/latest/
 """
 
 import os
-import pytest
 import tempfile
 from datetime import datetime
 from typing import Any
@@ -14,14 +13,12 @@ from hypothesis import given, strategies as st
 from common.file_persistent_storage import FilePersistentStorage
 
 
-class TestFilePersistentStorageUtil():  # pylint: disable=unused-variable
+class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
 
     def init(self):
         """Set up test fixtures"""
         # Create a temporary file for testing
-        self.temp_file = tempfile.NamedTemporaryFile(
-            mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
-        )
+        self.temp_file = tempfile.NamedTemporaryFile(mode="w", delete=True, delete_on_close=False, suffix=".jsonl")
         self.temp_file.close()
         self.tool = FilePersistentStorage(self.temp_file.name)
         self.tool.clear()
@@ -39,9 +36,7 @@ class TestFilePersistentStorageUtil():  # pylint: disable=unused-variable
                 st.one_of(
                     st.text(max_size=10),
                     st.integers(),
-                    st.floats(
-                        allow_nan=False, allow_infinity=False, allow_subnormal=False
-                    ),
+                    st.floats(allow_nan=False, allow_infinity=False, allow_subnormal=False),
                 ),
             ),
             min_size=0,
@@ -70,9 +65,7 @@ class TestFilePersistentStorageUtil():  # pylint: disable=unused-variable
                 st.one_of(
                     st.text(max_size=10),
                     st.integers(),
-                    st.floats(
-                        allow_nan=False, allow_infinity=False, allow_subnormal=False
-                    ),
+                    st.floats(allow_nan=False, allow_infinity=False, allow_subnormal=False),
                 ),
             ),
             min_size=0,

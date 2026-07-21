@@ -39,9 +39,7 @@ class ResponseHandler:
                 self.logger.info(handled)
             return handled
         except ValueError as err:
-            return {
-                "error": f"""ValueError raised: "{err}" for response = "{response}"."""
-            }
+            return {"error": f"""ValueError raised: "{err}" for response = "{response}"."""}
 
     def _handle(self, processed_response: dict[str, Any]) -> dict[str, Any]:
         """
@@ -88,9 +86,7 @@ This could be the next business day. If you are having an emergency, please call
     }
 
     def __init__(self, confidence_level_threshold: float, logger: logging.Logger):
-        super().__init__(
-            confidence_level_threshold=confidence_level_threshold, logger=logger
-        )
+        super().__init__(confidence_level_threshold=confidence_level_threshold, logger=logger)
 
     def _handle(self, processed_response: dict[str, Any]) -> dict[str, Any]:
         """
@@ -109,9 +105,7 @@ This could be the next business day. If you are having an emergency, please call
                     f"Reply's confidence {confidence} < {self.confidence_level_threshold}. Using default 'other' handling. (processed_response = {processed_response})"
                 )
             else:
-                text = str(
-                    processed_response.get("text", "")
-                )  # str() for type checking!
+                text = str(processed_response.get("text", ""))  # str() for type checking!
                 label = processed_response.get("label")
                 match label:
                     case "emergency" | "other":

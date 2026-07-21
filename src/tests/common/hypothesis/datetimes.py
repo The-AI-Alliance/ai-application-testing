@@ -33,9 +33,7 @@ def is_work_hours(
     return True
 
 
-def future_dates(
-    date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max
-):
+def future_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
     """
     A Hypothesis strategy for generating dates in the future, using the
     input date_strategy (default st.dates) and min_value and max_value.
@@ -65,9 +63,7 @@ def future_dates(
     return date_strategy(min_value=min_value, max_value=max_value)
 
 
-def past_dates(
-    date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max
-):
+def past_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
     """
     A Hypothesis strategy for generating dates in the past, meaning
     yesterday or earlier, using the input date_strategy (default st.dates)
@@ -126,9 +122,7 @@ def non_weekend_dates(
             return False
         return True
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(
-        lambda dt: allowed(dt)
-    )
+    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
 
 
 def weekend_dates(
@@ -159,9 +153,7 @@ def weekend_dates(
             return False
         return True
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(
-        lambda dt: allowed(dt)
-    )
+    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
 
 
 def work_dates(
@@ -194,9 +186,7 @@ def work_dates(
             return False
         return True
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(
-        lambda dt: allowed(dt)
-    )
+    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
 
 
 def work_hours(start_hour_inclusive: int = 8, end_hour_inclusive: int = 17):
@@ -219,9 +209,7 @@ def work_hours(start_hour_inclusive: int = 8, end_hour_inclusive: int = 17):
     return st.integers(min_value=start_hour_inclusive, max_value=end_hour_inclusive)
 
 
-def non_work_hours(
-    last_morning_hour_inclusive: int = 7, first_evening_hour_inclusive: int = 18
-):
+def non_work_hours(last_morning_hour_inclusive: int = 7, first_evening_hour_inclusive: int = 18):
     """
     A Hypothesis strategy for generating hours outside of the work hours.
 
@@ -269,9 +257,7 @@ def off_the_hour_minutes():
     return st.integers(min_value=1, max_value=59)
 
 
-def date_hour_minute_datetimes(
-    date_strategy, hour_strategy, minute_strategy, future: bool
-):
+def date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, future: bool):
     """
     A Hypothesis strategy for generating future or datetimes, with the dates, hours, and minutes generated
     by the input strategies. This method could be called directly, but it is important to pass consistent
@@ -330,9 +316,7 @@ def future_work_datetimes(
 
     A strategy for future datetime generation.
     """
-    return date_hour_minute_datetimes(
-        date_strategy, hour_strategy, minute_strategy, True
-    )
+    return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, True)
 
 
 def past_work_datetimes(
@@ -355,6 +339,4 @@ def past_work_datetimes(
 
     A strategy for past datetime generation.
     """
-    return date_hour_minute_datetimes(
-        date_strategy, hour_strategy, minute_strategy, False
-    )
+    return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, False)

@@ -33,9 +33,7 @@ def test_chatbot_creation():
             data_dir=Path("src/data"),
             output_dir=Path("output/chatbot"),
             confidence_level_threshold=0.9,
-            response_handler=ChatBotResponseHandler(
-                confidence_level_threshold=0.9, logger=logger
-            ),
+            response_handler=ChatBotResponseHandler(confidence_level_threshold=0.9, logger=logger),
             logger=logger,
         )
         print("✓ Successfully created ChatBot instance")

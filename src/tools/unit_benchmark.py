@@ -84,13 +84,9 @@ class UnitBenchmarkDataParent(ABC):
             label = from_json(json_line, ["answer", "label"])
             return expected_label == label
         except KeyError as ke:
-            self.logger.warning(
-                f" check_label(): input JSON doesn't have a label field (exception: {ke}): {json_line}"
-            )
+            self.logger.warning(f" check_label(): input JSON doesn't have a label field (exception: {ke}): {json_line}")
         except json.decoder.JSONDecodeError as ex:
-            self.logger.warning(
-                f" check_label(): JSON parsing failed (exception: {ex}): {json_line}"
-            )
+            self.logger.warning(f" check_label(): JSON parsing failed (exception: {ex}): {json_line}")
 
         return False
 
@@ -121,9 +117,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
         use_cases: list[str],
         logger: logging.Logger,
     ):
-        super().__init__(
-            model_name, service_url, template_dir, data_dir, use_cases, logger
-        )
+        super().__init__(model_name, service_url, template_dir, data_dir, use_cases, logger)
 
         # Create the data directory
         os.makedirs(self.data_dir, exist_ok=True)
@@ -154,16 +148,12 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
             self.logger.error(f"Data file {data_file} not found.")
             sys.exit(1)
 
-    def _do_generate(
-        self, data_file: str, template: Mapping[str, str], expected_label: str
-    ) -> int:
+    def _do_generate(self, data_file: str, template: Mapping[str, str], expected_label: str) -> int:
         """Generate data."""
         try:
             content = template["prompt"]
             if len(content) == 0:
-                self.logger.error(
-                    f"The template['prompt'] is empty: template:\n{template}"
-                )
+                self.logger.error(f"The template['prompt'] is empty: template:\n{template}")
                 sys.exit(1)
             response = completion(
                 model=self.model_name,
@@ -241,9 +231,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         just_stats: bool,
         logger: logging.Logger,
     ):
-        super().__init__(
-            model_name, service_url, template_dir, data_dir, use_cases, logger
-        )
+        super().__init__(model_name, service_url, template_dir, data_dir, use_cases, logger)
         self.just_stats = just_stats
         ensure_dirs_exist(self.data_dir)
 
@@ -251,9 +239,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         self.logger.info(f"Using template file: {template_file}")
         self.template = load_yaml(template_file)
 
-    def return_stats(
-        self, data_file: str, validation_file: str
-    ) -> MutableMapping[str, Any]:
+    def return_stats(self, data_file: str, validation_file: str) -> MutableMapping[str, Any]:
         """Return a map with the validation statistics."""
         ratings = [0 for i in range(5)]
         total_count = 0
@@ -280,9 +266,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             "error_count": error_count,
         }
 
-    def validate_line(
-        self, line: str, system_prompt: str, validation_file: io.TextIOWrapper
-    ):
+    def validate_line(self, line: str, system_prompt: str, validation_file: io.TextIOWrapper):
         """Validate a single generated datum; does the question match the label?"""
         try:
             response: ModelResponse | CustomStreamWrapper = completion(
@@ -301,9 +285,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             if isinstance(response, ModelResponse):
                 lines, errors = extract_jsonl_list(extract_content(response))
                 if errors:
-                    self.logger.error(
-                        f"Some lines couldn't be parsed in response <{response}>, errors = {errors}"
-                    )
+                    self.logger.error(f"Some lines couldn't be parsed in response <{response}>, errors = {errors}")
                 for ln in lines:
                     validation_file.write(ln + "\n")
             elif isinstance(response, CustomStreamWrapper):
@@ -312,9 +294,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 )
                 sys.exit(1)
             else:
-                self.logger.error(
-                    f"Logic error: unexpected response type ({type(response)}) received: {response}"
-                )
+                self.logger.error(f"Logic error: unexpected response type ({type(response)}) received: {response}")
                 sys.exit(1)
 
         except OpenAIError as e:
@@ -325,9 +305,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         """Validate the generated data labeling."""
         system_prompt = self.template["system"]
         if len(system_prompt) == 0:
-            self.logger.error(
-                f"The template['system'] is empty: template:\n{self.template}"
-            )
+            self.logger.error(f"The template['system'] is empty: template:\n{self.template}")
             sys.exit(1)
 
         total_stats = {}
@@ -335,9 +313,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         globs = [f"*-{name}-data.jsonl" for name in self.use_cases]
         data_file_names = []
         for gl in globs:
-            for files in glob.iglob(
-                gl, root_dir=self.data_dir, recursive=False, include_hidden=False
-            ):
+            for files in glob.iglob(gl, root_dir=self.data_dir, recursive=False, include_hidden=False):
                 data_file_names.append(files)
         self.logger.info(f"Validating data files: {data_file_names}")
         parse_err_fmt = """Some substrings from line {}, <{}> in data file <{}> didn't parse as JSONL. errors = {}"""
@@ -351,11 +327,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                         for line_number, line in enumerate(synthetic_data_file):
                             lines2, errors = extract_jsonl_list(line)
                             if errors:
-                                self.logger.error(
-                                    parse_err_fmt.format(
-                                        line_number, line, data_file, errors
-                                    )
-                                )
+                                self.logger.error(parse_err_fmt.format(line_number, line, data_file, errors))
                             for line2 in lines2:
                                 line3 = line2.strip()
                                 if len(line3) == 0:
@@ -371,11 +343,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         name_len = 80  # hack
         name_fmt = "{:" + f"{name_len}" + "s}  |"
         col_fmt = "  {:3d}  |"
-        border_fmt = (
-            "{:"
-            + f"{name_len}"
-            + "s}  |-------|-------|-------|-------|-------|-------|"
-        )
+        border_fmt = "{:" + f"{name_len}" + "s}  |-------|-------|-------|-------|-------|-------|"
 
         header: list[str] = [name_fmt.format("Files:")]
         for i in range(5):
@@ -414,6 +382,4 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         totals.append(col_fmt.format(str(sum(all_ratings))))
         self.logger.info("".join(totals))
         self.logger.info(border_fmt.format("-" * name_len))
-        self.logger.info(
-            f"Total count: {all_count} (includes errors), total errors: {all_error_count}"
-        )
+        self.logger.info(f"Total count: {all_count} (includes errors), total errors: {all_error_count}")

@@ -61,9 +61,7 @@ class ChatBotAgent(ChatBot):
 
         # Set up appointment tools with the correct data directory
         appointments_file = Path(self.output_dir) / "appointments.jsonl"
-        self.appointment_manager = get_appointment_manager(
-            file_path=appointments_file, logger=self.logger
-        )
+        self.appointment_manager = get_appointment_manager(file_path=appointments_file, logger=self.logger)
 
         self.agent = create_deep_agent(
             model=self.model,

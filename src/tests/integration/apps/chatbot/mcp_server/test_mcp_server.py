@@ -15,9 +15,10 @@ from pathlib import Path
 from apps.chatbot.mcp_server.server import create_mcp_server
 from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestBase
 
+
 def test_chatbot_creation():
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
-    cbtb = ChatBotTestBase(data_dir = Path(data_dir))
+    cbtb = ChatBotTestBase(data_dir=Path(data_dir))
     """Test that a ChatBot can be created. This is effectively done by the ChatBotTestBase.setUp() method."""
     assert cbtb.chatbot
     print("✓ Successfully created ChatBot instance")
@@ -28,9 +29,10 @@ def test_chatbot_creation():
     print(f"  - Output dir: {cbtb.chatbot.output_dir}")
     print(f"  - Confidence threshold: {cbtb.chatbot.confidence_level_threshold}")
 
+
 def test_mcp_server_creation():
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
-    cbtb = ChatBotTestBase(data_dir = Path(data_dir))
+    cbtb = ChatBotTestBase(data_dir=Path(data_dir))
     """Test that MCP server can be created with FastMCP."""
     logger = logging.getLogger("test")
     logger.setLevel(logging.INFO)
@@ -45,7 +47,7 @@ def test_mcp_server_creation():
         logger=logger,
     )
 
-    assert result, "FastMCP not available (this is expected if not installed). Install with: pip install fastmcp"""
+    assert result, "FastMCP not available (this is expected if not installed). Install with: pip install fastmcp" ""
 
     mcp, chatbot = result
     print("✓ Successfully created FastMCP server")

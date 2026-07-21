@@ -61,10 +61,9 @@ def get_appointment_manager(
     logger.info(f"Created a new AppointmentManager({fp}, logger) (id = {hex(id(_appointment_manager))}).")
     return _appointment_manager
 
+
 @tool
-def create_appointment(
-    patient_name: str, appointment_date_time: str, reason: str
-) -> Tuple[str, str]:
+def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[str, str]:
     """
     Create a new appointment for a patient.
 
@@ -128,9 +127,7 @@ def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
 
 
 @tool
-def get_appointments(
-    patient_name: str = "", after_date_time: str = ""
-) -> Sequence[MutableMapping[str, Any]]:
+def get_appointments(patient_name: str = "", after_date_time: str = "") -> Sequence[MutableMapping[str, Any]]:
     """
     List all active appointments, with optional filtering.
 
@@ -147,9 +144,7 @@ def get_appointments(
         get_appointments(patient_name="John Doe")
     """
     am = get_appointment_manager()
-    after_dt = (
-        datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
-    )
+    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
     return am.get_appointments(patient_name=patient_name, after_date_time=after_dt)
 
 
@@ -180,9 +175,7 @@ def get_appointment_by_id(id: str) -> MutableMapping[str, Any]:
 
 
 @tool
-def get_appointment_id_for_name_and_date_time(
-    patient_name: str, appointment_date_time: str
-) -> str:
+def get_appointment_id_for_name_and_date_time(patient_name: str, appointment_date_time: str) -> str:
     """
     Retrieve the appointment ID for the specified patient and date time.
 

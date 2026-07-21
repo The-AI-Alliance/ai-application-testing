@@ -18,12 +18,7 @@ class FilePersistentStorageError(Exception):
 
 
 class FilePersistentStorage:
-    def __init__(
-        self,
-        storage_path: Path | str,
-        logger: Optional[logging.Logger] = None,
-        remove_old: bool = False
-    ):
+    def __init__(self, storage_path: Path | str, logger: Optional[logging.Logger] = None, remove_old: bool = False):
         """
         Initialize the appointment tool.
 
@@ -79,9 +74,7 @@ class FilePersistentStorage:
                             dicts.append(d)
                         except json.JSONDecodeError as e:
                             errors.append(line)
-                            self.logger.error(
-                                f"Error parsing record line: {e} (line: {line})"
-                            )
+                            self.logger.error(f"Error parsing record line: {e} (line: {line})")
         return dicts, errors
 
     def save(self, records: Sequence[MutableMapping[str, Any]]) -> int:

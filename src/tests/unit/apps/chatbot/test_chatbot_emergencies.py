@@ -5,6 +5,7 @@ import pytest
 from pathlib import Path
 from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
 
+
 @pytest.mark.ai
 @pytest.mark.qna
 def test_chatbot_emergency_requests():
@@ -20,6 +21,5 @@ def test_chatbot_emergency_requests():
     use case is based on QnA pairs.
     """
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
-    cbtb = ChatBotTestWithInference(data_dir = Path(data_dir))
+    cbtb = ChatBotTestWithInference(data_dir=Path(data_dir))
     cbtb.try_qna_queries("emergencies")
-

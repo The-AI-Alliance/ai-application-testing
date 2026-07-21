@@ -62,9 +62,7 @@ def person_names(
     if max_size < min_size:
         max_size = min_size
     return st.lists(
-        person_name_parts(
-            regex_format, min_size=min_part_length, max_size=max_part_length
-        ),
+        person_name_parts(regex_format, min_size=min_part_length, max_size=max_part_length),
         min_size=min_size,
         max_size=max_size,
     )

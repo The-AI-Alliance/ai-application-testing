@@ -43,6 +43,7 @@ def encode_json(dct: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> str:
     """Create a JSON string from the input object."""
     return def_datetime_encoder.encode(dct)
 
+
 def decode_json_dict(text: Any) -> MutableMapping[str, Any]:
     """
     Parse a JSON string, returning a dictionary or raise a ValueError
@@ -59,9 +60,8 @@ def decode_json_dict(text: Any) -> MutableMapping[str, Any]:
             )
         return obj
     except (JSONDecodeError, TypeError) as err:
-        raise ValueError(
-            f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})"
-        ) from err
+        raise ValueError(f"JSONDecodeError or TypeError {err}: text not JSON? <{text}> (type: {type(text)})") from err
+
 
 def decode_json_list(text: Any) -> Sequence[MutableMapping[str, Any]]:
     """

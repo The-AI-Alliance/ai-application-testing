@@ -86,9 +86,7 @@ def example_conversation():
 
     # Second turn
     messages = example_messages.copy()
-    messages.append(
-        {"role": "user", "content": "I need to refill my lisinopril prescription"}
-    )
+    messages.append({"role": "user", "content": "I need to refill my lisinopril prescription"})
     print(f"\nUser: {messages[-1]['content']}")
     response = client.chat.completions.create(
         model="ollama_chat/gemma4:12b",
