@@ -164,7 +164,7 @@ def test_str_to_date_can_parse_friendly_formatted_date_strings(d):
     for fmt in friendly_date_formats:
         d_str = d.strftime(fmt)
         actual, error = str_to_date.run({"a_date_str": d_str, "input_format": fmt})
-        assert actual, f"Failed to convert \"{d_str}\" with format \"{fmt}\". Error: {error}"
+        assert actual, f'Failed to convert "{d_str}" with format "{fmt}". Error: {error}'
 
         # We actually need to compare strings, not ds, because a returned datetime might have "missing"
         # hours, minutes, seconds, etc., depending on fmt.
