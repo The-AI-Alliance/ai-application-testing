@@ -79,6 +79,11 @@ endif
 define help-message-general
 ${HIGHLIGHT}Quick help for this make process: General Targets${_END}
 
+${NOTE}You can ignore the following warnings you might see:${_END}
+${NOTE}  .custom.mk:N: warning: overriding commands for target ...${_END}
+${NOTE}  .common.mk:N: warning: ignoring old commands for target ...${_END}
+${NOTE}  `VIRTUAL_ENV=.../.venv` does not match the project environment path `.venv` ...${_END}
+
 ${CODE}make all${_END}                # Makes the ${CODE}help${_END} and ${CODE}print-info${_END} targets.
 ${CODE}make help${_END}               # Prints this output.
 ${CODE}make print-info${_END}         # Print the current values of some make and environment variables.
@@ -270,6 +275,7 @@ setup one-time-setup:: install-uv uv-venv install-dev-dependencies
 force-setup force-one-time-setup:: rm-venv setup
 rm-venv::
 	rm -rf .venv
+	rm -f uv.lock
 
 clean-setup:: uninstall-uv
 
