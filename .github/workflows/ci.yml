@@ -8,9 +8,9 @@ on:
       - ".common.mk"
       - ".console-colors.mk"
       - ".website.mk"
-      - "pyproject.toml"
       - "Makefile"
       - "src/**"
+      - "pyproject.toml"
 
 jobs:
   quality:
