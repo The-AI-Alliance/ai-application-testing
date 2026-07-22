@@ -6,6 +6,23 @@
 # Posted by Robert Ranjan
 # Retrieved 2026-05-18, License - CC BY-SA 4.0
 # TIP: Run `make show-colors` (This target is at the end of this file.)
+#
+# We get a lot of error calling tput in the GitHub CI headless linux servers:
+ifeq (${TERM},)
+RED=
+GREEN=
+ORANGE=
+BLUE=
+PINK=
+DARK_GREEN=
+LIGHT_GREY=
+BLACK=
+# virtually identical to RED:
+RED2=
+BOLD=
+OFFBOLD=
+_END=
+else
 RED=$(shell tput setaf 1)
 GREEN=$(shell tput setaf 2)
 ORANGE=$(shell tput setaf 3)
@@ -19,7 +36,7 @@ RED2=$(shell tput setaf 9)
 BOLD=$(shell tput smso)
 OFFBOLD=$(shell tput rmso)
 _END=$(shell tput sgr0; tput rmso)
-
+endif
 # Note the definitions with labels, like "ERROR:" have a trailing white space 
 # which both separate the label from the messages when used and also have the labels
 # line up equally! Use "make show-colors" to see this.
