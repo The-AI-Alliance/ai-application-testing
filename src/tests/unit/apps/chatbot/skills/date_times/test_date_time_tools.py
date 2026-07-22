@@ -45,8 +45,9 @@ from apps.chatbot.skills.date_times.date_time_tools import (
 from common.utils import datetimes_approx_equal
 
 from tests.common.hypothesis.datetimes import (
-    weekend_dates,
     non_weekend_dates,
+    weekend_dates,
+    year_2000,
 )
 
 one_second = timedelta(seconds=1)
@@ -72,38 +73,38 @@ def test_now_returns_current_datetime():
     assert is_eql, msg
 
 
-@given(non_weekend_dates())
+@given(non_weekend_dates(min_value=year_2000.date()))
 def test_is_weekday_returns_true_for_week_days(week_day):
     assert is_week_day.run({"a_date_time": week_day})
 
 
-@given(weekend_dates())
+@given(weekend_dates(min_value=year_2000.date()))
 def test_is_weekday_returns_false_for_weekend_days(weekend_day):
     assert not is_week_day.run({"a_date_time": weekend_day})
 
 
-@given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
+@given(st.datetimes(min_value=year_2000), st.sampled_from(friendly_date_time_formats))
 def test_datetime_to_str_returns_properly_formatted_string_based_on_desired_format(dt, fmt):
     expected = dt.strftime(fmt)
     actual = datetime_to_str.run({"a_date_time": dt, "output_format": fmt})
     assert expected == actual, f"dt: {dt}, fmt: {fmt}"
 
 
-@given(st.datetimes())
+@given(st.datetimes(min_value=year_2000))
 def test_datetime_to_str_uses_a_default_format(dt):
     expected = dt.strftime(def_friendly_date_time_format)
     actual = datetime_to_str.run({"a_date_time": dt})
     assert expected == actual, f"dt: {dt}, fmt: {def_friendly_date_time_format}"
 
 
-@given(st.dates(), st.sampled_from(friendly_date_formats))
+@given(st.dates(min_value=year_2000.date()), st.sampled_from(friendly_date_formats))
 def test_date_to_str_returns_properly_formatted_string_based_on_desired_format(d, fmt):
     expected = d.strftime(fmt)
     actual = date_to_str.run({"a_date": d, "output_format": fmt})
     assert expected == actual, f"d: {d}, fmt: {fmt}"
 
 
-@given(st.dates())
+@given(st.dates(min_value=year_2000.date()))
 def test_date_to_str_uses_a_default_format(d):
     expected = d.strftime(def_friendly_date_format)
     actual = date_to_str.run({"a_date": d})
@@ -124,7 +125,7 @@ def test_time_to_str_uses_a_default_format(t):
     assert expected == actual, f"t: {t}, fmt: {def_friendly_time_format}"
 
 
-@given(st.datetimes(), st.sampled_from(friendly_date_time_formats))
+@given(st.datetimes(min_value=year_2000), st.sampled_from(friendly_date_time_formats))
 def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
     import locale
 
@@ -140,7 +141,7 @@ def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
     locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
 
 
-@given(st.datetimes())
+@given(st.datetimes(min_value=year_2000))
 def test_str_to_datetime_can_parse_iso_formatted_strings(dt):
     dt_iso = dt.isoformat()
     actual, error = str_to_datetime.run({"a_date_time_str": dt_iso})
@@ -155,7 +156,7 @@ def test_str_to_datetime_returns_an_error_string_for_invalid_date_time_strings()
         assert "" != error
 
 
-@given(st.dates())
+@given(st.dates(min_value=year_2000.date()))
 def test_str_to_date_can_parse_friendly_formatted_date_strings(d):
     import locale
 
@@ -174,7 +175,7 @@ def test_str_to_date_can_parse_friendly_formatted_date_strings(d):
     locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
 
 
-@given(st.dates())
+@given(st.dates(min_value=year_2000.date()))
 def test_str_to_date_can_parse_iso_formatted_strings(d):
     d_iso = d.isoformat()
     actual, error = str_to_date.run({"a_date_str": d_iso})

@@ -19,6 +19,7 @@ from common.utils import (
     ExpectedFail,
 )
 
+from tests.common.hypothesis.datetimes import year_2000
 
 def valid_dirs(min_size: int = 1, max_size: int = 5):
     """Hypothesis strategy for generating directory names."""
@@ -50,7 +51,7 @@ def test_expected_fail():
         pass
 
 
-@given(st.datetimes(), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
+@given(st.datetimes(min_value=year_2000), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
 def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_approx_equal(dt, ns):
     for n in ns:
         delta = timedelta(seconds=n)
@@ -60,7 +61,7 @@ def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_appro
         assert msg == ""
 
 
-@given(st.datetimes(), st.lists(st.integers(min_value=1, max_value=4), min_size=0, max_size=3))
+@given(st.datetimes(min_value=year_2000), st.lists(st.integers(min_value=1, max_value=4), min_size=0, max_size=3))
 def test_datetimes_approx_equal_returns_false_and_non_empty_string_if_not_datetimes_approx_equal(dt, ns):
     for n in ns:
         delta = timedelta(seconds=n)

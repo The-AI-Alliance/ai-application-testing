@@ -5,11 +5,11 @@ Test utilities, e.g., strategy generators for Hypothesis.
 from hypothesis import strategies as st
 from datetime import datetime, timedelta, date, time
 
-one_day = timedelta(days=1)
-today = date.today()
+one_day   = timedelta(days=1)
+today     = date.today()
 yesterday = today - one_day
-tomorrow = today + one_day
-
+tomorrow  = today + one_day
+year_2000 = datetime(year=2000, month=1, day=1)
 
 def is_work_hours(
     dt: datetime,
