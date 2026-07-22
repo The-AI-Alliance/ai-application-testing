@@ -115,9 +115,11 @@ ${CODE}make black${_END}              # Alias for ${CODE}format${_END}.
 ${CODE}make lint${_END}               # Lint the Python code by making the ${CODE}ruff${_END} and ${CODE}pylint${_END} targets.
 ${CODE}make ruff${_END}               # Lint the Python code with ${CODE}ruff${_END}.
 ${CODE}make pylint${_END}             # Lint the Python code with ${CODE}pylint${_END}.
-${CODE}make type-check${_END}         # Type check the Python code with ${CODE}ty${_END}.
+${CODE}make type-check${_END}         # Type check the Python code making the ${CODE}ty${_END} target.
 ${CODE}make type-check-watch${_END}   # Type check the Python code with ${CODE}ty${_END} in "watch" mode,
 ${CODE}${_END}                        # so you can fix mistakes and keep it updating.
+${CODE}make ty${_END}                 # Type check the Python code with ${CODE}ty${_END}.
+${CODE}make ty-watch${_END}           # Type check the Python code with ${CODE}ty${_END} in "watch" mode.
 ${CODE}make before-pr${_END}          # Make ${CODE}format${_END}, ${CODE}lint${_END}, ${CODE}type-check${_END}, and ${CODE}unit-tests${_END}.
 ${CODE}${_END}                        # ${RED}DO THIS BEFORE SUBMITTING A PR!${_END}
 ${CODE}make before-pr-no-tests${_END} # Everything in ${CODE}before-pr${_END} except ${CODE}unit-tests${_END}.
@@ -232,8 +234,8 @@ print-pwd::
 .PHONY: format format-prerequisite format-default format-postrequisite black
 .PHONY: ruff ruff-prerequisite ruff-default ruff-postrequisite
 .PHONY: pylint pylint-prerequisite pylint-default pylint-postrequisite
-.PHONY: type-check type-check-prerequisite type-check-default type-check-postrequisite
-.PHONY: type-check-watch type-check-watch-default
+.PHONY: type-check ty type-check-prerequisite type-check-default type-check-postrequisite
+.PHONY: type-check-watch ty-watch type-check-watch-default
 .PHONY: lint
 
 tests:: unit-tests
@@ -268,13 +270,15 @@ pylint-default-save:
 	@echo "${INFO_LABEL}Target ${CODE}pylint${_END}: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
 	cd ${SRC_DIR} && ${UV_RUN} pylint ${PYLINT_IGNORE_ARGS} .
 
-type-check:: type-check-prerequisite type-check-default type-check-postrequisite
+type-check:: ty
+ty:: type-check-prerequisite type-check-default type-check-postrequisite
 type-check-prerequisite type-check-postrequisite::
 type-check-default:
 	@echo "${INFO_LABEL}Target ${CODE}type-check${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END}."
 	cd ${SRC_DIR} && ${UV_RUN} ty check .
 
-type-check-watch:: type-check-prerequisite type-check-watch-default type-check-postrequisite
+type-check-watch:: ty-watch
+ty-watch:: type-check-prerequisite type-check-watch-default type-check-postrequisite
 type-check-watch-default:
 	@echo "${INFO_LABEL}Target ${CODE}type-check-watch${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
 	cd ${SRC_DIR} && ${UV_RUN} ty check --watch .
