@@ -9,6 +9,7 @@ one_day = timedelta(days=1)
 today = date.today()
 yesterday = today - one_day
 tomorrow = today + one_day
+year_2000 = datetime(year=2000, month=1, day=1)
 
 
 def is_work_hours(

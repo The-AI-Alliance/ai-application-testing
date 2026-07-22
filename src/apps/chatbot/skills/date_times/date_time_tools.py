@@ -10,27 +10,63 @@ from langchain_core.tools import tool
 
 friendly_date_formats = [
     "%A, %B %d, %Y",
+    "%a, %B %d, %Y",
     "%A, %b %d, %Y",
+    "%a, %b %d, %Y",
     "%A %B %d, %Y",
+    "%a %B %d, %Y",
     "%A %b %d, %Y",
+    "%a %b %d, %Y",
     "%A, %B %d %Y",
+    "%a, %B %d %Y",
     "%A, %b %d %Y",
+    "%a, %b %d %Y",
     "%A %B %d %Y",
+    "%a %B %d %Y",
     "%A %b %d %Y",
+    "%a %b %d %Y",
     "%B %d, %Y",
     "%b %d, %Y",
     "%B %d %Y",
     "%b %d %Y",
+    "%A, %d %B, %Y",
+    "%a, %d %B, %Y",
+    "%A, %d %b, %Y",
+    "%a, %d %b, %Y",
+    "%A %d %B, %Y",
+    "%a %d %B, %Y",
+    "%A %d %b, %Y",
+    "%a %d %b, %Y",
+    "%A, %d %B %Y",
+    "%a, %d %B %Y",
+    "%A, %d %b %Y",
+    "%a, %d %b %Y",
+    "%A %d %B %Y",
+    "%a %d %B %Y",
+    "%A %d %b %Y",
+    "%a %d %b %Y",
+    "%B %d, %Y",
+    "%b %d, %Y",
+    "%B %d %Y",
+    "%b %d %Y",
+    "%d %B, %Y",
+    "%d %b, %Y",
+    "%d %B %Y",
+    "%d %b %Y",
     "%A, %Y-%m-%d",
+    "%a, %Y-%m-%d",
     "%A %Y-%m-%d",
+    "%a %Y-%m-%d",
     "%Y-%m-%d",
 ]
 
 friendly_time_formats = [
+    "%I:%M:%S %p",
     "%I:%M %p",
-    "%I:%M",
+    "%H:%M:%S",
+    "%H:%M",
     "%I %p",
-    "%I",
+    "%H",
 ]
 
 friendly_date_time_formats = ["%c", "%x %X"]
@@ -139,7 +175,7 @@ def _str_to_object[DT](
         if not fmt:  # skip empties...
             continue
         try:
-            dt = datetime.strptime(a_date_time_str, fmt)
+            dt = datetime.strptime(a_date_time_str.strip(), fmt)
             if dt:
                 return extract(dt), ""
         except ValueError:

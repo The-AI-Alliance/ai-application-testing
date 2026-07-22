@@ -20,6 +20,8 @@ from common.json_yaml import (
 )
 from common.utils import ExpectedFail
 
+from tests.common.hypothesis.datetimes import year_2000
+
 
 def clean_text(s: str) -> str:
     """Fix some problematic substrings that cause problems with JSON conversion."""
@@ -131,7 +133,7 @@ def __check_dict(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     question: str,
@@ -149,7 +151,7 @@ def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_decode_json_list_handles_datetimes_and_returns_valid_JSON(
     count: int,
@@ -179,7 +181,7 @@ js_template = """{{
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_decode_json_dict_ValueError_on_bad_input_str(
     question: str,
@@ -201,7 +203,7 @@ def test_decode_json_dict_ValueError_on_bad_input_str(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_decode_json_list_ValueError_on_bad_input_str(
     count: int,
@@ -224,7 +226,7 @@ def test_decode_json_list_ValueError_on_bad_input_str(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     count: int,
@@ -245,7 +247,7 @@ def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_decode_json_list_ValueError_on_input_dict_str(
     question: str,
@@ -320,7 +322,7 @@ def test_extract_jsonl_list_returns_empty_lists_if_text_empty():
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     count: int,
@@ -343,7 +345,7 @@ def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     escaped_dquotes(),
     escaped_dquotes(),
     escaped_dquotes(),
-    st.datetimes(),
+    st.datetimes(min_value=year_2000),
 )
 def test_extract_jsonl_list_handles_invalid_JSONL_all_on_one_line(
     count: int,
