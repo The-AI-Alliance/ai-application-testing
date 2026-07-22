@@ -64,4 +64,4 @@ jobs:
         run: uv pip install -e ".[dev]"
 
       - name: Run before-pr checks
-        run: make before-pr
+        run: make GITHUB_CI='true' before-pr
