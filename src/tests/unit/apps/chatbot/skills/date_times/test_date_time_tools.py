@@ -133,6 +133,8 @@ def test_str_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
     locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
     dt_str = dt.strftime(fmt)
     actual, error = str_to_datetime.run({"a_date_time_str": dt_str, "input_format": fmt})
+    assert actual, f'Failed to convert "{dt_str}" with format "{fmt}". Error: {error}'
+
     # We actually need to compare strings, not dts, because a returned datetime might have "missing"
     # hours, minutes, seconds, etc., depending on fmt.
     actual_str = actual.strftime(fmt)
