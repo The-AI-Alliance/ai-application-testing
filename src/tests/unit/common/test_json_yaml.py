@@ -22,6 +22,7 @@ from common.utils import ExpectedFail
 
 from tests.common.hypothesis.datetimes import year_2000
 
+
 def clean_text(s: str) -> str:
     """Fix some problematic substrings that cause problems with JSON conversion."""
     s1 = re.sub(r'"', r"\"", s)

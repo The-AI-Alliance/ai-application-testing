@@ -21,6 +21,7 @@ from common.utils import (
 
 from tests.common.hypothesis.datetimes import year_2000
 
+
 def valid_dirs(min_size: int = 1, max_size: int = 5):
     """Hypothesis strategy for generating directory names."""
     return st.text(alphabet=st.characters(codec="ascii"), min_size=min_size, max_size=max_size).map(

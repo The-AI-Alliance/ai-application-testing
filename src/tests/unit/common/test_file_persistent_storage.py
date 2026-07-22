@@ -14,6 +14,7 @@ from common.file_persistent_storage import FilePersistentStorage
 
 from tests.common.hypothesis.datetimes import year_2000
 
+
 class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
 
     def init(self):
