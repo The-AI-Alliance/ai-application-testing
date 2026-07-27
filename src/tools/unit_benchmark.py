@@ -322,8 +322,10 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             data_file = os.path.join(self.data_dir, data_file_name)
             validation_file = os.path.splitext(data_file)[0] + "-validation.jsonl"
             if not self.just_stats:
-                with open(validation_file, "w", encoding="utf-8") as vfile, \
-                    open(data_file, "r", encoding="utf-8") as synthetic_data_file:
+                with (
+                    open(validation_file, "w", encoding="utf-8") as vfile,
+                    open(data_file, "r", encoding="utf-8") as synthetic_data_file,
+                ):
                     for line_number, line in enumerate(synthetic_data_file):
                         lines2, errors = extract_jsonl_list(line)
                         if errors:
