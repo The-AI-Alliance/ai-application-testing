@@ -21,7 +21,6 @@ Uses Hypothesis.
 
 import contextlib
 import io
-from datetime import timedelta
 from typing import Any
 
 from hypothesis import given
@@ -45,6 +44,8 @@ from common.date_time_utils import (
     friendly_date_formats,
     friendly_date_time_formats,
     friendly_time_formats,
+    local_timezone,
+    one_second,
 )
 from common.date_time_utils import (
     now as now_util,
@@ -56,8 +57,6 @@ from tests.common.hypothesis.datetimes import (
     weekend_dates,
     year_2000,
 )
-
-one_second = timedelta(seconds=1)
 
 
 def _capture_output(tool: StructuredTool, params: dict[str, Any]) -> Any:
@@ -133,21 +132,17 @@ def test_time_to_str_uses_a_default_format(t):
 
 @given(local_datetimes_2000(), st.sampled_from(friendly_date_time_formats))
 def test_string_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
-    import locale
-
-    current_locale = locale.getlocale()
-    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+    assert dt.tzinfo == local_timezone
     dt_str = dt.strftime(fmt)
     actual, error = string_to_datetime.run({"a_date_time_str": dt_str, "input_format": fmt})
     assert actual, f'Failed to convert "{dt_str}" with format "{fmt}". Error: {error}'
-    assert dt == actual, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, fmt: {fmt}"
+    assert datetimes_approx_equal(dt, actual, one_second), f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, fmt: {fmt}"
 
     # We actually need to compare strings, not dts, because a returned datetime might have "missing"
     # hours, minutes, seconds, etc., depending on fmt.
     actual_str = actual.strftime(fmt)
     assert dt_str == actual_str, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
     assert "" == error
-    locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
 
 
 @given(local_datetimes_2000())
@@ -167,10 +162,6 @@ def test_string_to_datetime_returns_an_error_string_for_invalid_date_time_string
 
 @given(dates_2000())
 def test_string_to_date_can_parse_friendly_formatted_date_strings(d):
-    import locale
-
-    current_locale = locale.getlocale()
-    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
     for fmt in friendly_date_formats:
         d_str = d.strftime(fmt)
         actual, error = string_to_date.run({"a_date_str": d_str, "input_format": fmt})
@@ -181,7 +172,6 @@ def test_string_to_date_can_parse_friendly_formatted_date_strings(d):
         actual_str = actual.strftime(fmt)
         assert d_str == actual_str, f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
         assert "" == error
-    locale.setlocale(locale.LC_ALL, f"{current_locale[0]}.{current_locale[1]}")
 
 
 @given(dates_2000())

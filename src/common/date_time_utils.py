@@ -3,9 +3,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
-from datetime import UTC, date, datetime, time, timedelta, timezone
-
-from common.utils import empty_set
+from datetime import UTC, date, datetime, time, timedelta, timezone, tzinfo
 
 # The "friendly" formats used for parsing strings. They don't include
 # punctuation. They are used by _str_to_object() where punctuation
@@ -60,6 +58,8 @@ timestamp_str_fmt = "%Y:%m:%d %H:%M:%S%:z"
 timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S_%Z"
 
 one_day = timedelta(days=1)
+one_hour = timedelta(hours=1)
+one_second = timedelta(seconds=1)
 
 local_timezone = datetime.now(UTC).astimezone().tzinfo
 
@@ -86,16 +86,17 @@ def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: time
     return close, msg
 
 
-def add_timezone(dt: datetime, tz: timezone | None = None) -> datetime:
+def add_timezone(dt: datetime, tz: tzinfo | None = None) -> datetime:
     """
     If the input `datetime` doesn't have timezone information, add
     the input timezone, `tz`. If `tz` is `None`, use the local timezone.
     """
     if dt.tzinfo:
         return dt
-    if tz:
-        return dt.astimezone(tz)
-    return dt.astimezone()
+    if not tz:
+        tz = local_timezone
+    return datetime.combine(dt.date(), dt.time(), tz)
+    # return dt.astimezone(tz)
 
 
 def now(tz: timezone | None = None) -> datetime:
@@ -165,7 +166,7 @@ def is_work_hours(
     weekdays_only: bool = True,
     start_hour_inclusive: int = def_start_hour_inclusive,
     end_hour_inclusive: int = def_end_hour_inclusive,
-    holidays: set[tuple[int, int]] = empty_set,
+    holidays: set[tuple[int, int]] | None = None,
 ) -> bool:
     """
     Returns `True` if the input `datetime` falls within work hours,
