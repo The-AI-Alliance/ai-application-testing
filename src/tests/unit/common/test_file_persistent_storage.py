@@ -12,7 +12,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from common.file_persistent_storage import FilePersistentStorage
-from tests.common.hypothesis.datetimes import utc_datetimes_2000
+from tests.common.hypothesis.datetimes import local_datetimes_2000
 
 
 class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
@@ -46,7 +46,7 @@ class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
             min_size=0,
             max_size=5,
         ),
-        utc_datetimes_2000(),
+        local_datetimes_2000(),
     )
     def test_save_load(self, lst: list[dict[str, Any]], dt: datetime):
         """

@@ -15,11 +15,14 @@ from __future__ import annotations
 import json
 import logging
 from collections.abc import Callable, MutableMapping, Sequence
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from common.utils import utc_datetime_min
+from common.date_time_utils import (
+    local_datetime_min,
+    now,
+)
 
 from .resource_manager import ResourceManager
 
@@ -127,7 +130,7 @@ class AppointmentManager(ResourceManager):
             "appointment_date_time": appointment_date_time,
             "reason": reason,
             "status": "scheduled",
-            "created_at": datetime.now(UTC),
+            "created_at": now(),
         }
 
     def _further_date_time_validation(self, a_date_time: datetime) -> tuple[bool, str]:
@@ -265,7 +268,7 @@ class AppointmentManager(ResourceManager):
             return False, error_msg
 
         appointment["status"] = "cancelled"
-        appointment["cancelled_at"] = datetime.now(UTC)
+        appointment["cancelled_at"] = now()
 
         # Persist the updated status.
         self._persist_resources([appointment])
@@ -303,7 +306,7 @@ class AppointmentManager(ResourceManager):
 
         old_time = appointment["appointment_date_time"]
         appointment["appointment_date_time"] = new_date_time
-        appointment["changed_at"] = datetime.now(UTC)
+        appointment["changed_at"] = now()
         appointment["previous_time"] = old_time
 
         # Save the updated appointment
@@ -330,7 +333,7 @@ class AppointmentManager(ResourceManager):
     def get_appointments(
         self,
         patient_name: str = "",
-        after_date_time: datetime = utc_datetime_min,
+        after_date_time: datetime = local_datetime_min,
     ) -> Sequence[MutableMapping[str, Any]]:
         """
         Get all appointments, optionally filtered by patient name and/or
@@ -338,18 +341,18 @@ class AppointmentManager(ResourceManager):
 
         Args:
             - patient_name (str): Only return appointments for this patient (default: all patients)
-            - after_date_time (datetime): Don't include appointments before this date time. Pass `datetime.now(UTC)` to only return future appointments.
+            - after_date_time (datetime): Don't include appointments before this date time. Pass `now()` to only return future appointments.
 
         Returns:
             List of appointment dictionaries
         """
-        if not patient_name and after_date_time == utc_datetime_min:
+        if not patient_name and after_date_time == local_datetime_min:
             return self.get_resources()
 
         criteria: MutableMapping[str, Callable[[Any], bool]] = {}
         if patient_name:
             criteria["patient_name"] = lambda pn: pn == patient_name
-        if after_date_time != utc_datetime_min:
+        if after_date_time != local_datetime_min:
             criteria["appointment_date_time"] = lambda dt: dt >= after_date_time
 
         return self.get_resources_by_criteria(criteria, sort_by_key="appointment_date_time")

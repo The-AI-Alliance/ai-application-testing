@@ -9,7 +9,7 @@ import logging
 import os
 import tempfile
 from collections.abc import Mapping, Sequence
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +28,10 @@ from apps.chatbot.skills.appointments.appointment_tools import (
     get_appointments_count,
 )
 from apps.chatbot.tools.appointment_manager import AppointmentManager
+from common.date_time_utils import (
+    local_timezone,
+    now,
+)
 from tests.common.hypothesis.appointments import (
     appointment_dicts,
     appointment_dicts_lists,
@@ -98,9 +102,9 @@ class AppointmentToolsTestUtil:
         reason: str = "",
     ):
         if not appointment_date_time:
-            appointment_date_time = expected.get("appointment_date_time", datetime.now(UTC))
+            appointment_date_time = expected.get("appointment_date_time", now())
         if not changed_at:
-            changed_at = expected.get("changed_at", datetime.now(UTC))
+            changed_at = expected.get("changed_at", now())
         if not patient_name:
             patient_name = expected.get("patient_name", "")
         if not reason:
@@ -113,7 +117,7 @@ class AppointmentToolsTestUtil:
         ), f"appointment_date_time expected: {appointment_date_time}, actual: {actual}"
 
         if changed_at:
-            actual_changed_at = actual.get("changed_at", datetime(1970, 1, 1, tzinfo=UTC))
+            actual_changed_at = actual.get("changed_at", datetime(1970, 1, 1, tzinfo=local_timezone))
             assert changed_at >= actual_changed_at, f"changed_at expected: {changed_at}, actual: {actual}"
 
         assert patient_name == actual.get("patient_name"), f"patient_name expected: {patient_name}, actual: {actual}"
@@ -457,7 +461,7 @@ class TestAppointmentTools:
 
     def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(self):
         paramss = [
-            ["", datetime.now(UTC).isoformat()],
+            ["", now().isoformat()],
             ["John Doe", ""],
         ]
         for params in paramss:

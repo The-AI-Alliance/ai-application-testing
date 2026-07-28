@@ -5,12 +5,13 @@ import argparse
 import logging
 import os
 from collections.abc import Callable, Mapping
-from datetime import UTC, datetime, timedelta, timezone
 from importlib import metadata
 from pathlib import Path
 from typing import Any
 
 from litellm.types.utils import ModelResponse
+
+from common.date_time_utils import now, now_str, timestamp_file_fmt
 
 from .collections import get_chain
 
@@ -22,12 +23,6 @@ common_defaults = {
     "output-dir": "output",
     "levenshtein-ratio-threshold": 0.95,
 }
-
-timestamp_str_fmt = "%Y:%m:%d %H:%M:%S"
-timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S"
-
-utc_datetime_min = datetime.min.replace(tzinfo=UTC)
-utc_datetime_max = datetime.max.replace(tzinfo=UTC)
 
 empty_omit_arguments: set[str] = set()
 empty_list: list[Any] = []
@@ -50,20 +45,6 @@ class ExpectedFail:
             assert False, f'Exception of type {type(err).__name__} ("{err}") received. Expected {self.expected_name}.'
 
         assert False, f"No exception occurred. Expected exception of type {self.expected_name}."
-
-
-def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> tuple[bool, str]:
-    """
-    Are the input date equal within the specified timedelta, delta?
-    """
-    # If delta is negative, convert it to positive so the logic below works!
-    delta_neg = -delta
-    delta = max(delta, delta_neg)
-    close = datetime1 == datetime2 or (datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2)
-    msg = ""
-    if not close:
-        msg = f"{datetime1} == {datetime2} NOT within +- {delta}"
-    return close, msg
 
 
 def setup(
@@ -170,8 +151,7 @@ def logging_level_to_string(logger: logging.Logger, level: int = -1):
 
 
 def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""):
-    ns = now_str(fmt=timestamp_str_fmt)
-    logger.info(f" ({ns}) Running {tool} with these argument values:")
+    logger.info(f" ({now()}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
         if k == "log_level":
             v = f"{v} (== logger.{logging_level_to_string(logger, v)})"
@@ -200,17 +180,6 @@ def get_package_version(logger: logging.Logger) -> str | None:
         logger.error(f"Could not determine the package version {pnfe}. Try running 'uv pip install -e .'")
         version = None
     return version
-
-
-default_datetime_min = datetime.min.replace(tzinfo=UTC)
-
-
-def now(tz: timezone = UTC) -> datetime:
-    return datetime.now(tz=tz)
-
-
-def now_str(fmt: str = timestamp_str_fmt, tz: timezone = UTC) -> str:
-    return now(tz=tz).strftime(fmt)
 
 
 def model_dir_name(model: str) -> str:

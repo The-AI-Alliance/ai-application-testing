@@ -7,13 +7,14 @@ https://hypothesis.readthedocs.io/en/latest/
 import json
 import re
 from collections.abc import Mapping, Sequence
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from json.decoder import JSONDecodeError
 from typing import Any
 
 from hypothesis import given
 from hypothesis import strategies as st
 
+from common.date_time_utils import now
 from common.json_yaml import (
     decode_json_dict,
     decode_json_list,
@@ -22,7 +23,7 @@ from common.json_yaml import (
     from_json,
 )
 from common.utils import ExpectedFail
-from tests.common.hypothesis.datetimes import utc_datetimes_2000
+from tests.common.hypothesis.datetimes import local_datetimes_2000
 
 
 def _clean_text(s: str) -> str:
@@ -135,7 +136,7 @@ def __check_dict(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     question: str,
@@ -153,7 +154,7 @@ def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_decode_json_list_handles_datetimes_and_returns_valid_JSON(
     count: int,
@@ -183,7 +184,7 @@ js_template = """{{
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_decode_json_dict_ValueError_on_bad_input_str(
     question: str,
@@ -206,7 +207,7 @@ def test_decode_json_dict_ValueError_on_bad_input_str(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_decode_json_list_ValueError_on_bad_input_str(
     count: int,
@@ -230,7 +231,7 @@ def test_decode_json_list_ValueError_on_bad_input_str(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     count: int,
@@ -251,7 +252,7 @@ def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_decode_json_list_ValueError_on_input_dict_str(
     question: str,
@@ -300,7 +301,7 @@ def do_test_extract_jsonl_list(
     timestamp: datetime | None = None,
 ):
     if not timestamp:
-        timestamp = datetime.now(UTC)
+        timestamp = now()
     lists, qs, ls, ps, bs, ts = __make_dict_list(count, question, label, prescription, body_part, timestamp)
 
     jsons = [encode_json(d) for d in lists]
@@ -328,7 +329,7 @@ def test_extract_jsonl_list_returns_empty_lists_if_text_empty():
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     count: int,
@@ -351,7 +352,7 @@ def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     _escaped_dquotes(),
     _escaped_dquotes(),
     _escaped_dquotes(),
-    utc_datetimes_2000(),
+    local_datetimes_2000(),
 )
 def test_extract_jsonl_list_handles_invalid_JSONL_all_on_one_line(
     count: int,

@@ -5,13 +5,14 @@ These tools are used by the Deep Agent's appointment skill.
 
 import logging
 from collections.abc import MutableMapping, Sequence
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from langchain_core.tools import tool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
+from common.date_time_utils import now
 
 # Initialize the appointment tool with a default file location
 # This will be overridden when integrated with the ChatBot
@@ -133,8 +134,8 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
     List all active appointments, with optional filtering.
 
     Args:
-        - patient_name (str): Only return appointments for this patient (default (str): all patients)
-        - after_date_time (str): Don't include appointments before this date time. I (str)f empty, the value `datetime.now(UTC).isoformat()` will be used to only return future appointments.
+        - patient_name (str): Only return appointments for this patient (default: all patients)
+        - after_date_time (str): Don't include appointments before this date time. If empty, the value `now().isoformat()` will be used to only return future appointments.
 
     Returns:
         List of dictionaries for the located appointments
@@ -145,7 +146,7 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
         get_appointments(patient_name="John Doe")
     """
     am = get_appointment_manager()
-    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now(UTC)
+    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else now()
     return am.get_appointments(patient_name=patient_name, after_date_time=after_dt)
 
 

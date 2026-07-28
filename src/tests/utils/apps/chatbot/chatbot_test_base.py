@@ -12,7 +12,6 @@ import sys
 import time
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from datetime import UTC, datetime
 from enum import StrEnum, auto
 from io import StringIO
 from pathlib import Path
@@ -26,6 +25,7 @@ from apps.chatbot import (
     ChatBotSimple,
 )
 from common.collections import dict_pop
+from common.date_time_utils import now
 from common.json_yaml import decode_json_dict, decode_json_list
 
 from .data_ai_tests import BaseAITest, QnATest, ScenarioTest
@@ -369,7 +369,7 @@ class ChatBotTestBase:
     default_chatbot_data_dir = f"{default_chatbot_dir}/data"
     default_output_dir = "output/tests"
     default_log_file_template = (
-        f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.jsonl"
+        f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{now().strftime('%Y%m%d_%H%M%S')}.jsonl"
     )
 
     default_data_sample_rate = 1.0
@@ -426,7 +426,7 @@ class ChatBotTestBase:
 
         Finally, if the `log_file_path` isn't specified, a _template_ is used, either
         the value of the environment variable `OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE` or
-        `tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.jsonl`.
+        `tests/logs/{{which_chatbot}}-{{class_name}}-{now().strftime('%Y%m%d_%H%M%S')}.jsonl`.
 
         This is a special-purpose, custom "log" file. We also use the Python `logging` framework
         for "general" logging.

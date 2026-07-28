@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable, MutableMapping, Sequence
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from common.date_time_utils import now
 from common.file_persistent_storage import FilePersistentStorage
 
 
@@ -290,7 +291,7 @@ class ResourceManager:
             Tuple of (is_valid, error_message)
         """
         one_second = timedelta(seconds=1)
-        min_allowed_datetime = datetime.now(UTC) - one_second
+        min_allowed_datetime = now() - one_second
         if not a_date_time:
             return False, "The input date time can't be None"
         if not in_the_past_allowed and a_date_time < min_allowed_datetime:
@@ -365,7 +366,7 @@ class ResourceManager:
             self.logger.error(msg)
             return "", msg
 
-        success_msg = f"Resource created at {datetime.now(UTC)} with ID {resource_id}."
+        success_msg = f"Resource created at {now()} with ID {resource_id}."
         self.logger.info(success_msg)
         return resource_id, success_msg
 
