@@ -14,10 +14,12 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timedelta
+from collections.abc import Callable, MutableMapping, Sequence
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, MutableMapping, Optional, Sequence, Tuple
+from typing import Any
 
+from common.utils import utc_datetime_min
 
 from .resource_manager import ResourceManager
 
@@ -69,14 +71,12 @@ class AppointmentManager(ResourceManager):
     """
 
     # Common USA holidays (simplified list)
-    USA_HOLIDAYS = set(
-        [
-            (1, 1),  # New Year's Day
-            (7, 4),  # Independence Day
-            (12, 25),  # Christmas
-            # Add more as needed
-        ]
-    )
+    USA_HOLIDAYS = {  # noqa: RUF012
+        (1, 1),  # New Year's Day
+        (7, 4),  # Independence Day
+        (12, 25),  # Christmas
+        # Add more as needed
+    }
 
     def_json_encoder = AppointmentManagerEncoder()
     def_json_decoder = AppointmentManagerDecoder()
@@ -85,7 +85,7 @@ class AppointmentManager(ResourceManager):
         self,
         appointments_file: Path | str,
         start_empty: bool = False,
-        logger: Optional[logging.Logger] = None,
+        logger: logging.Logger | None = None,
     ):
         """
         Initialize the appointment tool.
@@ -127,7 +127,7 @@ class AppointmentManager(ResourceManager):
             "appointment_date_time": appointment_date_time,
             "reason": reason,
             "status": "scheduled",
-            "created_at": datetime.now(),
+            "created_at": datetime.now(UTC),
         }
 
     def _further_date_time_validation(self, a_date_time: datetime) -> tuple[bool, str]:
@@ -210,7 +210,7 @@ class AppointmentManager(ResourceManager):
         else:
             return True, ""
 
-    def create_appointment(self, patient_name: str, appointment_date_time: datetime, reason: str) -> Tuple[str, str]:
+    def create_appointment(self, patient_name: str, appointment_date_time: datetime, reason: str) -> tuple[str, str]:
         """
         Create a new appointment.
 
@@ -231,7 +231,7 @@ class AppointmentManager(ResourceManager):
         )
         return self.create_resource(appointment)
 
-    def set_appointments(self, appointments: Sequence[MutableMapping[str, Any]]) -> Tuple[int, str]:
+    def set_appointments(self, appointments: Sequence[MutableMapping[str, Any]]) -> tuple[int, str]:
         """
         Set the appointments, replacing the current list. Normally, create_appointment() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
@@ -248,7 +248,7 @@ class AppointmentManager(ResourceManager):
         # This method is just an alias for `set_resources()`.
         return self.set_resources(appointments)
 
-    def cancel_appointment(self, appointment_id: str) -> Tuple[bool, str]:
+    def cancel_appointment(self, appointment_id: str) -> tuple[bool, str]:
         """
         Cancel an existing appointment.
 
@@ -265,7 +265,7 @@ class AppointmentManager(ResourceManager):
             return False, error_msg
 
         appointment["status"] = "cancelled"
-        appointment["cancelled_at"] = datetime.now()
+        appointment["cancelled_at"] = datetime.now(UTC)
 
         # Persist the updated status.
         self._persist_resources([appointment])
@@ -273,7 +273,7 @@ class AppointmentManager(ResourceManager):
         self.logger.info(success_msg)
         return True, success_msg
 
-    def change_appointment(self, appointment_id: str, new_date_time: datetime) -> Tuple[bool, str]:
+    def change_appointment(self, appointment_id: str, new_date_time: datetime) -> tuple[bool, str]:
         """
         Change an appointment to a new time.
 
@@ -303,7 +303,7 @@ class AppointmentManager(ResourceManager):
 
         old_time = appointment["appointment_date_time"]
         appointment["appointment_date_time"] = new_date_time
-        appointment["changed_at"] = datetime.now()
+        appointment["changed_at"] = datetime.now(UTC)
         appointment["previous_time"] = old_time
 
         # Save the updated appointment
@@ -330,7 +330,7 @@ class AppointmentManager(ResourceManager):
     def get_appointments(
         self,
         patient_name: str = "",
-        after_date_time: datetime = datetime.min,
+        after_date_time: datetime = utc_datetime_min,
     ) -> Sequence[MutableMapping[str, Any]]:
         """
         Get all appointments, optionally filtered by patient name and/or
@@ -338,18 +338,18 @@ class AppointmentManager(ResourceManager):
 
         Args:
             - patient_name (str): Only return appointments for this patient (default: all patients)
-            - after_date_time (datetime): Don't include appointments before this date time. Pass `datetime.now()` to only return future appointments.
+            - after_date_time (datetime): Don't include appointments before this date time. Pass `datetime.now(UTC)` to only return future appointments.
 
         Returns:
             List of appointment dictionaries
         """
-        if not patient_name and after_date_time == datetime.min:
+        if not patient_name and after_date_time == utc_datetime_min:
             return self.get_resources()
 
         criteria: MutableMapping[str, Callable[[Any], bool]] = {}
         if patient_name:
             criteria["patient_name"] = lambda pn: pn == patient_name
-        if after_date_time:
+        if after_date_time != utc_datetime_min:
             criteria["appointment_date_time"] = lambda dt: dt >= after_date_time
 
         return self.get_resources_by_criteria(criteria, sort_by_key="appointment_date_time")

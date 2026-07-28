@@ -4,13 +4,15 @@ https://hypothesis.readthedocs.io/en/latest/
 """
 
 from typing import Any
-from hypothesis import given, settings, strategies as st
+
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from common.collections import (
-    get_chain,
     dict_permutations,
     dict_pop,
     get,
+    get_chain,
     mult,
 )
 from common.utils import ExpectedFail
@@ -104,7 +106,7 @@ def test_get_raises_a_value_error_if_none_would_be_returned_for_an_unknown_key( 
     dictionary = {}
     ef = ExpectedFail(ValueError)
     for key in set:
-        ef(lambda: get(dictionary, key))
+        ef(lambda: get(dictionary, key))  # noqa: B023
 
 
 @given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
@@ -116,8 +118,8 @@ def test_get_raises_a_value_error_if_none_would_be_returned_for_a_known_key_with
     ef = ExpectedFail(ValueError)
     for key in keyset:
         dictionary[key] = None
-        ef(lambda: get(dictionary, key))
-        ef(lambda: get(dictionary, key, "hello!"))
+        ef(lambda: get(dictionary, key))  # noqa: B023
+        ef(lambda: get(dictionary, key, "hello!"))  # noqa: B023
 
 
 @given(

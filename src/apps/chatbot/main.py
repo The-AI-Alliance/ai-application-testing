@@ -1,12 +1,12 @@
 import os
 
-from common.utils import setup
 from apps.chatbot import (
-    ChatBotSimple,
     ChatBotAgent,
-    ChatBotShell,
     ChatBotResponseHandler,
+    ChatBotShell,
+    ChatBotSimple,
 )
+from common.utils import setup
 
 
 def main():

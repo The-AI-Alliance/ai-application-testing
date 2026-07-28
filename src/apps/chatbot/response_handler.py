@@ -64,12 +64,12 @@ class ChatBotResponseHandler(ResponseHandler):
     """
 
     team_member_reply = """
-I will ask a member of the healthcare team to get back to you as soon as possible. 
+I will ask a member of the healthcare team to get back to you as soon as possible.
 This could be the next business day. If you are having an emergency, please call 911 immediately!"""
 
     # If a value is a dictionary, it corresponds to the expected `actions` value, with `default` used if the actions
     # is empty or not found here.
-    fixed_replies = {
+    fixed_replies = {  # noqa: RUF012
         "prescription": {
             "refill": f"I have your request for a refill for {{prescriptions}}. {team_member_reply}",
             "inquiry": f"I have your request for information concerning {{prescriptions}}. {team_member_reply}",

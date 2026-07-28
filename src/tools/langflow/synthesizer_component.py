@@ -1,12 +1,12 @@
 """Langflow component for UnitBenchmarkDataSynthesizer."""
 
 import logging
+import sys
+from pathlib import Path
+
 from lfx.custom.custom_component.component import Component
 from lfx.io import Output, StrInput
 from lfx.schema.data import Data
-
-import sys
-from pathlib import Path
 
 # Add parent directory to path to import from tools
 sys.path.insert(0, str(Path(__file__).parent.parent))

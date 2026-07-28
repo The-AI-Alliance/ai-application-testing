@@ -4,9 +4,10 @@ These tools are used by the Deep Agent's appointment skill.
 """
 
 import logging
-from datetime import datetime
+from collections.abc import MutableMapping, Sequence
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, MutableMapping, Optional, Sequence, Tuple
+from typing import Any
 
 from langchain_core.tools import tool
 
@@ -17,7 +18,7 @@ from apps.chatbot.tools.appointment_manager import AppointmentManager
 _def_appointments_file = Path("../output/appointments.jsonl")
 _def_appointment_manager_logger = logging.getLogger("AppointmentManager")
 _def_appointment_manager_logger.setLevel(logging.INFO)
-_appointment_manager: Optional[AppointmentManager] = None
+_appointment_manager: AppointmentManager | None = None
 
 
 def get_appointment_manager(
@@ -63,7 +64,7 @@ def get_appointment_manager(
 
 
 @tool
-def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[str, str]:
+def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> tuple[str, str]:
     """
     Create a new appointment for a patient.
 
@@ -85,7 +86,7 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
 
 
 @tool
-def cancel_appointment(id: str) -> Tuple[bool, str]:
+def cancel_appointment(id: str) -> tuple[bool, str]:
     """
     Cancel an existing appointment, specified by the appointment ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
@@ -105,7 +106,7 @@ def cancel_appointment(id: str) -> Tuple[bool, str]:
 
 
 @tool
-def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
+def change_appointment(id: str, new_date_time: str) -> tuple[bool, str]:
     """
     Change an appointment to a new time.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
@@ -133,7 +134,7 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
 
     Args:
         - patient_name (str): Only return appointments for this patient (default (str): all patients)
-        - after_date_time (str): Don't include appointments before this date time. I (str)f empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
+        - after_date_time (str): Don't include appointments before this date time. I (str)f empty, the value `datetime.now(UTC).isoformat()` will be used to only return future appointments.
 
     Returns:
         List of dictionaries for the located appointments
@@ -144,7 +145,7 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
         get_appointments(patient_name="John Doe")
     """
     am = get_appointment_manager()
-    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
+    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now(UTC)
     return am.get_appointments(patient_name=patient_name, after_date_time=after_dt)
 
 

@@ -4,14 +4,15 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-from datetime import datetime, timedelta
+from collections.abc import Callable, Mapping
+from datetime import UTC, datetime, timedelta, timezone
 from importlib import metadata
 from pathlib import Path
-from typing import Any, Callable, Mapping, Tuple
-
-from .collections import get_chain
+from typing import Any
 
 from litellm.types.utils import ModelResponse
+
+from .collections import get_chain
 
 common_defaults = {
     "model": "ollama_chat/gemma4:12b",
@@ -25,37 +26,39 @@ common_defaults = {
 timestamp_str_fmt = "%Y:%m:%d %H:%M:%S"
 timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S"
 
+utc_datetime_min = datetime.min.replace(tzinfo=UTC)
+utc_datetime_max = datetime.max.replace(tzinfo=UTC)
+
+empty_omit_arguments: set[str] = set()
+empty_list: list[Any] = []
+empty_set: set[Any] = set()
+
 
 class ExpectedFail:
     def __init__(self, expected_type: type[BaseException]):
         self.expected_type = expected_type
+        self.expected_name = self.expected_type.__name__
 
     def __call__(self, block: Callable[[], Any], verbose: bool = False):
-        unexpected_err = None
         try:
             block()
         except self.expected_type as err:
             if verbose:
-                print(f"Okay: expected exception type {type(err).__name__} received: {err}.")
+                print(f"Okay: expected exception type {self.expected_name} received: {err}.")
             return
-        except BaseException as err:
-            unexpected_err = err
-        if unexpected_err:
-            assert (
-                False
-            ), f'Exception of type {type(unexpected_err).__name__} ("{unexpected_err}") received. Expected {self.expected_type.__name__}.'
-        else:
-            assert False, f"No exception occurred. Expected exception of type {self.expected_type.__name__}."
+        except BaseException as err:  # noqa: BLE001
+            assert False, f'Exception of type {type(err).__name__} ("{err}") received. Expected {self.expected_name}.'
+
+        assert False, f"No exception occurred. Expected exception of type {self.expected_name}."
 
 
-def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> Tuple[bool, str]:
+def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> tuple[bool, str]:
     """
     Are the input date equal within the specified timedelta, delta?
     """
     # If delta is negative, convert it to positive so the logic below works!
     delta_neg = -delta
-    if delta_neg > delta:
-        delta = delta_neg
+    delta = max(delta, delta_neg)
     close = datetime1 == datetime2 or (datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2)
     msg = ""
     if not close:
@@ -68,7 +71,7 @@ def setup(
     description: str,
     epilog: str = "",
     add_arguments: Callable[[argparse.ArgumentParser], Any | None] = lambda ap: None,
-    omit_arguments: set[str] = set(),
+    omit_arguments: set[str] = empty_omit_arguments,
 ) -> tuple[argparse.Namespace, logging.Logger]:
     parser = parser_with_common_args(tool, description, epilog=epilog, omit_arguments=omit_arguments)
     add_arguments(parser)
@@ -79,7 +82,7 @@ def setup(
 
 
 def parser_with_common_args(
-    tool: str, description: str, epilog: str = "", omit_arguments: set[str] = set()
+    tool: str, description: str, epilog: str = "", omit_arguments: set[str] = empty_omit_arguments
 ) -> argparse.ArgumentParser:
     """
     Returns an `ArgumentParser` with the default arguments and a format string
@@ -123,7 +126,7 @@ def parser_with_common_args(
             help=f"Directory where some output files are read or written (may not be used). Default: {common_defaults['output-dir']}",
         )
     if "use-cases" not in omit_arguments:
-        all_ucs = ", ".join([f"'{key}'" for key in all_use_cases().keys()])
+        all_ucs = ", ".join([f"'{key}'" for key in all_use_cases()])
         parser.add_argument(
             "-u",
             "--use-cases",
@@ -168,15 +171,15 @@ def logging_level_to_string(logger: logging.Logger, level: int = -1):
 
 def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""):
     ns = now_str(fmt=timestamp_str_fmt)
-    logging.info(f" ({ns}) Running {tool} with these argument values:")
+    logger.info(f" ({ns}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
         if k == "log_level":
-            v = f"{v} (== logging.{logging_level_to_string(logger, v)})"
-        logging.info(add_info_str(k, v))
+            v = f"{v} (== logger.{logging_level_to_string(logger, v)})"
+        logger.info(add_info_str(k, v))
 
     if epilog:
-        logging.info("")
-        logging.info(" " + epilog)
+        logger.info("")
+        logger.info(" " + epilog)
 
 
 def get_package_version(logger: logging.Logger) -> str | None:
@@ -199,12 +202,15 @@ def get_package_version(logger: logging.Logger) -> str | None:
     return version
 
 
-def now() -> datetime:
-    return datetime.now()
+default_datetime_min = datetime.min.replace(tzinfo=UTC)
 
 
-def now_str(fmt: str = timestamp_str_fmt) -> str:
-    return now().strftime(fmt)
+def now(tz: timezone = UTC) -> datetime:
+    return datetime.now(tz=tz)
+
+
+def now_str(fmt: str = timestamp_str_fmt, tz: timezone = UTC) -> str:
+    return now(tz=tz).strftime(fmt)
 
 
 def model_dir_name(model: str) -> str:
@@ -267,12 +273,13 @@ def ensure_dirs_exist(*dirs) -> bool:
     return True  # most callers will ignore this...
 
 
-def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str, str]] = []) -> str:
+def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str, str]] = empty_list) -> str:
     ss = ["SESSION:"]
-    for query, reply in session:
-        ss.append(f"query: {query}")
-        ss.append(f"reply: {reply}")
-        ss.append("\n")
+    if session:
+        for query, reply in session:
+            ss.append(f"query: {query}")
+            ss.append(f"reply: {reply}")
+            ss.append("\n")
 
     return f"""
 SYSTEM PROMPT: 

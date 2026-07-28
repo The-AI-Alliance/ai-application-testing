@@ -8,18 +8,19 @@ import re
 import shutil
 from datetime import timedelta
 from pathlib import Path
-from hypothesis import given, strategies as st
+
+from hypothesis import given
+from hypothesis import strategies as st
 
 from common.utils import (
+    ExpectedFail,
     all_use_cases,
     datetimes_approx_equal,
     ensure_dirs_exist,
     make_parent_dirs,
     model_dir_name,
-    ExpectedFail,
 )
-
-from tests.common.hypothesis.datetimes import year_2000
+from tests.common.hypothesis.datetimes import utc_datetimes_2000
 
 
 def valid_dirs(min_size: int = 1, max_size: int = 5):
@@ -52,7 +53,7 @@ def test_expected_fail():
         pass
 
 
-@given(st.datetimes(min_value=year_2000), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
+@given(utc_datetimes_2000(), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
 def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_approx_equal(dt, ns):
     for n in ns:
         delta = timedelta(seconds=n)
@@ -62,7 +63,7 @@ def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_appro
         assert msg == ""
 
 
-@given(st.datetimes(min_value=year_2000), st.lists(st.integers(min_value=1, max_value=4), min_size=0, max_size=3))
+@given(utc_datetimes_2000(), st.lists(st.integers(min_value=1, max_value=4), min_size=0, max_size=3))
 def test_datetimes_approx_equal_returns_false_and_non_empty_string_if_not_datetimes_approx_equal(dt, ns):
     for n in ns:
         delta = timedelta(seconds=n)

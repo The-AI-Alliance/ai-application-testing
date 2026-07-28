@@ -7,9 +7,10 @@ with the ChatBot implementation.
 
 import json
 import logging
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
-from pathlib import Path
 
 from apps.chatbot.api_server.server import APIServer
 

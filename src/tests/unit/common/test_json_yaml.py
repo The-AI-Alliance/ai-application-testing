@@ -6,33 +6,35 @@ https://hypothesis.readthedocs.io/en/latest/
 
 import json
 import re
-from hypothesis import given, strategies as st
-from datetime import datetime, timedelta
+from collections.abc import Mapping, Sequence
+from datetime import UTC, datetime, timedelta
 from json.decoder import JSONDecodeError
-from typing import Any, Mapping, Sequence
+from typing import Any
+
+from hypothesis import given
+from hypothesis import strategies as st
 
 from common.json_yaml import (
-    extract_jsonl_list,
     decode_json_dict,
     decode_json_list,
     encode_json,
+    extract_jsonl_list,
     from_json,
 )
 from common.utils import ExpectedFail
+from tests.common.hypothesis.datetimes import utc_datetimes_2000
 
-from tests.common.hypothesis.datetimes import year_2000
 
-
-def clean_text(s: str) -> str:
+def _clean_text(s: str) -> str:
     """Fix some problematic substrings that cause problems with JSON conversion."""
     s1 = re.sub(r'"', r"\"", s)
     s2 = re.sub(r"\}[,\s]*\{", "_ _", s1)
     return s2
 
 
-def escaped_dquotes(min_size: int = 0, max_size: int = 5):
+def _escaped_dquotes(min_size: int = 0, max_size: int = 5):
     return st.text(alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size).map(
-        lambda s: clean_text(s)
+        lambda s: _clean_text(s)
     )
 
 
@@ -129,11 +131,11 @@ def __check_dict(
 
 
 @given(
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     question: str,
@@ -147,11 +149,11 @@ def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
 
 @given(
     st.integers(min_value=0, max_value=5),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_decode_json_list_handles_datetimes_and_returns_valid_JSON(
     count: int,
@@ -177,11 +179,11 @@ js_template = """{{
 
 
 @given(
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_decode_json_dict_ValueError_on_bad_input_str(
     question: str,
@@ -190,20 +192,21 @@ def test_decode_json_dict_ValueError_on_bad_input_str(
     body_part: str,
     timestamp: datetime,
 ):
-    for quote in ["'", ""]:
-        jss = __make_quoted_json_strings(1, quote, question, label, prescription, body_part, timestamp)
-        jsq = jss[0]  # check for a single "bad" dict.
-        ef = ExpectedFail(ValueError)
-        ef(lambda: decode_json_dict(jsq))
+    def _make_js(q: str):
+        jss = __make_quoted_json_strings(1, q, question, label, prescription, body_part, timestamp)
+        return "[\n" + ",\n".join(jss) + "\n]"
+
+    ExpectedFail(ValueError)(lambda: decode_json_list(_make_js("'")[0]))
+    ExpectedFail(ValueError)(lambda: decode_json_list(_make_js("")[0]))
 
 
 @given(
     st.integers(min_value=1, max_value=3),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_decode_json_list_ValueError_on_bad_input_str(
     count: int,
@@ -213,20 +216,21 @@ def test_decode_json_list_ValueError_on_bad_input_str(
     body_part: str,
     timestamp: datetime,
 ):
-    for quote in ["'", ""]:
-        jss = __make_quoted_json_strings(count, quote, question, label, prescription, body_part, timestamp)
-        jsqs = "[\n" + ",\n".join(jss) + "\n]"
-        ef = ExpectedFail(ValueError)
-        ef(lambda: decode_json_list(jsqs))
+    def _make_js(q: str):
+        jss = __make_quoted_json_strings(1, q, question, label, prescription, body_part, timestamp)
+        return "[\n" + ",\n".join(jss) + "\n]"
+
+    ExpectedFail(ValueError)(lambda: decode_json_list(_make_js("'")))
+    ExpectedFail(ValueError)(lambda: decode_json_list(_make_js("")))
 
 
 @given(
     st.integers(min_value=1, max_value=3),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     count: int,
@@ -243,11 +247,11 @@ def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
 
 
 @given(
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_decode_json_list_ValueError_on_input_dict_str(
     question: str,
@@ -293,8 +297,10 @@ def do_test_extract_jsonl_list(
     label: str = "label",
     prescription: str = "prescription",
     body_part: str = "body_part",
-    timestamp: datetime = datetime.now(),
+    timestamp: datetime | None = None,
 ):
+    if not timestamp:
+        timestamp = datetime.now(UTC)
     lists, qs, ls, ps, bs, ts = __make_dict_list(count, question, label, prescription, body_part, timestamp)
 
     jsons = [encode_json(d) for d in lists]
@@ -318,11 +324,11 @@ def test_extract_jsonl_list_returns_empty_lists_if_text_empty():
 
 @given(
     st.integers(min_value=0, max_value=5),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     count: int,
@@ -341,11 +347,11 @@ def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
 
 @given(
     st.integers(min_value=0, max_value=5),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    escaped_dquotes(),
-    st.datetimes(min_value=year_2000),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    _escaped_dquotes(),
+    utc_datetimes_2000(),
 )
 def test_extract_jsonl_list_handles_invalid_JSONL_all_on_one_line(
     count: int,
@@ -381,14 +387,18 @@ def test_from_json():
 
     efve(lambda: from_json(js, []))
 
-    for kis in [[4], [4.1], ["four"], ["two", "two2"], ["three", 0, "three3"]]:
-        efke(lambda: from_json(js, kis))
-    for kis in [
-        ["one", "bad"],
-        ["two", "two1", "bad"],
-        ["three", "three1"],
-        ["three", 4.1],
-    ]:
-        efte(lambda: from_json(js, kis))
-    for js2 in ["[", "]", "{", "}"]:
-        efje(lambda: from_json(js2, ["ignored"]))
+    efke(lambda: from_json(js, [4]))
+    efke(lambda: from_json(js, [4.1]))
+    efke(lambda: from_json(js, ["four"]))
+    efke(lambda: from_json(js, ["two", "two2"]))
+    efke(lambda: from_json(js, ["three", 0, "three3"]))
+
+    efte(lambda: from_json(js, ["one", "bad"]))
+    efte(lambda: from_json(js, ["two", "two1", "bad"]))
+    efte(lambda: from_json(js, ["three", "three1"]))
+    efte(lambda: from_json(js, ["three", 4.1]))
+
+    efje(lambda: from_json("[", ["ignored"]))
+    efje(lambda: from_json("]", ["ignored"]))
+    efje(lambda: from_json("{", ["ignored"]))
+    efje(lambda: from_json("}", ["ignored"]))

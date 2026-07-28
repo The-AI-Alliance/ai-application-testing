@@ -1,6 +1,7 @@
 """Miscellaneous utilities for working with collections."""
 
-from typing import Any, Mapping, MutableMapping, Sequence
+from collections.abc import Mapping, MutableMapping, Sequence
+from typing import Any
 
 
 def get(dictionary: Mapping[str, Any], key: str, default: Any | None = None) -> Any:
@@ -60,7 +61,7 @@ def get_chain(dictionary: Mapping[str, Any], keys: Sequence[str | int]) -> Any |
             else:
                 d = value
         else:
-            raise ValueError(
+            raise TypeError(
                 f"object '{d}' must be a dictionary or list and the key '{key}' must be str or int, respectively. Input dict = {dictionary}, keys = {keys}"
             )
     return value

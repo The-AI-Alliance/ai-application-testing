@@ -9,7 +9,7 @@ from common.utils import (
     get_package_version,
 )
 
-from .response_handler import ResponseHandler, ChatBotResponseHandler
+from .response_handler import ChatBotResponseHandler, ResponseHandler
 
 
 class ChatBot(ABC):
@@ -53,10 +53,8 @@ class ChatBot(ABC):
         self.data_dir = data_dir
         self.output_dir = output_dir
         self.logger = logger
-        if confidence_level_threshold < 0.0:
-            confidence_level_threshold = 0.0
-        if confidence_level_threshold > 1.0:
-            confidence_level_threshold = 1.0  # would reject almost all!!
+        confidence_level_threshold = max(confidence_level_threshold, 0.0)
+        confidence_level_threshold = min(confidence_level_threshold, 1.0)  # would reject almost all!!
         self.confidence_level_threshold = confidence_level_threshold
         self.version = get_package_version(self.logger)
         if not self.version:

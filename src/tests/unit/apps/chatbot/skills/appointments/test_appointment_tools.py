@@ -3,41 +3,40 @@ Unit tests for the appointment skills tool.
 Uses Hypothesis.
 """
 
-from hypothesis import given, strategies as st
 import contextlib
 import io
 import logging
 import os
 import tempfile
-from datetime import datetime, timedelta
+from collections.abc import Mapping, Sequence
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Mapping, Sequence, Tuple
+from typing import Any
+
+from hypothesis import given
+from hypothesis import strategies as st
 from langchain_core.tools.structured import BaseTool
 
-from apps.chatbot.tools.appointment_manager import AppointmentManager
-
 from apps.chatbot.skills.appointments.appointment_tools import (
-    get_appointment_manager,
-    create_appointment,
     cancel_appointment,
     change_appointment,
+    create_appointment,
     get_appointment_by_id,
+    get_appointment_id_for_name_and_date_time,
+    get_appointment_manager,
     get_appointments,
     get_appointments_count,
-    get_appointment_id_for_name_and_date_time,
 )
-
+from apps.chatbot.tools.appointment_manager import AppointmentManager
+from tests.common.hypothesis.appointments import (
+    appointment_dicts,
+    appointment_dicts_lists,
+    appointment_future_non_work_datetimes,
+    appointment_future_work_datetimes,
+)
 from tests.common.hypothesis.datetimes import (
     off_the_hour_minutes,
     past_work_datetimes,
-)
-
-
-from tests.common.hypothesis.appointments import (
-    appointment_future_work_datetimes,
-    appointment_future_non_work_datetimes,
-    appointment_dicts,
-    appointment_dicts_lists,
 )
 
 
@@ -64,7 +63,9 @@ class AppointmentToolsTestUtil:
 
     def __init__(self):
         # Create a temporary file for testing
-        self.temp_file = tempfile.NamedTemporaryFile(mode="w", delete=True, delete_on_close=False, suffix=".jsonl")
+        self.temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
+            mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
+        )
         self.temp_file.close()
         self.tool = self.make_manager(make_new=True)
 
@@ -97,9 +98,9 @@ class AppointmentToolsTestUtil:
         reason: str = "",
     ):
         if not appointment_date_time:
-            appointment_date_time = expected.get("appointment_date_time", datetime.now())
+            appointment_date_time = expected.get("appointment_date_time", datetime.now(UTC))
         if not changed_at:
-            changed_at = expected.get("changed_at", datetime.now())
+            changed_at = expected.get("changed_at", datetime.now(UTC))
         if not patient_name:
             patient_name = expected.get("patient_name", "")
         if not reason:
@@ -112,7 +113,7 @@ class AppointmentToolsTestUtil:
         ), f"appointment_date_time expected: {appointment_date_time}, actual: {actual}"
 
         if changed_at:
-            actual_changed_at = actual.get("changed_at", datetime(1970, 1, 1))
+            actual_changed_at = actual.get("changed_at", datetime(1970, 1, 1, tzinfo=UTC))
             assert changed_at >= actual_changed_at, f"changed_at expected: {changed_at}, actual: {actual}"
 
         assert patient_name == actual.get("patient_name"), f"patient_name expected: {patient_name}, actual: {actual}"
@@ -127,18 +128,21 @@ class AppointmentToolsTestUtil:
             a = actual2[i]
             self.result_expected(e, a)
 
-    def capture_output(self, tool: BaseTool, params: dict[str, Any]) -> Tuple[Any, Any]:
+    def capture_output(self, tool: BaseTool, params: dict[str, Any]) -> tuple[Any, Any]:
         # We assert that stdout and stderr are empty.
-        with contextlib.redirect_stdout(io.StringIO()) as fout:
-            with contextlib.redirect_stderr(io.StringIO()) as ferr:
-                success, message = tool.run(params)
-                assert "" == fout.getvalue()
-                assert "" == ferr.getvalue()
-                return success, message
+        with contextlib.redirect_stdout(io.StringIO()) as fout, contextlib.redirect_stderr(io.StringIO()) as ferr:
+            success, message = tool.run(params)
+            assert "" == fout.getvalue()
+            assert "" == ferr.getvalue()
+            return success, message
 
     def successfully_add_valid_appointment(
-        self, appointment_dict: dict[str, Any], all: list[dict[str, Any]] = []
+        self,
+        appointment_dict: dict[str, Any],
+        all: list[dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
+        if not all:
+            all = []
         before_count = get_appointments_count.run({})
         patient_name = appointment_dict["patient_name"]
         appointment_date_time = appointment_dict["appointment_date_time"].isoformat()
@@ -453,7 +457,7 @@ class TestAppointmentTools:
 
     def test_get_appointment_id_for_name_and_date_time_raises_ValueError_for_invalid_name_or_date_time(self):
         paramss = [
-            ["", datetime.now().isoformat()],
+            ["", datetime.now(UTC).isoformat()],
             ["John Doe", ""],
         ]
         for params in paramss:
@@ -484,7 +488,7 @@ class TestAppointmentTools:
     @given(appointment_dicts_lists())
     def test_appointments_persist_across_instances(self, appointment_dicts: list[dict[str, Any]]):
         """Test that appointments persist across tool instances"""
-        test_util, ids = self._add_apmts(appointment_dicts)
+        test_util, _ids = self._add_apmts(appointment_dicts)
 
         # Create new instance and verify appointments exist.
         old_tool = test_util.tool
@@ -501,7 +505,7 @@ class TestAppointmentTools:
     @given(appointment_dicts_lists().filter(lambda lst: len(lst) > 0))
     def test_clear_erases_appointments(self, appointment_dicts: list[dict[str, Any]]):
         """Test that appointments persist across tool instances"""
-        test_util, ids = self._add_apmts(appointment_dicts)
+        test_util, _ids = self._add_apmts(appointment_dicts)
         test_util.clear()
         assert 0 == get_appointments_count.run({})
 

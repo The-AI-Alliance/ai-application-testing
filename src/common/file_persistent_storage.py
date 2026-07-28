@@ -3,10 +3,12 @@
 """
 
 from __future__ import annotations
+
 import json
 import logging
+from collections.abc import MutableMapping, Sequence
 from pathlib import Path
-from typing import Any, Optional, MutableMapping, Sequence
+from typing import Any
 
 from common.json_yaml import decode_json_dict, encode_json
 
@@ -14,11 +16,9 @@ from common.json_yaml import decode_json_dict, encode_json
 class FilePersistentStorageError(Exception):
     """Custom exception for storage-related errors"""
 
-    pass
-
 
 class FilePersistentStorage:
-    def __init__(self, storage_path: Path | str, logger: Optional[logging.Logger] = None, remove_old: bool = False):
+    def __init__(self, storage_path: Path | str, logger: logging.Logger | None = None, remove_old: bool = False):
         """
         Initialize the appointment tool.
 

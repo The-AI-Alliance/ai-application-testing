@@ -1,52 +1,25 @@
 """A basic example of refill requests for the ChatBot."""
 
+import logging
 import os
 import sys
-import logging
-import Levenshtein
 from pathlib import Path
-from litellm import completion
 
+import Levenshtein
+from litellm import completion
 from openai import OpenAIError
+
 from common.json_yaml import load_yaml
 from common.utils import (
-    setup,
     common_defaults,
-    make_full_prompt,
     extract_content,
+    make_full_prompt,
+    setup,
 )
 
 
 class TDDExampleRefillChatbot:
     """A basic example of refill requests for the ChatBot."""
-
-    queries_responses = {
-        "refill": {
-            "queries": [
-                "I need my _P_ refilled.",
-                "I need my _P_ drug refilled.",
-                "I'm out of _P_. Can I get a refill?",
-                "I need more _P_.",
-                "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?",
-            ],
-            "expected_response": "Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.",
-        },
-        "non-refill": {
-            "queries": [
-                "My prescription for _P_ upsets my stomach.",
-                "I have trouble sleeping, ever since I started taking _P_.",
-                "When is my next appointment?",
-            ],
-            "expected_response": "I have received your message, but I can't answer it right now. I will get back to you within the next business day.",
-        },
-    }
-
-    template_names = [
-        "q-and-a_patient-chatbot-prescriptions-with-examples",
-        "q-and-a_patient-chatbot-prescriptions",
-    ]
-
-    drugs = ["prozac", "xanax"]
 
     def __init__(
         self,
@@ -61,6 +34,34 @@ class TDDExampleRefillChatbot:
         self.service_url = service_url
         self.template_dir = template_dir
         self.logger = logger
+
+        self.queries_responses = {
+            "refill": {
+                "queries": [
+                    "I need my _P_ refilled.",
+                    "I need my _P_ drug refilled.",
+                    "I'm out of _P_. Can I get a refill?",
+                    "I need more _P_.",
+                    "My pharmacy says I don't have any refills for _P_. Can you ask them to refill it?",
+                ],
+                "expected_response": "Okay, I have your request for a refill for _P_. I will check your records and get back to you within the next business day.",
+            },
+            "non-refill": {
+                "queries": [
+                    "My prescription for _P_ upsets my stomach.",
+                    "I have trouble sleeping, ever since I started taking _P_.",
+                    "When is my next appointment?",
+                ],
+                "expected_response": "I have received your message, but I can't answer it right now. I will get back to you within the next business day.",
+            },
+        }
+
+        self.template_names = [
+            "q-and-a_patient-chatbot-prescriptions-with-examples",
+            "q-and-a_patient-chatbot-prescriptions",
+        ]
+
+        self.drugs = ["prozac", "xanax"]
 
     def trial(self, label):
         """Performs trials for the given label and queries."""
