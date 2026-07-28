@@ -1,8 +1,10 @@
 # Tests for the "ChatBot" module with "Appointment" Q&A pairs.
 
 import os
-import pytest
 from pathlib import Path
+
+import pytest
+
 from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
 
 

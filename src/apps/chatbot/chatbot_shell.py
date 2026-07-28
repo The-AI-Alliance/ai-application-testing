@@ -1,14 +1,14 @@
 import cmd
-import sys
-from rich.status import Status
-
-from .chatbot import ChatBot
 
 # Source for history management adapted from - https://stackoverflow.com/a/39495060
 # Posted by Martijn Pieters, modified by community. See post 'Timeline' for change history
 # Retrieved 2026-04-10, License - CC BY-SA 3.0
-
 import os.path
+import sys
+
+from rich.status import Status
+
+from .chatbot import ChatBot
 
 try:
     import readline
@@ -72,7 +72,6 @@ class ChatBotShell(cmd.Cmd):
 
     def emptyline(self):
         """Don't repeat the last command, just show the prompt again."""
-        pass
 
     def do_bye(self, arg):
         """Stop the session."""

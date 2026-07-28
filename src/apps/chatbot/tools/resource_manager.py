@@ -6,11 +6,13 @@ Abstraction for tool that manages "resources".
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable, MutableMapping, Sequence
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, MutableMapping, Sequence, Tuple
+from typing import Any
 from uuid import uuid4
 
+from common.date_time_utils import now
 from common.file_persistent_storage import FilePersistentStorage
 
 
@@ -289,7 +291,7 @@ class ResourceManager:
             Tuple of (is_valid, error_message)
         """
         one_second = timedelta(seconds=1)
-        min_allowed_datetime = datetime.now() - one_second
+        min_allowed_datetime = now() - one_second
         if not a_date_time:
             return False, "The input date time can't be None"
         if not in_the_past_allowed and a_date_time < min_allowed_datetime:
@@ -364,7 +366,7 @@ class ResourceManager:
             self.logger.error(msg)
             return "", msg
 
-        success_msg = f"Resource created at {datetime.now()} with ID {resource_id}."
+        success_msg = f"Resource created at {now()} with ID {resource_id}."
         self.logger.info(success_msg)
         return resource_id, success_msg
 
@@ -392,7 +394,7 @@ class ResourceManager:
                 f"Failed to write the current list of resources. {actual_count}/{len_resources} written. Errors: {error_msg}"
             )
 
-    def set_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> Tuple[int, str]:
+    def set_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> tuple[int, str]:
         """
         Set the resources, _replacing_ the current list. Normally, create_resource() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
@@ -440,6 +442,6 @@ class ResourceManager:
             msg = f"Failed to persist all the new resources ({actual_count} out of {len_resources}). File is now out of sync with the in memory self.resources (unchanged)! Error: {error_msg}"
             self.logger.error(msg)
             return 0, msg
-        self.resources = dict([(a["id"], a) for a in resources])
+        self.resources = {a["id"]: a for a in resources}
         self.logger.info(f"Records replaced with {len_resources} new resources.")
         return len(self.resources), ""

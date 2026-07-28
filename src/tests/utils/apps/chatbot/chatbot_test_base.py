@@ -11,20 +11,21 @@ import re
 import sys
 import time
 from abc import ABC, abstractmethod
-from datetime import datetime
+from collections.abc import Sequence
 from enum import StrEnum, auto
 from io import StringIO
 from pathlib import Path
-from typing import Any, Sequence, TypeVar
+from typing import Any
 
 from apps.chatbot import (
     ChatBot,
-    ChatBotSimple,
     ChatBotAgent,
     ChatBotResponseHandler,
     ChatBotShell,
+    ChatBotSimple,
 )
 from common.collections import dict_pop
+from common.date_time_utils import now
 from common.json_yaml import decode_json_dict, decode_json_list
 
 from .data_ai_tests import BaseAITest, QnATest, ScenarioTest
@@ -71,9 +72,6 @@ class LowConfidenceResult:
 
     def json(self) -> str:
         return json.dumps(self.dict())
-
-
-TESTDATUM = TypeVar("TESTDATUM")
 
 
 class TestDataLoader[TESTDATUM](ABC):
@@ -217,7 +215,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
 
             if isinstance(actual_actions, str):
                 actual_actions = re.split(r"\s*,\s*", actual_reply.get("actions", ""))
-            actual_keywords = dict([(key, actual_reply.get(key, "")) for key in exp_keywords])
+            actual_keywords = {key: actual_reply.get(key, "") for key in exp_keywords}
             # We have seen the occasional confidence scores at the content level, rather than inside the reply.
             actual_confidence = actual_reply.get("confidence", actual_content.get("confidence", 1.0))
             # actual_text = actual_reply.get('text', '')
@@ -297,9 +295,9 @@ class QnAQueryRunner(QueryRunner[QnATest]):
                         missing_kvs[key] = f"{expected} vs. {actual}"
                 if missing_kvs:
                     warnings["missing keywords"] = missing_kvs
-        except TypeError as te:
+        except TypeError:
             print(f"TypeError while parsing answer: {answer}")
-            raise te
+            raise
 
         return metadata, errors, warnings, lowConfidenceResults
 
@@ -371,7 +369,7 @@ class ChatBotTestBase:
     default_chatbot_data_dir = f"{default_chatbot_dir}/data"
     default_output_dir = "output/tests"
     default_log_file_template = (
-        f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
+        f"src/tests/logs/{{which_chatbot}}-{{class_name}}-{now().strftime('%Y%m%d_%H%M%S')}.jsonl"
     )
 
     default_data_sample_rate = 1.0
@@ -428,7 +426,7 @@ class ChatBotTestBase:
 
         Finally, if the `log_file_path` isn't specified, a _template_ is used, either
         the value of the environment variable `OUTPUT_LOGS_TESTS_DIRFILE_TEMPLATE` or
-        `tests/logs/{{which_chatbot}}-{{class_name}}-{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl`.
+        `tests/logs/{{which_chatbot}}-{{class_name}}-{now().strftime('%Y%m%d_%H%M%S')}.jsonl`.
 
         This is a special-purpose, custom "log" file. We also use the Python `logging` framework
         for "general" logging.
@@ -473,7 +471,7 @@ class ChatBotTestBase:
             if confidence_threshold > 0.0
             else float(os.environ.get("CONFIDENCE_THRESHOLD", ChatBotTestBase.default_confidence_threshold))
         )
-        self.verbose: bool = verbose if verbose is not None else bool(os.environ.get("VERBOSE", False))
+        self.verbose: bool = verbose if verbose is not None else bool(os.environ.get("VERBOSE", "False"))
 
         if log_file_path:
             self.log_file_path = Path(log_file_path)
@@ -675,9 +673,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
         last_time = time.time()
         allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
 
-        sample_number = 0
-        for test_prompt in samples:
-            sample_number += 1
+        for sample_number, test_prompt in enumerate(samples, start=1):
             metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(test_prompt)
             if errors:
                 me = errors | metadata  # print the error data first.
@@ -783,7 +779,6 @@ class ChatBotTestWithInference(ChatBotTestBase):
             # The samples will be unsorted, but that's okay, as we would like to catch subtle differences
             # in behavior that might be triggered by different ordering.
             k = round(sample_rate * n)
-            if k < minimum_n:
-                k = minimum_n
+            k = max(k, minimum_n)
             samples = random.sample(collection, k=k)
         return samples

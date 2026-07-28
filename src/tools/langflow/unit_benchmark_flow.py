@@ -6,9 +6,9 @@ synthesis and validation pipeline without requiring Langflow to be installed.
 It can also generate a Langflow-compatible JSON flow definition.
 """
 
-import sys
 import logging
-from typing import Dict, Any, Optional
+import sys
+from typing import Any
 
 from common.utils import all_use_cases
 from tools.unit_benchmark import (
@@ -26,11 +26,11 @@ class UnitBenchmarkFlowOrchestrator:
         service_url: str,
         template_dir: str,
         data_dir: str,
-        use_case: Optional[str],
+        use_case: str | None,
         just_synthesis: bool,
         just_validation: bool,
         just_stats: bool,
-        logger: Optional[logging.Logger] = None,
+        logger: logging.Logger | None = None,
     ):
         """
         Initialize the flow orchestrator.
@@ -58,7 +58,7 @@ class UnitBenchmarkFlowOrchestrator:
         self.synthesis_results = None
         self.validation_results = None
 
-    def run_synthesis(self) -> Dict[str, Any]:
+    def run_synthesis(self) -> dict[str, Any]:
         """
         Run the data synthesis step.
 
@@ -111,7 +111,7 @@ class UnitBenchmarkFlowOrchestrator:
         self.logger.info(f"Synthesis completed: {self.synthesis_results}")
         return self.synthesis_results
 
-    def run_validation(self) -> Dict[str, Any]:
+    def run_validation(self) -> dict[str, Any]:
         """
         Run the data validation step.
 
@@ -142,7 +142,7 @@ class UnitBenchmarkFlowOrchestrator:
         self.logger.info("Validation completed")
         return self.validation_results
 
-    def run_full_pipeline(self) -> Dict[str, Any]:
+    def run_full_pipeline(self) -> dict[str, Any]:
         """
         Run the complete pipeline: synthesis followed by validation.
 

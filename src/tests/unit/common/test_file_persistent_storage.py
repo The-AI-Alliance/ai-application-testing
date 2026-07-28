@@ -8,11 +8,11 @@ import tempfile
 from datetime import datetime
 from typing import Any
 
-from hypothesis import given, strategies as st
+from hypothesis import given
+from hypothesis import strategies as st
 
 from common.file_persistent_storage import FilePersistentStorage
-
-from tests.common.hypothesis.datetimes import year_2000
+from tests.common.hypothesis.datetimes import local_datetimes_2000
 
 
 class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
@@ -20,7 +20,9 @@ class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
     def init(self):
         """Set up test fixtures"""
         # Create a temporary file for testing
-        self.temp_file = tempfile.NamedTemporaryFile(mode="w", delete=True, delete_on_close=False, suffix=".jsonl")
+        self.temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
+            mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
+        )
         self.temp_file.close()
         self.tool = FilePersistentStorage(self.temp_file.name)
         self.tool.clear()
@@ -44,7 +46,7 @@ class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
             min_size=0,
             max_size=5,
         ),
-        st.datetimes(min_value=year_2000),
+        local_datetimes_2000(),
     )
     def test_save_load(self, lst: list[dict[str, Any]], dt: datetime):
         """

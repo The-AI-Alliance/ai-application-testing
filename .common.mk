@@ -41,18 +41,23 @@ TIME                     ?= time
 # "pyproject.toml" files. Therefore, DON'T USE THIS FLAG!):
 UV_RUN                   ?= uv run
 PYLINT_IGNORE_ARGS       := --ignore=.venv --ignore-pattern='.*cache.*'
-# Define PYTEST_*_OPT_ARGS in targets to customize behavior.
+# Define PYTEST_*_OPT_ARGS in targets to customize behavior. Override on the command line, too.
 PYTEST_RUN_OPT_ARGS      ?=
 PYTEST_COV_OPT_ARGS      ?=
 PYTEST_RUN_CMD           := ${UV_RUN} coverage run -m pytest -v -s ${PYTEST_RUN_OPT_ARGS}
 PYTEST_COV_REPORT_CMD    := ${UV_RUN} coverage report -m ${PYTEST_COV_OPT_ARGS}
 
+# Define *_OPT_ARGS on the CLI to pass additional arguments to the corresponding target recipes.
+RUFF_OPT_ARGS            ?=
+PYLINT_OPT_ARGS          ?=
+TY_OPT_ARGS              ?=
+
 ifeq (${GITHUB_CI},)
-	BLACK_OPT_ARGS :=
+	BLACK_OPT_ARGS         ?=
 else
 	# In CI, only check if reformatting would happen. exit code 1
 	# is returned if so, causing the PR to fail.
-	BLACK_OPT_ARGS := --check
+	BLACK_OPT_ARGS          = --check
 endif
 
 # The environment:
@@ -233,6 +238,7 @@ print-pwd::
 .PHONY: tests unit-tests unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
 .PHONY: format format-prerequisite format-default format-postrequisite black
 .PHONY: ruff ruff-prerequisite ruff-default ruff-postrequisite
+.PHONY: ruff-watch ruff-watch-default
 .PHONY: pylint pylint-prerequisite pylint-default pylint-postrequisite
 .PHONY: type-check ty type-check-prerequisite type-check-default type-check-postrequisite
 .PHONY: type-check-watch ty-watch type-check-watch-default
@@ -259,7 +265,12 @@ ruff:: ruff-prerequisite ruff-default ruff-postrequisite
 ruff-prerequisite ruff-postrequisite::
 ruff-default:
 	@echo "${INFO_LABEL}Target ${CODE}ruff${_END}: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END}."
-	cd ${SRC_DIR} && ${UV_RUN} ruff check --fix .
+	cd ${SRC_DIR} && ${UV_RUN} ruff check --fix ${RUFF_OPT_ARGS} .
+
+ruff-watch:: ruff-prerequisite ruff-watch-default ruff-postrequisite
+ruff-watch-default:
+	@echo "${INFO_LABEL}Target ${CODE}ruff${_END}: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
+	cd ${SRC_DIR} && ${UV_RUN} ruff check --fix --watch ${RUFF_OPT_ARGS} .
 
 pylint:: pylint-prerequisite pylint-default pylint-postrequisite
 pylint-prerequisite pylint-postrequisite::
@@ -268,20 +279,20 @@ pylint-default:
 
 pylint-default-save:
 	@echo "${INFO_LABEL}Target ${CODE}pylint${_END}: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
-	cd ${SRC_DIR} && ${UV_RUN} pylint ${PYLINT_IGNORE_ARGS} .
+	cd ${SRC_DIR} && ${UV_RUN} pylint ${PYLINT_IGNORE_ARGS} ${PYLINT_OPT_ARGS} .
 
 type-check:: ty
 ty:: type-check-prerequisite type-check-default type-check-postrequisite
 type-check-prerequisite type-check-postrequisite::
 type-check-default:
 	@echo "${INFO_LABEL}Target ${CODE}type-check${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END}."
-	cd ${SRC_DIR} && ${UV_RUN} ty check .
+	cd ${SRC_DIR} && ${UV_RUN} ty check ${TY_OPT_ARGS} .
 
 type-check-watch:: ty-watch
 ty-watch:: type-check-prerequisite type-check-watch-default type-check-postrequisite
 type-check-watch-default:
 	@echo "${INFO_LABEL}Target ${CODE}type-check-watch${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
-	cd ${SRC_DIR} && ${UV_RUN} ty check --watch .
+	cd ${SRC_DIR} && ${UV_RUN} ty check --watch ${TY_OPT_ARGS} .
 
 .PHONY: one-time-setup clean-setup uninstall-uv 
 .PHONY: force-setup force-one-time-setup rm-venv

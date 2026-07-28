@@ -6,22 +6,23 @@ through OpenAI-compatible endpoints, allowing integration with any client
 that supports the OpenAI API format.
 """
 
+import json
 import logging
 import os
 import sys
 import time
 import uuid
-import json
+from collections.abc import AsyncGenerator
 from pathlib import Path
-from typing import List, Optional, Dict, Any, AsyncGenerator
+from typing import Any
 
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-import uvicorn
 
-from apps.chatbot import ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
-from common.utils import setup, get_package_version
+from apps.chatbot import ChatBotAgent, ChatBotResponseHandler, ChatBotSimple
+from common.utils import get_package_version, setup
 
 # Pydantic models for OpenAI-compatible API
 
@@ -37,12 +38,12 @@ class ChatCompletionRequest(BaseModel):
     """Request body for chat completions endpoint."""
 
     model: str = Field(..., description="ID of the model to use")
-    messages: List[Message] = Field(..., description="List of messages in the conversation")
-    temperature: Optional[float] = Field(default=1.0, ge=0.0, le=2.0, description="Sampling temperature")
-    max_tokens: Optional[int] = Field(default=None, description="Maximum tokens to generate")
-    stream: Optional[bool] = Field(default=False, description="Whether to stream responses")
-    n: Optional[int] = Field(default=1, description="Number of completions to generate")
-    stop: Optional[List[str]] = Field(default=None, description="Stop sequences")
+    messages: list[Message] = Field(..., description="List of messages in the conversation")
+    temperature: float | None = Field(default=1.0, ge=0.0, le=2.0, description="Sampling temperature")
+    max_tokens: int | None = Field(default=None, description="Maximum tokens to generate")
+    stream: bool | None = Field(default=False, description="Whether to stream responses")
+    n: int | None = Field(default=1, description="Number of completions to generate")
+    stop: list[str] | None = Field(default=None, description="Stop sequences")
 
 
 class Usage(BaseModel):
@@ -68,7 +69,7 @@ class ChatCompletionResponse(BaseModel):
     object: str = "chat.completion"
     created: int
     model: str
-    choices: List[ChatCompletionChoice]
+    choices: list[ChatCompletionChoice]
     usage: Usage
 
 
@@ -79,7 +80,7 @@ class ChatCompletionChunk(BaseModel):
     object: str = "chat.completion.chunk"
     created: int
     model: str
-    choices: List[Dict[str, Any]]
+    choices: list[dict[str, Any]]
 
 
 class Model(BaseModel):
@@ -95,7 +96,7 @@ class ModelList(BaseModel):
     """List of available models."""
 
     object: str = "list"
-    data: List[Model]
+    data: list[Model]
 
 
 class APIServer:
@@ -245,8 +246,8 @@ class APIServer:
 
             except HTTPException:
                 raise
-            except Exception as e:
-                error_msg = f"Error processing chat completion: {str(e)}"
+            except Exception as e:  # noqa
+                error_msg = f"Error processing chat completion: {e!s}"
                 if self.logger:
                     self.logger.error(error_msg)
                 raise HTTPException(status_code=500, detail=error_msg)
@@ -291,7 +292,7 @@ class APIServer:
             ),
         )
 
-    async def _stream_completion(self, request: ChatCompletionRequest, user_query: str) -> AsyncGenerator[str, None]:
+    async def _stream_completion(self, request: ChatCompletionRequest, user_query: str) -> AsyncGenerator[str]:
         """Stream a chat completion response."""
 
         # Query the chatbot
@@ -425,7 +426,7 @@ def main():
         if logger:
             logger.info("API server stopped by user")
         print("\nAPI server stopped")
-    except Exception as e:
+    except Exception as e:  # noqa
         error_msg = f"Error running API server: {e}"
         if logger:
             logger.error(error_msg)

@@ -3,11 +3,13 @@
 
 import json
 import re
-import yaml
+from collections.abc import Mapping, MutableMapping, Sequence
 from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Mapping, MutableMapping, Sequence
+from typing import Any
+
+import yaml
 
 
 def load_yaml(path: Path) -> Mapping[str, Any]:
@@ -55,7 +57,7 @@ def decode_json_dict(text: Any) -> MutableMapping[str, Any]:
     try:
         obj = def_datetime_decoder.decode(text)
         if not isinstance(obj, MutableMapping):
-            raise ValueError(
+            raise TypeError(
                 f"decode_json_dict called with a string that is not a dictionary!? type: {type(obj)}, obj = <{obj}>"
             )
         return obj
@@ -74,7 +76,7 @@ def decode_json_list(text: Any) -> Sequence[MutableMapping[str, Any]]:
     try:
         obj = def_datetime_decoder.decode(text)
         if not isinstance(obj, Sequence):
-            raise ValueError(
+            raise TypeError(
                 f"decode_json_list called with a string that is not a list!? type: {type(obj)}, obj = <{obj}>"
             )
         return obj

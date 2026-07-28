@@ -8,14 +8,14 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
+from collections.abc import Mapping, MutableMapping, Sequence
 from datetime import datetime
-from typing import Any, Mapping, MutableMapping, Sequence, Tuple, Type
-
-from common.collections import get_chain, get
+from typing import Any
 
 from apps.chatbot import ChatBotAgent
-from apps.chatbot.tools.resource_manager import ResourceManager
 from apps.chatbot.tools.appointment_manager import AppointmentManager
+from apps.chatbot.tools.resource_manager import ResourceManager
+from common.collections import get, get_chain
 
 
 class BaseAITest(ABC):
@@ -75,7 +75,7 @@ class ScenarioTest(BaseAITest):
     """
 
     @classmethod
-    def get_known_scenario_kinds(cls) -> Mapping[str, Type[ScenarioTest]]:
+    def get_known_scenario_kinds(cls) -> Mapping[str, type[ScenarioTest]]:
         """Corresponding to the known subtypes of ScenarioTest."""
         return {
             "appointment": AppointmentScenarioTest,
@@ -142,7 +142,7 @@ class ScenarioTest(BaseAITest):
         `self.start()`, which you shouldn't override!
         """
 
-    def end(self, result: dict[str, Any]) -> Tuple[bool, dict[str, Any]]:
+    def end(self, result: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         """
         Called after the test has finished. Captures the data needed
         for the post-condition checks. Then performs all checks.
@@ -196,7 +196,7 @@ class ScenarioTest(BaseAITest):
     def _custom_check_conditions(self, result: dict[str, Any]) -> None:
         pass
 
-    def _parse_value(self, label: str, value: str) -> Tuple[Any, str]:
+    def _parse_value(self, label: str, value: str) -> tuple[Any, str]:
         """
         Assume a JSON string for a single value or a list of values.
         Parse with json.loads(), then convert any datetimes found.
@@ -379,7 +379,7 @@ class AppointmentScenarioTest(ScenarioTest):
             )
 
     def appointments_unchanged(self, result: dict[str, Any]):
-        if not self.start_appointments == self.end_appointments:
+        if self.start_appointments != self.end_appointments:
             self.errors["post-conditions"].append(
                 f"Start and end appointments differ: {self.start_appointments} != {self.end_appointments}"
             )

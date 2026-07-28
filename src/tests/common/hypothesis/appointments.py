@@ -4,20 +4,18 @@ Test utilities, e.g., strategy generators for appointments.
 
 from hypothesis import strategies as st
 
+from apps.chatbot.tools.appointment_manager import AppointmentManager
 from tests.common.hypothesis.datetimes import (
     future_dates,
-    work_dates,
-    work_hours,
+    future_work_datetimes,
     non_work_hours,
     on_the_hour_minutes,
-    future_work_datetimes,
+    work_dates,
+    work_hours,
 )
-
 from tests.common.hypothesis.persons import (
     person_names,
 )
-
-from apps.chatbot.tools.appointment_manager import AppointmentManager
 
 
 def appointment_work_hours():

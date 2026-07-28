@@ -6,6 +6,7 @@ using the OpenAI Python client library.
 """
 
 import sys
+
 from openai import OpenAI
 
 example_content = "I need a refill for my blood pressure medication"
@@ -153,7 +154,7 @@ def main():
         print("All examples completed successfully!")
         print("=" * 60 + "\n")
 
-    except Exception as e:
+    except Exception as e:  # noqa
         print(f"\nError: {e}")
         print("\nMake sure the API server is running:")
         print("  python -m apps.chatbot.api_server.server")

@@ -2,17 +2,18 @@
 
 import glob
 import io
-import os
 import json
 import logging
+import os
 import sys
 from abc import ABC
+from collections.abc import Mapping, MutableMapping
 from pathlib import Path
-from typing import Any, Mapping, MutableMapping
+from typing import Any
 
 from litellm import completion
-from litellm.types.utils import ModelResponse
 from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
+from litellm.types.utils import ModelResponse
 from openai import OpenAIError
 
 from common.json_yaml import (
@@ -127,7 +128,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
         try:
             with open(data_file, "r", encoding="utf-8") as f:
                 unexpected_lines = []
-                for line in f.readlines():
+                for line in f:
                     line2 = line.strip()
                     if len(line2) == 0:
                         continue  # skip blanks
@@ -177,10 +178,9 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
                 )
 
             with open(data_file, "w", encoding="utf-8") as f:
-                for line in jsonls:
-                    f.write(line)
+                f.writelines(jsonls)
             with open(data_file, "r", encoding="utf-8") as f:
-                num_qa_pairs = sum(1 for line in f.readlines() if '"question":' in line)
+                num_qa_pairs = sum(1 for line in f if '"question":' in line)
                 self.logger.info(f"Approximately {num_qa_pairs} Q&A pairs generated.")
 
             # Check if all lines have the expected label
@@ -245,7 +245,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         total_count = 0
         error_count = 0
         with open(validation_file, "r", encoding="utf-8") as f:
-            for line in f.readlines():
+            for line in f:
                 if len(line.strip()) == 0:
                     continue
                 total_count += 1
@@ -286,8 +286,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 lines, errors = extract_jsonl_list(extract_content(response))
                 if errors:
                     self.logger.error(f"Some lines couldn't be parsed in response <{response}>, errors = {errors}")
-                for ln in lines:
-                    validation_file.write(ln + "\n")
+                validation_file.writelines(ln + "\n" for ln in lines)
             elif isinstance(response, CustomStreamWrapper):
                 self.logger.error(
                     f"Logic error: CustomStreamWrapper (streaming) responses are not supported: {response}"
@@ -311,10 +310,14 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
         total_stats = {}
 
         globs = [f"*-{name}-data.jsonl" for name in self.use_cases]
-        data_file_names = []
-        for gl in globs:
-            for files in glob.iglob(gl, root_dir=self.data_dir, recursive=False, include_hidden=False):
-                data_file_names.append(files)
+        data_file_names = [
+            file
+            for gl in globs
+            for file in glob.iglob(gl, root_dir=self.data_dir, recursive=False, include_hidden=False)
+        ]
+        # for gl in globs:
+        #     for files in glob.iglob(gl, root_dir=self.data_dir, recursive=False, include_hidden=False):
+        #         data_file_names.append(files)
         self.logger.info(f"Validating data files: {data_file_names}")
         parse_err_fmt = """Some substrings from line {}, <{}> in data file <{}> didn't parse as JSONL. errors = {}"""
         print(f"Validating data files: {data_file_names}")
@@ -322,17 +325,19 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
             data_file = os.path.join(self.data_dir, data_file_name)
             validation_file = os.path.splitext(data_file)[0] + "-validation.jsonl"
             if not self.just_stats:
-                with open(validation_file, "w", encoding="utf-8") as vfile:
-                    with open(data_file, "r", encoding="utf-8") as synthetic_data_file:
-                        for line_number, line in enumerate(synthetic_data_file):
-                            lines2, errors = extract_jsonl_list(line)
-                            if errors:
-                                self.logger.error(parse_err_fmt.format(line_number, line, data_file, errors))
-                            for line2 in lines2:
-                                line3 = line2.strip()
-                                if len(line3) == 0:
-                                    continue
-                                self.validate_line(line3, system_prompt, vfile)
+                with (
+                    open(validation_file, "w", encoding="utf-8") as vfile,
+                    open(data_file, "r", encoding="utf-8") as synthetic_data_file,
+                ):
+                    for line_number, line in enumerate(synthetic_data_file):
+                        lines2, errors = extract_jsonl_list(line)
+                        if errors:
+                            self.logger.error(parse_err_fmt.format(line_number, line, data_file, errors))
+                        for line2 in lines2:
+                            line3 = line2.strip()
+                            if len(line3) == 0:
+                                continue
+                            self.validate_line(line3, system_prompt, vfile)
 
             stats = self.return_stats(data_file, validation_file)
             total_stats.update({data_file: stats})

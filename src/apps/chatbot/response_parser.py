@@ -2,16 +2,14 @@ import json
 import re
 from abc import ABC, abstractmethod
 from json.decoder import JSONDecodeError
-from typing import Any, Generic, TypeVar
-
-from common.collections import get_chain
+from typing import Any
 
 from litellm.types.utils import ModelResponse
 
-RESPONSE = TypeVar("RESPONSE")
+from common.collections import get_chain
 
 
-class ResponseParser(ABC, Generic[RESPONSE]):
+class ResponseParser[RESPONSE](ABC):
     """
     Abstraction for the different types of responses returned by
     agent and inference libraries we use use, e.g., LiteLLM, LangChain, etc.
