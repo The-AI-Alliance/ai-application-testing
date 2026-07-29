@@ -68,7 +68,7 @@ view-local:: setup-jekyll run-jekyll
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
 # `localhost:4000/The-AI-Alliance/${REPO_NAME}` when running locally.
 
-run-jekyll: clean
+run-jekyll: clean-website
 	@echo
 	@echo "Once you see the ${CODE}http://127.0.0.1:${JEKYLL_PORT}/${_END} URL printed, open it with command+click..."
 	@echo
@@ -82,8 +82,10 @@ setup-jekyll:: ruby-installed-check ruby-gem-installation bundle-command-check b
 .PHONY: jekyll-error ruby-missing-error gem-missing-error gem-error bundle-error bundle-missing-error
 
 ruby-gem-installation::
-	@echo "${NOTE}Updating Ruby gems required for local viewing of the website in the '${WEBSITE_DIR}' directory...${_END}"
-	gem install jekyll bundler jemoji || ${MAKE} gem-error
+	@command -v jekyll > /dev/null && \
+	  echo "${INFO_LABEL}jekyll already installed." || \
+	  { echo "${NOTE}Installing Ruby gems...${_END}"; \
+	    gem install jekyll bundler jemoji || ${MAKE} gem-error; }
 
 bundle-installation::
 	bundle install || ${MAKE} bundle-error
