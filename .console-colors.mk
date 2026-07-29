@@ -58,7 +58,7 @@ INFO_LABEL      = ${BOLD}${DARK_GREEN}INFO:${_END}
 TIP_LABEL       = ${BOLD}${PINK}TIP:${_END}     
 
 # For "special" strings in output:
-CODE            = ${PINK}
+CODE            = ${DARK_GREEN}
 
 .PHONY: show-colors
 
