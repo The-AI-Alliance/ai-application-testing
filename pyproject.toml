@@ -8,14 +8,14 @@ dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
     "fastapi>=0.140.1",
-    "uvicorn>=0.51.0",
+    "uvicorn>=0.52.0",
     "httpx>=0.28.1",
     "deepagents>=0.7.1",
     "langchain-ollama>=1.1.0",
     "openai>=2.49.0",
     "litellm>=1.93.0",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.4",
+    "fastmcp>=3.4.5",
 ]
 
 [tool.setuptools.packages.find]
@@ -34,8 +34,8 @@ dev = [
     "pytest-cov>=7.1.0",
     "pylint>=4.0.6",
     "black>=26.5.1",
-    "ruff>=0.16.0",
-    "ty>=0.0.64",
+    "ruff>=0.16.1",
+    "ty>=0.0.65",
 ]
 
 [tool.pytest.ini_options]
