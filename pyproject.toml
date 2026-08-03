@@ -15,7 +15,7 @@ dependencies = [
     "openai>=2.49.0",
     "litellm>=1.93.0",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.4",
+    "fastmcp>=3.4.5",
 ]
 
 [tool.setuptools.packages.find]
