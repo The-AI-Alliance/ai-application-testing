@@ -18,4 +18,4 @@ max-line-length = 250
 [tool.pylint.variables]
 # Tells whether unused global variables should be treated as a violation.
 allow-global-unused-variables = false
-
+max-locals = 25

@@ -58,6 +58,8 @@ from tests.common.hypothesis.datetimes import (
     year_2000,
 )
 
+# pylint: disable=unused-variable,missing-function-docstring
+
 
 def _capture_output(tool: StructuredTool, params: dict[str, Any]) -> Any:
     with contextlib.redirect_stdout(io.StringIO()) as fout, contextlib.redirect_stderr(io.StringIO()) as ferr:

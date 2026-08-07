@@ -2,6 +2,7 @@
 Test utilities, e.g., strategy generators for Hypothesis.
 """
 
+from collections.abc import Set
 from datetime import date, datetime, time
 
 from hypothesis import strategies as st
@@ -21,6 +22,8 @@ from common.date_time_utils import (
 from common.utils import (
     empty_set,
 )
+
+# pylint: disable=unused-variable,missing-function-docstring,fixme
 
 year_2000 = datetime(year=2000, month=1, day=1, tzinfo=local_timezone)
 
@@ -129,14 +132,14 @@ def non_weekend_dates(
     def allowed(dt: date) -> bool:
         return is_week_day(dt) and not (holidays and (dt.month, dt.day) in holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def weekend_dates(
     date_strategy=future_dates,
     min_value: date = date.min,
     max_value: date = date.max,
-    holidays: set[tuple[int, int]] = empty_set,
+    holidays: Set[tuple[int, int]] = empty_set,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Saturday or Sunday, but
@@ -157,7 +160,7 @@ def weekend_dates(
     def allowed(dt: date) -> bool:
         return is_weekend(dt) and not (holidays and (dt.month, dt.day) in holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def work_dates(
@@ -165,7 +168,7 @@ def work_dates(
     min_value: date = date.min,
     max_value: date = date.max,
     weekdays_only: bool = True,
-    holidays: set[tuple[int, int]] = empty_set,
+    holidays: Set[tuple[int, int]] = empty_set,
 ):
     """
     A Hypothesis strategy for generating work dates.
@@ -188,7 +191,7 @@ def work_dates(
             return False
         return not (holidays and (d.month, d.day) in holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda d: allowed(d))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def work_times(
@@ -336,8 +339,8 @@ def date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, fu
 
     return (
         st.tuples(date_strategy(), hour_strategy(), minute_strategy())
-        .map(lambda t: tuple_to_datetime(t))
-        .filter(lambda dt: is_future_or_past(dt))
+        .map(tuple_to_datetime)
+        .filter(is_future_or_past)
     )
 
 

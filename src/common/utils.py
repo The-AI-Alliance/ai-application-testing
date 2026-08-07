@@ -14,6 +14,7 @@ from litellm.types.utils import ModelResponse
 from common.date_time_utils import now, now_str, timestamp_file_fmt
 
 from .collections import get_chain
+from collections.abc import Sequence, Set
 
 common_defaults = {
     "model": "ollama_chat/gemma4:12b",
@@ -24,9 +25,9 @@ common_defaults = {
     "levenshtein-ratio-threshold": 0.95,
 }
 
-empty_omit_arguments: set[str] = set()
-empty_list: list[Any] = []
-empty_set: set[Any] = set()
+empty_omit_arguments: set[str] = Set()
+empty_list: list[Any] = Sequence()
+empty_set: set[Any] = Set()
 
 
 class ExpectedFail:
@@ -242,7 +243,7 @@ def ensure_dirs_exist(*dirs) -> bool:
     return True  # most callers will ignore this...
 
 
-def make_full_prompt(prompt: str, system_prompt: Any, session: list[tuple[str, str]] = empty_list) -> str:
+def make_full_prompt(prompt: str, system_prompt: Any, session: Sequence[tuple[str, str]] = empty_list) -> str:
     ss = ["SESSION:"]
     if session:
         for query, reply in session:

@@ -14,23 +14,24 @@ from hypothesis import strategies as st
 from common.file_persistent_storage import FilePersistentStorage
 from tests.common.hypothesis.datetimes import local_datetimes_2000
 
+# pylint: disable=unused-variable,missing-function-docstring
 
-class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
+class TestFilePersistentStorageUtil:
+    """Class to test file persistent storage."""
 
-    def init(self):
+    def __init__(self):
         """Set up test fixtures"""
         # Create a temporary file for testing
-        self.temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
+        self.temp_file = tempfile.NamedTemporaryFile( # noqa: SIM115 pylint: disable=consider-using-with
             mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
         )
         self.temp_file.close()
         self.tool = FilePersistentStorage(self.temp_file.name)
         self.tool.clear()
-        return self.tool
 
     def test_initialization_creates_file(self):
         """Check that initialization creates the JSONL file if it doesn't exist"""
-        self.init()
+        # self.init()
         assert os.path.exists(self.temp_file.name)
 
     @given(
@@ -52,7 +53,7 @@ class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
         """
         Check that saving, then reloading dictionaries works as expected.
         """
-        self.init()
+        # self.init()
         for d in lst:
             d["timestamp"] = dt
         count = self.tool.save(lst)
@@ -80,12 +81,12 @@ class TestFilePersistentStorageUtil:  # pylint: disable=unused-variable
         """
         Check that saving, then reloading dictionaries works as expected.
         """
-        self.init()
+        # self.init()
         self.tool.save(lst)
         count = self.tool.save(lst)
         assert len(lst) == count
 
         self.tool.clear()
         lst2, errors = self.tool.load()
-        assert [] == lst2, f"list2: {lst2}"
+        assert not lst2, f"list2: {lst2}"
         assert 0 == len(errors), str(errors)

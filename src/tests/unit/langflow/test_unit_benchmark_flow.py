@@ -2,13 +2,13 @@
 
 import logging
 import os
-import sys
 import tempfile
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+#sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from tools.langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
+
+# pylint: disable=unused-variable,missing-function-docstring,fixme,too-few-public-methods,unused-variable
 
 # TODO: Move this to an integration test and replace the mocks with real calls to Langflow.
 
@@ -16,7 +16,7 @@ from tools.langflow.unit_benchmark_flow import UnitBenchmarkFlowOrchestrator
 class TestUnitBenchmarkFlowOrchestrator:
     """Test cases for UnitBenchmarkFlowOrchestrator."""
 
-    def init(self):
+    def __init__(self):
         """Set up test fixtures."""
         self.temp_dir = tempfile.mkdtemp()
         self.model_name = "test_model"
@@ -46,7 +46,7 @@ class TestUnitBenchmarkFlowOrchestrator:
 
     def test_initialization(self):
         """Test orchestrator initialization."""
-        self.init()
+        # self.init()
         assert self.orchestrator.model_name == self.model_name
         assert self.orchestrator.service_url == self.service_url
         assert self.orchestrator.template_dir == self.template_dir

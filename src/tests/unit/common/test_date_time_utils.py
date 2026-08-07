@@ -29,6 +29,7 @@ from tests.common.hypothesis.datetimes import (
     year_2000,
 )
 
+# pylint: disable=unused-variable,missing-function-docstring
 
 @given(local_datetimes_2000(), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
 def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_approx_equal(dt, ns):
