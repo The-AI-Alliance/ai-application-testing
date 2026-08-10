@@ -8,6 +8,7 @@ from hypothesis import strategies as st
 
 DEF_PERSON_NAME_PART_REGEX_FORMAT = r"['\w][-'\w]{%d,%d}"
 
+
 def person_name_parts(
     regex_format: str = DEF_PERSON_NAME_PART_REGEX_FORMAT,
     min_size: int = 1,

@@ -31,16 +31,20 @@ def valid_dirs(min_size: int = 1, max_size: int = 5):
         lambda s: re.sub(r"\W", "_", s)
     )
 
+
 def clean():
     """Remove the temporary file and its directory."""
     tt = Path(TEST_TEMP)
     if tt.exists():
         shutil.rmtree(TEST_TEMP)
 
+
 # pylint: disable=unused-variable
+
 
 def test_expected_fail(use_case_name: str):
     """Test that an expected failure occurs."""
+
     def should_raise(exc):
         raise exc
 
@@ -49,6 +53,7 @@ def test_expected_fail(use_case_name: str):
 
     class ExpectedException(BaseException):
         """For testing expected exceptions."""
+
         def __init__(self, msg):
             super().__init__(msg)
 
@@ -62,6 +67,7 @@ def test_expected_fail(use_case_name: str):
         ef(lambda: should_not_raise(f"Didn't fail! {use_case_name}"))
     except AssertionError:
         pass
+
 
 @given(st.lists(valid_dirs(), max_size=5))
 def test_model_dir_name(strs: list[str]):

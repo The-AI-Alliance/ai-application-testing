@@ -15,13 +15,14 @@ from common.date_time_utils import (
     friendly_date_formats,
     friendly_date_time_formats,
     is_week_day,
-    local_timezone,
     now,
     one_second,
     string_to_date,
     string_to_datetime,
 )
 from tests.common.hypothesis.datetimes import (
+    check_date_to_str_and_back,
+    check_datetime_to_str_and_back,
     dates_2000,
     local_datetimes_2000,
     non_weekend_dates,
@@ -30,6 +31,7 @@ from tests.common.hypothesis.datetimes import (
 )
 
 # pylint: disable=unused-variable,missing-function-docstring
+
 
 @given(local_datetimes_2000(), st.lists(st.integers(min_value=-120, max_value=120), min_size=0, max_size=10))
 def test_datetimes_approx_equal_returns_true_and_empty_string_if_datetimes_approx_equal(dt, ns):
@@ -81,17 +83,7 @@ def test_is_weekday_returns_false_for_weekend_days(weekend_day):
 
 @given(local_datetimes_2000(), st.sampled_from(friendly_date_time_formats))
 def test_string_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
-    assert dt.tzinfo == local_timezone
-    dt_str = dt.strftime(fmt)
-    actual, error = string_to_datetime(dt_str, fmt)
-    assert actual, f'Failed to convert "{dt_str}" with format "{fmt}". Error: {error}'
-    assert datetimes_approx_equal(dt, actual, one_second), f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, fmt: {fmt}"
-
-    # We actually need to compare strings, not dts, because a returned datetime might have "missing"
-    # hours, minutes, seconds, etc., depending on fmt.
-    actual_str = actual.strftime(fmt)
-    assert dt_str == actual_str, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
-    assert "" == error
+    check_datetime_to_str_and_back(dt, fmt, string_to_datetime)
 
 
 @given(local_datetimes_2000())
@@ -112,15 +104,7 @@ def test_string_to_datetime_returns_an_error_string_for_invalid_date_time_string
 @given(dates_2000())
 def test_string_to_date_can_parse_friendly_formatted_date_strings(d):
     for fmt in friendly_date_formats:
-        d_str = d.strftime(fmt)
-        actual, error = string_to_date(d_str, fmt)
-        assert actual, f'Failed to convert "{d_str}" with format "{fmt}". Error: {error}'
-
-        # We actually need to compare strings, not ds, because a returned datetime might have "missing"
-        # hours, minutes, seconds, etc., depending on fmt.
-        actual_str = actual.strftime(fmt)
-        assert d_str == actual_str, f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
-        assert "" == error
+        check_date_to_str_and_back(d, fmt, string_to_date)
 
 
 @given(dates_2000())

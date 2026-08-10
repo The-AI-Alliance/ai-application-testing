@@ -2,12 +2,14 @@
 Test utilities, e.g., strategy generators for Hypothesis.
 """
 
-from collections.abc import Set
+from collections.abc import Callable
+from collections.abc import Set as AbstractSet
 from datetime import date, datetime, time
 
 from hypothesis import strategies as st
 
 from common.date_time_utils import (
+    datetimes_approx_equal,
     def_end_hour_inclusive,
     def_start_hour_inclusive,
     is_week_day,
@@ -16,6 +18,7 @@ from common.date_time_utils import (
     local_datetime_min,
     local_timezone,
     now,
+    one_second,
     tomorrow,
     yesterday,
 )
@@ -139,7 +142,7 @@ def weekend_dates(
     date_strategy=future_dates,
     min_value: date = date.min,
     max_value: date = date.max,
-    holidays: Set[tuple[int, int]] = empty_set,
+    holidays: AbstractSet[tuple[int, int]] = empty_set,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Saturday or Sunday, but
@@ -168,7 +171,7 @@ def work_dates(
     min_value: date = date.min,
     max_value: date = date.max,
     weekdays_only: bool = True,
-    holidays: Set[tuple[int, int]] = empty_set,
+    holidays: AbstractSet[tuple[int, int]] = empty_set,
 ):
     """
     A Hypothesis strategy for generating work dates.
@@ -338,9 +341,7 @@ def date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, fu
         return dt >= right_now if future else dt < right_now
 
     return (
-        st.tuples(date_strategy(), hour_strategy(), minute_strategy())
-        .map(tuple_to_datetime)
-        .filter(is_future_or_past)
+        st.tuples(date_strategy(), hour_strategy(), minute_strategy()).map(tuple_to_datetime).filter(is_future_or_past)
     )
 
 
@@ -388,3 +389,58 @@ def past_work_datetimes(
     A strategy for past datetime generation.
     """
     return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, False)
+
+
+def check_datetime_to_str_and_back(
+    dt: datetime,
+    datetime_format: str,
+    str_to_datetime: Callable[[str, str], [datetime, str]],
+):
+    """
+    Helper function for several tests that, starting with a datetime,
+    first convert it to a string, then parse the string with a specified
+    format, and verify the result is the expected datetime. It must
+    handle the case where the format might remove information, e.g., just
+    return the date and not the time part.
+    """
+    assert dt.tzinfo == local_timezone
+    dt_str = dt.strftime(datetime_format)
+    actual, error = str_to_datetime(dt_str, datetime_format)
+    assert (
+        actual
+    ), f'Failed to convert "{dt_str}" with format "{datetime_format}", original datetime "{dt}". Error: {error}'
+    assert datetimes_approx_equal(
+        dt, actual, one_second
+    ), f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, datetime_format: {datetime_format}"
+
+    # We actually need to compare strings, not dts, because a returned datetime might have "missing"
+    # hours, minutes, seconds, etc., depending on fmt.
+    actual_str = actual.strftime(datetime_format)
+    assert (
+        dt_str == actual_str
+    ), f"original datetime: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, datetime_format: {datetime_format}"
+    assert not error
+
+
+def check_date_to_str_and_back(
+    d: date,
+    date_format: str,
+    str_to_date: Callable[[str, str], [date, str]],
+):
+    """
+    Helper function for several tests that, starting with a date,
+    first convert it to a string, then parse the string with a specified
+    format, and verify the result is the expected date. It must
+    handle the case where the format might remove some information.
+    """
+    d_str = d.strftime(date_format)
+    actual, error = str_to_date(d_str, date_format)
+    assert actual, f'Failed to convert "{d_str}" with format "{date_format}", original date "{d}". Error: {error}'
+
+    # We actually need to compare strings, not ds, because a returned datetime might have "missing"
+    # hours, minutes, seconds, etc., depending on fmt.
+    actual_str = actual.strftime(date_format)
+    assert (
+        d_str == actual_str
+    ), f"original date: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, date_format: {date_format}"
+    assert not error

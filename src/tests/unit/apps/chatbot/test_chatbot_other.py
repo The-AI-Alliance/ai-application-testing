@@ -9,6 +9,7 @@ from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
 
 # pylint: disable=unused-variable
 
+
 @pytest.mark.ai
 @pytest.mark.qna
 def test_chatbot_other_requests():

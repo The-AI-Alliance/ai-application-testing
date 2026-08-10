@@ -45,6 +45,7 @@ from tests.common.hypothesis.datetimes import (
 
 # pylint: disable=unused-variable,missing-function-docstring,too-many-public-methods,consider-using-with
 
+
 class AppointmentToolsTestUtil:
     """
     Supports test cases for the _skills_ tools in `appointment_tools.py`.
@@ -128,7 +129,7 @@ class AppointmentToolsTestUtil:
         assert len(expected) == len(actual)
         expected2 = sorted(expected, key=lambda a: a["appointment_date_time"])
         actual2 = sorted(actual, key=lambda a: a["appointment_date_time"])
-        for i in range(len(expected2)): # pylint: disable=consider-using-enumerate
+        for i in range(len(expected2)):  # pylint: disable=consider-using-enumerate
             e = expected2[i]
             a = actual2[i]
             self.result_expected(e, a)
@@ -204,7 +205,7 @@ class AppointmentToolsTestUtil:
         Test that two lists of appointments are identical.
         """
         assert len(expected_appointments) == len(actual_appointments)
-        for i in range(len(expected_appointments)): # pylint: disable=consider-using-enumerate
+        for i in range(len(expected_appointments)):  # pylint: disable=consider-using-enumerate
             ea = expected_appointments[i]
             aa = actual_appointments[i]
             assert ea["id"] == aa["id"]
@@ -215,6 +216,7 @@ class AppointmentToolsTestUtil:
 
 class TestAppointmentTools:
     """Test the appointment tools."""
+
     @given(appointment_dicts())
     def test_create_appointment_succeeds_if_datetime_in_the_future_on_the_hour_and_slot_is_open(
         self, appointment_dict: dict[str, Any]

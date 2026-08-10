@@ -19,6 +19,7 @@ from common.utils import ExpectedFail
 
 # pylint: disable=unused-variable,missing-function-docstring
 
+
 def _check(dictionary: dict[str, Any], n: int = -1):
     actual = dict_permutations(dictionary, max_size=n)
 
@@ -120,6 +121,7 @@ def test_get_raises_a_value_error_if_none_would_be_returned_for_a_known_key_with
     ef(lambda: get(dictionary, "bad1"))
     dictionary["bad2"] = None
     ef(lambda: get(dictionary, "bad2"))
+
 
 @given(
     st.dictionaries(

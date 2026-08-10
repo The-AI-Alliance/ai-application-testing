@@ -25,12 +25,14 @@ class BaseAITest(ABC):
         return self.json()
 
     def to_dict(self) -> Mapping[str, Any]:
+        """Return the object as a dictionary, specially formatted."""
         class_name = self.__class__.__name__
         d = {"name": class_name}
         d.update(vars(self))
         return d
 
     def json(self) -> str:
+        """Return the object as JSON, specially formatted."""
         return json.dumps(self.to_dict())
 
 
@@ -47,7 +49,7 @@ class QnATest(BaseAITest):
         actions: Sequence[str],
         rating: int,
         reason: str = "",
-        keywords: Mapping[str, str] = {},
+        keywords: Mapping[str, str] | None = None,
     ):
         super().__init__()
         self.query = query
@@ -67,7 +69,7 @@ class QnATest(BaseAITest):
             raise ValueError(f"Invalid inputs: {', '.join(errors)}")
 
 
-class ScenarioTest(BaseAITest):
+class ScenarioTest(BaseAITest):  # pylint: disable=too-many-instance-attributes
     """
     Class to hold the test data for a "scenario" test, where one or more
     round trip interactions between the user (or AI surrogate) and the system
@@ -81,22 +83,30 @@ class ScenarioTest(BaseAITest):
             "appointment": AppointmentScenarioTest,
         }
 
-    class Inputs:
+    class Inputs:  # pylint: disable=too-few-public-methods
+        """Encapsulate expected inputs and preconditions."""
+
         def __init__(self, required_information: list[dict[str, str]], pre_conditions: list[str]):
             self.required_information = required_information
             self.pre_conditions = pre_conditions
 
-    class SuccessFailure:
+    class SuccessFailure:  # pylint: disable=too-few-public-methods
+        """Encapsulate Success or failure, along with post-conditions."""
+
         def __init__(self, succeeded: bool, text: str, post_conditions: list[str]):
             self.succeeded = succeeded
             self.text = text
             self.post_conditions = post_conditions
 
-    class Success(SuccessFailure):
+    class Success(SuccessFailure):  # pylint: disable=too-few-public-methods
+        """Encapsulate Success."""
+
         def __init__(self, text: str, post_conditions: list[str]):
             super().__init__(True, text, post_conditions)
 
-    class Failure(SuccessFailure):
+    class Failure(SuccessFailure):  # pylint: disable=too-few-public-methods
+        """Encapsulate failure."""
+
         def __init__(self, text: str, post_conditions: list[str]):
             super().__init__(False, text, post_conditions)
 
@@ -108,6 +118,7 @@ class ScenarioTest(BaseAITest):
         failures: list[Failure],
         initial_queries: list[str],
     ):
+        self.chatbot: ChatBotAgent | None = None
         self.scenario = scenario
         self.inputs = inputs
         self.successes = successes
@@ -151,9 +162,9 @@ class ScenarioTest(BaseAITest):
         self.check_required_information(result)
         self.check_conditions(result)
         success = (
-            self.errors["required-information"] == []
-            and self.errors["pre-conditions"] == []
-            and self.errors["post-conditions"] == []
+            not self.errors["required-information"]
+            and not self.errors["pre-conditions"]
+            and not self.errors["post-conditions"]
         )
         return success, self.errors
 
@@ -212,8 +223,7 @@ class ScenarioTest(BaseAITest):
                     except ValueError:
                         lst.append(x)
                 return lst, ""
-            else:
-                return obj, ""
+            return obj, ""
         except json.decoder.JSONDecodeError as e:
             return value, f"Label {label} value {value} is not valid JSON: {e}"
 
@@ -273,19 +283,17 @@ class AppointmentScenarioTest(ScenarioTest):
         initial_queries: list[str],
     ):
         super().__init__(scenario, inputs, successes, failures, initial_queries)
+        self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
+        self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
+        self.am: AppointmentManager | None = None
 
     def _custom_start(self):
         """
         Custom setup for appointment scenario tests.
         """
         self.am: AppointmentManager = self.chatbot.appointment_manager
-        # For some inexplicable reason, the "ty" type checker doesn't believe that
-        # MutableMapping has a copy() method, so we do it "manually".
-        # self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = self.am.get_appointments().copy()
-        self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
         for appointment in self.am.get_appointments():
             self.start_appointments[appointment["id"]] = appointment
-        self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
 
     def _custom_end(self, result: dict[str, Any]):
         """
@@ -295,7 +303,7 @@ class AppointmentScenarioTest(ScenarioTest):
         for appointment in self.am.get_appointments():
             self.end_appointments[appointment["id"]] = appointment
 
-    def _custom_check_conditions(self, result: dict[str, Any]) -> None:
+    def _custom_check_conditions(self, result: dict[str, Any]) -> None:  # pylint: disable=too-many-branches
         for pc in self.inputs.pre_conditions:
             match pc:
                 case "appointment-at-date-time-for-patient":
@@ -316,13 +324,13 @@ class AppointmentScenarioTest(ScenarioTest):
                     case "no-appointment-at-date-time":
                         self.check_appointment_at_date_time_for_patient(False, False, "post-conditions", result)
                     case "appointments-unchanged":
-                        self.appointments_unchanged(result)
+                        self.appointments_unchanged()
                     case "before-appointments-count":
-                        self.check_appointments_count(0, result)
+                        self.check_appointments_count(0)
                     case "before-appointments-count-minus-one":
-                        self.check_appointments_count(-1, result)
+                        self.check_appointments_count(-1)
                     case "before-appointments-count-plus-one":
-                        self.check_appointments_count(1, result)
+                        self.check_appointments_count(1)
 
     def check_appointment_at_date_time_for_patient(
         self,
@@ -331,6 +339,7 @@ class AppointmentScenarioTest(ScenarioTest):
         which_conditions: str,
         result: dict[str, Any],
     ):
+        """Check an appointment."""
         appointments = self.start_appointments if which_conditions == "pre-conditions" else self.end_appointments
         run_criteria = True
         criteria = {}
@@ -370,7 +379,8 @@ class AppointmentScenarioTest(ScenarioTest):
                     if not found and should_find:
                         self.errors[which_conditions].append(f"No appointment found for criteria {criteria}")
 
-    def check_appointments_count(self, delta: int, result: dict[str, Any]):
+    def check_appointments_count(self, delta: int):
+        """Check appointment count."""
         len_start = len(self.start_appointments)
         len_end = len(self.end_appointments)
         if len_start + delta != len_end:
@@ -378,7 +388,8 @@ class AppointmentScenarioTest(ScenarioTest):
                 f"After vs. before appointments counts {len_start + delta} != {len_end}"
             )
 
-    def appointments_unchanged(self, result: dict[str, Any]):
+    def appointments_unchanged(self):
+        """Check that appointments are unchanged."""
         if self.start_appointments != self.end_appointments:
             self.errors["post-conditions"].append(
                 f"Start and end appointments differ: {self.start_appointments} != {self.end_appointments}"

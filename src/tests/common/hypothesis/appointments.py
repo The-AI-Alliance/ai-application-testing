@@ -19,6 +19,7 @@ from tests.common.hypothesis.persons import (
 
 # pylint: disable=unused-variable,missing-function-docstring
 
+
 def appointment_work_hours():
     return work_hours(end_hour_inclusive=16)
 

@@ -44,13 +44,14 @@ from common.date_time_utils import (
     friendly_date_formats,
     friendly_date_time_formats,
     friendly_time_formats,
-    local_timezone,
     one_second,
 )
 from common.date_time_utils import (
     now as now_util,
 )
 from tests.common.hypothesis.datetimes import (
+    check_date_to_str_and_back,
+    check_datetime_to_str_and_back,
     dates_2000,
     local_datetimes_2000,
     non_weekend_dates,
@@ -134,17 +135,9 @@ def test_time_to_str_uses_a_default_format(t):
 
 @given(local_datetimes_2000(), st.sampled_from(friendly_date_time_formats))
 def test_string_to_datetime_can_parse_friendly_formatted_datetime_strings(dt, fmt):
-    assert dt.tzinfo == local_timezone
-    dt_str = dt.strftime(fmt)
-    actual, error = string_to_datetime.run({"a_date_time_str": dt_str, "input_format": fmt})
-    assert actual, f'Failed to convert "{dt_str}" with format "{fmt}". Error: {error}'
-    assert datetimes_approx_equal(dt, actual, one_second), f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, fmt: {fmt}"
-
-    # We actually need to compare strings, not dts, because a returned datetime might have "missing"
-    # hours, minutes, seconds, etc., depending on fmt.
-    actual_str = actual.strftime(fmt)
-    assert dt_str == actual_str, f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
-    assert "" == error
+    check_datetime_to_str_and_back(
+        dt, fmt, lambda dts, f: string_to_datetime.run({"a_date_time_str": dts, "input_format": f})
+    )
 
 
 @given(local_datetimes_2000())
@@ -165,15 +158,7 @@ def test_string_to_datetime_returns_an_error_string_for_invalid_date_time_string
 @given(dates_2000())
 def test_string_to_date_can_parse_friendly_formatted_date_strings(d):
     for fmt in friendly_date_formats:
-        d_str = d.strftime(fmt)
-        actual, error = string_to_date.run({"a_date_str": d_str, "input_format": fmt})
-        assert actual, f'Failed to convert "{d_str}" with format "{fmt}". Error: {error}'
-
-        # We actually need to compare strings, not ds, because a returned datetime might have "missing"
-        # hours, minutes, seconds, etc., depending on fmt.
-        actual_str = actual.strftime(fmt)
-        assert d_str == actual_str, f"d: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, fmt: {fmt}"
-        assert "" == error
+        check_date_to_str_and_back(d, fmt, lambda ds, f: string_to_date.run({"a_date_str": ds, "input_format": f}))
 
 
 @given(dates_2000())

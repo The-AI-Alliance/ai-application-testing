@@ -27,6 +27,7 @@ from tests.common.hypothesis.datetimes import local_datetimes_2000
 
 # pylint: disable=unused-variable,missing-function-docstring
 
+
 def _clean_text(s: str) -> str:
     """Fix some problematic substrings that cause problems with JSON conversion."""
     s1 = re.sub(r'"', r"\"", s)
@@ -35,9 +36,7 @@ def _clean_text(s: str) -> str:
 
 
 def _escaped_dquotes(min_size: int = 0, max_size: int = 5):
-    return st.text(alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size).map(
-        _clean_text
-    )
+    return st.text(alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size).map(_clean_text)
 
 
 def __check_encode_decode_json_dict(

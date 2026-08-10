@@ -16,13 +16,14 @@ from tests.common.hypothesis.datetimes import local_datetimes_2000
 
 # pylint: disable=unused-variable,missing-function-docstring
 
+
 class TestFilePersistentStorageUtil:
     """Class to test file persistent storage."""
 
     def __init__(self):
         """Set up test fixtures"""
         # Create a temporary file for testing
-        self.temp_file = tempfile.NamedTemporaryFile( # noqa: SIM115 pylint: disable=consider-using-with
+        self.temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115 pylint: disable=consider-using-with
             mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
         )
         self.temp_file.close()

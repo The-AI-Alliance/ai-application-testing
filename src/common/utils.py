@@ -4,7 +4,8 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Set as AbstractSet
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -14,7 +15,6 @@ from litellm.types.utils import ModelResponse
 from common.date_time_utils import now, now_str, timestamp_file_fmt
 
 from .collections import get_chain
-from collections.abc import Sequence, Set
 
 common_defaults = {
     "model": "ollama_chat/gemma4:12b",
@@ -25,9 +25,9 @@ common_defaults = {
     "levenshtein-ratio-threshold": 0.95,
 }
 
-empty_omit_arguments: set[str] = Set()
+empty_omit_arguments: set[str] = AbstractSet()
 empty_list: list[Any] = Sequence()
-empty_set: set[Any] = Set()
+empty_set: set[Any] = AbstractSet()
 
 
 class ExpectedFail:
