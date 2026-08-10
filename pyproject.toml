@@ -35,7 +35,7 @@ dev = [
     "pylint>=4.0.6",
     "black>=26.5.1",
     "ruff>=0.16.1",
-    "ty>=0.0.65",
+    "ty>=0.0.69",
 ]
 
 [tool.pytest.ini_options]
