@@ -36,7 +36,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Cache uv download cache
         uses: actions/cache@v6
@@ -50,9 +50,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .venv
-          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('pyproject.toml') }}
+          key: venv-${{ runner.os }}-py3.13-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            venv-${{ runner.os }}-py3.12-
+            venv-${{ runner.os }}-py3.13-
 
       - name: Create virtual environment (if cache miss)
         run: |
