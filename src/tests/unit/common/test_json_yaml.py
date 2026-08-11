@@ -25,6 +25,8 @@ from common.json_yaml import (
 from common.utils import ExpectedFail
 from tests.common.hypothesis.datetimes import local_datetimes_2000
 
+# pylint: disable=unused-variable,missing-function-docstring
+
 
 def _clean_text(s: str) -> str:
     """Fix some problematic substrings that cause problems with JSON conversion."""
@@ -34,9 +36,7 @@ def _clean_text(s: str) -> str:
 
 
 def _escaped_dquotes(min_size: int = 0, max_size: int = 5):
-    return st.text(alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size).map(
-        lambda s: _clean_text(s)
-    )
+    return st.text(alphabet=st.characters(codec="utf-8"), min_size=min_size, max_size=max_size).map(_clean_text)
 
 
 def __check_encode_decode_json_dict(
@@ -138,7 +138,7 @@ def __check_dict(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
+def test_encode_json_dict_handles_datetimes_and_returns_valid_json(
     question: str,
     label: str,
     prescription: str,
@@ -156,7 +156,7 @@ def test_encode_json_dict_handles_datetimes_and_returns_valid_JSON(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_decode_json_list_handles_datetimes_and_returns_valid_JSON(
+def test_decode_json_list_handles_datetimes_and_returns_valid_json(
     count: int,
     question: str,
     label: str,
@@ -167,8 +167,8 @@ def test_decode_json_list_handles_datetimes_and_returns_valid_JSON(
     __check_encode_decode_json_list(count, question, label, prescription, body_part, timestamp)
 
 
-"""We only worry about parsing responses we expect to receive..."""
-js_template = """{{
+# We only worry about parsing responses we expect to receive...
+JS_TEMPLATE = """{{
     {quote}question{quote}: {quote}{question}{quote},
     {quote}answer{quote}: {{
         {quote}label{quote}: {quote}{label}{quote},
@@ -186,7 +186,7 @@ js_template = """{{
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_decode_json_dict_ValueError_on_bad_input_str(
+def test_decode_json_dict_value_error_on_bad_input_str(
     question: str,
     label: str,
     prescription: str,
@@ -209,7 +209,7 @@ def test_decode_json_dict_ValueError_on_bad_input_str(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_decode_json_list_ValueError_on_bad_input_str(
+def test_decode_json_list_value_error_on_bad_input_str(
     count: int,
     question: str,
     label: str,
@@ -218,7 +218,7 @@ def test_decode_json_list_ValueError_on_bad_input_str(
     timestamp: datetime,
 ):
     def _make_js(q: str):
-        jss = __make_quoted_json_strings(1, q, question, label, prescription, body_part, timestamp)
+        jss = __make_quoted_json_strings(count, q, question, label, prescription, body_part, timestamp)
         return "[\n" + ",\n".join(jss) + "\n]"
 
     ExpectedFail(ValueError)(lambda: decode_json_list(_make_js("'")))
@@ -233,7 +233,7 @@ def test_decode_json_list_ValueError_on_bad_input_str(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
+def test_decode_json_dict_value_error_on_input_list_of_dicts_str(
     count: int,
     question: str,
     label: str,
@@ -254,14 +254,14 @@ def test_decode_json_dict_ValueError_on_input_list_of_dicts_str(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_decode_json_list_ValueError_on_input_dict_str(
+def test_decode_json_list_value_error_on_input_dict_str(
     question: str,
     label: str,
     prescription: str,
     body_part: str,
     timestamp: datetime,
 ):
-    jss = __make_quoted_json_strings(1, '"', question, label, prescription, body_part, timestamp)
+    jss = __make_quoted_json_strings(1, "'", question, label, prescription, body_part, timestamp)
     ef = ExpectedFail(ValueError)
     ef(lambda: decode_json_dict(jss[0]))
 
@@ -279,8 +279,8 @@ def __make_quoted_json_strings(
     jss = []
     for i in range(count):
         jss.append(
-            js_template.format(
-                quote=qs[i],
+            JS_TEMPLATE.format(
+                quote=quote,
                 question=qs[i],
                 label=ls[i],
                 prescription=ps[i],
@@ -331,7 +331,7 @@ def test_extract_jsonl_list_returns_empty_lists_if_text_empty():
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
+def test_extract_jsonl_list_handles_valid_jsonl_one_per_line(
     count: int,
     question: str,
     label: str,
@@ -354,7 +354,7 @@ def test_extract_jsonl_list_handles_valid_JSONL_one_per_line(
     _escaped_dquotes(),
     local_datetimes_2000(),
 )
-def test_extract_jsonl_list_handles_invalid_JSONL_all_on_one_line(
+def test_extract_jsonl_list_handles_invalid_jsonl_all_on_one_line(
     count: int,
     question: str,
     label: str,

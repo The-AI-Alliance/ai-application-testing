@@ -4,11 +4,13 @@ Test utilities, e.g., strategy generators for Hypothesis.
 
 from hypothesis import strategies as st
 
-def_person_name_part_regex_format = r"['\w][-'\w]{%d,%d}"
+# pylint: disable=unused-variable
+
+DEF_PERSON_NAME_PART_REGEX_FORMAT = r"['\w][-'\w]{%d,%d}"
 
 
 def person_name_parts(
-    regex_format: str = def_person_name_part_regex_format,
+    regex_format: str = DEF_PERSON_NAME_PART_REGEX_FORMAT,
     min_size: int = 1,
     max_size: int = 10,
 ):
@@ -35,7 +37,7 @@ def person_name_parts(
 
 
 def person_names(
-    regex_format: str = def_person_name_part_regex_format,
+    regex_format: str = DEF_PERSON_NAME_PART_REGEX_FORMAT,
     min_size: int = 1,
     max_size: int = 3,
     min_part_length: int = 1,

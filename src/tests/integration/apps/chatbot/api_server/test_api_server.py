@@ -14,9 +14,14 @@ from fastapi.testclient import TestClient
 
 from apps.chatbot.api_server.server import APIServer
 
+# pylint: disable=unused-variable
 
-@pytest.fixture
-def api_server():
+
+# Use this idiom to name the fixture, so pylint doesn't complain
+# that method argument names below shadow this definition.
+# See https://stackoverflow.com/questions/46089480/pytest-fixtures-redefining-name-from-outer-scope-pylint
+@pytest.fixture(name="api_server")
+def fixture_api_server():  # pylint: disable=unused-variable
     """Create an API server instance for testing."""
     # Use test configuration
     model = "ollama_chat/gemma4:12b"
@@ -44,49 +49,48 @@ def api_server():
     return server
 
 
-@pytest.fixture
-def client(api_server):
+@pytest.fixture(name="client")
+def fixture_client(api_server):  # pylint: disable=unused-variable
     """Create a test client for the API server."""
     return TestClient(api_server.app)
 
 
-class TestAPIServerEndpoints:
-    """Test the API server endpoints."""
+def test_api_server_root_endpoint(client):
+    """Test the root endpoint returns API information."""
+    response = client.get("/")
+    assert response.status_code == 200
+    data = response.json()
+    assert "message" in data
+    assert "version" in data
+    assert "endpoints" in data
+    assert data["endpoints"]["chat_completions"] == "/v1/chat/completions"
+    assert data["endpoints"]["models"] == "/v1/models"
 
-    def test_root_endpoint(self, client):
-        """Test the root endpoint returns API information."""
-        response = client.get("/")
-        assert response.status_code == 200
-        data = response.json()
-        assert "message" in data
-        assert "version" in data
-        assert "endpoints" in data
-        assert data["endpoints"]["chat_completions"] == "/v1/chat/completions"
-        assert data["endpoints"]["models"] == "/v1/models"
 
-    def test_health_endpoint(self, client):
-        """Test the health check endpoint."""
-        response = client.get("/v1/health")
-        assert response.status_code == 200
-        data = response.json()
-        assert data["status"] == "healthy"
+def test_api_server_health_endpoint(client):
+    """Test the health check endpoint."""
+    response = client.get("/v1/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "healthy"
 
-    def test_list_models_endpoint(self, client):
-        """Test the /v1/models endpoint."""
-        response = client.get("/v1/models")
-        assert response.status_code == 200
-        data = response.json()
-        assert data["object"] == "list"
-        assert "data" in data
-        assert len(data["data"]) > 0
 
-        # Check model structure
-        model = data["data"][0]
-        assert "id" in model
-        assert "object" in model
-        assert model["object"] == "model"
-        assert "created" in model
-        assert "owned_by" in model
+def test_api_server_list_models_endpoint(client):
+    """Test the /v1/models endpoint."""
+    response = client.get("/v1/models")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["object"] == "list"
+    assert "data" in data
+    assert len(data["data"]) > 0
+
+    # Check model structure
+    model = data["data"][0]
+    assert "id" in model
+    assert "object" in model
+    assert model["object"] == "model"
+    assert "created" in model
+    assert "owned_by" in model
 
 
 class TestChatCompletions:

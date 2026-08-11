@@ -13,7 +13,7 @@ from pathlib import Path
 from fastmcp import FastMCP
 
 from apps.chatbot import ChatBot, ChatBotAgent, ChatBotResponseHandler, ChatBotSimple
-from common.utils import setup
+from common.utils import tool_setup
 
 
 def create_mcp_server(
@@ -109,7 +109,7 @@ def create_mcp_server(
 
             return result
 
-        except Exception as e:  # noqa
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
             error_msg = f"Error processing chatbot query: {e!s}"
             logger.error(error_msg)
             return error_msg
@@ -125,7 +125,7 @@ def create_mcp_server(
         Returns:
             A formatted list of all queries and responses in the current session
         """
-        # TODO: This needs rework, based on changes to query/response handling.
+        # This could be reworked, based on changes to query/response handling.
 
         logger.info("MCP tool get_chatbot_session_history called")
 
@@ -160,7 +160,7 @@ def create_mcp_server(
 
             return "\n".join(history_lines)
 
-        except Exception as e:  # noqa
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
             error_msg = f"Error retrieving session history: {e!s}"
             logger.error(error_msg)
             return error_msg
@@ -201,7 +201,7 @@ def create_mcp_server(
 
             return "\n".join(info_lines)
 
-        except Exception as e:  # noqa
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
             error_msg = f"Error retrieving chatbot info: {e!s}"
             logger.error(error_msg)
             return error_msg
@@ -235,7 +235,7 @@ def main():
             help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent",
         )
 
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
@@ -276,7 +276,7 @@ def main():
         if logger:
             logger.info("MCP server stopped by user")
         print("\nMCP server stopped")
-    except Exception as e:  # noqa
+    except Exception as e:  # noqa pylint: disable=broad-exception-caught
         error_msg = f"Error running MCP server: {e}"
         if logger:
             logger.error(error_msg)

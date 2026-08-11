@@ -1,5 +1,4 @@
-# Allow types to self-reference during their definitions.
-# from __future__ import annotations
+"""YAML and JSON utilities."""
 
 import json
 import re
@@ -11,6 +10,9 @@ from typing import Any
 
 import yaml
 
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
+
 
 def load_yaml(path: Path) -> Mapping[str, Any]:
     """Parse a YAML file and return the corresponding Mapping."""
@@ -18,6 +20,8 @@ def load_yaml(path: Path) -> Mapping[str, Any]:
 
 
 class DatetimeEncoder(json.JSONEncoder):
+    """Specialized JSON encoder that handles datetime instances."""
+
     def default(self, o: Any) -> Any:
         if isinstance(o, datetime):
             return {"__class__": "datetime", "iso_str": o.isoformat()}
@@ -25,11 +29,14 @@ class DatetimeEncoder(json.JSONEncoder):
 
 
 class DatetimeDecoder(json.JSONDecoder):
+    """Specialized JSON decoder that handles datetime instances."""
+
     def __init__(self):
         super().__init__(object_hook=DatetimeDecoder.from_dict)
 
     @staticmethod
     def from_dict(d: dict[str, Any]) -> Any:
+        """Custom conversion from a dict to a datetime."""
         if d.get("__class__") == "datetime":
             iso_str = d.get("iso_str", "")
             if iso_str:

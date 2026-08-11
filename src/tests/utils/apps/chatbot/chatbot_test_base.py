@@ -9,9 +9,9 @@ import os
 import random
 import re
 import sys
-import time
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from datetime import timedelta
 from enum import StrEnum, auto
 from io import StringIO
 from pathlib import Path
@@ -58,8 +58,10 @@ class LowConfidenceResult:
         return f"""LowConfidenceResult(query='{self.query}',reasons='{self.reasons}',reply='{self.reply}',test_prompt='{self.test_prompt}',rating_threshold='{self.rating_threshold}',confidence_threshold={self.confidence_threshold})"""
 
     def dict(self) -> dict[str, Any]:
-        # We don't use __dict__ here because we need to turn the QnATest instance into a dictionary.
-        # TODO: Is there a more standard way to make any class recursively convertible to a dictionary?
+        """
+        Custom conversion to a dictionary. We don't use __dict__ here
+        because we need to turn the QnATest instance into a dictionary.
+        """
         return {
             "name": "LowConfidenceResult",
             "query": self.query,
@@ -71,22 +73,28 @@ class LowConfidenceResult:
         }
 
     def json(self) -> str:
+        """Convenience method to dump the object as a JSON string."""
         return json.dumps(self.dict())
 
 
-class TestDataLoader[TESTDATUM](ABC):
+class TestDataLoader[TESTDATUM](ABC):  # pylint: disable=invalid-name,too-few-public-methods
+    """Loads the test data."""
+
     @abstractmethod
     def load_data(self, path: Path) -> list[TESTDATUM]:
-        pass
+        """Method called to load the data."""
 
 
-class QnADataLoader(TestDataLoader[QnATest]):
+class QnADataLoader(TestDataLoader[QnATest]):  # pylint: disable=too-few-public-methods
+    """Load question-answer test data."""
+
     def load_data(self, path: Path) -> list[QnATest]:
+        """Method called to load the data."""
         if not path.exists():
             raise FileNotFoundError(path)
 
-        # TODO: Use extract_jsonl_list isntead of looping through the lines
-        # and calling decode_json_dict??
+        # Note: Consider using `extract_jsonl_list` instead of looping through the lines
+        # and calling decode_json_dict. This would need to be tested thoroughly.
         tests = []
         with path.open("r") as file:
             for line in file:
@@ -105,13 +113,16 @@ class QnADataLoader(TestDataLoader[QnATest]):
                         tests.append(qnat)
                     except ValueError as err:
                         raise ValueError(f"From file {path}, error parsing line: <{line}>") from err
-        if not len(tests):
+        if not tests:
             raise ValueError(f"No Q&A pairs were loaded from {path}!")
         return tests
 
 
-class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
+class ScenarioDataLoader(TestDataLoader[ScenarioTest]):  # pylint: disable=too-few-public-methods
+    """Load scenario test data."""
+
     def load_data(self, path: Path) -> list[ScenarioTest]:
+        """Method called to load the data."""
         if not path.exists():
             raise FileNotFoundError(path)
 
@@ -131,14 +142,16 @@ class ScenarioDataLoader(TestDataLoader[ScenarioTest]):
             lines = file.readlines()
             try:
                 objs = decode_json_list("".join(lines))
-                if not len(objs):
+                if not objs:
                     raise ValueError(f"No scenario tests were loaded from {path}!")
                 return [kind.from_dict(obj) for obj in objs]
             except ValueError as err:
                 raise ValueError(f"Error parsing JSON in file {path}") from err
 
 
-class QueryRunner[TESTDATUM](ABC):
+class QueryRunner[TESTDATUM](ABC):  # pylint: disable=invalid-name,too-few-public-methods
+    """Abstract base class for query runners."""
+
     def __init__(
         self,
         chatbot: ChatBot,
@@ -154,26 +167,21 @@ class QueryRunner[TESTDATUM](ABC):
         self,
         test_prompt: TESTDATUM,
     ):
-        pass
+        """Method to run a query with the input test prompt."""
 
     def _check_label(self, expected: Sequence[str], actual: str) -> str:
         return "" if actual in expected else f"""label '{actual}' not in expected: {expected}."""
 
 
-class QnAQueryRunner(QueryRunner[QnATest]):
-    def __init__(
-        self,
-        chatbot: ChatBot,
-        rating_threshold: int,
-        confidence_threshold: float,
-    ):
-        super().__init__(chatbot, rating_threshold, confidence_threshold)
+class QnAQueryRunner(QueryRunner[QnATest]):  # pylint: disable=too-few-public-methods
+    """Run question-answer queries."""
 
-    def run_query(
+    def run_query(  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
         self,
         test_prompt: QnATest,
     ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[LowConfidenceResult]]:
         """
+        Method to run a query with the input test prompt.
         See src/apps/chatbot/prompts/templates/patient-chatbot.yaml for "requirements".
         Rather than follow the usual approach for failing fast on the first wrong datum,
         we run all the examples and accumulate error messages, then report the results.
@@ -182,7 +190,8 @@ class QnAQueryRunner(QueryRunner[QnATest]):
         exp_labels = test_prompt.labels
         exp_actions = test_prompt.actions
         exp_rating = test_prompt.rating
-        exp_keywords = test_prompt.keywords
+        kws = test_prompt.keywords
+        exp_keywords = kws if kws else {}
         prompt = exp_query  # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
 
         metadata = {
@@ -194,14 +203,14 @@ class QnAQueryRunner(QueryRunner[QnATest]):
         # On success this will be returned as empty.
         errors = {}
         warnings = {}
-        lowConfidenceResults = []
+        low_confidence_results = []
 
         answer = self.chatbot.query(prompt)
         metadata["answer"] = answer
         try:
             if isinstance(answer, str) or answer.get("error"):
                 errors["query_failure"] = f"unexpected message returned: {answer}, error: {answer.get("error", "")}"
-                return metadata, errors, warnings, lowConfidenceResults
+                return metadata, errors, warnings, low_confidence_results
 
             actual_query = str(answer.get("query"))
             actual_rtu = answer.get("reply_to_user")
@@ -238,7 +247,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
 
             if low_confidence_reasons:
                 reasons = " ".join(low_confidence_reasons)
-                lowConfidenceResults.append(
+                low_confidence_results.append(
                     LowConfidenceResult(
                         prompt,
                         reasons,
@@ -252,7 +261,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
                 err_msg = self._check_label(exp_labels, actual_label)
                 if len(err_msg) > 0:
                     errors["unexpected label"] = err_msg
-                elif actual_label == "emergency" or actual_label == "other":
+                elif actual_label in ("emergency", "other"):
                     # Ignore the action if we detect an emergency or other prompt, but check
                     # the returned user response, since we always return with the same reply for
                     # these labels!
@@ -269,7 +278,7 @@ class QnAQueryRunner(QueryRunner[QnATest]):
                     if exp_actions:
                         exp_set = set(exp_actions)
                         actual_set = set(actual_actions)
-                        if not len(actual_set.intersection(exp_set)):
+                        if not actual_set.intersection(exp_set):
                             warnings["unexpected actions"] = (
                                 f"""At least one actual action {actual_actions} not found in the allowed (expected) actions = {exp_actions}."""
                             )
@@ -299,17 +308,11 @@ class QnAQueryRunner(QueryRunner[QnATest]):
             print(f"TypeError while parsing answer: {answer}")
             raise
 
-        return metadata, errors, warnings, lowConfidenceResults
+        return metadata, errors, warnings, low_confidence_results
 
 
-class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
-    def __init__(
-        self,
-        chatbot: ChatBot,
-        rating_threshold: int,
-        confidence_threshold: float,
-    ):
-        super().__init__(chatbot, rating_threshold, confidence_threshold)
+class ScenarioQueryRunner(QueryRunner[ScenarioTest]):  # pylint: disable=too-few-public-methods
+    """Run scenario queries (sessions)."""
 
     def run_query(
         self,
@@ -331,30 +334,34 @@ class ScenarioQueryRunner(QueryRunner[ScenarioTest]):
         #     "post-conditions": [],
         # }
 
-        metadata = {
-            "test_prompt": test_prompt.to_dict(),
-            "rating_threshold": self.rating_threshold,
-            "confidence_threshold": self.confidence_threshold,
-        }
-        # On success these will be returned as empty.
-        errors = {}
-        warnings = {}
-        lowConfidenceResults = []
         raise ValueError("Not yet implemented")
 
-        return metadata, errors, warnings, lowConfidenceResults
+        # On success these will be returned as empty.
+        # errors = {}
+        # warnings = {}
+        # low_confidence_results = []
+
+        # metadata = {
+        #     "test_prompt": test_prompt.to_dict(),
+        #     "rating_threshold": self.rating_threshold,
+        #     "confidence_threshold": self.confidence_threshold,
+        # }
+        # return metadata, errors, warnings, low_confidence_results
 
 
 # class syntax
 class WhichChatBot(StrEnum):
+    """Type safe marker for which kind of ChatBot."""
+
     SIMPLE = auto()
     AGENT = auto()
 
     def chatbot_name(self):
+        """Return the name of the ChatBot class."""
         return f"ChatBot{self.capitalize()}"
 
 
-class ChatBotTestBase:
+class ChatBotTestBase:  # pylint: disable=too-few-public-methods,too-many-instance-attributes
     """
     Base class for tests that need to instantiate a ChatBot, but not to run
     inference with it, which is expensive. Use the derived class,
@@ -377,7 +384,7 @@ class ChatBotTestBase:
     default_rating_threshold = 4
     default_confidence_threshold = ChatBot.default_confidence_threshold
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
@@ -486,13 +493,14 @@ class ChatBotTestBase:
             )
         print(f"\n  ** Logging to {self.log_file_path} ** \n")
         os.makedirs(self.log_file_path.parent, exist_ok=True)
-        self.log_file = self.log_file_path.open(
+        self.log_file = self.log_file_path.open(  # pylint: disable=unspecified-encoding,consider-using-with
             "a", buffering=1
         )  # append mode, because we _may_ share it across tests.
 
         self.make_chatbot()
 
     def make_chatbot(self):
+        """Make a ChatBot."""
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.INFO)
 
@@ -512,7 +520,8 @@ class ChatBotTestBase:
         self.shell = ChatBotShell(self.chatbot, stdout=StringIO())
 
 
-class ChatBotTestWithInference(ChatBotTestBase):
+# The pylint "unused variable" warning doesn't make sense. This is imported by several other modules.
+class ChatBotTestWithInference(ChatBotTestBase):  # pylint: disable=unused-variable
     """
     A support class for ChatBot tests that invoke inference. This class implements a number
     of extensions to normal test behavior, which we added to address some of the challenges
@@ -540,7 +549,7 @@ class ChatBotTestWithInference(ChatBotTestBase):
     also PR checks.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         which_chatbot: WhichChatBot | None = None,
         model: str = "",
@@ -670,11 +679,12 @@ class ChatBotTestWithInference(ChatBotTestBase):
                 f"No samples! test data size = {len(test_data)} * data sample rate = {self.data_sample_rate} => no samples!"
             )
 
-        last_time = time.time()
-        allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
+        last_datetime = now()
+        # NOTE: litellm appears to have an internal timeout of 5-6 minutes.
+        allowed_time_delta = timedelta(seconds=120)
 
         for sample_number, test_prompt in enumerate(samples, start=1):
-            metadata, errors, warnings, lowConfidenceResults = query_runner.run_query(test_prompt)
+            metadata, errors, warnings, low_confidence_results = query_runner.run_query(test_prompt)
             if errors:
                 me = errors | metadata  # print the error data first.
                 self.errors.append(me)
@@ -686,10 +696,10 @@ class ChatBotTestWithInference(ChatBotTestBase):
                 if self.verbose:
                     print(mw)
 
-            if lowConfidenceResults:
-                self.low_confidence_results.extend(lowConfidenceResults)
+            if low_confidence_results:
+                self.low_confidence_results.extend(low_confidence_results)
                 if self.verbose:
-                    print(lowConfidenceResults)
+                    print(low_confidence_results)
 
             lcr_count = len(self.low_confidence_results)
             warnings_count = len(self.warnings)
@@ -699,12 +709,11 @@ class ChatBotTestWithInference(ChatBotTestBase):
 
             # Logic to detect when it appears the system has deadlocked in some way.
             # If so, then error out.
-            now = time.time()
-            difference = int(last_time - now)
+            difference = last_datetime - now()
             assert (
                 difference <= allowed_time_delta
             ), f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}"
-            last_time = now
+            last_datetime = now()
 
             # Show we aren't dead by printing counts...
             print(

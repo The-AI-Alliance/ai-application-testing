@@ -22,7 +22,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from apps.chatbot import ChatBotAgent, ChatBotResponseHandler, ChatBotSimple
-from common.utils import get_package_version, setup
+from common.utils import get_package_version, tool_setup
 
 # Pydantic models for OpenAI-compatible API
 
@@ -99,7 +99,7 @@ class ModelList(BaseModel):
     data: list[Model]
 
 
-class APIServer:
+class APIServer:  # pylint: disable=too-many-instance-attributes,too-few-public-methods
     """OpenAI-compatible API server for the ChatBot."""
 
     def __init__(
@@ -241,16 +241,15 @@ class APIServer:
                         self._stream_completion(request, user_query),
                         media_type="text/event-stream",
                     )
-                else:
-                    return await self._create_completion(request, user_query)
+                return await self._create_completion(request, user_query)
 
             except HTTPException:
                 raise
-            except Exception as e:  # noqa
+            except Exception as e:
                 error_msg = f"Error processing chat completion: {e!s}"
                 if self.logger:
                     self.logger.error(error_msg)
-                raise HTTPException(status_code=500, detail=error_msg)
+                raise HTTPException(status_code=500, detail=error_msg) from e
 
     async def _create_completion(self, request: ChatCompletionRequest, user_query: str) -> ChatCompletionResponse:
         """Create a non-streaming chat completion."""
@@ -392,7 +391,7 @@ def main():
             help="Port to bind the server to. Default: 8000",
         )
 
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         epilog="Run the chatbot as an OpenAI-compatible API server.",
@@ -426,7 +425,7 @@ def main():
         if logger:
             logger.info("API server stopped by user")
         print("\nAPI server stopped")
-    except Exception as e:  # noqa
+    except Exception as e:  # noqa pylint: disable=broad-exception-caught
         error_msg = f"Error running API server: {e}"
         if logger:
             logger.error(error_msg)

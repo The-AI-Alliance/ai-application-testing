@@ -1,9 +1,14 @@
+"""Utilities for working with dates and times."""
+
 # Allow types to self-reference during their definitions.
 from __future__ import annotations
 
 import re
 from collections.abc import Callable
 from datetime import UTC, date, datetime, time, timedelta, timezone, tzinfo
+
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
 
 # The "friendly" formats used for parsing strings. They don't include
 # punctuation. They are used by _str_to_object() where punctuation
@@ -50,12 +55,14 @@ friendly_date_formats.append("%x")  # add this AFTER the previous loop.
 friendly_time_formats.append("%X")  # add this AFTER the previous loop.
 
 # "Friendly" output formats.
-def_friendly_date_output_format = "%A, %B %d, %Y"
-def_friendly_time_output_format = "%I:%M:%S %p %Z"
-def_friendly_date_time_output_format = def_friendly_date_output_format + " " + def_friendly_time_output_format
+def_friendly_date_output_format = "%A, %B %d, %Y"  # pylint: disable=invalid-name
+def_friendly_time_output_format = "%I:%M:%S %p %Z"  # pylint: disable=invalid-name
+def_friendly_date_time_output_format = (  # pylint: disable=invalid-name
+    def_friendly_date_output_format + " " + def_friendly_time_output_format
+)
 
-timestamp_str_fmt = "%Y:%m:%d %H:%M:%S%:z"
-timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S_%Z"
+timestamp_str_fmt = "%Y:%m:%d %H:%M:%S%:z"  # pylint: disable=invalid-name
+timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S_%Z"  # pylint: disable=invalid-name
 
 one_day = timedelta(days=1)
 one_hour = timedelta(hours=1)
@@ -67,9 +74,11 @@ local_timezone = datetime.now(UTC).astimezone().tzinfo
 # datetime.min.astimezone() and datetime.max.astimezone(), both fail!
 local_datetime_min: datetime = (datetime.min + one_day).astimezone()  # noqa: DTZ901
 local_datetime_max: datetime = (datetime.max - one_day).astimezone()  # noqa: DTZ901
+local_date_min: date = local_datetime_min.date()
+local_date_max: date = local_datetime_max.date()
 
-def_start_hour_inclusive: int = 8
-def_end_hour_inclusive: int = 17
+def_start_hour_inclusive: int = 8  # pylint: disable=invalid-name
+def_end_hour_inclusive: int = 17  # pylint: disable=invalid-name
 
 
 def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> tuple[bool, str]:
@@ -79,7 +88,9 @@ def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: time
     # If delta is negative, convert it to positive so the logic below works!
     delta_neg = -delta
     delta = max(delta, delta_neg)
-    close = datetime1 == datetime2 or (datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2)
+    upper = datetime1 + delta
+    lower = datetime1 - delta
+    close = datetime1 == datetime2 or (upper >= datetime2 and lower <= datetime2)  # pylint: disable=chained-comparison
     msg = ""
     if not close:
         msg = f"{datetime1} == {datetime2} NOT within +- {delta}"
@@ -112,10 +123,8 @@ def now(tz: timezone | None = None) -> datetime:
     Example:
         now(tz=timezone.utc)
     """
-    if tz:
-        return datetime.now(tz=tz)
-    else:
-        return datetime.now(tz=local_timezone)
+    tz2 = tz if tz else local_timezone
+    return datetime.now(tz=tz2)
 
 
 def now_str(fmt: str = timestamp_str_fmt, tz: timezone | None = None) -> str:
@@ -142,7 +151,7 @@ def is_week_day(dt: datetime | date) -> bool:
         is_week_day(now())
     """
     weekday = dt.weekday()
-    return weekday >= 0 and weekday < 5
+    return weekday >= 0 and weekday < 5  # pylint: disable=chained-comparison
 
 
 def is_weekend(dt: datetime | date) -> bool:
@@ -198,10 +207,7 @@ def _str_to_object[DT](
     def fromiso(dt_str):
         try:
             dt = datetime.fromisoformat(dt_str)
-            if dt:
-                return add_timezone(dt)
-            else:
-                return None
+            return add_timezone(dt) if dt else None
         except ValueError:
             return None
 
@@ -240,8 +246,7 @@ def _str_to_object[DT](
     dt = fromiso(dt_str)
     if dt:
         return extract(dt), ""
-    else:
-        return None, err_msg()
+    return None, err_msg()
 
 
 def string_to_datetime(date_time_str: str, input_format: str = "") -> tuple[datetime | None, str]:

@@ -1,3 +1,5 @@
+"""Abstraction for a ChatBot."""
+
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -12,7 +14,7 @@ from common.utils import (
 from .response_handler import ChatBotResponseHandler, ResponseHandler
 
 
-class ChatBot(ABC):
+class ChatBot(ABC):  # pylint: disable=too-many-instance-attributes,too-few-public-methods,unused-variable
     """
     Base class for ChatBot implementations.
     Provides common initialization and abstract methods for query processing.
@@ -60,25 +62,6 @@ class ChatBot(ABC):
         if not self.version:
             self.version = "0.1.0"  # An error occurred that was logged by get_package_version()
 
-        errors = []
-        if not self.model:
-            errors.append("model")
-        if not self.service_url:
-            errors.append("service_url")
-        if not self.template_dir:
-            errors.append("template_dir")
-        if not self.data_dir:
-            errors.append("data_dir")
-        if not self.output_dir:
-            errors.append("output_dir")
-        if errors:
-            error_msg = f"These values can't be None or empty: {', '.join(errors)}"
-            if self.logger:
-                self.logger.error(error_msg)
-            raise ValueError(error_msg)
-
-        ensure_dirs_exist(self.template_dir, self.data_dir, self.output_dir)
-
         if response_handler:
             self.response_handler = response_handler
         else:
@@ -93,11 +76,8 @@ class ChatBot(ABC):
             self.logger.info(f"Using template file: {self.template_file}")
         self.template = load_yaml(self.template_file)
         self.system_prompt = self.template.get("system")
-        if not self.system_prompt:
-            error_msg = f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}"
-            if self.logger:
-                self.logger.error(error_msg)
-            raise ValueError(error_msg)
+
+        self.__check_inputs()
 
         if self.logger:
             self.logger.info(f"{self.__class__.__name__} Settings:")
@@ -109,6 +89,36 @@ class ChatBot(ABC):
             self.logger.info(f"  output_dir:                 {self.output_dir}")
             self.logger.info(f"  confidence_level_threshold: {self.confidence_level_threshold}")
             self.logger.info(f"  response_handler:           {self.response_handler}")
+
+    def __check_inputs(self):
+        empty = []
+        if not self.model:
+            empty.append("model")
+        if not self.service_url:
+            empty.append("service_url")
+        if not self.template_dir:
+            empty.append("template_dir")
+        if not self.data_dir:
+            empty.append("data_dir")
+        if not self.output_dir:
+            empty.append("output_dir")
+
+        error_msgs = []
+        if empty:
+            error_msgs.append(f"These values can't be None or empty: {', '.join(empty)}.")
+
+        if not self.system_prompt:
+            error_msgs.append(
+                f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}."
+            )
+
+        if error_msgs:
+            error_msg = " ".join(error_msgs)
+            if self.logger:
+                self.logger.error(error_msg)
+            raise ValueError(error_msg)
+
+        ensure_dirs_exist(self.template_dir, self.data_dir, self.output_dir)
 
     def query(self, query: str) -> dict[str, Any]:
         """

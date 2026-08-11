@@ -12,9 +12,9 @@ from openai import OpenAIError
 from common.json_yaml import load_yaml
 from common.utils import (
     common_defaults,
-    extract_content,
+    extract_content_from_model_response,
     make_full_prompt,
-    setup,
+    tool_setup,
 )
 
 
@@ -111,7 +111,7 @@ class TDDExampleRefillChatbot:
                                 verbose=False,
                             )
                             count += 1
-                            actual = extract_content(response)
+                            actual = extract_content_from_model_response(response)
                             prefix_str = f"    Query: {query_with_drug} => "
                             if actual == expected:
                                 self.logger.info(
@@ -146,7 +146,7 @@ def main():
     tool = os.path.basename(__file__)
     description = "TDD Example 'refill' use case for the healthcare ChatBot."
     epilog = "NOTE: the --data-dir argument is currently ignored!"
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         epilog=epilog,

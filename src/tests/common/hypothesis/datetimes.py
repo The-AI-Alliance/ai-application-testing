@@ -2,30 +2,54 @@
 Test utilities, e.g., strategy generators for Hypothesis.
 """
 
+from collections.abc import Callable
+from collections.abc import Set as AbstractSet
 from datetime import date, datetime, time
 
 from hypothesis import strategies as st
 
 from common.date_time_utils import (
+    datetimes_approx_equal,
     def_end_hour_inclusive,
     def_start_hour_inclusive,
     is_week_day,
     is_weekend,
+    local_date_max,
+    local_date_min,
     local_datetime_max,
     local_datetime_min,
     local_timezone,
     now,
+    one_second,
     tomorrow,
     yesterday,
 )
-from common.utils import (
-    empty_set,
-)
+
+# pylint: disable=unused-variable,missing-function-docstring,fixme
 
 year_2000 = datetime(year=2000, month=1, day=1, tzinfo=local_timezone)
 
 default_work_start_time = time(hour=def_start_hour_inclusive, minute=0)
 default_work_end_time = time(hour=def_end_hour_inclusive, minute=0)
+
+
+def is_holiday(
+    d: date,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
+):
+    """
+    Is the month and day in an optional list of holidays.
+
+    Args:
+
+    - date: Ahe date to check.
+    - holidays: An optional set of tuples with month-day integers that are holidays.
+
+    Returns:
+
+    True if a non-empty set of holidays is provided and the date falls on one of them, or False otherwise.
+    """
+    return holidays and (d.month, d.day) in holidays
 
 
 def local_datetimes(
@@ -44,11 +68,11 @@ def local_datetimes_2000(max_value: datetime = local_datetime_max):
     return local_datetimes(min_value=year_2000, max_value=max_value)
 
 
-def dates_2000(max_value: date = date.max):
+def dates_2000(max_value: date = local_date_max):
     return st.dates(min_value=year_2000.date(), max_value=max_value)
 
 
-def future_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
+def future_dates(date_strategy=st.dates, min_value: date = local_date_min, max_value: date = local_date_max):
     """
     A Hypothesis strategy for generating dates in the future, using the
     input date_strategy (default st.dates) and min_value and max_value.
@@ -76,7 +100,7 @@ def future_dates(date_strategy=st.dates, min_value: date = date.min, max_value: 
     return date_strategy(min_value=min_value, max_value=max_value)
 
 
-def past_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
+def past_dates(date_strategy=st.dates, min_value: date = local_date_min, max_value: date = local_date_max):
     """
     A Hypothesis strategy for generating dates in the past, meaning
     yesterday or earlier, using the input date_strategy (default st.dates)
@@ -107,9 +131,9 @@ def past_dates(date_strategy=st.dates, min_value: date = date.min, max_value: da
 
 def non_weekend_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
-    holidays: set[tuple[int, int]] = empty_set,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
+    holidays: set[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Monday through Friday.
@@ -126,17 +150,17 @@ def non_weekend_dates(
     A strategy for generating of valid week dates.
     """
 
-    def allowed(dt: date) -> bool:
-        return is_week_day(dt) and not (holidays and (dt.month, dt.day) in holidays)
+    def allowed(d: date) -> bool:
+        return is_week_day(d) and not is_holiday(d, holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def weekend_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
-    holidays: set[tuple[int, int]] = empty_set,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Saturday or Sunday, but
@@ -154,18 +178,18 @@ def weekend_dates(
     A strategy for generating valid weekend dates, excluding optional holidays.
     """
 
-    def allowed(dt: date) -> bool:
-        return is_weekend(dt) and not (holidays and (dt.month, dt.day) in holidays)
+    def allowed(d: date) -> bool:
+        return is_weekend(d) and not is_holiday(d, holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda dt: allowed(dt))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def work_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
     weekdays_only: bool = True,
-    holidays: set[tuple[int, int]] = empty_set,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating work dates.
@@ -186,9 +210,9 @@ def work_dates(
     def allowed(d: date) -> bool:
         if weekdays_only and not is_week_day(d):
             return False
-        return not (holidays and (d.month, d.day) in holidays)
+        return not is_holiday(d, holidays)
 
-    return date_strategy(min_value=min_value, max_value=max_value).filter(lambda d: allowed(d))
+    return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
 
 def work_times(
@@ -335,9 +359,7 @@ def date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, fu
         return dt >= right_now if future else dt < right_now
 
     return (
-        st.tuples(date_strategy(), hour_strategy(), minute_strategy())
-        .map(lambda t: tuple_to_datetime(t))
-        .filter(lambda dt: is_future_or_past(dt))
+        st.tuples(date_strategy(), hour_strategy(), minute_strategy()).map(tuple_to_datetime).filter(is_future_or_past)
     )
 
 
@@ -385,3 +407,58 @@ def past_work_datetimes(
     A strategy for past datetime generation.
     """
     return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, False)
+
+
+def check_datetime_to_str_and_back(
+    dt: datetime,
+    datetime_format: str,
+    str_to_datetime: Callable[[str, str], tuple[datetime | None, str]],
+):
+    """
+    Helper function for several tests that, starting with a datetime,
+    first convert it to a string, then parse the string with a specified
+    format, and verify the result is the expected datetime. It must
+    handle the case where the format might remove information, e.g., just
+    return the date and not the time part.
+    """
+    assert dt.tzinfo == local_timezone
+    dt_str = dt.strftime(datetime_format)
+    actual, error = str_to_datetime(dt_str, datetime_format)
+    assert (
+        actual
+    ), f'Failed to convert "{dt_str}" with format "{datetime_format}", original datetime "{dt}". Error: {error}'
+    assert datetimes_approx_equal(
+        dt, actual, one_second
+    ), f"dt: {dt}, dt_str: {dt_str}, actual: {actual}, datetime_format: {datetime_format}"
+
+    # We actually need to compare strings, not dts, because a returned datetime might have "missing"
+    # hours, minutes, seconds, etc., depending on fmt.
+    actual_str = actual.strftime(datetime_format)
+    assert (
+        dt_str == actual_str
+    ), f"original datetime: {dt}, dt_str: {dt_str}, actual: {actual}, actual_str: {actual_str}, datetime_format: {datetime_format}"
+    assert not error
+
+
+def check_date_to_str_and_back(
+    d: date,
+    date_format: str,
+    str_to_date: Callable[[str, str], tuple[date | None, str]],
+):
+    """
+    Helper function for several tests that, starting with a date,
+    first convert it to a string, then parse the string with a specified
+    format, and verify the result is the expected date. It must
+    handle the case where the format might remove some information.
+    """
+    d_str = d.strftime(date_format)
+    actual, error = str_to_date(d_str, date_format)
+    assert actual, f'Failed to convert "{d_str}" with format "{date_format}", original date "{d}". Error: {error}'
+
+    # We actually need to compare strings, not ds, because a returned datetime might have "missing"
+    # hours, minutes, seconds, etc., depending on fmt.
+    actual_str = actual.strftime(date_format)
+    assert (
+        d_str == actual_str
+    ), f"original date: {d}, d_str: {d_str}, actual: {actual}, actual_str: {actual_str}, date_format: {date_format}"
+    assert not error

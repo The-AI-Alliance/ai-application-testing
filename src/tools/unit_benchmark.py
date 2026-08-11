@@ -24,7 +24,7 @@ from common.json_yaml import (
 from common.utils import (
     all_use_cases,
     ensure_dirs_exist,
-    extract_content,
+    extract_content_from_model_response,
     make_full_prompt,
 )
 
@@ -170,7 +170,7 @@ class UnitBenchmarkDataSynthesizer(UnitBenchmarkDataParent):
                 verbose=False,
                 # format = "json",
             )
-            extracted_content = extract_content(response)
+            extracted_content = extract_content_from_model_response(response)
             jsonls, errors = extract_jsonl_list(extracted_content)
             if errors:
                 self.logger.error(
@@ -283,7 +283,7 @@ class UnitBenchmarkDataValidator(UnitBenchmarkDataParent):
                 # format = "json",
             )
             if isinstance(response, ModelResponse):
-                lines, errors = extract_jsonl_list(extract_content(response))
+                lines, errors = extract_jsonl_list(extract_content_from_model_response(response))
                 if errors:
                     self.logger.error(f"Some lines couldn't be parsed in response <{response}>, errors = {errors}")
                 validation_file.writelines(ln + "\n" for ln in lines)

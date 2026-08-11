@@ -1,11 +1,13 @@
-# Tests for the "ChatBot" module with "Appointment" Q&A pairs.
+"""Tests for the "ChatBot" module with "Appointment" Q&A pairs."""
 
 import os
 from pathlib import Path
 
 import pytest
 
-from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
+from tests.utils.apps.chatbot import ChatBotTestWithInference
+
+# pylint: disable=unused-variable
 
 
 @pytest.mark.ai

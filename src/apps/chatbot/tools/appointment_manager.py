@@ -313,11 +313,11 @@ class AppointmentManager(ResourceManager):
         self._persist_resources([appointment])
 
         self.logger.info(
-            f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
+            f"I changed appointment with id = {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
         )
         return (
             True,
-            f"I changed appointment {appointment_id} from {old_time} to {new_date_time}.",
+            f"I changed appointment with id = {appointment_id} from {old_time} to {new_date_time}.",
         )
 
     def get_appointments_by_criteria(
@@ -421,7 +421,8 @@ class AppointmentManager(ResourceManager):
         """Create a JSON string from the object."""
         return AppointmentManager.def_json_encoder.encode(self)
 
-    def from_json(text: Any) -> AppointmentManager:
+    @classmethod
+    def from_json(cls, text: Any) -> AppointmentManager:
         """Attempt to parse a JSON object, returning an instance."""
         am = AppointmentManager.def_json_decoder.decode(text)
         assert isinstance(am, AppointmentManager), f"Not an AppointmentManager! am = {am}"

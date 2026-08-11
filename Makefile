@@ -107,11 +107,11 @@ CHATBOT_API_SERVER_HOST            ?= localhost
 CHATBOT_API_SERVER_PORT            ?= 8000
 export CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
-ALL_TOOLS                   ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
+ALL_TOOLS  ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
 
 # We don't lint the src/tools content, because they are intended more as "scripts",
 # rather than modules with higher quality expectations.
-PYLINT_IGNORE_ARGS  += --ignore=${SRC_DIR}/tools,${SRC_DIR}/tools/langflow
+PYLINT_ARGS  += --ignore=tools #,${SRC_DIR}/tools/langflow
 
 # Add custom help for the application here, which will be shown when the user
 # types "make help".

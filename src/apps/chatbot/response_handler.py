@@ -1,3 +1,5 @@
+"""Handle processing of responses from LLMs."""
+
 import logging
 from typing import Any
 
@@ -56,7 +58,7 @@ class ResponseHandler:
         return f"{type(self).__name__}(confidence_level_threshold = {self.confidence_level_threshold}, #responses = {len(self.responses)})"
 
 
-class ChatBotResponseHandler(ResponseHandler):
+class ChatBotResponseHandler(ResponseHandler):  # pylint: disable=too-few-public-methods,unused-variable
     """
     Handle responses for the ChatBot, reflecting the details for the expected responses,
     as defined in the prompt file. We follow a policy of actually using the model's response text if the
@@ -119,5 +121,7 @@ This could be the next business day. If you are having an emergency, please call
         return processed_response
 
     class DictEmptyStrDefault(dict):
+        """A dictionary that simply returns an empty string "" for any missing keys."""
+
         def __missing__(self, key):
             return '""'

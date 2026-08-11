@@ -1,5 +1,5 @@
 """
-"Persistent storage" of JSONL data in a local file.
+Persistent storage of JSONL data in a local file.
 """
 
 from __future__ import annotations
@@ -13,11 +13,9 @@ from typing import Any
 from common.json_yaml import decode_json_dict, encode_json
 
 
-class FilePersistentStorageError(Exception):
-    """Custom exception for storage-related errors"""
-
-
 class FilePersistentStorage:
+    """Persistent storage of JSONL data in a local file."""
+
     def __init__(self, storage_path: Path | str, logger: logging.Logger | None = None, remove_old: bool = False):
         """
         Initialize the appointment tool.
@@ -65,7 +63,7 @@ class FilePersistentStorage:
         dicts = []
         errors = []
         if self.storage_path.exists():
-            with open(self.storage_path, "r") as f:
+            with open(self.storage_path, "r") as f:  # pylint: disable=unspecified-encoding
                 for line in f:
                     line = line.strip()
                     if line:
@@ -74,7 +72,7 @@ class FilePersistentStorage:
                             dicts.append(d)
                         except json.JSONDecodeError as e:
                             errors.append(line)
-                            self.logger.error(f"Error parsing record line: {e} (line: {line})")
+                            self.logger.error("Error parsing record line: %s (line: %s)", e, line)
         return dicts, errors
 
     def save(self, records: Sequence[MutableMapping[str, Any]]) -> int:
@@ -91,7 +89,7 @@ class FilePersistentStorage:
             The count of the number of records written, which should be equal to len(records).
         """
         count = 0
-        with open(self.storage_path, "a") as f:
+        with open(self.storage_path, "a") as f:  # pylint: disable=unspecified-encoding
             for record in records:
                 f.write(encode_json(record) + "\n")
                 count += 1
@@ -109,7 +107,8 @@ class FilePersistentStorage:
             }
         )
 
-    def from_json(text: Any) -> FilePersistentStorage:
+    @classmethod
+    def from_json(cls, text: Any) -> FilePersistentStorage:
         """Attempt to parse a JSON object, returning an instance."""
         d = json.loads(text)
         return FilePersistentStorage(d.get("storage_path", ""))
