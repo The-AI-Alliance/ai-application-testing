@@ -75,7 +75,7 @@ local_timezone = datetime.now(UTC).astimezone().tzinfo
 local_datetime_min: datetime = (datetime.min + one_day).astimezone()  # noqa: DTZ901
 local_datetime_max: datetime = (datetime.max - one_day).astimezone()  # noqa: DTZ901
 local_date_min: date = local_datetime_min.date()
-local_date_max: date = local_datetime_min.date()
+local_date_max: date = local_datetime_max.date()
 
 def_start_hour_inclusive: int = 8  # pylint: disable=invalid-name
 def_end_hour_inclusive: int = 17  # pylint: disable=invalid-name

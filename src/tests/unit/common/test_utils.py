@@ -42,14 +42,15 @@ def clean():
 # pylint: disable=unused-variable
 
 
-def test_expected_fail(use_case_name: str):
+@given(st.text())
+def test_expected_fail(label: str):
     """Test that an expected failure occurs."""
 
     def should_raise(exc):
         raise exc
 
-    def should_not_raise(msg):
-        print(msg)
+    def should_not_raise():
+        pass
 
     class ExpectedException(BaseException):
         """For testing expected exceptions."""
@@ -58,13 +59,13 @@ def test_expected_fail(use_case_name: str):
             super().__init__(msg)
 
     ef = ExpectedFail(ValueError)
-    ef(lambda: should_raise(ValueError(f"oops! {use_case_name}")))
+    ef(lambda: should_raise(ValueError(f"oops! {label}")))
     try:
-        ef(lambda: should_raise(ExpectedException(f"fail! {use_case_name}")))
+        ef(lambda: should_raise(ExpectedException(f"fail! {label}")))
     except AssertionError:
         pass
     try:
-        ef(lambda: should_not_raise(f"Didn't fail! {use_case_name}"))
+        ef(should_not_raise)
     except AssertionError:
         pass
 

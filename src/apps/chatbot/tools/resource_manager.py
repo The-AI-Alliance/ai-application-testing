@@ -222,7 +222,9 @@ class ResourceManager:
         error_count = len(errors)
         all_count = loaded_count + error_count
         if errors:
-            self.logger.error(f"{error_count}/{all_count} records from storage file {self.storage.storage_path} failed to parse: {errors}")
+            self.logger.error(
+                f"{error_count}/{all_count} records from storage file {self.storage.storage_path} failed to parse: {errors}"
+            )
 
         self.resources = {}
         for resource in resources:
@@ -231,9 +233,7 @@ class ResourceManager:
                 resource_id = resource.get("id")
                 if resource_id:
                     if resource_id in self.resources:
-                        error_msg = (
-                            f"self.resources already has an entry for {resource_id} ({self.resources[resource_id]}) (from storage file: {self.storage.storage_path}). SKIPPING new one!"
-                        )
+                        error_msg = f"self.resources already has an entry for {resource_id} ({self.resources[resource_id]}) (from storage file: {self.storage.storage_path}). SKIPPING new one!"
                         self.logger.error(error_msg)
                         errors.append(error_msg)
                     else:

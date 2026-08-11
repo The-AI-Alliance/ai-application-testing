@@ -261,7 +261,7 @@ def test_decode_json_list_value_error_on_input_dict_str(
     body_part: str,
     timestamp: datetime,
 ):
-    jss = __make_quoted_json_strings(1, '"', question, label, prescription, body_part, timestamp)
+    jss = __make_quoted_json_strings(1, "'", question, label, prescription, body_part, timestamp)
     ef = ExpectedFail(ValueError)
     ef(lambda: decode_json_dict(jss[0]))
 

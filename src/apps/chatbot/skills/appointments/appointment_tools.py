@@ -26,6 +26,7 @@ class AppointmentManagerTool:  # pylint: disable=too-few-public-methods
     appointment_manager: AppointmentManager
     appointment_manager_initialized: bool = False
 
+
 def get_appointment_manager(
     file_path: Path | str = "",
     logger: logging.Logger | None = None,
@@ -61,11 +62,15 @@ def get_appointment_manager(
     if not logger:
         logger = AppointmentManagerTool.def_appointment_manager_logger  # assign the default logger
 
-    AppointmentManagerTool.appointment_manager = AppointmentManager(
-        appointments_file=fp,
-        logger=logger)
+    AppointmentManagerTool.appointment_manager = AppointmentManager(appointments_file=fp, logger=logger)
     amt_id = hex(id(AppointmentManagerTool.appointment_manager))
-    logger.info("Created a new AppointmentManager(%s, logger) (id = %s, existing appointment count: %d), %s", fp, amt_id, AppointmentManagerTool.appointment_manager.get_appointments_count(), AppointmentManagerTool.appointment_manager)
+    logger.info(
+        "Created a new AppointmentManager(%s, logger) (id = %s, existing appointment count: %d), %s",
+        fp,
+        amt_id,
+        AppointmentManagerTool.appointment_manager.get_appointments_count(),
+        AppointmentManagerTool.appointment_manager,
+    )
     AppointmentManagerTool.appointment_manager_initialized = True
     return AppointmentManagerTool.appointment_manager
 
