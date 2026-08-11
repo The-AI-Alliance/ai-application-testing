@@ -119,7 +119,7 @@ class ScenarioTest(BaseAITest):  # pylint: disable=too-many-instance-attributes
         failures: list[Failure],
         initial_queries: list[str],
     ):
-        self.chatbot: ChatBotAgent | None = None
+        self.chatbot: ChatBotAgent
         self.scenario = scenario
         self.inputs = inputs
         self.successes = successes
@@ -286,13 +286,13 @@ class AppointmentScenarioTest(ScenarioTest):
         super().__init__(scenario, inputs, successes, failures, initial_queries)
         self.start_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
         self.end_appointments: MutableMapping[str, MutableMapping[str, Any]] = {}
-        self.am: AppointmentManager | None = None
+        self.am: AppointmentManager
 
     def _custom_start(self):
         """
         Custom setup for appointment scenario tests.
         """
-        self.am: AppointmentManager = self.chatbot.appointment_manager
+        self.am = self.chatbot.appointment_manager
         for appointment in self.am.get_appointments():
             self.start_appointments[appointment["id"]] = appointment
 

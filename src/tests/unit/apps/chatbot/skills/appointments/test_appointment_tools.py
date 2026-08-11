@@ -365,7 +365,7 @@ class TestAppointmentTools:
         test_util = AppointmentToolsTestUtil()
         ids = []
         for d in apmt_dicts:
-            appointment = test_util.successfully_add_valid_appointment(d, all_appointments=appointment_dicts)
+            appointment = test_util.successfully_add_valid_appointment(d, all_appointments=apmt_dicts)
             ids.append(appointment["id"])
 
         # Pick an entry in the middle:

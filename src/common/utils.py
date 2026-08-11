@@ -74,46 +74,45 @@ def parser_with_common_args(
     that can be used by the calling program to print the actual values specified
     by the user.
     """
-    if not omit_arguments:
-        omit_arguments = {}
+    omit_args: set[str] = omit_arguments if omit_arguments else set()
 
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
-    if "model" not in omit_arguments:
+    if "model" not in omit_args:
         parser.add_argument(
             "-m",
             "--model",
             default=common_defaults["model"],
             help=f"Use MODEL. Default {common_defaults['model']}",
         )
-    if "service-url" not in omit_arguments:
+    if "service-url" not in omit_args:
         parser.add_argument(
             "-s",
             "--service-url",
             default=common_defaults["service-url"],
             help=f"Use SERVICE_URL as the inference hosting service URL. Default: {common_defaults['service-url']}",
         )
-    if "template-dir" not in omit_arguments:
+    if "template-dir" not in omit_args:
         parser.add_argument(
             "-t",
             "--template-dir",
             default=common_defaults["template-dir"],
             help=f"Use TEMPLATE_DIR as the location to find the prompt templates used. Default: {common_defaults['template-dir']}",
         )
-    if "data-dir" not in omit_arguments:
+    if "data-dir" not in omit_args:
         parser.add_argument(
             "-d",
             "--data-dir",
             default=common_defaults["data-dir"],
             help=f"Directory where data files are read or written. Default: {common_defaults['data-dir']}",
         )
-    if "output-dir" not in omit_arguments:
+    if "output-dir" not in omit_args:
         parser.add_argument(
             "-o",
             "--output-dir",
             default=common_defaults["output-dir"],
             help=f"Directory where some output files are read or written (may not be used). Default: {common_defaults['output-dir']}",
         )
-    if "use-cases" not in omit_arguments:
+    if "use-cases" not in omit_args:
         all_ucs = ", ".join([f"'{key}'" for key in all_use_cases()])
         parser.add_argument(
             "-u",
@@ -121,7 +120,7 @@ def parser_with_common_args(
             nargs="*",
             help=f"One or more uses cases to process. Quote them when the names have spaces. to specify more than one. Default: {all_ucs}",
         )
-    if "log-file" not in omit_arguments:
+    if "log-file" not in omit_args:
         default_log_file = _get_default_log_file(tool)
         default_log_level = logging.INFO
         parser.add_argument(
@@ -136,7 +135,7 @@ def parser_with_common_args(
             type=int,
             help=f"The integer value for the logging level (see https://docs.python.org/3/library/logging.html#logging-levels) is written. Default: {default_log_level} ('logging.INFO').",
         )
-    if "verbose" not in omit_arguments:
+    if "verbose" not in omit_args:
         parser.add_argument(
             "-v",
             "--verbose",

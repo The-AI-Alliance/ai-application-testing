@@ -86,8 +86,8 @@ def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: time
     # If delta is negative, convert it to positive so the logic below works!
     delta_neg = -delta
     delta = max(delta, delta_neg)
-    upper = datetime1 + delta >= datetime2
-    lower = datetime1 - delta <= datetime2
+    upper = datetime1 + delta
+    lower = datetime1 - delta
     close = datetime1 == datetime2 or (upper >= datetime2 and lower <= datetime2)  # pylint: disable=chained-comparison
     msg = ""
     if not close:
@@ -242,7 +242,9 @@ def _str_to_object[DT](
     # will be a repeat attempt if "input_format" is empty, which is
     # harmless, if slightly wasteful...
     dt = fromiso(dt_str)
-    return extract(dt), "" if dt else None, err_msg()
+    if dt:
+        return extract(dt), ""
+    return None, err_msg()
 
 
 def string_to_datetime(date_time_str: str, input_format: str = "") -> tuple[datetime | None, str]:

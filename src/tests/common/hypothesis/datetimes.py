@@ -410,7 +410,7 @@ def past_work_datetimes(
 def check_datetime_to_str_and_back(
     dt: datetime,
     datetime_format: str,
-    str_to_datetime: Callable[[str, str], [datetime, str]],
+    str_to_datetime: Callable[[str, str], tuple[datetime | None, str]],
 ):
     """
     Helper function for several tests that, starting with a datetime,
@@ -441,7 +441,7 @@ def check_datetime_to_str_and_back(
 def check_date_to_str_and_back(
     d: date,
     date_format: str,
-    str_to_date: Callable[[str, str], [date, str]],
+    str_to_date: Callable[[str, str], tuple[date | None, str]],
 ):
     """
     Helper function for several tests that, starting with a date,

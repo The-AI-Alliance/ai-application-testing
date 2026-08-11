@@ -9,9 +9,9 @@ import os
 import random
 import re
 import sys
-import time
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from datetime import timedelta
 from enum import StrEnum, auto
 from io import StringIO
 from pathlib import Path
@@ -190,7 +190,8 @@ class QnAQueryRunner(QueryRunner[QnATest]):  # pylint: disable=too-few-public-me
         exp_labels = test_prompt.labels
         exp_actions = test_prompt.actions
         exp_rating = test_prompt.rating
-        exp_keywords = test_prompt.keywords
+        kws = test_prompt.keywords
+        exp_keywords = kws if kws else {}
         prompt = exp_query  # no longer used: if not exp_keywords else exp_query.format_map(exp_keywords)
 
         metadata = {
@@ -678,8 +679,9 @@ class ChatBotTestWithInference(ChatBotTestBase):  # pylint: disable=unused-varia
                 f"No samples! test data size = {len(test_data)} * data sample rate = {self.data_sample_rate} => no samples!"
             )
 
-        last_time = time.time()
-        allowed_time_delta = 120  # seconds (NOTE: litellm appears to have an internal timeout of 5-6 minutes.)
+        last_datetime = now()
+        # NOTE: litellm appears to have an internal timeout of 5-6 minutes.
+        allowed_time_delta = timedelta(seconds=120)
 
         for sample_number, test_prompt in enumerate(samples, start=1):
             metadata, errors, warnings, low_confidence_results = query_runner.run_query(test_prompt)
@@ -707,11 +709,11 @@ class ChatBotTestWithInference(ChatBotTestBase):  # pylint: disable=unused-varia
 
             # Logic to detect when it appears the system has deadlocked in some way.
             # If so, then error out.
-            difference = int(last_time - now())
+            difference = last_datetime - now()
             assert (
                 difference <= allowed_time_delta
             ), f"Time difference between inference calls, {difference} exceeds allowed time delta {allowed_time_delta}"
-            last_time = now()
+            last_datetime = now()
 
             # Show we aren't dead by printing counts...
             print(
