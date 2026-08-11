@@ -1,4 +1,5 @@
 """A "Simple" ChatBot implementation for questions and answers."""
+
 import logging
 from pathlib import Path
 from typing import Any
@@ -10,7 +11,7 @@ from .response_handler import ResponseHandler
 from .response_parser import LiteLLMModelResponseParser
 
 
-class ChatBotSimple(ChatBot): # pylint: disable=too-few-public-methods,unused-variable
+class ChatBotSimple(ChatBot):  # pylint: disable=too-few-public-methods,unused-variable
     """
     Simple ChatBot implementation using direct LiteLLM completion calls.
     """

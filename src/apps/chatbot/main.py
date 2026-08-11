@@ -1,4 +1,5 @@
 """Provides the entry point for the ChatBot."""
+
 import os
 
 from apps.chatbot import (
@@ -8,6 +9,7 @@ from apps.chatbot import (
     ChatBotSimple,
 )
 from common.utils import tool_setup
+
 
 def main():
     """

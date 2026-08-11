@@ -6,8 +6,8 @@
 
 [tool.pylint.design]
 # Maximum number of positional arguments for function / method.
-max-positional-arguments = 8
-max-args = 8
+max-positional-arguments = 10
+max-args = 10
 
 [tool.pylint.format]
 # Maximum number of characters on a single line. Pylint's default of 100 is based
@@ -19,3 +19,20 @@ max-line-length = 250
 # Tells whether unused global variables should be treated as a violation.
 allow-global-unused-variables = false
 max-locals = 25
+
+# The following similarties section adapted from:
+# Source - https://stackoverflow.com/a/30007053
+# Posted by tmthydvnprt, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-08-10, License - CC BY-SA 3.0
+[tool.pylint.similarities]
+# Minimum lines number of a similarity.
+min-similarity-lines = 10
+
+# Ignore comments when computing similarities.
+ignore-comments = "yes"
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings = "yes"
+
+# Ignore imports when computing similarities.
+ignore-imports = "yes"

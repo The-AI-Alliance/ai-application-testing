@@ -1,4 +1,5 @@
 """Miscellaneous utilities."""
+
 # Allow types to self-reference during their definitions.
 from __future__ import annotations
 
@@ -29,8 +30,9 @@ common_defaults = {
 }
 
 
-class ExpectedFail: # pylint: disable=too-few-public-methods
+class ExpectedFail:  # pylint: disable=too-few-public-methods
     """Utility to handle a callable that is expected to raise an exception of a particular type."""
+
     def __init__(self, expected_type: type[BaseException]):
         self.expected_type = expected_type
         self.expected_name = self.expected_type.__name__
@@ -267,6 +269,7 @@ USER PROMPT:
 
 {'\n'.join(ss)}
 """
+
 
 def extract_content_from_model_response(litellm_response: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""

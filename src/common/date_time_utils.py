@@ -1,4 +1,5 @@
 """Utilities for working with dates and times."""
+
 # Allow types to self-reference during their definitions.
 from __future__ import annotations
 
@@ -54,11 +55,13 @@ friendly_date_formats.append("%x")  # add this AFTER the previous loop.
 friendly_time_formats.append("%X")  # add this AFTER the previous loop.
 
 # "Friendly" output formats.
-def_friendly_date_output_format = "%A, %B %d, %Y"   # pylint: disable=invalid-name
+def_friendly_date_output_format = "%A, %B %d, %Y"  # pylint: disable=invalid-name
 def_friendly_time_output_format = "%I:%M:%S %p %Z"  # pylint: disable=invalid-name
-def_friendly_date_time_output_format = def_friendly_date_output_format + " " + def_friendly_time_output_format   # pylint: disable=invalid-name
+def_friendly_date_time_output_format = (  # pylint: disable=invalid-name
+    def_friendly_date_output_format + " " + def_friendly_time_output_format
+)
 
-timestamp_str_fmt = "%Y:%m:%d %H:%M:%S%:z"   # pylint: disable=invalid-name
+timestamp_str_fmt = "%Y:%m:%d %H:%M:%S%:z"  # pylint: disable=invalid-name
 timestamp_file_fmt = "%Y-%m-%d_%H-%M-%S_%Z"  # pylint: disable=invalid-name
 
 one_day = timedelta(days=1)
@@ -73,7 +76,7 @@ local_datetime_min: datetime = (datetime.min + one_day).astimezone()  # noqa: DT
 local_datetime_max: datetime = (datetime.max - one_day).astimezone()  # noqa: DTZ901
 
 def_start_hour_inclusive: int = 8  # pylint: disable=invalid-name
-def_end_hour_inclusive: int = 17   # pylint: disable=invalid-name
+def_end_hour_inclusive: int = 17  # pylint: disable=invalid-name
 
 
 def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: timedelta) -> tuple[bool, str]:
@@ -83,7 +86,9 @@ def datetimes_approx_equal(datetime1: datetime, datetime2: datetime, delta: time
     # If delta is negative, convert it to positive so the logic below works!
     delta_neg = -delta
     delta = max(delta, delta_neg)
-    close = datetime1 == datetime2 or (datetime1 + delta >= datetime2 and datetime1 - delta <= datetime2) # pylint: disable=chained-comparison
+    upper = datetime1 + delta >= datetime2
+    lower = datetime1 - delta <= datetime2
+    close = datetime1 == datetime2 or (upper >= datetime2 and lower <= datetime2)  # pylint: disable=chained-comparison
     msg = ""
     if not close:
         msg = f"{datetime1} == {datetime2} NOT within +- {delta}"
@@ -144,7 +149,7 @@ def is_week_day(dt: datetime | date) -> bool:
         is_week_day(now())
     """
     weekday = dt.weekday()
-    return weekday >= 0 and weekday < 5 # pylint: disable=chained-comparison
+    return weekday >= 0 and weekday < 5  # pylint: disable=chained-comparison
 
 
 def is_weekend(dt: datetime | date) -> bool:
@@ -238,6 +243,7 @@ def _str_to_object[DT](
     # harmless, if slightly wasteful...
     dt = fromiso(dt_str)
     return extract(dt), "" if dt else None, err_msg()
+
 
 def string_to_datetime(date_time_str: str, input_format: str = "") -> tuple[datetime | None, str]:
     """

@@ -1,4 +1,5 @@
 """Parsing LLM responses."""
+
 import json
 import re
 from abc import ABC, abstractmethod
@@ -9,7 +10,8 @@ from litellm.types.utils import ModelResponse
 
 from common.utils import extract_content_from_model_response
 
-class ResponseParser[RESPONSE](ABC): # pylint: disable=too-few-public-methods
+
+class ResponseParser[RESPONSE](ABC):  # pylint: disable=too-few-public-methods
     """
     Abstraction for the different types of responses returned by
     agent and inference libraries we use use, e.g., LiteLLM, LangChain, etc.
@@ -71,8 +73,12 @@ class ResponseParser[RESPONSE](ABC): # pylint: disable=too-few-public-methods
             parsed["response"] = optional_response_dict
         return parsed
 
-class LiteLLMModelResponseParser(ResponseParser[ModelResponse]): # pylint: disable=too-few-public-methods,unused-variable
+
+class LiteLLMModelResponseParser(
+    ResponseParser[ModelResponse]
+):  # pylint: disable=too-few-public-methods,unused-variable
     """Parser for ModelResponse objects returned by LiteLLM."""
+
     def parse(self, query: str, response: ModelResponse) -> dict[str, Any]:
         """
         Takes a LiteLLM `ModelResponse` and extracts the
@@ -120,8 +126,12 @@ class LiteLLMModelResponseParser(ResponseParser[ModelResponse]): # pylint: disab
         content = extract_content_from_model_response(response)
         return self._make_full_response(query, content, {})
 
-class LangChainDeepAgentResponseParser(ResponseParser[dict[str, Any]]): # pylint: disable=too-few-public-methods,unused-variable
+
+class LangChainDeepAgentResponseParser(
+    ResponseParser[dict[str, Any]]
+):  # pylint: disable=too-few-public-methods,unused-variable
     """Parser for response dictionaries returned by LangChain's DeepAgent."""
+
     def parse(self, query: str, response: dict[str, Any]) -> dict[str, Any]:
         """
         Takes a LangChain Deep Agents dict response and extracts the

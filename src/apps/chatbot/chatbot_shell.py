@@ -1,4 +1,5 @@
 """The interactive "shell" for a ChatBot."""
+
 import cmd
 
 # Source for history management adapted from - https://stackoverflow.com/a/39495060
@@ -84,5 +85,6 @@ class ChatBotShell(cmd.Cmd):
     def close(self):
         """Close the command object."""
         print("\nThank you for using the patient ChatBot", file=self.stdout)
+
 
 # Made with Bob

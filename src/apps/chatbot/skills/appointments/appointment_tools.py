@@ -14,8 +14,10 @@ from langchain_core.tools import tool
 from apps.chatbot.tools.appointment_manager import AppointmentManager
 from common.date_time_utils import now
 
-class AppointmentManagerTool: # pylint: disable=too-few-public-methods
+
+class AppointmentManagerTool:  # pylint: disable=too-few-public-methods
     """Holds "global" objects for appointment management, but in a more OO way."""
+
     # Initialize the appointment tool with a default file location
     # This will be overridden when integrated with the ChatBot
     def_appointments_file = Path("../output/appointments.jsonl")

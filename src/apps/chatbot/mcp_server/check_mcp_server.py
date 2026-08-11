@@ -12,8 +12,7 @@ import sys
 from pathlib import Path
 
 # Add src to path for imports
-#sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-
+# sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from apps.chatbot import ChatBotResponseHandler, ChatBotSimple
 from apps.chatbot.mcp_server.server import create_mcp_server
 

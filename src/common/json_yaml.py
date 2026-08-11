@@ -21,6 +21,7 @@ def load_yaml(path: Path) -> Mapping[str, Any]:
 
 class DatetimeEncoder(json.JSONEncoder):
     """Specialized JSON encoder that handles datetime instances."""
+
     def default(self, o: Any) -> Any:
         if isinstance(o, datetime):
             return {"__class__": "datetime", "iso_str": o.isoformat()}
@@ -29,6 +30,7 @@ class DatetimeEncoder(json.JSONEncoder):
 
 class DatetimeDecoder(json.JSONDecoder):
     """Specialized JSON decoder that handles datetime instances."""
+
     def __init__(self):
         super().__init__(object_hook=DatetimeDecoder.from_dict)
 

@@ -1,4 +1,5 @@
 """A ChatBot implementation that supports "agentic" activities, e.g., for sessions."""
+
 import logging
 from pathlib import Path
 from typing import Any
@@ -12,7 +13,7 @@ from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_manager
 from .skills.date_times import DATE_TIME_TOOLS
 
 
-class ChatBotAgent(ChatBot): # pylint: disable=too-few-public-methods,unused-variable
+class ChatBotAgent(ChatBot):  # pylint: disable=too-few-public-methods,unused-variable
     """
     ChatBot implementation using LangChain Deep Agents framework.
 

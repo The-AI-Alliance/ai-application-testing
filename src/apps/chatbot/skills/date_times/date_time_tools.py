@@ -32,6 +32,7 @@ from common.date_time_utils import (
 # Too many of these warnings for variables that ARE used in other files.
 # pylint: disable=unused-variable
 
+
 @tool
 def now(tz: timezone | None = None) -> datetime:
     """

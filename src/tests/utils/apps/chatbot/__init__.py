@@ -5,7 +5,6 @@ from .chatbot_test_base import (
     ChatBotTestWithInference,
 )
 
-
 __all__ = [
     "ChatBotTestBase",
     "ChatBotTestWithInference",

@@ -99,7 +99,7 @@ class ModelList(BaseModel):
     data: list[Model]
 
 
-class APIServer: # pylint: disable=too-many-instance-attributes,too-few-public-methods
+class APIServer:  # pylint: disable=too-many-instance-attributes,too-few-public-methods
     """OpenAI-compatible API server for the ChatBot."""
 
     def __init__(
@@ -245,7 +245,7 @@ class APIServer: # pylint: disable=too-many-instance-attributes,too-few-public-m
 
             except HTTPException:
                 raise
-            except Exception as e:  # noqa pylint: disable=broad-exception-caught
+            except Exception as e:
                 error_msg = f"Error processing chat completion: {e!s}"
                 if self.logger:
                     self.logger.error(error_msg)

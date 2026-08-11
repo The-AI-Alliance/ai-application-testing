@@ -1,4 +1,5 @@
 """Abstraction for a ChatBot."""
+
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -13,7 +14,7 @@ from common.utils import (
 from .response_handler import ChatBotResponseHandler, ResponseHandler
 
 
-class ChatBot(ABC): # pylint: disable=too-many-instance-attributes,too-few-public-methods,unused-variable
+class ChatBot(ABC):  # pylint: disable=too-many-instance-attributes,too-few-public-methods,unused-variable
     """
     Base class for ChatBot implementations.
     Provides common initialization and abstract methods for query processing.
@@ -107,7 +108,9 @@ class ChatBot(ABC): # pylint: disable=too-many-instance-attributes,too-few-publi
             error_msgs.append(f"These values can't be None or empty: {', '.join(empty)}.")
 
         if not self.system_prompt:
-            error_msgs.append(f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}.")
+            error_msgs.append(
+                f"The template['system'] is empty: prompt template file {self.template_file}, template:\n{self.template}."
+            )
 
         if error_msgs:
             error_msg = " ".join(error_msgs)

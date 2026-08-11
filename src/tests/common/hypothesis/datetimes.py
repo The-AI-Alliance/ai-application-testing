@@ -30,6 +30,7 @@ year_2000 = datetime(year=2000, month=1, day=1, tzinfo=local_timezone)
 default_work_start_time = time(hour=def_start_hour_inclusive, minute=0)
 default_work_end_time = time(hour=def_end_hour_inclusive, minute=0)
 
+
 def is_holiday(
     d: date,
     holidays: AbstractSet[tuple[int, int]] | None = None,
@@ -47,6 +48,7 @@ def is_holiday(
     True if a non-empty set of holidays is provided and the date falls on one of them, or False otherwise.
     """
     return holidays and (d.month, d.day) in holidays
+
 
 def local_datetimes(
     min_value: datetime = local_datetime_min, max_value: datetime = local_datetime_max
@@ -403,6 +405,7 @@ def past_work_datetimes(
     A strategy for past datetime generation.
     """
     return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, False)
+
 
 def check_datetime_to_str_and_back(
     dt: datetime,

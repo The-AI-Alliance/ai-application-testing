@@ -12,8 +12,10 @@ from typing import Any
 
 from common.json_yaml import decode_json_dict, encode_json
 
+
 class FilePersistentStorage:
     """Persistent storage of JSONL data in a local file."""
+
     def __init__(self, storage_path: Path | str, logger: logging.Logger | None = None, remove_old: bool = False):
         """
         Initialize the appointment tool.
@@ -61,7 +63,7 @@ class FilePersistentStorage:
         dicts = []
         errors = []
         if self.storage_path.exists():
-            with open(self.storage_path, "r") as f: # pylint: disable=unspecified-encoding
+            with open(self.storage_path, "r") as f:  # pylint: disable=unspecified-encoding
                 for line in f:
                     line = line.strip()
                     if line:
