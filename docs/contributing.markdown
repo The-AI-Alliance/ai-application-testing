@@ -18,9 +18,9 @@ We welcome your contributions!
 
 * [GitHub repo]({{site.gh_edit_repository}}/){:target="repo"}
 	* [Issues]({{site.gh_edit_repository}}/issues){:target="issues"}
-	* [Discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"} 
+	* [Discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"}
 	* [Pull requests]({{site.gh_edit_repository}}/pulls){:target="prs"}
-* Or give us your feedback through [email](mailto:contact@thealliance.ai,dwampler@thealliance.ai?subject=Feedback on Testing Generative AI Agent Applications)
+* Or give us your feedback through [email](mailto:contact@thealliance.ai?subject=Feedback on Testing Generative AI Agent Applications)
 
 Here are some areas where help is most needed:
 
@@ -34,15 +34,7 @@ Visit the AI Alliance [`community` repo](https://github.com/The-AI-Alliance/comm
 
 See also the full list of Alliance projects [here](https://the-ai-alliance.github.io/){:target="aia-github"}, where you might find other projects of interest to you.
 
-## Join the Work Group
-
-Are you interested in joining this project's work group? While not required to collaborate through GitHub repo pull requests and issues, it helps us keep you informed of group meetings, project goals, major initiatives, and milestones. 
-
-Use the [Working Group Application](https://share.hsforms.com/12dRIKDc5SSGUENOtAstjMgqmmqo){:target="join-collab"} form to let us know your interests. 
-
-Check any of these boxes on the form that look interesting. In particular, _Evaluations (performance, quality, trust, safety)_ applies to this project. Use the _Message_ box to mention this project specifically, **Testing Generative AI Agent Applications**, and add anything else you would like us to know.
-
-## Notes on Improving this User Guide
+## Notes on Improving the User Guide
 
 The sources for this guide are in the GitHub repository's [`docs`]({{site.gh_edit_repository}}/tree/main/docs){:target="repo-docs"} directory. 
 
