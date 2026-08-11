@@ -22,9 +22,6 @@ from common.date_time_utils import (
     tomorrow,
     yesterday,
 )
-from common.utils import (
-    empty_set,
-)
 
 # pylint: disable=unused-variable,missing-function-docstring,fixme
 
@@ -33,6 +30,23 @@ year_2000 = datetime(year=2000, month=1, day=1, tzinfo=local_timezone)
 default_work_start_time = time(hour=def_start_hour_inclusive, minute=0)
 default_work_end_time = time(hour=def_end_hour_inclusive, minute=0)
 
+def is_holiday(
+    d: date,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
+):
+    """
+    Is the month and day in an optional list of holidays.
+
+    Args:
+
+    - date: Ahe date to check.
+    - holidays: An optional set of tuples with month-day integers that are holidays.
+
+    Returns:
+
+    True if a non-empty set of holidays is provided and the date falls on one of them, or False otherwise.
+    """
+    return holidays and (d.month, d.day) in holidays
 
 def local_datetimes(
     min_value: datetime = local_datetime_min, max_value: datetime = local_datetime_max
@@ -115,7 +129,7 @@ def non_weekend_dates(
     date_strategy=future_dates,
     min_value: date = date.min,
     max_value: date = date.max,
-    holidays: set[tuple[int, int]] = empty_set,
+    holidays: set[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Monday through Friday.
@@ -132,8 +146,8 @@ def non_weekend_dates(
     A strategy for generating of valid week dates.
     """
 
-    def allowed(dt: date) -> bool:
-        return is_week_day(dt) and not (holidays and (dt.month, dt.day) in holidays)
+    def allowed(d: date) -> bool:
+        return is_week_day(d) and not is_holiday(d, holidays)
 
     return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
@@ -142,7 +156,7 @@ def weekend_dates(
     date_strategy=future_dates,
     min_value: date = date.min,
     max_value: date = date.max,
-    holidays: AbstractSet[tuple[int, int]] = empty_set,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating dates that fall on Saturday or Sunday, but
@@ -160,8 +174,8 @@ def weekend_dates(
     A strategy for generating valid weekend dates, excluding optional holidays.
     """
 
-    def allowed(dt: date) -> bool:
-        return is_weekend(dt) and not (holidays and (dt.month, dt.day) in holidays)
+    def allowed(d: date) -> bool:
+        return is_weekend(d) and not is_holiday(d, holidays)
 
     return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
@@ -171,7 +185,7 @@ def work_dates(
     min_value: date = date.min,
     max_value: date = date.max,
     weekdays_only: bool = True,
-    holidays: AbstractSet[tuple[int, int]] = empty_set,
+    holidays: AbstractSet[tuple[int, int]] | None = None,
 ):
     """
     A Hypothesis strategy for generating work dates.
@@ -192,7 +206,7 @@ def work_dates(
     def allowed(d: date) -> bool:
         if weekdays_only and not is_week_day(d):
             return False
-        return not (holidays and (d.month, d.day) in holidays)
+        return not is_holiday(d, holidays)
 
     return date_strategy(min_value=min_value, max_value=max_value).filter(allowed)
 
@@ -389,7 +403,6 @@ def past_work_datetimes(
     A strategy for past datetime generation.
     """
     return date_hour_minute_datetimes(date_strategy, hour_strategy, minute_strategy, False)
-
 
 def check_datetime_to_str_and_back(
     dt: datetime,

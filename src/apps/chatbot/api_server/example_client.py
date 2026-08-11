@@ -9,11 +9,12 @@ import sys
 
 from openai import OpenAI
 
-example_content = "I need a refill for my blood pressure medication"
-example_messages = [{"role": "user", "content": example_content}]
+EXAMPLE_CONTENT = "I need a refill for my blood pressure medication"
+EXAMPLE_MESSAGES = [{"role": "user", "content": EXAMPLE_CONTENT}]
 
 
 def make_client() -> OpenAI:
+    """Make an OpenAI client."""
     return OpenAI(
         base_url="http://localhost:8000/v1",
         api_key="not-needed",  # API key not required for local server
@@ -30,10 +31,10 @@ def example_basic_query():
 
     response = client.chat.completions.create(
         model="ollama_chat/gemma4:12b",
-        messages=example_messages,  # ty: ignore[invalid-argument-type]
+        messages=EXAMPLE_MESSAGES,  # ty: ignore[invalid-argument-type]
     )
 
-    print(f"\nUser: {example_content}")
+    print(f"\nUser: {EXAMPLE_CONTENT}")
     print(f"Assistant: {response.choices[0].message.content}")
     print("\nMetadata:")
     print(f"  - Model: {response.model}")
@@ -49,11 +50,11 @@ def example_streaming_query():
 
     client = make_client()
 
-    print(f"\nUser: {example_content}")
+    print(f"\nUser: {EXAMPLE_CONTENT}")
     print("Assistant: ", end="", flush=True)
 
     stream = client.chat.completions.create(  # ty: ignore[no-matching-overload]
-        model="ollama_chat/gemma4:12b", messages=example_messages, stream=True
+        model="ollama_chat/gemma4:12b", messages=EXAMPLE_MESSAGES, stream=True
     )
 
     for chunk in stream:
@@ -72,21 +73,21 @@ def example_conversation():
     client = make_client()
 
     # First turn
-    print(f"\nUser: {example_messages[0]['content']}")
+    print(f"\nUser: {EXAMPLE_MESSAGES[0]['content']}")
     response = client.chat.completions.create(
         model="ollama_chat/gemma4:12b",
-        messages=example_messages,  # ty: ignore[invalid-argument-type]
+        messages=EXAMPLE_MESSAGES,  # ty: ignore[invalid-argument-type]
     )
     assistant_reply = response.choices[0].message.content
     print(f"Assistant: {assistant_reply}")
 
-    messages = example_messages.copy()
+    messages = EXAMPLE_MESSAGES.copy()
 
     # Add assistant response to conversation
     messages.append({"role": "assistant", "content": assistant_reply})
 
     # Second turn
-    messages = example_messages.copy()
+    messages = EXAMPLE_MESSAGES.copy()
     messages.append({"role": "user", "content": "I need to refill my lisinopril prescription"})
     print(f"\nUser: {messages[-1]['content']}")
     response = client.chat.completions.create(
@@ -154,7 +155,7 @@ def main():
         print("All examples completed successfully!")
         print("=" * 60 + "\n")
 
-    except Exception as e:  # noqa
+    except Exception as e:  # noqa pylint: disable=broad-exception-caught
         print(f"\nError: {e}")
         print("\nMake sure the API server is running:")
         print("  python -m apps.chatbot.api_server.server")

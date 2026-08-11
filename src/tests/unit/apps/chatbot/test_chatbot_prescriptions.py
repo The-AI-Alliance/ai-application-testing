@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
+from tests.utils.apps.chatbot import ChatBotTestWithInference
 
 # pylint: disable=unused-variable
 

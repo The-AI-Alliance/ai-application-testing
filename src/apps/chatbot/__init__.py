@@ -1,3 +1,4 @@
+"""ChatBot module"""
 from .chatbot import ChatBot
 from .chatbot_agent import ChatBotAgent
 from .chatbot_shell import ChatBotShell

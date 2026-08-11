@@ -1,3 +1,4 @@
+"""Miscellaneous utilities."""
 # Allow types to self-reference during their definitions.
 from __future__ import annotations
 
@@ -5,7 +6,6 @@ import argparse
 import logging
 import os
 from collections.abc import Callable, Mapping, Sequence
-from collections.abc import Set as AbstractSet
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -16,6 +16,9 @@ from common.date_time_utils import now, now_str, timestamp_file_fmt
 
 from .collections import get_chain
 
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
+
 common_defaults = {
     "model": "ollama_chat/gemma4:12b",
     "service-url": "http://localhost:11434",
@@ -25,12 +28,9 @@ common_defaults = {
     "levenshtein-ratio-threshold": 0.95,
 }
 
-empty_omit_arguments: set[str] = AbstractSet()
-empty_list: list[Any] = Sequence()
-empty_set: set[Any] = AbstractSet()
 
-
-class ExpectedFail:
+class ExpectedFail: # pylint: disable=too-few-public-methods
+    """Utility to handle a callable that is expected to raise an exception of a particular type."""
     def __init__(self, expected_type: type[BaseException]):
         self.expected_type = expected_type
         self.expected_name = self.expected_type.__name__
@@ -42,35 +42,39 @@ class ExpectedFail:
             if verbose:
                 print(f"Okay: expected exception type {self.expected_name} received: {err}.")
             return
-        except BaseException as err:  # noqa: BLE001
+        except BaseException as err:  # noqa: BLE001 pylint: disable=broad-exception-caught
             assert False, f'Exception of type {type(err).__name__} ("{err}") received. Expected {self.expected_name}.'
 
         assert False, f"No exception occurred. Expected exception of type {self.expected_name}."
 
 
-def setup(
+def tool_setup(
     tool: str,
     description: str,
     epilog: str = "",
     add_arguments: Callable[[argparse.ArgumentParser], Any | None] = lambda ap: None,
-    omit_arguments: set[str] = empty_omit_arguments,
+    omit_arguments: set[str] | None = None,
 ) -> tuple[argparse.Namespace, logging.Logger]:
+    """Common setup steps for command line tools."""
     parser = parser_with_common_args(tool, description, epilog=epilog, omit_arguments=omit_arguments)
     add_arguments(parser)
     args = parser.parse_args()
     logger = make_logger(args.log_file, name=tool, level=args.log_level)
-    log_args(logger, tool, args, epilog=epilog)
+    _log_args(logger, tool, args, epilog=epilog)
     return args, logger
 
 
 def parser_with_common_args(
-    tool: str, description: str, epilog: str = "", omit_arguments: set[str] = empty_omit_arguments
+    tool: str, description: str, epilog: str = "", omit_arguments: set[str] | None = None
 ) -> argparse.ArgumentParser:
     """
     Returns an `ArgumentParser` with the default arguments and a format string
     that can be used by the calling program to print the actual values specified
     by the user.
     """
+    if not omit_arguments:
+        omit_arguments = {}
+
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     if "model" not in omit_arguments:
         parser.add_argument(
@@ -116,8 +120,8 @@ def parser_with_common_args(
             help=f"One or more uses cases to process. Quote them when the names have spaces. to specify more than one. Default: {all_ucs}",
         )
     if "log-file" not in omit_arguments:
-        default_log_file = get_default_log_file(tool)
-        default_log_level = get_default_log_level(tool)
+        default_log_file = _get_default_log_file(tool)
+        default_log_level = logging.INFO
         parser.add_argument(
             "-l",
             "--log-file",
@@ -140,23 +144,23 @@ def parser_with_common_args(
     return parser
 
 
-def add_info_str(label: str, value: str, separator: str = ":") -> str:
+def _add_info_str(label: str, value: str, separator: str = ":") -> str:
     lbl = label + separator
     return f"  {lbl:20s} {value}"
 
 
-def logging_level_to_string(logger: logging.Logger, level: int = -1):
+def _logging_level_to_string(logger: logging.Logger, level: int = -1):
     if level < 0:
         level = logger.getEffectiveLevel()
     return logging.getLevelName(level)
 
 
-def log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""):
+def _log_args(logger: logging.Logger, tool: str, args: argparse.Namespace, epilog: str = ""):
     logger.info(f" ({now()}) Running {tool} with these argument values:")
     for k, v in vars(args).items():
         if k == "log_level":
-            v = f"{v} (== logger.{logging_level_to_string(logger, v)})"
-        logger.info(add_info_str(k, v))
+            v = f"{v} (== logger.{_logging_level_to_string(logger, v)})"
+        logger.info(_add_info_str(k, v))
 
     if epilog:
         logger.info("")
@@ -201,16 +205,13 @@ def all_use_cases() -> Mapping[str, Any]:
     }
 
 
-def get_default_log_file(tool_name: str) -> str:
+def _get_default_log_file(tool_name: str) -> str:
     log_dir = f"logs/{now_str(fmt = timestamp_file_fmt)}"
     return f"{log_dir}/{tool_name}.log"
 
 
-def get_default_log_level(ignored: str) -> int:
-    return logging.INFO
-
-
 def make_logger(log_file: str, name: str = "__name__", level: int = logging.INFO) -> logging.Logger:
+    """Convenience function to make a Logger instance."""
     make_parent_dirs(log_file)
     logging.basicConfig(filename=log_file, level=level)
     logger = logging.getLogger(name)
@@ -222,28 +223,34 @@ def make_logger(log_file: str, name: str = "__name__", level: int = logging.INFO
 
 
 def make_parent_dirs(file: str, exist_ok: bool = True) -> Path:
+    """
+    Create the parent directories for the input file path.
+    This is a wrapper around `os.mkdirs()`, so the value for
+    `exist_ok` is passed to it. If there is no parent directory path,
+    then nothing is done and `Path(".")` is returned.
+    """
     path = Path(file)
     dot = Path(".")
-    # If there is no parent prefix or possibly '.', return Path('.')
     if dot == path.parent:
         return dot
-    else:
-        dirs = path.parent
-        os.makedirs(dirs, exist_ok=exist_ok)
-        return dirs
+    dirs = path.parent
+    os.makedirs(dirs, exist_ok=exist_ok)
+    return dirs
 
 
 def ensure_dirs_exist(*dirs) -> bool:
+    """Raise a `ValueError` if any of the directories passed in don't exist."""
     missing_dirs = []
-    for dir in dirs:
-        if not os.path.isdir(dir):
-            missing_dirs.append(dir)
+    for d in dirs:
+        if not os.path.isdir(d):
+            missing_dirs.append(d)
     if len(missing_dirs) > 0:
         raise ValueError(f"These directories don't exit: {', '.join(missing_dirs)}")
     return True  # most callers will ignore this...
 
 
-def make_full_prompt(prompt: str, system_prompt: Any, session: Sequence[tuple[str, str]] = empty_list) -> str:
+def make_full_prompt(prompt: str, system_prompt: Any, session: Sequence[tuple[str, str]] | None = None) -> str:
+    """Make a full prompt string from the input details."""
     ss = ["SESSION:"]
     if session:
         for query, reply in session:
@@ -261,13 +268,10 @@ USER PROMPT:
 {'\n'.join(ss)}
 """
 
-
-# TODO: This is duplicated now in the ModelResponseParser class, which is used by
-# the ChatBot app, but not by the "tools".
-def extract_content(litellm_response: ModelResponse) -> str:
+def extract_content_from_model_response(litellm_response: ModelResponse) -> str:
     """Returns the JSON-formatted string content we care about."""
     response_dict = litellm_response.to_dict()
-    # TODO: There must be an easier way to get the "content"!!!
+    # There really must be an easier way to get the "content"!!!
     content = get_chain(response_dict, ["choices", 0, "message", "content"])
     # print(f"content (type = {type(content)}: {content})")
     return content if content is not None else ""

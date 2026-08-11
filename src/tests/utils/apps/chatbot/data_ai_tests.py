@@ -35,8 +35,8 @@ class BaseAITest(ABC):
         """Return the object as JSON, specially formatted."""
         return json.dumps(self.to_dict())
 
-
-class QnATest(BaseAITest):
+# The pylint "unused variable" warning doesn't make sense. This is imported by several other modules.
+class QnATest(BaseAITest): #pylint: disable=unused-variable
     """
     Class to hold a benchmark Q&A pair: a query
     and expected results: labels, actions, and rating.

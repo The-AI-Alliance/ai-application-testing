@@ -519,7 +519,8 @@ class ChatBotTestBase:  # pylint: disable=too-few-public-methods,too-many-instan
         self.shell = ChatBotShell(self.chatbot, stdout=StringIO())
 
 
-class ChatBotTestWithInference(ChatBotTestBase):
+# The pylint "unused variable" warning doesn't make sense. This is imported by several other modules.
+class ChatBotTestWithInference(ChatBotTestBase): #pylint: disable=unused-variable
     """
     A support class for ChatBot tests that invoke inference. This class implements a number
     of extensions to normal test behavior, which we added to address some of the challenges

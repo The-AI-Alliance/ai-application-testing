@@ -1,3 +1,4 @@
+"""A "Simple" ChatBot implementation for questions and answers."""
 import logging
 from pathlib import Path
 from typing import Any
@@ -6,10 +7,10 @@ from litellm import completion
 
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
-from .response_parser import ModelResponseParser
+from .response_parser import LiteLLMModelResponseParser
 
 
-class ChatBotSimple(ChatBot):
+class ChatBotSimple(ChatBot): # pylint: disable=too-few-public-methods,unused-variable
     """
     Simple ChatBot implementation using direct LiteLLM completion calls.
     """
@@ -42,7 +43,7 @@ class ChatBotSimple(ChatBot):
             logger=logger,
             template_file=self.default_template_file,
         )
-        self.response_parser = ModelResponseParser()
+        self.response_parser = LiteLLMModelResponseParser()
 
     def _do_query(self, query: str) -> dict[str, Any]:
         sysp = self.system_prompt

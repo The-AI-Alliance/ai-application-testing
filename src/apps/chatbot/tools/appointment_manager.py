@@ -421,7 +421,8 @@ class AppointmentManager(ResourceManager):
         """Create a JSON string from the object."""
         return AppointmentManager.def_json_encoder.encode(self)
 
-    def from_json(text: Any) -> AppointmentManager:
+    @classmethod
+    def from_json(cls, text: Any) -> AppointmentManager:
         """Attempt to parse a JSON object, returning an instance."""
         am = AppointmentManager.def_json_decoder.decode(text)
         assert isinstance(am, AppointmentManager), f"Not an AppointmentManager! am = {am}"
