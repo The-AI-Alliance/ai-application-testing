@@ -313,11 +313,11 @@ class AppointmentManager(ResourceManager):
         self._persist_resources([appointment])
 
         self.logger.info(
-            f"I changed appointment {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
+            f"I changed appointment with id = {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
         )
         return (
             True,
-            f"I changed appointment {appointment_id} from {old_time} to {new_date_time}.",
+            f"I changed appointment with id = {appointment_id} from {old_time} to {new_date_time}.",
         )
 
     def get_appointments_by_criteria(

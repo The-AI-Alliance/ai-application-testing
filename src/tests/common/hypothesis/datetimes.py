@@ -14,6 +14,8 @@ from common.date_time_utils import (
     def_start_hour_inclusive,
     is_week_day,
     is_weekend,
+    local_date_max,
+    local_date_min,
     local_datetime_max,
     local_datetime_min,
     local_timezone,
@@ -66,11 +68,11 @@ def local_datetimes_2000(max_value: datetime = local_datetime_max):
     return local_datetimes(min_value=year_2000, max_value=max_value)
 
 
-def dates_2000(max_value: date = date.max):
+def dates_2000(max_value: date = local_date_max):
     return st.dates(min_value=year_2000.date(), max_value=max_value)
 
 
-def future_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
+def future_dates(date_strategy=st.dates, min_value: date = local_date_min, max_value: date = local_date_max):
     """
     A Hypothesis strategy for generating dates in the future, using the
     input date_strategy (default st.dates) and min_value and max_value.
@@ -98,7 +100,7 @@ def future_dates(date_strategy=st.dates, min_value: date = date.min, max_value: 
     return date_strategy(min_value=min_value, max_value=max_value)
 
 
-def past_dates(date_strategy=st.dates, min_value: date = date.min, max_value: date = date.max):
+def past_dates(date_strategy=st.dates, min_value: date = local_date_min, max_value: date = local_date_max):
     """
     A Hypothesis strategy for generating dates in the past, meaning
     yesterday or earlier, using the input date_strategy (default st.dates)
@@ -129,8 +131,8 @@ def past_dates(date_strategy=st.dates, min_value: date = date.min, max_value: da
 
 def non_weekend_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
     holidays: set[tuple[int, int]] | None = None,
 ):
     """
@@ -156,8 +158,8 @@ def non_weekend_dates(
 
 def weekend_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
     holidays: AbstractSet[tuple[int, int]] | None = None,
 ):
     """
@@ -184,8 +186,8 @@ def weekend_dates(
 
 def work_dates(
     date_strategy=future_dates,
-    min_value: date = date.min,
-    max_value: date = date.max,
+    min_value: date = local_date_min,
+    max_value: date = local_date_max,
     weekdays_only: bool = True,
     holidays: AbstractSet[tuple[int, int]] | None = None,
 ):

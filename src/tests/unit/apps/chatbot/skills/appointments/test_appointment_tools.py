@@ -67,20 +67,25 @@ class AppointmentToolsTestUtil:
     Also, it appears the tool writes to `sys.stderr` sometimes, so we capture that output.
     """
 
-    def __init__(self):
-        # Create a temporary file for testing
+    def __init__(self, force_empty: bool = True):
+        """
+        Create a temporary file for testing. If `force_empty` is true,
+        we make sure the file is empty.
+        """
         self.temp_file = tempfile.NamedTemporaryFile(  # noqa: SIM115
             mode="w", delete=True, delete_on_close=False, suffix=".jsonl"
         )
         self.temp_file.close()
-        self.tool = self.make_manager(make_new=True)
+        self.tool = self.make_manager(make_new=force_empty)
+        if force_empty:
+            assert self.tool.get_resources_count() == 0
 
-    def make_manager(self, make_new=True) -> AppointmentManager:
+    def make_manager(self, make_new: bool = True) -> AppointmentManager:
         file_path = Path(self.temp_file.name)
+        assert file_path, "temp_file: {self.temp_file}"
         logger = logging.getLogger(self.__class__.__name__)
         logger.setLevel(logging.CRITICAL)  # suppress almost everything...
-
-        tool = get_appointment_manager(file_path, logger=logger, make_new=make_new)
+        tool = get_appointment_manager(file_path=file_path, logger=logger, make_new=make_new)
         assert file_path == tool.storage.storage_path
         return tool
 
@@ -174,7 +179,7 @@ class AppointmentToolsTestUtil:
             }
         )
         assert "" != a_id
-        appt = get_appointment_by_id.run({"id": a_id})
+        appt = get_appointment_by_id.run({"appointment_id": a_id})
         self.result_expected(appointment_dict, appt)
         return appt
 
@@ -279,12 +284,12 @@ class TestAppointmentTools:
         a_id = appointment["id"]
 
         before_count = get_appointments_count.run({})
-        success, msg = test_util.capture_output(cancel_appointment, {"id": a_id})
+        success, msg = test_util.capture_output(cancel_appointment, {"appointment_id": a_id})
         after_count = get_appointments_count.run({})
         assert success, msg
         assert "" != msg
         assert before_count - 1 == after_count
-        appt = get_appointment_by_id.run({"id": a_id})
+        appt = get_appointment_by_id.run({"appointment_id": a_id})
         assert appt and appt.get("status") == "cancelled"
 
     @given(st.uuids())
@@ -292,7 +297,7 @@ class TestAppointmentTools:
         """Test that canceling a non-existent appointment fails"""
         test_util = AppointmentToolsTestUtil()
         before_count = get_appointments_count.run({})
-        success, msg = test_util.capture_output(cancel_appointment, {"id": str(uuid)})
+        success, msg = test_util.capture_output(cancel_appointment, {"appointment_id": str(uuid)})
         assert not success, msg
         assert "" != msg
         after_count = get_appointments_count.run({})
@@ -318,10 +323,10 @@ class TestAppointmentTools:
 
         a_id = appointment["id"]
         success, msg = test_util.capture_output(
-            change_appointment, {"id": a_id, "new_date_time": new_date_time.isoformat()}
+            change_appointment, {"appointment_id": a_id, "new_date_time": new_date_time.isoformat()}
         )
         assert success, msg
-        updated = get_appointment_by_id.run({"id": a_id})
+        updated = get_appointment_by_id.run({"appointment_id": a_id})
         test_util.result_expected(
             appointment_dict,
             updated,
@@ -394,14 +399,14 @@ class TestAppointmentTools:
     def test_get_appointment_by_id_returns_nonempty_dict_if_it_exists(self, apmt_dict: dict[str, Any]):
         test_util = AppointmentToolsTestUtil()
         appointment2 = test_util.successfully_add_valid_appointment(apmt_dict)
-        appointment = get_appointment_by_id.run({"id": appointment2["id"]})
+        appointment = get_appointment_by_id.run({"appointment_id": appointment2["id"]})
         test_util.result_expected(apmt_dict, appointment)
 
     @given(appointment_dicts())
     def test_get_appointment_by_id_returns_empty_dict_if_key_does_not_exist(self, apmt_dict: dict[str, Any]):
         test_util = AppointmentToolsTestUtil()
         appointment2 = test_util.successfully_add_valid_appointment(apmt_dict)
-        appointment = get_appointment_by_id.run({"id": appointment2["id"] + "bad"})
+        appointment = get_appointment_by_id.run({"appointment_id": appointment2["id"] + "bad"})
         assert {} == appointment
 
     @given(appointment_dicts())
@@ -503,7 +508,7 @@ class TestAppointmentTools:
         first_appointments = old_tool.get_appointments()
 
         # Create new instance and verify appointments exist.
-        new_tool = test_util.make_manager()
+        new_tool = test_util.make_manager(make_new=True)
         assert old_tool is not new_tool
         second_appointments = new_tool.get_appointments()
 
