@@ -3,7 +3,7 @@ name = "ai_application_testing"
 version = "0.5.0"
 description = "Code and documentation for the AI Alliance user guide and tools for 'Testing Generative AI Agent Applications'."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
@@ -15,7 +15,7 @@ dependencies = [
     "openai>=2.49.0",
     "litellm>=1.96.2",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.5",
+    "fastmcp>=3.4.7",
 ]
 
 [tool.setuptools.packages.find]
@@ -29,10 +29,10 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "hypothesis>=6.163.0",
+    "hypothesis>=6.165.7",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "pylint>=4.0.6",
+    "pylint>=4.0.7",
     "black>=26.5.1",
     "ruff>=0.16.1",
     "ty>=0.0.69",
