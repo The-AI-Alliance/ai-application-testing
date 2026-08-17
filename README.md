@@ -483,7 +483,7 @@ Finally, if you prefer using a GUI instead of the CLI prompt for the ChatBot, an
 
 A number of practical enhancements have been adopted to better support long-running tests that require lots of inference, which we call &ldquo;AI tests&rdquo;, as well as the more conventional, faster tests that don't use inference. The details are described in the section titled [Automated Testing: Practical Enhancements](https://the-ai-alliance.github.io/ai-application-testing/working-example/#automated-testing-practical-enhancements) in the user guide's chapter, [The Working Example and Tools](https://the-ai-alliance.github.io/ai-application-testing/working-example/).
 
-## Getting Involved
+## Making Contributions
 
 We welcome contributions as PRs, either to our code examples or our user guide. Please see our [Alliance community repo](https://github.com/The-AI-Alliance/community/) for general information about contributing to any of our projects. This section provides some specific details you need to know.
 

@@ -54,7 +54,7 @@ PYLINT_ARGS              := --recursive=y --ignore=.venv --ignore-pattern='.*cac
 TY_ARGS                  := check
 # Some of the *_ARGS have different settings for CI...
 ifeq (${GITHUB_CI},)
-	# No CI, i.e., run manually by the developer.
+	# No CI, i.e., run locally and manually by the developer.
 	BLACK_ARGS             :=
 	RUFF_ARGS              := check --fix
 else
