@@ -15,7 +15,7 @@ from .chatbot import ChatBot
 try:
     import readline
 except ImportError:
-    readline = None  # ty: ignore
+    readline = None
 
 
 class ChatBotShell(cmd.Cmd):
