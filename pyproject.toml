@@ -29,7 +29,7 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "hypothesis>=6.163.0",
+    "hypothesis>=6.165.7",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pylint>=4.0.6",
