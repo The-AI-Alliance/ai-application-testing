@@ -13,7 +13,7 @@ dependencies = [
     "deepagents>=0.7.5",
     "langchain-ollama>=1.1.0",
     "openai>=2.49.0",
-    "litellm>=1.95.0",
+    "litellm>=1.96.2",
     "levenshtein>=0.27.3",
     "fastmcp>=3.4.5",
 ]
