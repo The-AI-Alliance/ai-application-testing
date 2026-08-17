@@ -125,7 +125,7 @@ help-custom::
 	$(info ${help-custom-message})
 
 define help-custom-message
-${HIGHLIGHT}Quick help for this project's specific targets:${_END}
+${HIGHLIGHT} Quick help for this project's specific targets: ${_END}
 
 ${CODE}make help-code${_END}         # Help on the make processes unique to this project.
 ${CODE}make help-tools${_END}        # Help on the tools and example ChatBot targets.
@@ -133,7 +133,7 @@ ${CODE}make help-tools${_END}        # Help on the tools and example ChatBot tar
 endef
 
 define help-code-message
-${HIGHLIGHT}Quick help for this make process on extra targets available.${_END}
+${HIGHLIGHT} Quick help for this make process on extra targets available. ${_END}
 
 For help on the targets for this project's tools and ChatBot apps, run ${CODE}make help-tools${_END}.
 
@@ -205,7 +205,7 @@ ${TIP_LABEL}by ${CODE}make help${_END}.
 endef
 
 define help-tools-message
-${HIGHLIGHT}Quick help for this make process for the tools and ChatBot example app.${_END}
+${HIGHLIGHT} Quick help for this make process for the tools and ChatBot example app. ${_END}
 
 For help on the extra process targets defined in this Makefile, run ${CODE}make help-code${_END}.
 
@@ -309,7 +309,7 @@ clean clean-tools:: clean-code
 
 print-info:: print-info-code
 print-info-code::
-	@echo "${HIGHLIGHT}For the example code and tools:${_END}"
+	@echo "${HIGHLIGHT} For the example code and tools: ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}MODEL:${_END}                       ${CODE}${MODEL}${_END} (the default)"
 	@echo "  ${DARK_GREEN}MODELS:${_END}                      (all of them that we explicitly list in the ${CODE}Makefile${_END})"
@@ -325,7 +325,7 @@ print-info-code::
 	@echo "  ${DARK_GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CODE}${CHATBOT_OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}APP_ARGS:${_END}                    ${CODE}'${APP_ARGS}'${_END} (A user hook for passing custom arguments, like ${CODE}-h${_END})"
 	@echo
-	@echo "${HIGHLIGHT}The following depend on the value of MODEL (${MODEL}):${_END}"
+	@echo "${HIGHLIGHT} The following depend on the value of MODEL (${MODEL}): ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}OUTPUT_DIR:${_END}                  ${CODE}${OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}OUTPUT_LOGS_DIR:${_END}             ${CODE}${OUTPUT_LOGS_DIR}${_END}"
@@ -404,7 +404,7 @@ run-tdd-example-refill-chatbot:: before-run run-tdd-example-refill-chatbot-pream
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-tdd-example-refill-chatbot-preamble::
-	@echo "${BOLD}${INFO}*** Running the TDD example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the TDD example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis-preamble
@@ -420,7 +420,7 @@ run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis-preamble::
-	@echo "${BOLD}${INFO}*** Running the unit benchmark data synthesis example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the unit benchmark data synthesis example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validation-preamble
@@ -436,7 +436,7 @@ run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validati
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation-preamble::
-	@echo "${BOLD}${INFO}*** Running the unit benchmark synthetic data validation example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the unit benchmark synthetic data validation example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 before-run:: silent-before-run
@@ -446,7 +446,7 @@ silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR
 run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
-	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR}Ollama is not running!${_END}" || exit 1
+	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR} Ollama is not running! ${_END}" || exit 1
 
 # Langflow targets
 .PHONY: run-langflow-pipeline langflow-pipeline langflow-pipeline-preamble help-langflow-pipeline
@@ -579,13 +579,13 @@ check-api-server::
 	@echo "${INFO_LABEL}Running the server in the background..."
 	${NOOP} ${MAKE} api-server &
 	@echo
-	@echo "  ${HIGHLIGHT}Hit the 'return' key!${_END}"
+	@echo "  ${HIGHLIGHT} Hit the 'return' key! ${_END}"
 	@echo
 	@echo "${INFO_LABEL}Running ${CODE}apps/chatbot//api_server/example_client.py${_END} ..."
 	@echo
 	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/api_server/example_client.py
 	@echo
-	@echo " ${HIGHLIGHT}Using a hack: Find the process id for the server and kill it...${_END}"
+	@echo " ${HIGHLIGHT} Using a hack: Find the process id for the server and kill it... ${_END}"
 	@echo
 	${NOOP} kill %1
 

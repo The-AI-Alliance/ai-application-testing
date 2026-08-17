@@ -99,25 +99,25 @@ else
 endif
 
 ifndef SRC_DIR
-$(error ${ERROR} There is no ${SRC_DIR} directory!${_END})
+$(error ${ERROR} There is no ${SRC_DIR} directory! ${_END})
 endif
 
 # When you see ${CODE}${_end} without anything between them, it is there
 # to make it easier to line up multi-line description comments.
 
 define help-message-general
-${HIGHLIGHT}Quick help for this make process: General Targets${_END}
+${HIGHLIGHT} Quick help for this make process: General Targets ${_END}
 
-${NOTE}You can ignore the following warnings you might see:${_END}
-${NOTE}  .custom.mk:N: warning: overriding commands for target ...${_END}
-${NOTE}  .common.mk:N: warning: ignoring old commands for target ...${_END}
-${NOTE}  `VIRTUAL_ENV=.../.venv` does not match the project environment path `.venv` ...${_END}
+${NOTE} You can ignore the following warnings you might see: ${_END}
+${NOTE}   .custom.mk:N: warning: overriding commands for target ... ${_END}
+${NOTE}   .common.mk:N: warning: ignoring old commands for target ... ${_END}
+${NOTE}   `VIRTUAL_ENV=.../.venv` does not match the project environment path `.venv` ... ${_END}
 
 ${CODE}make all${_END}                # Makes the ${CODE}help${_END} and ${CODE}print-info${_END} targets.
 ${CODE}make help${_END}               # Prints this output.
 ${CODE}make print-info${_END}         # Print the current values of some make and environment variables.
 
-${HIGHLIGHT}Working with the code:${_END}
+${HIGHLIGHT} Working with the code: ${_END}
 
 ${CODE}make one-time-setup${_END}     # "One time setup" of ${CODE}uv${_END} dependencies (in ${CODE}.venv${_END}).
 ${CODE}make setup${_END}              # Alias for ${CODE}one-time-setup${_END}.
@@ -214,13 +214,13 @@ silent-command-check-%:
 # ...
 # endef
 define help-custom-targets-message
-  ${NOTE}No custom targets defined.${_END}
+${NOTE} No custom targets defined. ${_END}
 endef
 
 .PHONY: print-info-env
 print-info:: print-info-env
 print-info-env::
-	@echo "${HIGHLIGHT}Some 'environment' settings:${_END}"
+	@echo "${HIGHLIGHT} Some 'environment' settings: ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}MAKEFLAGS:${_END}             ${CODE}${MAKEFLAGS}${_END}"
 	@echo "  ${DARK_GREEN}UNAME:${_END}                 ${CODE}${UNAME}${_END}"
@@ -244,7 +244,7 @@ before-pr:: print-pwd ${QUALITY_CHECKS}
 before-pr-no-tests:: print-pwd ${QUALITY_CHECKS_NO_TESTS}
 
 print-pwd::
-	$(info ${HIGHLIGHT}In directory: ${CODE}${PWD}${_END})
+	$(info ${HIGHLIGHT} In directory: ${CODE}${PWD} ${_END})
 	@true
 
 .PHONY: tests unit-tests unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
@@ -341,7 +341,7 @@ command-check-uv::
 install-jq:: help-command-jq
 
 %-error:
-	$(info ${ERROR}${@:%-error=%} - Error ${_END})
+	$(info ${ERROR} ${@:%-error=%} - Error ${_END})
 	$(error ${${@}-message})
 
 define help-command-uv-message
