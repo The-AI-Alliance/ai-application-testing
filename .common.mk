@@ -31,6 +31,10 @@ GITHUB_CI                :=
 QUALITY_CHECKS_NO_TESTS  := format ruff pylint type-check
 QUALITY_CHECKS           := ${QUALITY_CHECKS_NO_TESTS} unit-tests
 
+# Define on the command line to be "echo" to just print commands. An alternative
+# to using the make -n argument.
+NOOP                     ?=
+
 # Commands as variables:
 # Time execution of commands. Prefix the command invocation with "${TIME}":
 TIME                     ?= time
@@ -108,11 +112,6 @@ endif
 define help-message-general
 ${HIGHLIGHT} Quick help for this make process: General Targets ${_END}
 
-${NOTE} You can ignore the following warnings you might see: ${_END}
-${NOTE}   .custom.mk:N: warning: overriding commands for target ... ${_END}
-${NOTE}   .common.mk:N: warning: ignoring old commands for target ... ${_END}
-${NOTE}   `VIRTUAL_ENV=.../.venv` does not match the project environment path `.venv` ... ${_END}
-
 ${CODE}make all${_END}                # Makes the ${CODE}help${_END} and ${CODE}print-info${_END} targets.
 ${CODE}make help${_END}               # Prints this output.
 ${CODE}make print-info${_END}         # Print the current values of some make and environment variables.
@@ -141,15 +140,14 @@ ${CODE}make before-pr${_END}          # Make ${CODE}format${_END}, ${CODE}lint${
 ${CODE}${_END}                        # ${RED}DO THIS BEFORE SUBMITTING A PR!${_END}
 ${CODE}make before-pr-no-tests${_END} # Everything in ${CODE}before-pr${_END} except ${CODE}unit-tests${_END}.
 
-${NOTE_LABEL}
-Use the ${CODE}clean${_END} and ${CODE}clean-code${_END} targets with caution, since they both delete the ${CODE}OUTPUT_CODE_DIR${_END} 
-content, which can take a ${RED}LOT${_END} of compute to generate due to the inference involved!
+${NOTE_LABEL}Use the ${CODE}clean${_END} and ${CODE}clean-code${_END} targets with caution, since they both delete the ${CODE}OUTPUT_CODE_DIR${_END}
+${NOTE_LABEL}content, which can take a ${RED}LOT${_END} of compute to generate due to the inference involved!
 
 ${help-top-level-message}
 endef
 
 
-.PHONY: all help help-general help-command-no-message help-command-not-installed print-info clean clean-code
+.PHONY: all help help-command-no-message help-command-not-installed print-info clean clean-code
 all:: help print-info
 
 clean::
@@ -158,11 +156,10 @@ clean::
 clean-code::
 	rm -rf ${CLEAN_CODE_DIRS}
 
-help:: help-general 
-	@true
-help-general::
+help::
 	$(info )
 	$(info ${help-message-general})
+	@true
 
 # NOTE: The order of declaration is important for the help-* targets.
 help-command-no-message::
@@ -234,32 +231,79 @@ print-info-env::
 	@echo "  ${DARK_GREEN}WHICH_TESTS:${_END}           ${CODE}${WHICH_TESTS}${_END}"
 	@echo
 
-# The idiom of targets named "*-default" is an override hook. They are declared here
-# with a single colon (:), so Makefiles can define their own recipe for the "core" of
-# the corresponding targets, e.g., before-pr, pylint, tests, etc.
+# In what follows, note the structure used for common tasks, like running the unit tests:
+#   unit-tests:: unit-tests-prerequisite unit-tests-command unit-tests-postrequisite
+# The *-prerequisite and *-postrequisite are hooks that permit a .custom.mk (or a Makefile)
+# to add additional dependencies or recipes to execute before or after the "core" command is
+# executed by the *-command target.  The *-prerequisite and *-postrequisite all have empty
+# recipes in this file. So, if you want to define them with custom behaviors, you must use
+# the double-colon syntax, "::", like this:
+#
+# unit-tests-prerequisite:: even-more
+#   @echo "Doing some unit testing setup..."
+# even-more::
+#   @echo "Doing even more stuff!"
+#
+# In contrast, the *-command targets are designed to be OVERRIDDEN. A common usage is to
+# disable a task. For example, if there are no unit tests in the project, then
+# unit-tests-command will fail, because of how it is defined below. (This isn't true for
+# ruff, black, pylint, and ty, which silently ignore when there is no python code.)
+# So, projects without python tests should have the following definition in their Makefile:
+#
+# unit-tests-command::
+#   @echo "${skip-command-target-message}"
+#   @true
+#
+# The "skip-command-target-message" variable is defined in .common.mk to provide a
+# useful notice to the reader that the target is skipped.
+#
+# There is one more point to explain for how this is implemented. The _default_ way
+# *-command is actually declared is as follows:
+#
+# %-command::
+#  	@${MAKE} ${@}-default
+#
+# Take for example, unit-tests-command. Because the .custom.mk file (if any) is read
+# before this point in .common.mk, The target pattern "%-command" is _only_ used if
+# .custom.mk (and Makefile) do not define unit-tests-command themselves. When
+# this happens, the recipe calls `make unit-tests-command-default` to invoke the
+# "default" command for unit tests.
+#
+# See the bottom of this file for a note about a previous, alternative
+# implementation we used for this feature.
 
-.PHONY: before-pr before-pr-default before-pr-no-tests print-pwd
+# The default implementation of any *-command target:
+%-command::
+	@${MAKE} ${@}-default
 
-before-pr:: print-pwd ${QUALITY_CHECKS}
-before-pr-no-tests:: print-pwd ${QUALITY_CHECKS_NO_TESTS}
+.PHONY: before-pr before-pr-prerequisite before-pr-command-default before-pr-postrequisite
+.PHONY: before-pr-no-tests print-pwd
+
+before-pr:: before-pr-prerequisite before-pr-command before-pr-postrequisite
+before-pr-prerequisite before-pr-postrequisite:: print-pwd
+before-pr-command-default:: ${QUALITY_CHECKS}
+
+before-pr-no-tests:: ${QUALITY_CHECKS_NO_TESTS}
 
 print-pwd::
-	$(info ${HIGHLIGHT} In directory: ${CODE}${PWD} ${_END})
-	@true
+	@echo "${HIGHLIGHT} In directory: ${CODE}${PWD} ${_END}"
 
-.PHONY: tests unit-tests unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
-.PHONY: format format-prerequisite format-default format-postrequisite black
-.PHONY: ruff ruff-prerequisite ruff-default ruff-postrequisite
-.PHONY: ruff-watch ruff-watch-default
-.PHONY: pylint pylint-prerequisite pylint-default pylint-postrequisite
-.PHONY: type-check ty type-check-prerequisite type-check-default type-check-postrequisite
-.PHONY: type-check-watch ty-watch type-check-watch-default
+# Note that *-command-default targets are declared phony, but the dependencies for * targets
+# are *: *-prerequisite *-command *-postrequisite
+
+.PHONY: tests unit-tests unit-tests-prerequisite unit-tests-command-default unit-tests-postrequisite
+.PHONY: format format-prerequisite format-command-default format-postrequisite black
+.PHONY: ruff ruff-prerequisite ruff-command-default ruff-postrequisite
+.PHONY: ruff-watch ruff-watch-command-default
+.PHONY: pylint pylint-prerequisite pylint-command-default pylint-postrequisite
+.PHONY: type-check ty type-check-prerequisite type-check-command-default type-check-postrequisite
+.PHONY: type-check-watch ty-watch type-check-watch-command-default
 .PHONY: lint
 
 tests:: unit-tests
-unit-tests:: unit-tests-prerequisite unit-tests-default unit-tests-postrequisite
+unit-tests:: unit-tests-prerequisite unit-tests-command unit-tests-postrequisite
 unit-tests-prerequisite unit-tests-postrequisite::
-unit-tests-default:
+unit-tests-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}unit-tests${_END}: Running the unit tests (with coverage)."
 	cd ${SRC_DIR} && ${PYTEST_RUN_CMD} ${WHICH_TESTS}
 	cd ${SRC_DIR} && ${PYTEST_COV_REPORT_CMD}
@@ -267,42 +311,42 @@ unit-tests-default:
 # Convenient short hand for the two linters.
 lint:: ruff pylint
 
-format black:: format-prerequisite format-default format-postrequisite
+format black:: format-prerequisite format-command format-postrequisite
 format-prerequisite format-postrequisite::
-format-default:
+format-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}format${_END}: Running ${CODE}black${_END} on the code in ${CODE}${SRC_DIR}${_END}."
 	cd ${SRC_DIR} && ${UV_RUN} black ${BLACK_ARGS} ${BLACK_OPT_ARGS} .
 
-ruff:: ruff-prerequisite ruff-default ruff-postrequisite
+ruff:: ruff-prerequisite ruff-command ruff-postrequisite
 ruff-prerequisite ruff-postrequisite::
-ruff-default:
+ruff-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}ruff${_END}: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END}."
 	cd ${SRC_DIR} && ${UV_RUN} ruff ${RUFF_ARGS} ${RUFF_OPT_ARGS} .
 
-ruff-watch:: ruff-prerequisite ruff-watch-default ruff-postrequisite
-ruff-watch-default:
+ruff-watch:: ruff-prerequisite ruff-watch-command ruff-postrequisite
+ruff-watch-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}ruff${_END}: Running ${CODE}ruff${_END} to lint the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
 	cd ${SRC_DIR} && ${UV_RUN} ruff ${RUFF_ARGS} --watch ${RUFF_OPT_ARGS} .
 
-pylint:: pylint-prerequisite pylint-default pylint-postrequisite
+pylint:: pylint-prerequisite pylint-command pylint-postrequisite
 pylint-prerequisite pylint-postrequisite::
 pylint-default-save:
 	@echo "${WARNING_LABEL}The ${CODE}pylint${_END} target is currently not passing, so it is disabled. See the repo issue #165."
 
-pylint-default:
+pylint-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}pylint${_END}: Running ${CODE}pylint${_END} on the code in ${CODE}${SRC_DIR}${_END} (configuration in ${CODE}pylintrc.toml${_END})"
 	cd ${SRC_DIR} && ${UV_RUN} pylint ${PYLINT_ARGS} ${PYLINT_OPT_ARGS} .
 
 type-check:: ty
-ty:: type-check-prerequisite type-check-default type-check-postrequisite
+ty:: type-check-prerequisite type-check-command type-check-postrequisite
 type-check-prerequisite type-check-postrequisite::
-type-check-default:
+type-check-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}type-check${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END}."
 	cd ${SRC_DIR} && ${UV_RUN} ty ${TY_ARGS} ${TY_OPT_ARGS} .
 
 type-check-watch:: ty-watch
-ty-watch:: type-check-prerequisite type-check-watch-default type-check-postrequisite
-type-check-watch-default:
+ty-watch:: type-check-prerequisite type-check-watch-command type-check-postrequisite
+type-check-watch-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}type-check-watch${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
 	cd ${SRC_DIR} && ${UV_RUN} ty ${TY_ARGS} --watch ${TY_OPT_ARGS} .
 
