@@ -67,4 +67,4 @@ For other documentation changes, such as `README`s:
 Any additional context or information that might be helpful for reviewers:
 
 * Relevant discussions or meetings
-* Open questions or areas for further discussion  
+* Open questions or areas for further discussion

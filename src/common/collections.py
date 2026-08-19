@@ -1,6 +1,10 @@
 """Miscellaneous utilities for working with collections."""
 
-from typing import Any, Mapping, MutableMapping, Sequence
+from collections.abc import Mapping, MutableMapping, Sequence
+from typing import Any
+
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
 
 
 def get(dictionary: Mapping[str, Any], key: str, default: Any | None = None) -> Any:
@@ -11,8 +15,7 @@ def get(dictionary: Mapping[str, Any], key: str, default: Any | None = None) -> 
     value = dictionary.get(key, default)
     if value is None:
         raise ValueError(f"No value for key {key} and default value is None in {dictionary}.")
-    else:
-        return value
+    return value
 
 
 def dict_pop(dictionary: MutableMapping[str, Any], key: str) -> Any:
@@ -51,16 +54,14 @@ def get_chain(dictionary: Mapping[str, Any], keys: Sequence[str | int]) -> Any |
             value = d.get(key)
             if value is None:
                 break
-            else:
-                d = value
+            d = value
         elif isinstance(d, Sequence) and isinstance(key, int):
             value = d[key]
             if value is None:
                 break
-            else:
-                d = value
+            d = value
         else:
-            raise ValueError(
+            raise TypeError(
                 f"object '{d}' must be a dictionary or list and the key '{key}' must be str or int, respectively. Input dict = {dictionary}, keys = {keys}"
             )
     return value
@@ -97,22 +98,20 @@ def dict_permutations(dictionary: dict[str, Any], max_size: int = -1) -> list[di
     def perm(array, d):
         if len(d) == 0:
             return array
-        else:
-            key, values = d.popitem()
-            if not values:
-                return perm(array, d)
+        key, values = d.popitem()
+        if not values:
+            return perm(array, d)
+        array2 = []
+        lenv = len(values)
+        n = lenv if max_size < 0 or lenv <= max_size else max_size
+        for value in list(values)[0:n]:
+            kv = {key: value}
+            if not array:
+                array2.append(kv)
             else:
-                array2 = []
-                lenv = len(values)
-                n = lenv if max_size < 0 or lenv <= max_size else max_size
-                for value in list(values)[0:n]:
-                    kv = {key: value}
-                    if not array:
-                        array2.append(kv)
-                    else:
-                        for d2 in array:
-                            array2.append(d2 | kv)
-            return perm(array2, d)
+                for d2 in array:
+                    array2.append(d2 | kv)
+        return perm(array2, d)
 
     dcopy = dictionary.copy()
     return list(reversed(perm([], dcopy)))  # return in input order!
@@ -121,12 +120,11 @@ def dict_permutations(dictionary: dict[str, Any], max_size: int = -1) -> list[di
 def mult(collection: list[int], skip_zeros: bool = False) -> int:
     """Multiple the integers in the collection, optionally _skipping zeros!_"""
     values = collection if not skip_zeros else [n for n in collection if n]
-    if values:
-        result = 1
-        for v in values:
-            result *= v
-            if not result:
-                break
-        return result
-    else:
+    if not values:
         return 0
+    result = 1
+    for v in values:
+        result *= v
+        if not result:
+            break
+    return result

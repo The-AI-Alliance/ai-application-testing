@@ -1,17 +1,17 @@
+"""Parsing LLM responses."""
+
 import json
 import re
 from abc import ABC, abstractmethod
 from json.decoder import JSONDecodeError
-from typing import Any, Generic, TypeVar
-
-from common.collections import get_chain
+from typing import Any
 
 from litellm.types.utils import ModelResponse
 
-RESPONSE = TypeVar("RESPONSE")
+from common.utils import extract_content_from_model_response
 
 
-class ResponseParser(ABC, Generic[RESPONSE]):
+class ResponseParser[RESPONSE](ABC):  # pylint: disable=too-few-public-methods
     """
     Abstraction for the different types of responses returned by
     agent and inference libraries we use use, e.g., LiteLLM, LangChain, etc.
@@ -19,9 +19,9 @@ class ResponseParser(ABC, Generic[RESPONSE]):
 
     @abstractmethod
     def parse(self, query: str, response: RESPONSE) -> dict[str, Any]:
-        pass
+        """Parse some response and return a dictionary of content extracted, along the input query."""
 
-    def __parse_content(self, content: str) -> dict[str, Any]:
+    def _parse_content(self, content: str) -> dict[str, Any]:
         try:
             # hack: Gemma responses sometimes start with "google:" or "json"
             # and sometimes it wraps in Markdown: "```json ...```".
@@ -33,7 +33,7 @@ class ResponseParser(ABC, Generic[RESPONSE]):
         except JSONDecodeError:
             return {"text": content4}
 
-    def _make_full_response(self, query: str, content: str, response_dict: dict[str, Any]) -> dict[str, Any]:
+    def _make_full_response(self, query: str, content: str, optional_response_dict: dict[str, Any]) -> dict[str, Any]:
         """
         Tries to parse the response content to extract the content
         we expect to find.
@@ -41,38 +41,44 @@ class ResponseParser(ABC, Generic[RESPONSE]):
         On success, returns this dictionary:
         ```python
         {
-            "query":    query,
-            "text":  parsed_content_field, # Text to optionally show to the user.
-            ... other key-value pairs in the response
-            "response": response_dict,
+            "query":     query,
+            "text":      parsed_content_field, # Text to optionally show to the user.
+            "response":  optional_response_dict,
+            ... other key-value pairs extracted.
         }
         ```
+        There may be additional key-values. If `optional_response_dict` is
+        empty, the `"response": optional_response_dict` entry
+        is omitted.
+
         On failure, returns this dictionary:
         ```python
         {
             "error":          error_message,
             "query":          query,
             "content_string": content_field,
-            "response":       response_dict,
+            "response":       optional_response_dict,
+            ... other key-value pairs extracted.
         }
         ```
         """
 
-        parsed = self.__parse_content(content)
+        parsed = self._parse_content(content)
         assert isinstance(parsed, dict)
         if "error" in parsed:
             parsed["content_string"] = content
 
-        parsed.update(
-            {
-                "query": query,
-                "response": response_dict,
-            }
-        )
+        parsed["query"] = query
+        if optional_response_dict:
+            parsed["response"] = optional_response_dict
         return parsed
 
 
-class ModelResponseParser(ResponseParser[ModelResponse]):
+class LiteLLMModelResponseParser(
+    ResponseParser[ModelResponse]
+):  # pylint: disable=too-few-public-methods,unused-variable
+    """Parser for ModelResponse objects returned by LiteLLM."""
+
     def parse(self, query: str, response: ModelResponse) -> dict[str, Any]:
         """
         Takes a LiteLLM `ModelResponse` and extracts the
@@ -117,16 +123,15 @@ class ModelResponseParser(ResponseParser[ModelResponse]):
         }
         ```
         """
-        response_dict = response.to_dict()
-        # A hacky way way to get the "content"!!!
-        content = get_chain(response_dict, ["choices", 0, "message", "content"])
-        # print(f"content (type = {type(content)}: {content})")
-        if content is None:
-            content = ""
-        return self._make_full_response(query, content, response_dict)
+        content = extract_content_from_model_response(response)
+        return self._make_full_response(query, content, {})
 
 
-class DeepAgentResponseParser(ResponseParser[dict[str, Any]]):
+class LangChainDeepAgentResponseParser(
+    ResponseParser[dict[str, Any]]
+):  # pylint: disable=too-few-public-methods,unused-variable
+    """Parser for response dictionaries returned by LangChain's DeepAgent."""
+
     def parse(self, query: str, response: dict[str, Any]) -> dict[str, Any]:
         """
         Takes a LangChain Deep Agents dict response and extracts the

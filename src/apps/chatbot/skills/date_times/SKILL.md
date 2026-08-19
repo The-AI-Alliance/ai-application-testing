@@ -33,7 +33,7 @@ Does the input `datetime.datetime` object correspond to a week day (Monday throu
 **Returns:**
 `True` if the input `a_date_time` corresponds to a weekday (Monday through Friday) or `False`, otherwise.
 
-### datetime_to_str
+### datetime_to_string
 Format a `datetime.datetime` as a string.
 
 **Parameters:**
@@ -43,7 +43,7 @@ Format a `datetime.datetime` as a string.
 **Returns:**
 A string representing the input `a_date_time`, formatted using the `output_format` string.
 
-### date_to_str
+### date_to_string
 
 **Parameters:**
 - `a_date`: A Python `datetime.date` object.
@@ -52,7 +52,7 @@ A string representing the input `a_date_time`, formatted using the `output_forma
 **Returns:**
 A string representing the input `datetime.date` object, formatted using the `output_format` string.
 
-### time_to_str
+### time_to_string
 
 **Parameters:**
 - `a_time`: A Python `datetime.time` object.
@@ -61,7 +61,7 @@ A string representing the input `datetime.date` object, formatted using the `out
 **Returns:**
 A string representing the input `datetime.time` object, formatted using the `output_format` string.
 
-### iso_format_str_to_datetime
+### iso_format_string_to_datetime
 Parse the input string that uses the ISO format and return the corresponding Python `datetime.datetime` object.
 
 **Parameters:**
@@ -70,7 +70,7 @@ Parse the input string that uses the ISO format and return the corresponding Pyt
 **Returns:**
 A Python `datetime.datetime` object with the corresponding date and time.
 
-### str_to_datetime
+### string_to_datetime
 Parse the input string using the specified format and return the corresponding Python `datetime.datetime` object.
 
 **Parameters:**
@@ -80,7 +80,7 @@ Parse the input string using the specified format and return the corresponding P
 **Returns:**
 A tuple. If successful, returns a Python `datetime.datetime` object parsed from the input string and an empty message string. If unsuccessful, returns `None` and an error message.
 
-### str_to_date
+### string_to_date
 Parse the input string using the specified format and return the corresponding Python `datetime.date` object.
 
 **Parameters:**
@@ -90,7 +90,7 @@ Parse the input string using the specified format and return the corresponding P
 **Returns:**
 A tuple. If successful, returns a Python `datetime.date` object parsed from the input string and an empty message string. If unsuccessful, returns `None` and an error message.
 
-### str_to_time
+### string_to_time
 Parse the input string using the specified format and return the corresponding Python `datetime.time` object.
 
 **Parameters:**

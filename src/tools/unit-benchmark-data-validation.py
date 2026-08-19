@@ -1,5 +1,6 @@
 import os
-from common.utils import setup
+
+from common.utils import tool_setup
 from tools.unit_benchmark import UnitBenchmarkDataValidator
 
 
@@ -7,7 +8,7 @@ def main():
 
     tool = os.path.basename(__file__)
     description = "Validate synthesized Q&A pairs for the healthcare ChatBot."
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         add_arguments=lambda p: p.add_argument(

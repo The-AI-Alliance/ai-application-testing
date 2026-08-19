@@ -6,11 +6,13 @@ Abstraction for tool that manages "resources".
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable, MutableMapping, Sequence
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, MutableMapping, Sequence, Tuple
+from typing import Any
 from uuid import uuid4
 
+from common.date_time_utils import now
 from common.file_persistent_storage import FilePersistentStorage
 
 
@@ -53,7 +55,7 @@ class ResourceManager:
             self.logger.info("Starting 'empty' with no resource records")
         else:
             all_count, loaded_count, errors = self._load_resources()
-            self.logger.info(f"Loaded {loaded_count} resource records (out of {all_count} read)")
+            self.logger.info(f"Loaded {loaded_count}/{all_count} resource records read)")
             if errors:
                 self.logger.error(f"Errors while loading resource records: {', '.join(errors)}")
 
@@ -220,24 +222,24 @@ class ResourceManager:
         error_count = len(errors)
         all_count = loaded_count + error_count
         if errors:
-            self.logger.error(f"{error_count} records out of {all_count} failed to parse: {errors}")
+            self.logger.error(
+                f"{error_count}/{all_count} records from storage file {self.storage.storage_path} failed to parse: {errors}"
+            )
 
         self.resources = {}
         for resource in resources:
             # Only load "non-ignorable" resources and those with ids.
             if not self._ignore(resource):
-                id = resource.get("id")
-                if id:
-                    if id in self.resources:
-                        error_msg = (
-                            f"self.resources already has an entry for {id} (self.resources[id]). SKIPPING new one!"
-                        )
+                resource_id = resource.get("id")
+                if resource_id:
+                    if resource_id in self.resources:
+                        error_msg = f"self.resources already has an entry for {resource_id} ({self.resources[resource_id]}) (from storage file: {self.storage.storage_path}). SKIPPING new one!"
                         self.logger.error(error_msg)
                         errors.append(error_msg)
                     else:
-                        self.resources[id] = resource
+                        self.resources[resource_id] = resource
                 else:
-                    error_msg = f"resource doesn't have an id! resource = {resource}."
+                    error_msg = f"resource doesn't have an id! resource = {resource} (from storage file: {self.storage.storage_path})."
                     self.logger.error(error_msg)
                     errors.append(error_msg)
                     error_count += 1
@@ -275,7 +277,7 @@ class ResourceManager:
         by implementing `_further_date_time_validation()`.
 
         Args:
-            - a_date_time (datetime: The proposed resource time
+            - a_date_time (datetime: The proposed resource time.
             - in_the_past_allowed (bool): If False (default), a time is invalid if it is in the past.
               To facilitate some scenarios around "now", like tests, we actually require the
               time to be within one second of now. If the argument is True, then past datetimes
@@ -289,7 +291,7 @@ class ResourceManager:
             Tuple of (is_valid, error_message)
         """
         one_second = timedelta(seconds=1)
-        min_allowed_datetime = datetime.now() - one_second
+        min_allowed_datetime = now() - one_second
         if not a_date_time:
             return False, "The input date time can't be None"
         if not in_the_past_allowed and a_date_time < min_allowed_datetime:
@@ -364,7 +366,7 @@ class ResourceManager:
             self.logger.error(msg)
             return "", msg
 
-        success_msg = f"Resource created at {datetime.now()} with ID {resource_id}."
+        success_msg = f"Resource created at {now()} with ID {resource_id}."
         self.logger.info(success_msg)
         return resource_id, success_msg
 
@@ -392,7 +394,7 @@ class ResourceManager:
                 f"Failed to write the current list of resources. {actual_count}/{len_resources} written. Errors: {error_msg}"
             )
 
-    def set_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> Tuple[int, str]:
+    def set_resources(self, resources: Sequence[MutableMapping[str, Any]]) -> tuple[int, str]:
         """
         Set the resources, _replacing_ the current list. Normally, create_resource() should be used.
         This method is primarily for "deserializing" from storage, like JSON.
@@ -440,6 +442,6 @@ class ResourceManager:
             msg = f"Failed to persist all the new resources ({actual_count} out of {len_resources}). File is now out of sync with the in memory self.resources (unchanged)! Error: {error_msg}"
             self.logger.error(msg)
             return 0, msg
-        self.resources = dict([(a["id"], a) for a in resources])
+        self.resources = {a["id"]: a for a in resources}
         self.logger.info(f"Records replaced with {len_resources} new resources.")
         return len(self.resources), ""

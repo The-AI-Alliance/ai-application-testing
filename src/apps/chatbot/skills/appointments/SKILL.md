@@ -120,14 +120,14 @@ Create a new appointment for a patient.
 - `reason` (str): Reason for the appointment
 
 **Returns:**
-The tool returns a `tuple[str,str]`. If the appointment was successfully created, the first tuple element is the non-empty `appointment_id` for the created appointment and the second tuple element is a success message. If the appointment was not successfully created, the first tuple element is the empty string '' and the second tuple element is an error message. 
+The tool returns a `tuple[str,str]`. If the appointment was successfully created, the first tuple element is the non-empty `appointment_id` for the created appointment and the second tuple element is a success message. If the appointment was not successfully created, the first tuple element is the empty string '' and the second tuple element is an error message.
 
 Return this information as JSON:
 
 ```json
 {
-    "appointment_id": appointment_id, 
-    "message": message
+    "appointment_id": appointment_id,
+    "message":        message
 }
 ```
 
@@ -238,7 +238,7 @@ Return a specific appointment for the specified ID. Use "get_appointment_id_for_
 - `appointment_id` (str): ID of the appointment to change
 
 **Returns:**
-The tool returns a `dict[str, Any]` with the appointment details, or `{}` if no appointment was found for the input `appointment_id`. 
+The tool returns a `dict[str, Any]` with the appointment details, or `{}` if no appointment was found for the input `appointment_id`.
 
 Return this information as JSON:
 

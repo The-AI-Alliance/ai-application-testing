@@ -3,19 +3,19 @@ name = "ai_application_testing"
 version = "0.5.0"
 description = "Code and documentation for the AI Alliance user guide and tools for 'Testing Generative AI Agent Applications'."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "gnureadline>=8.3.3",
     "rich>=15.0.0",
-    "fastapi>=0.139.0",
-    "uvicorn>=0.50.2",
+    "fastapi>=0.141.1",
+    "uvicorn>=0.52.1",
     "httpx>=0.28.1",
-    "deepagents>=0.6.12",
+    "deepagents>=0.7.5",
     "langchain-ollama>=1.1.0",
-    "openai>=2.45.0",
-    "litellm==1.92.0",
+    "openai>=2.49.0",
+    "litellm>=1.96.2",
     "levenshtein>=0.27.3",
-    "fastmcp>=3.4.4",
+    "fastmcp>=3.4.7",
 ]
 
 [tool.setuptools.packages.find]
@@ -29,13 +29,13 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "hypothesis>=6.156.1",
+    "hypothesis>=6.165.7",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "pylint>=4.0.6",
+    "pylint>=4.0.7",
     "black>=26.5.1",
-    "ruff>=0.15.21",
-    "ty>=0.0.59",
+    "ruff>=0.16.2",
+    "ty>=0.0.69",
 ]
 
 [tool.pytest.ini_options]
@@ -57,6 +57,10 @@ target-version = ['py313']
 [tool.ruff]
 line-length = 120
 target-version = "py313"
+
+[tool.ruff.lint.per-file-ignores]
+"src/tools/*" = ["N999"]
+"src/tools/langflow/*" = ["RUF012"]
 
 [tool.pylint.format]
 max-line-length = 120

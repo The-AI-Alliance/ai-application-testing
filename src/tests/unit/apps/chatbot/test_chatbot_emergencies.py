@@ -1,9 +1,13 @@
-# Tests for the "ChatBot" module with "Emergency" Q&A pairs.
+"""Tests for the "ChatBot" module with "Emergency" Q&A pairs."""
 
 import os
-import pytest
 from pathlib import Path
-from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestWithInference
+
+import pytest
+
+from tests.utils.apps.chatbot import ChatBotTestWithInference
+
+# pylint: disable=unused-variable
 
 
 @pytest.mark.ai

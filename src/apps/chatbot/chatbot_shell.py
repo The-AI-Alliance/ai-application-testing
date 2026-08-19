@@ -1,19 +1,21 @@
-import cmd
-import sys
-from rich.status import Status
+"""The interactive "shell" for a ChatBot."""
 
-from .chatbot import ChatBot
+import cmd
 
 # Source for history management adapted from - https://stackoverflow.com/a/39495060
 # Posted by Martijn Pieters, modified by community. See post 'Timeline' for change history
 # Retrieved 2026-04-10, License - CC BY-SA 3.0
-
 import os.path
+import sys
+
+from rich.status import Status
+
+from .chatbot import ChatBot
 
 try:
     import readline
 except ImportError:
-    readline = None  # ty: ignore
+    readline = None
 
 
 class ChatBotShell(cmd.Cmd):
@@ -47,11 +49,8 @@ class ChatBotShell(cmd.Cmd):
         self.logger = chatbot.logger
 
     def default(self, line):
-        "Process the user prompt"
-        if line == "EOF":
-            return self.do_bye(line)
-        elif line:
-            # print("One moment...", file=self.stdout)
+        """Process the user prompt"""
+        if line:
             with Status("One moment..."):
                 response = self.chatbot.query(line)
             if isinstance(response, str):
@@ -69,19 +68,23 @@ class ChatBotShell(cmd.Cmd):
                 if self.verbose:
                     self.logger.info(f"answer = {answer}, full response = {response}")
                     print(f"Full response: {response}\n", file=self.stdout)
+        return self.emptyline()
 
     def emptyline(self):
         """Don't repeat the last command, just show the prompt again."""
-        pass
 
-    def do_bye(self, arg):
+    def do_quit(self):
         """Stop the session."""
-        print("\nThank you for using the patient ChatBot", file=self.stdout)
+        self.do_bye()
+
+    def do_bye(self):
+        """Stop the session."""
         self.close()
         return True
 
     def close(self):
-        pass
+        """Close the command object."""
+        print("\nThank you for using the patient ChatBot", file=self.stdout)
 
 
 # Made with Bob

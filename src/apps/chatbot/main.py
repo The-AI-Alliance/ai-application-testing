@@ -1,12 +1,14 @@
+"""Provides the entry point for the ChatBot."""
+
 import os
 
-from common.utils import setup
 from apps.chatbot import (
-    ChatBotSimple,
     ChatBotAgent,
-    ChatBotShell,
     ChatBotResponseHandler,
+    ChatBotShell,
+    ChatBotSimple,
 )
+from common.utils import tool_setup
 
 
 def main():
@@ -39,7 +41,7 @@ def main():
 
     tool = os.path.basename(__file__)
     description = "Demonstration Patient ChatBot."
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         epilog="The data directory is used to store the ChatBot GUI session information.",

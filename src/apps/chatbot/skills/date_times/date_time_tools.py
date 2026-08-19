@@ -3,56 +3,43 @@ LangChain tool wrappers for the appointment management functionality.
 These tools are used by the Deep Agent's appointment skill.
 """
 
-from datetime import datetime, date, time
-from typing import Callable, Optional, TypeVar
+from datetime import date, datetime, time, timezone
 
 from langchain_core.tools import tool
 
-friendly_date_formats = [
-    "%A, %B %d, %Y",
-    "%A, %b %d, %Y",
-    "%A %B %d, %Y",
-    "%A %b %d, %Y",
-    "%A, %B %d %Y",
-    "%A, %b %d %Y",
-    "%A %B %d %Y",
-    "%A %b %d %Y",
-    "%B %d, %Y",
-    "%b %d, %Y",
-    "%B %d %Y",
-    "%b %d %Y",
-    "%A, %Y-%m-%d",
-    "%A %Y-%m-%d",
-    "%Y-%m-%d",
-]
+from common.date_time_utils import (
+    add_timezone,
+    def_friendly_date_output_format,
+    def_friendly_date_time_output_format,
+    def_friendly_time_output_format,
+)
+from common.date_time_utils import (
+    is_week_day as is_week_day_util,
+)
+from common.date_time_utils import (
+    now as now_util,
+)
+from common.date_time_utils import (
+    string_to_date as string_to_date_util,
+)
+from common.date_time_utils import (
+    string_to_datetime as string_to_datetime_util,
+)
+from common.date_time_utils import (
+    string_to_time as string_to_time_util,
+)
 
-friendly_time_formats = [
-    "%I:%M %p",
-    "%I:%M",
-    "%I %p",
-    "%I",
-]
-
-friendly_date_time_formats = ["%c", "%x %X"]
-for d in friendly_date_formats:
-    for t in friendly_time_formats:
-        friendly_date_time_formats.append(f"{d} {t}")
-        friendly_date_time_formats.append(f"{d}T{t}")
-        friendly_date_time_formats.append(f"{d}, at {t}")
-
-friendly_date_formats.append("%x")  # add this AFTER the previous loop.
-friendly_time_formats.append("%X")  # add this AFTER the previous loop.
-def_friendly_date_time_format = friendly_date_time_formats[0]
-def_friendly_date_format = friendly_date_formats[0]
-def_friendly_time_format = friendly_time_formats[0]
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
 
 
 @tool
-def now() -> datetime:
+def now(tz: timezone | None = None) -> datetime:
     """
     Return the `datetime.datetime` for right now.
 
     Args:
+        tz - Optional timezone. The local timezone is used, if None.
 
     Returns:
         The current `datetime.datetime`
@@ -60,11 +47,11 @@ def now() -> datetime:
     Example:
         now()
     """
-    return datetime.now()
+    return now_util(tz)
 
 
 @tool
-def today() -> date:
+def today(tz: timezone | None = None) -> date:
     """
     Return the `datetime.date` for today's date.
 
@@ -76,7 +63,7 @@ def today() -> date:
     Example:
         today()
     """
-    return datetime.now().date()
+    return now_util(tz=tz).date()
 
 
 @tool
@@ -85,22 +72,22 @@ def is_week_day(a_date_time: datetime) -> bool:
     Return `True` if the input date is a week day, or return `False`.
 
     Args:
+        a_date_time: a `datetime`.
 
     Returns:
-        a_date_time: `datetime.datetime`
+        `True` if the input `datetime` is a week day.
 
     Example:
-        is_week_day()
+        is_week_day(now())
     """
-    weekday = a_date_time.weekday()
-    return weekday >= 0 and weekday < 5
+    return is_week_day_util(a_date_time)
 
 
 # Tools to convert to and from strings.
 
 
 @tool
-def datetime_to_str(a_date_time: datetime, output_format: str = def_friendly_date_time_format) -> str:
+def datetime_to_string(a_date_time: datetime, output_format: str = def_friendly_date_time_output_format) -> str:
     """
     Format the input `a_date_time` as a string using the input `format`.
     """
@@ -108,7 +95,7 @@ def datetime_to_str(a_date_time: datetime, output_format: str = def_friendly_dat
 
 
 @tool
-def date_to_str(a_date: date, output_format: str = def_friendly_date_format) -> str:
+def date_to_string(a_date: date, output_format: str = def_friendly_date_output_format) -> str:
     """
     Return the date part of the input `datetime` object formatted as
     a string using the input `format`.
@@ -117,7 +104,7 @@ def date_to_str(a_date: date, output_format: str = def_friendly_date_format) -> 
 
 
 @tool
-def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> str:
+def time_to_string(a_time: time, output_format: str = def_friendly_time_output_format) -> str:
     """
     Return the time part of the input `datetime` object formatted as
     a string using the input `format`.
@@ -125,43 +112,8 @@ def time_to_str(a_time: time, output_format: str = def_friendly_time_format) -> 
     return a_time.strftime(output_format)
 
 
-DT = TypeVar("DT")
-
-
-def _str_to_object[DT](
-    a_date_time_str: str,
-    input_format: str,
-    friendly_formats: list[str],
-    extract: Callable[[datetime], DT],
-) -> tuple[Optional[DT], str]:
-    fmts = [input_format] + friendly_formats
-    for fmt in fmts:
-        if not fmt:  # skip empties...
-            continue
-        try:
-            dt = datetime.strptime(a_date_time_str, fmt)
-            if dt:
-                return extract(dt), ""
-        except ValueError:
-            pass
-
-    # If here, none of our "friendly formats" worked. Try ISO...
-    def err_msg():
-        input_format_msg = "" if not format else f"""input format "{input_format}", nor other """
-        return f"""I could not parse string "{a_date_time_str}" with {input_format_msg}formats, {friendly_formats}, nor using fromisoformat()."""
-
-    try:
-        dt = datetime.fromisoformat(a_date_time_str)
-        if dt:
-            return extract(dt), ""
-        else:
-            return None, err_msg()
-    except ValueError:
-        return None, err_msg()
-
-
 @tool
-def str_to_datetime(a_date_time_str: str, input_format: str = "") -> tuple[Optional[datetime], str]:
+def string_to_datetime(a_date_time_str: str, input_format: str = "") -> tuple[datetime | None, str]:
     """
     Using the input `a_date_time_str` string, format and return a `datetime` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -176,11 +128,11 @@ def str_to_datetime(a_date_time_str: str, input_format: str = "") -> tuple[Optio
     Returns:
         a tuple with the constructed `datetime` and an empty string or `None` and an error message.
     """
-    return _str_to_object(a_date_time_str, input_format, friendly_date_time_formats, lambda dt: dt)
+    return string_to_datetime_util(a_date_time_str, input_format)
 
 
 @tool
-def str_to_date(a_date_str: str, input_format: str = "") -> tuple[Optional[date], str]:
+def string_to_date(a_date_str: str, input_format: str = "") -> tuple[date | None, str]:
     """
     Using the input `a_date_str` string, format and return a `date` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -195,11 +147,11 @@ def str_to_date(a_date_str: str, input_format: str = "") -> tuple[Optional[date]
     Returns:
         a tuple with the constructed `date` and an empty string or `None` and an error message.
     """
-    return _str_to_object(a_date_str, input_format, friendly_date_formats, lambda dt: dt.date())
+    return string_to_date_util(a_date_str, input_format)
 
 
 @tool
-def str_to_time(a_time_str: str, input_format: str = "") -> tuple[Optional[time], str]:
+def string_to_time(a_time_str: str, input_format: str = "") -> tuple[time | None, str]:
     """
     Using the input `a_time_str` string, format and return a `time` parsed
     using the input `input_format`, if not empty. If the format is empty or parsing with
@@ -214,15 +166,16 @@ def str_to_time(a_time_str: str, input_format: str = "") -> tuple[Optional[time]
     Returns:
         a tuple with the constructed `time` and an empty string or `None` and an error message.
     """
-    return _str_to_object(a_time_str, input_format, friendly_time_formats, lambda dt: dt.time())
+    return string_to_time_util(a_time_str, input_format)
 
 
 @tool
-def iso_format_str_to_datetime(a_date_time_str: str) -> datetime:
+def iso_format_string_to_datetime(a_date_time_str: str) -> datetime:
     """
     Return a `datetime` parsed from the ISO format-compatible input string.
+    Add the local timezone if not defined in the parsed datetime.
     """
-    return datetime.fromisoformat(a_date_time_str)
+    return add_timezone(datetime.fromisoformat(a_date_time_str))
 
 
 # Export all tools as a list for easy registration
@@ -231,11 +184,11 @@ def iso_format_str_to_datetime(a_date_time_str: str) -> datetime:
 DATE_TIME_TOOLS = [
     now,
     is_week_day,
-    datetime_to_str,
-    date_to_str,
-    time_to_str,
-    iso_format_str_to_datetime,
-    str_to_datetime,
-    str_to_date,
-    str_to_time,
+    datetime_to_string,
+    date_to_string,
+    time_to_string,
+    iso_format_string_to_datetime,
+    string_to_datetime,
+    string_to_date,
+    string_to_time,
 ]

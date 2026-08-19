@@ -5,21 +5,22 @@ This script tests that the MCP server can be imported and initialized
 with FastMCP.
 """
 
-import os
 import logging
+import os
 from pathlib import Path
 
 # Add src to path for imports
 # sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent.parent))
-
 from apps.chatbot.mcp_server.server import create_mcp_server
-from tests.utils.apps.chatbot.chatbot_test_base import ChatBotTestBase
+from tests.utils.apps.chatbot import ChatBotTestBase
+
+# pylint: disable=unused-variable
 
 
 def test_chatbot_creation():
+    """Test that a ChatBot can be created. This is effectively done by the ChatBotTestBase.setUp() method."""
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
     cbtb = ChatBotTestBase(data_dir=Path(data_dir))
-    """Test that a ChatBot can be created. This is effectively done by the ChatBotTestBase.setUp() method."""
     assert cbtb.chatbot
     print("✓ Successfully created ChatBot instance")
     print(f"  - Model: {cbtb.chatbot.model}")
@@ -31,9 +32,9 @@ def test_chatbot_creation():
 
 
 def test_mcp_server_creation():
+    """Test that MCP server can be created with FastMCP."""
     data_dir = os.environ.get("TEST_DATA_DIR", "src/tests/data")
     cbtb = ChatBotTestBase(data_dir=Path(data_dir))
-    """Test that MCP server can be created with FastMCP."""
     logger = logging.getLogger("test")
     logger.setLevel(logging.INFO)
 

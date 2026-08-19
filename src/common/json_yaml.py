@@ -1,13 +1,17 @@
-# Allow types to self-reference during their definitions.
-# from __future__ import annotations
+"""YAML and JSON utilities."""
 
 import json
 import re
-import yaml
+from collections.abc import Mapping, MutableMapping, Sequence
 from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Mapping, MutableMapping, Sequence
+from typing import Any
+
+import yaml
+
+# Too many of these warnings for variables that ARE used in other files.
+# pylint: disable=unused-variable
 
 
 def load_yaml(path: Path) -> Mapping[str, Any]:
@@ -16,6 +20,8 @@ def load_yaml(path: Path) -> Mapping[str, Any]:
 
 
 class DatetimeEncoder(json.JSONEncoder):
+    """Specialized JSON encoder that handles datetime instances."""
+
     def default(self, o: Any) -> Any:
         if isinstance(o, datetime):
             return {"__class__": "datetime", "iso_str": o.isoformat()}
@@ -23,11 +29,14 @@ class DatetimeEncoder(json.JSONEncoder):
 
 
 class DatetimeDecoder(json.JSONDecoder):
+    """Specialized JSON decoder that handles datetime instances."""
+
     def __init__(self):
         super().__init__(object_hook=DatetimeDecoder.from_dict)
 
     @staticmethod
     def from_dict(d: dict[str, Any]) -> Any:
+        """Custom conversion from a dict to a datetime."""
         if d.get("__class__") == "datetime":
             iso_str = d.get("iso_str", "")
             if iso_str:
@@ -55,7 +64,7 @@ def decode_json_dict(text: Any) -> MutableMapping[str, Any]:
     try:
         obj = def_datetime_decoder.decode(text)
         if not isinstance(obj, MutableMapping):
-            raise ValueError(
+            raise TypeError(
                 f"decode_json_dict called with a string that is not a dictionary!? type: {type(obj)}, obj = <{obj}>"
             )
         return obj
@@ -74,7 +83,7 @@ def decode_json_list(text: Any) -> Sequence[MutableMapping[str, Any]]:
     try:
         obj = def_datetime_decoder.decode(text)
         if not isinstance(obj, Sequence):
-            raise ValueError(
+            raise TypeError(
                 f"decode_json_list called with a string that is not a list!? type: {type(obj)}, obj = <{obj}>"
             )
         return obj

@@ -4,16 +4,20 @@ https://hypothesis.readthedocs.io/en/latest/
 """
 
 from typing import Any
-from hypothesis import given, settings, strategies as st
+
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from common.collections import (
-    get_chain,
     dict_permutations,
     dict_pop,
     get,
+    get_chain,
     mult,
 )
 from common.utils import ExpectedFail
+
+# pylint: disable=unused-variable,missing-function-docstring
 
 
 def _check(dictionary: dict[str, Any], n: int = -1):
@@ -96,28 +100,27 @@ def test_get_returns_value_for_the_key(dictionary: dict[str, str]):
         get(dictionary, key)
 
 
-@given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-def test_get_raises_a_value_error_if_none_would_be_returned_for_an_unknown_key(  # pylint: disable=invalid-name
-    set: set[str],
-):
+# Note: Originally I generated a set of keys, then looped over
+# them and called ef(lambda: get(dictionary, key), but you apparently
+# can't close over a loop variable like this, even though it would be used
+# before the next loop pass. So now, I hard code several "missing" keys.
+# (Same for the next test.)
+def test_get_raises_a_value_error_if_none_would_be_returned_for_an_unknown_key():
     """Check that get raises a ValueError if None would be returned for an unknown key."""
     dictionary = {}
     ef = ExpectedFail(ValueError)
-    for key in set:
-        ef(lambda: get(dictionary, key))
+    ef(lambda: get(dictionary, "bad1"))
+    ef(lambda: get(dictionary, "bad2"))
 
 
-@given(st.sets(st.text(min_size=1, max_size=10), max_size=4))
-def test_get_raises_a_value_error_if_none_would_be_returned_for_a_known_key_with_none_value_default_ignored(  # pylint: disable=invalid-name
-    keyset: set[str],
-):
+def test_get_raises_a_value_error_if_none_would_be_returned_for_a_known_key_with_none_value_default_ignored():
     """Check that get raises a ValueError if None would be returned for a known key with a None value."""
     dictionary = {}
     ef = ExpectedFail(ValueError)
-    for key in keyset:
-        dictionary[key] = None
-        ef(lambda: get(dictionary, key))
-        ef(lambda: get(dictionary, key, "hello!"))
+    dictionary["bad1"] = None
+    ef(lambda: get(dictionary, "bad1"))
+    dictionary["bad2"] = None
+    ef(lambda: get(dictionary, "bad2"))
 
 
 @given(

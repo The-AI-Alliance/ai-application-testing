@@ -1,17 +1,19 @@
+"""A ChatBot implementation that supports "agentic" activities, e.g., for sessions."""
+
 import logging
 from pathlib import Path
 from typing import Any
 
+from deepagents import create_deep_agent
+
 from .chatbot import ChatBot
 from .response_handler import ResponseHandler
-from .response_parser import DeepAgentResponseParser
+from .response_parser import LangChainDeepAgentResponseParser
 from .skills.appointments import APPOINTMENT_TOOLS, get_appointment_manager
 from .skills.date_times import DATE_TIME_TOOLS
 
-from deepagents import create_deep_agent
 
-
-class ChatBotAgent(ChatBot):
+class ChatBotAgent(ChatBot):  # pylint: disable=too-few-public-methods,unused-variable
     """
     ChatBot implementation using LangChain Deep Agents framework.
 
@@ -54,7 +56,7 @@ class ChatBotAgent(ChatBot):
             logger=logger,
             template_file=self.default_template_file,
         )
-        self.response_parser = DeepAgentResponseParser()
+        self.response_parser = LangChainDeepAgentResponseParser()
         if model2.find("gpt-oss") >= 0:
             err_msg = "The gpt-oss models served by ollama don't currently work with LangChain's Deep Agents!"
             logger.error(err_msg)

@@ -8,7 +8,7 @@
 
 # By default we DON'T run all the unit tests, because the AI-based tests are
 # slow and expensive, so we filter them by default using the following:
-PYTEST_RUN_OPT_ARGS ?= -m 'not ai'
+PYTEST_RUN_OPT_ARGS   ?= -m 'not ai'
 
 # This project further divides src/tests into src/tests/unit, src/tests/integration,
 # etc., so we define two new variables for unit and integration test locations, then
@@ -19,8 +19,6 @@ PYTEST_RUN_OPT_ARGS ?= -m 'not ai'
 TESTS_UNIT_DIR        ?= tests/unit
 TESTS_INTEGRATION_DIR ?= tests/integration
 WHICH_TESTS           ?= ${TESTS_UNIT_DIR}
-
-include .common.mk
 
 # Definitions for the tools and applications.
 # See the README.md for instructions on what definitions to change to
@@ -41,6 +39,19 @@ JUST_STATS            ?=
 export INFERENCE_SERVICE
 export INFERENCE_URL
 
+# Because the full unit-tests suite is too costly to run for PRs, we use a
+# special-purpose definition of "before-pr-command". This definition must
+# appear before we include .common.mk. The target unit-tests-non-ai is defined below.
+
+before-pr-command::
+	${MAKE} ${QUALITY_CHECKS_NO_TESTS} unit-tests-non-ai
+
+# Include all the common targets at this point.
+include .common.mk
+include .llm.mk
+include .mcp-server.mk
+include .api-server.mk
+include .langflow.mk
 
 # A hook for passing arguments to the programs, e.g., "make APP_ARGS=--help ..."
 APP_ARGS              ?=
@@ -70,7 +81,7 @@ export MODEL
 # TESTS_DATA_DIR: Where test data is read. RELATIVE to ${SRC_DIR}.
 OUTPUT_DIR            := output/${MODEL_FILE_NAME}
 DATA_DIR              := ${OUTPUT_DIR}/data
-TESTS_DATA_DIR        := ${TESTS_DIR}/data
+TESTS_DATA_DIR        := ${SRC_DIR}/tests/data
 
 OPEN_WEBUI_DIR        ?= ${SRC_DIR}/apps/chatbot/open-webui
 
@@ -107,33 +118,30 @@ CHATBOT_API_SERVER_HOST            ?= localhost
 CHATBOT_API_SERVER_PORT            ?= 8000
 export CHATBOT_API_SERVER          ?= ${CHATBOT_API_SERVER_HOST}:${CHATBOT_API_SERVER_PORT}
 
-ALL_TOOLS                   ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
+ALL_TOOLS  ?= tdd-example-refill-chatbot unit-benchmark-data-synthesis unit-benchmark-data-validation
 
 # We don't lint the src/tools content, because they are intended more as "scripts",
 # rather than modules with higher quality expectations.
-PYLINT_IGNORE_ARGS  += --ignore=${SRC_DIR}/tools,${SRC_DIR}/tools/langflow
+PYLINT_ARGS  += --ignore=tools #,${SRC_DIR}/tools/langflow
 
 # Add custom help for the application here, which will be shown when the user
 # types "make help".
 # When you see ${CODE}${_END} without anything between them in help messages,
 # it is there to make it easier to line up multi-line description comments.
 
-.PHONY: help-custom
+define help-top-level-message
+${HIGHLIGHT} Quick help for this project's specific targets: ${_END}
 
-help:: help-custom
-help-custom::
-	$(info ${help-custom-message})
-
-define help-custom-message
-${HIGHLIGHT}Quick help for this project's specific targets:${_END}
-
-${CODE}make help-code${_END}         # Help on the make processes unique to this project.
-${CODE}make help-tools${_END}        # Help on the tools and example ChatBot targets.
+${CODE}make help-code${_END}          # Help on the make processes unique to this project.
+${CODE}make help-tools${_END}         # Help on the tools and example ChatBot targets.
+${CODE}make help-mcp-server${_END}    # Help on the MCP server support for some of the tools.
+${CODE}make help-api-server${_END}    # Help on the API server support for some of the tools.
+${CODE}make help-langflow${_END}      # Help on the Langflow support for some of the tools.
 
 endef
 
 define help-code-message
-${HIGHLIGHT}Quick help for this make process on extra targets available.${_END}
+${HIGHLIGHT} Quick help for this make process on extra targets available. ${_END}
 
 For help on the targets for this project's tools and ChatBot apps, run ${CODE}make help-tools${_END}.
 
@@ -144,70 +152,74 @@ arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} 
 list of these variables and their default definitions. Specific variables are mentioned for
 some targets.
 
-${CODE}make all-models-*${_END}         # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
-${CODE}${_END}                          # that is everything to the right of ${CODE}all-models-${_END}, and
-${CODE}${_END}                          # make that target for ALL the models defined by ${CODE}MODELS${_END}:
-${CODE}${_END}                          #   ${CODE}${MODELS}${_END}
-${CODE}${_END}                          # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
-${CODE}${_END}                          # You can override the list of models as follows:
-${CODE}${_END}                          #   ${CODE}make MODELS="..." all-models-...${_END}
-${CODE}make all-tools${_END}            # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
-${CODE}make all-code${_END}             # Synonym for ${CODE}all-tools${_END}.
-${CODE}make run-tools${_END}            # Run all the tools (but not the ChatBot app) without cleaning first.
-${CODE}${_END}                          # Built by ${CODE}all-tools${_END}.
-${CODE}make run-code${_END}             # Synonym for ${CODE}run-tools${_END}.
+${CODE}make all-models-*${_END}       # Extract "*" as one of the other targets (such as, ${CODE}all-tools${CODE}),
+${CODE}${_END}                        # that is everything to the right of ${CODE}all-models-${_END}, and
+${CODE}${_END}                        # make that target for ALL the models defined by ${CODE}MODELS${_END}:
+${CODE}${_END}                        #   ${CODE}${MODELS}${_END}
+${CODE}${_END}                        # (Not useful for model-agnostic targets, like ${CODE}setup${_END}...)
+${CODE}${_END}                        # You can override the list of models as follows:
+${CODE}${_END}                        #   ${CODE}make MODELS="..." all-models-...${_END}
+${CODE}make all-tools${_END}          # Clean outputs and run all the tools using the model defined by ${CODE}MODEL${_END}.
+${CODE}make all-code${_END}           # Synonym for ${CODE}all-tools${_END}.
+${CODE}make run-tools${_END}          # Run all the tools (but not the ChatBot app) without cleaning first.
+${CODE}${_END}                        # Built by ${CODE}all-tools${_END}.
+${CODE}make run-code${_END}           # Synonym for ${CODE}run-tools${_END}.
 
-${CODE}make setup${_END}                # One-time setup tasks; e.g., builds target ${CODE}install-uv${_END}.
-${CODE}make one-time-setup${_END}       # Synonym for ${CODE}setup${_END}.
-${CODE}make install-uv${_END}           # Explain how to install ${CODE}uv${_END}.
-${CODE}${_END}                          # Run ${CODE}make help-command-uv${_END} for more information.
-${CODE}make install-jq${_END}           # Explain how to install ${CODE}jq${_END} (an optional CLI tool).
+${CODE}make setup${_END}              # One-time setup tasks; e.g., builds target ${CODE}install-uv${_END}.
+${CODE}make one-time-setup${_END}     # Synonym for ${CODE}setup${_END}.
+${CODE}make install-uv${_END}         # Explain how to install ${CODE}uv${_END}.
+${CODE}${_END}                        # Run ${CODE}make help-command-uv${_END} for more information.
+${CODE}make install-jq${_END}         # Explain how to install ${CODE}jq${_END} (an optional CLI tool).
 
-${CODE}make build${_END}                # Build a distribution.
-${CODE}make install${_END}              # Install the code locally in development mode.
+${CODE}make build${_END}              # Build a distribution.
+${CODE}make install${_END}            # Install the code locally in development mode.
 
-${CODE}make all-tests${_END}            # Run the unit tests (AI and non-AI) and integration tests.
-${CODE}${_END}                          # Equivalent to ${CODE}unit-tests-non-ai${_END} and ${CODE}unit-tests-ai${_END}.
+${CODE}make all-tests${_END}          # Run the unit tests (AI and non-AI) and integration tests.
+${CODE}${_END}                        # Equivalent to ${CODE}unit-tests-non-ai${_END} and ${CODE}unit-tests-ai${_END}.
 
-${CODE}make unit-tests${_END}           # Following convention, this target runs the unit tests only and, by default,
-${CODE}${_END}                          # it only runs the "non-AI" unit tests by building ${CODE}unit-tests-non-ai${_END}.
-${CODE}make tests${_END}                # Synonym for ${CODE}unit-tests${_END}.
-${CODE}make unit-tests-non-ai${_END}    # All unit tests that don't involve inference invocations.
-${CODE}${_END}                          # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
-${CODE}${_END}                          # Effectively, this target is a synonym for ${CODE}unit-tests${_END}.
-${CODE}make unit-tests-ai${_END}        # All unit tests that DO involve inference invocations, which take a long time to run.
-${CODE}${_END}                          # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
-${CODE}make unit-tests-qna${_END}       # Convenience target that runs just the AI unit tests involving QnA pairs.
-${CODE}${_END}                          # These all have the ${CODE}pytest${_END} marks ${CODE}ai${_END} and  ${CODE}qna${_END} for filtering.
-${CODE}make unit-tests-scenario${_END}  # Convenience target that runs just the AI unit tests involving scenario interactions.
-${CODE}${_END}                          # These all have the ${CODE}pytest${_END} marks ${CODE}scenario${_END} and  ${CODE}qna${_END} for filtering.
-${CODE}make unit-tests-simple${_END}    # Effectively a synonym for ${CODE}unit-tests-qna${_END}.
-${CODE}make unit-tests-agent${_END}     # Effectively a synonym for ${CODE}unit-tests-scenario${_END}.
+${CODE}make unit-tests${_END}         # Following convention, this target runs the unit tests only and, by default,
+${CODE}${_END}                        # it only runs the "non-AI" unit tests by building ${CODE}unit-tests-non-ai${_END}.
+${CODE}make tests${_END}              # Synonym for ${CODE}unit-tests${_END}.
+${CODE}make unit-tests-non-ai${_END}  # All unit tests that don't involve inference invocations.
+${CODE}${_END}                        # These all don't have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
+${CODE}${_END}                        # Effectively, this target is a synonym for ${CODE}unit-tests${_END}.
+${CODE}make unit-tests-ai${_END}      # All unit tests that DO involve inference invocations, which take a long time to run.
+${CODE}${_END}                        # These all have the ${CODE}pytest${_END} mark ${CODE}ai${_END}, which is used to filter them.
+${CODE}make unit-tests-qna${_END}     # Convenience target that runs just the AI unit tests involving QnA pairs.
+${CODE}${_END}                        # These all have the ${CODE}pytest${_END} marks ${CODE}ai${_END} and  ${CODE}qna${_END} for filtering.
+${CODE}make unit-tests-scenario${_END}# Convenience target that runs just the AI unit tests involving scenario interactions.
+${CODE}${_END}                        # These all have the ${CODE}pytest${_END} marks ${CODE}scenario${_END} and  ${CODE}qna${_END} for filtering.
+${CODE}make unit-tests-simple${_END}  # Effectively a synonym for ${CODE}unit-tests-qna${_END}.
+${CODE}make unit-tests-agent${_END}   # Effectively a synonym for ${CODE}unit-tests-scenario${_END}.
 
-${CODE}make integration-tests${_END}    # Run the integration tests, including "dedicated" integration tests
-${CODE}${_END}                          # and all unit tests with more "exhaustive" sample data flags.
-${CODE}${_END}                          # (See https://the-ai-alliance.github.io/ai-application-testing/working-example/ for details)
+${CODE}make integration-tests${_END}  # Run the integration tests, including "dedicated" integration tests
+${CODE}${_END}                        # and all unit tests with more "exhaustive" sample data flags.
+${CODE}${_END}                        # (See https://the-ai-alliance.github.io/ai-application-testing/working-example/ for details)
 ${CODE}make integration-tests-dedicated${_END}
-${CODE}${_END}                          # The "dedicated" integration tests, omitting the unit tests.
+${CODE}${_END}                        # The "dedicated" integration tests, omitting the unit tests.
 
-${CODE}make clean-setup${_END}          # Undoes everything done by the setup target or provides
-${CODE}${_END}                          # instructions for what you must do manually in some cases.
-${CODE}make uninstall-uv${_END}         # Explain how to uninstall "uv".
+${CODE}make clean-setup${_END}        # Undoes everything done by the setup target or provides
+${CODE}${_END}                        # instructions for what you must do manually in some cases.
+${CODE}make uninstall-uv${_END}       # Explain how to uninstall "uv".
 
 Several CLI tools are required, like ${CODE}uv${_END}, or only needed for a few special make targets, like ${CODE}jq${_END}:
 
-${CODE}make help-command-uv${_END}      # Prints specific information about ${CODE}uv${_END}, including installation.
-${CODE}make help-command-jq${_END}      # Prints specific information about ${CODE}jq${_END}, including installation.
-${CODE}make help-command-node${_END}    # Prints specific information about ${CODE}node${_END}, including installation.
+${CODE}make help-command-uv${_END}    # Prints specific information about ${CODE}uv${_END}, including installation.
+${CODE}make help-command-jq${_END}    # Prints specific information about ${CODE}jq${_END}, including installation.
+${CODE}make help-command-node${_END}  # Prints specific information about ${CODE}node${_END}, including installation.
 
 ${TIP_LABEL}See also the list of common targets, like ${CODE}tests${_END} and ${CODE}lint${_END}, which are shown
 ${TIP_LABEL}by ${CODE}make help${_END}.
 endef
 
 define help-tools-message
-${HIGHLIGHT}Quick help for this make process for the tools and ChatBot example app.${_END}
+${HIGHLIGHT} Quick help for this make process for the tools and ChatBot example app. ${_END}
 
-For help on the extra process targets defined in this Makefile, run ${CODE}make help-code${_END}.
+For help on the development process targets defined in this Makefile, run ${CODE}make help-code${_END}.
+
+For help on the support for MCP, an API server, and Langflow, try making the corresponding help
+targets ${CODE}help-mcp-server${_END}, ${CODE}help-api-server${_END}, and ${CODE}help-langflow${_END},
+respectively.
 
 For many targets tools, there are variables defined in this Makefile that are used to pass
 arguments to the corresponding commands. Run ${CODE}make print-info-code${_END} to see the
@@ -257,11 +269,6 @@ ${CODE}make run-chatbot${_END}        # Synonym for ${CODE}chatbot${_END}.
 ${CODE}make agent-chatbot${_END}      # Run the ${CODE}agent${_END} implementation of the ChatBot.
 ${CODE}make simple-chatbot${_END}     # Run the ${CODE}simple${_END} implementation of the ChatBot.
 
-${CODE}make mcp-server${_END}         # Run the ChatBot's MCP server.
-${CODE}make run-mcp-server${_END}     # Synonym for ${CODE}mcp-server${_END}.
-${CODE}make api-server${_END}         # Run the ChatBot's OpenAI-compatible API server.
-${CODE}make run-api-server${_END}     # Synonym for ${CODE}api-server${_END}.
-
 Tasks for help, debugging, setup, etc.
 
 ${CODE}make help-tools${_END}         # Prints this output.
@@ -282,16 +289,6 @@ ${CODE}${_END}                        # Show help for the synthetic data validat
 ${CODE}${_END}                        # Run the code for validating the synthetic data for the unit benchmarks.
 
 ${CODE}make help-chatbot${_END}       # Show help for the interactive ChatBot application.
-${CODE}make help-mcp-server${_END}    # Show help for the ChatBot's MCP server.
-${CODE}make help-api-server${_END}    # Show help for the ChatBot's OpenAI-compatible API server.
-${CODE}make view-api-server-docs${_END}
-${CODE}${_END}                        # Open a browser showing the API server ${CODE}docs${_END}.
-${CODE}make view-api-server-redoc${_END}
-${CODE}${_END}                        # Open a browser showing the API server ${CODE}redoc${_END}.
-
-${CODE}make help-langflow-pipeline${_END}
-${CODE}${_END}                        # Show help for the Langflow pipeline by passing the ${CODE}--help${_END} flag.
-${CODE}make help-langflow${_END}      # Synonym for ${CODE}help-langflow-pipeline${_END}.
 endef
 
 
@@ -309,7 +306,7 @@ clean clean-tools:: clean-code
 
 print-info:: print-info-code
 print-info-code::
-	@echo "${HIGHLIGHT}For the example code and tools:${_END}"
+	@echo "${HIGHLIGHT} For the example code and tools: ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}MODEL:${_END}                       ${CODE}${MODEL}${_END} (the default)"
 	@echo "  ${DARK_GREEN}MODELS:${_END}                      (all of them that we explicitly list in the ${CODE}Makefile${_END})"
@@ -325,7 +322,7 @@ print-info-code::
 	@echo "  ${DARK_GREEN}CHATBOT_OUTPUT_DIR:${_END}          ${CODE}${CHATBOT_OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}APP_ARGS:${_END}                    ${CODE}'${APP_ARGS}'${_END} (A user hook for passing custom arguments, like ${CODE}-h${_END})"
 	@echo
-	@echo "${HIGHLIGHT}The following depend on the value of MODEL (${MODEL}):${_END}"
+	@echo "${HIGHLIGHT} The following depend on the value of MODEL (${MODEL}): ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}OUTPUT_DIR:${_END}                  ${CODE}${OUTPUT_DIR}${_END}"
 	@echo "  ${DARK_GREEN}OUTPUT_LOGS_DIR:${_END}             ${CODE}${OUTPUT_LOGS_DIR}${_END}"
@@ -404,7 +401,7 @@ run-tdd-example-refill-chatbot:: before-run run-tdd-example-refill-chatbot-pream
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-tdd-example-refill-chatbot-preamble::
-	@echo "${BOLD}${INFO}*** Running the TDD example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the TDD example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis-preamble
@@ -420,7 +417,7 @@ run-unit-benchmark-data-synthesis:: before-run run-unit-benchmark-data-synthesis
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-synthesis-preamble::
-	@echo "${BOLD}${INFO}*** Running the unit benchmark data synthesis example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the unit benchmark data synthesis example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validation-preamble
@@ -436,7 +433,7 @@ run-unit-benchmark-data-validation:: before-run run-unit-benchmark-data-validati
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%=%}.log${_END}\n"
 
 run-unit-benchmark-data-validation-preamble::
-	@echo "${BOLD}${INFO}*** Running the unit benchmark synthetic data validation example.${_END}"
+	@echo "${BOLD}${INFO} *** Running the unit benchmark synthetic data validation example. ${_END}"
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:run-%-preamble=%}.log${_END}\n"
 
 before-run:: silent-before-run
@@ -446,37 +443,7 @@ silent-before-run:run-command-checks ${OUTPUT_DIR} ${OUTPUT_LOGS_DIR} ${DATA_DIR
 run-command-checks:: command-check-uv provider-server-check
 
 provider-server-check::
-	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR}Ollama is not running!${_END}" || exit 1
-
-# Langflow targets
-.PHONY: run-langflow-pipeline langflow-pipeline langflow-pipeline-preamble help-langflow-pipeline
-.PHONY: unit-tests-langflow
-
-run-langflow-pipeline:: langflow-pipeline
-langflow-pipeline:: langflow-pipeline-preamble
-	export LITELLM_LOG=ERROR; \
-	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/langflow/unit_benchmark_flow.py \
-	  --model ${MODEL} \
-	  --service-url ${INFERENCE_URL} \
-	  --template-dir ${TOOLS_PROMPTS_TEMPLATES_DIR} \
-	  --data-dir ${DATA_DIR} \
-	  --use-case ${USE_CASES} \
-	  --log-file ${OUTPUT_LOGS_DIR}/$@.log \
-	  ${JUST_STATS} ${APP_ARGS}
-	@echo "${INFO_LABEL} Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
-
-langflow-pipeline-preamble::
-	@echo "${INFO_LABEL} Running the Langflow unit benchmark pipeline (synthesis + validation)..."
-	@echo "${INFO_LABEL} Log output: ${CODE}${OUTPUT_LOGS_DIR}/${@:%-preamble=%}.log${_END}\n"
-
-help-lf help-langflow help-langflow-pipeline::
-	@echo "${INFO_LABEL}Help on the Langflow unit benchmark pipeline:"
-	${NOOP} ${TIME} uv run ${SRC_DIR}/tools/langflow/unit_benchmark_flow.py --help
-	@echo
-
-unit-tests-langflow:: run-command-checks
-	@echo "${INFO_LABEL} Running the langflow unit tests..."
-	${MAKE} WHICH_TESTS=tests/unit/langflow unit-tests
+	@[[ ${INFERENCE_SERVICE} != 'ollama' ]] || ollama ps > /dev/null || ! echo "${ERROR} Ollama is not running! ${_END}" || exit 1
 
 .PHONY: run-chatbot chatbot before-chatbot before-chatbot-preamble check-model-which-chatbot do-run-chatbot agent-chatbot simple-chatbot after-chatbot
 
@@ -522,117 +489,10 @@ before-chatbot-preamble::
 after-chatbot::
 	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/${WHICH_CHATBOT}-chatbot.log${_END}"
 
-.PHONY: mcp-server run-mcp-server help-mcp-server check-mcp-server inspect-mcp-server
-
-# See inspect-mcp-server for information about ${INSPECTOR}, which is otherwise
-# blank.
-run-mcp-server:: mcp-server
-mcp-server:: before-chatbot
-	@echo "${INFO_LABEL}Running the ChatBot MCP Server..."
-	export LITELLM_LOG=ERROR; \
-	${NOOP} ${INSPECTOR} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/server.py \
-		--model ${MODEL} \
-		--service-url ${INFERENCE_URL} \
-		--template-dir ${CHATBOT_TEMPLATES_DIR} \
-		--data-dir ${CHATBOT_DATA_DIR} \
-		--output-dir ${CHATBOT_OUTPUT_DIR} \
-		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--which-chatbot ${WHICH_CHATBOT} \
-		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
-	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}"
-
-inspect-mcp-server:: command-check-node
-	@echo "${INFO_LABEL}Running the ${CODE}@modelcontextprotocol/inspector${_END} with the ChatBot MCP Server..."
-	${MAKE} INSPECTOR="npx @modelcontextprotocol/inspector" mcp-server
-
-help-mcp-server::
-	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/mcp_server/server.py --help
-
-.PHONY: api-server run-api-server help-api-server check-api-server
-.PHONY: view-api-server-docs view-api-server-redoc view-api-server-docs-preamble
-
-run-api-server:: api-server
-api-server:: before-chatbot
-	@echo "${INFO_LABEL}Running the ChatBot OpenAI-compatible API Server..."
-	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
-	export LITELLM_LOG=ERROR; \
-	${NOOP} ${TIME} uv run python ${SRC_DIR}/apps/chatbot/api_server/server.py \
-		--host ${CHATBOT_API_SERVER_HOST} \
-		--port ${CHATBOT_API_SERVER_PORT} \
-		--model ${MODEL} \
-		--service-url ${INFERENCE_URL} \
-		--template-dir ${CHATBOT_TEMPLATES_DIR} \
-		--data-dir ${CHATBOT_DATA_DIR} \
-		--output-dir ${CHATBOT_OUTPUT_DIR} \
-		--confidence-threshold ${CONFIDENCE_THRESHOLD} \
-		--which-chatbot ${WHICH_CHATBOT} \
-		--log-file ${OUTPUT_LOGS_DIR}/$@.log \
-		${APP_ARGS}
-	@echo "${INFO_LABEL}Log output: ${CODE}${OUTPUT_LOGS_DIR}/$@.log${_END}\n"
-
-help-api-server::
-	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/api_server/server.py --help
-
-check-api-server::
-	@echo "${INFO_LABEL}'Sanity check' that the OpenAI-compatible API server works:"
-	@echo "${INFO_LABEL}Running the server in the background..."
-	${NOOP} ${MAKE} api-server &
-	@echo
-	@echo "  ${HIGHLIGHT}Hit the 'return' key!${_END}"
-	@echo
-	@echo "${INFO_LABEL}Running ${CODE}apps/chatbot//api_server/example_client.py${_END} ..."
-	@echo
-	${NOOP} uv run python ${SRC_DIR}/apps/chatbot/api_server/example_client.py
-	@echo
-	@echo " ${HIGHLIGHT}Using a hack: Find the process id for the server and kill it...${_END}"
-	@echo
-	${NOOP} kill %1
-
-view-api-server-docs view-api-server-redoc:: view-api-server-docs-preamble
-	@uv run python -m webbrowser "http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}"
-
-view-api-server-docs-preamble::
-	@echo
-	@echo "${INFO_LABEL}Opening ${HIGHLIGHT}http://${CHATBOT_API_SERVER}/${@:view-api-server-%=%}${_END}"
-	@echo "${open-url-message}"
-	@echo "${INFO_LABEL}If the URL isn't found, make sure the server is running! For example,"
-	@echo "${INFO_LABEL}run ${CODE}make api-server${_END} in another terminal window, then rerun this target."
-
-.PHONY: run-open-webui open-webui open-webui-preamble open-webui-setup help-open-webui remove-open-webui
-
-run-open-webui open-webui:: open-webui-preamble open-webui-setup
-	cd ${OPEN_WEBUI_DIR} && \
-		DATA_DIR=${CHATBOT_DATA_DIR} uv tool run --with greenlet open-webui serve
-
-open-webui-preamble::
-	@echo "${INFO_LABEL}Running Open WebUI (${CODE}https://docs.openwebui.com/getting-started/${_END}) out of directory ${CODE}${OPEN_WEBUI_DIR}${_END}."
-	@echo "${INFO_LABEL}Make sure the OpenAI-compatible API Server is running first, i.e., ${CODE}make api-server${_END} in another terminal!"
-	@echo "${INFO_LABEL}"
-	@echo "${INFO_LABEL}Open ${CODE}http://localhost:8080${_END} when it is up (it takes a few minutes)."
-	@echo "${open-url-message}"
-
-open-webui-setup::
-	@test -d ${OPEN_WEBUI_DIR}/.venv || (\
-		echo "${INFO_LABEL}Setting up Open WebUI in the ${CODE}${OPEN_WEBUI_DIR}${_END} directory." && \
-		cd ${OPEN_WEBUI_DIR} && uv venv && uv sync && uv tool install open-webui)
-	cd ${OPEN_WEBUI_DIR} && . .venv/bin/activate
-
-help-open-webui::
-	DATA_DIR=${CHATBOT_DATA_DIR} uvx --python 3.13 --with greenlet open-webui@latest serve --help
-
-remove-open-webui::
-	uv tool uninstall open-webui
-	rm -rf $HOME/.open-webui
-
-# Because the full unit-tests suite is too costly to run for PRs, we use a
-# special-purpose definition of "before-pr-default".
-
-before-pr-default: before-pr-no-tests unit-tests-non-ai
-
 .PHONY: all-tests note-all-tests unit-tests-non-ai
 .PHONY: unit-tests-ai unit-tests-ai-scenario unit-tests-ai-qna  unit-tests-ai-agent unit-tests-ai-simple
 .PHONY: integ-tests integration-tests integration-tests-dedicated unit-tests-as-integration-tests
+.PHONY: unit-tests-appointments
 
 all-tests:: note-all-tests unit-tests-non-ai integration-tests
 note-all-tests::
@@ -645,8 +505,6 @@ note-all-tests::
 
 # This is effectively an alias for the default behavior of unit-tests!
 unit-tests-non-ai:: unit-tests
-
-.PHONY: unit-tests-appointments
 
 unit-tests-ai:: unit-tests-ai-qna unit-tests-ai-scenario
 
@@ -734,9 +592,3 @@ build::
 install::
 	@echo "${INFO_LABEL}Installing the code locally in development mode..."
 	uv sync
-
-# Common includes. See the beginning of this file, too!
-# The reason the following are put at the end, rather than the beginning, is to
-# control the ordering of dependencies for "global" targets, like "help".
-include .website.mk
-include .llm.mk

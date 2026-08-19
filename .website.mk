@@ -10,7 +10,7 @@ CLEAN_DIRS   += ${CLEAN_WEBSITE_DIRS}
 JEKYLL_PORT  ?= 4000
 
 ifndef WEBSITE_DIR
-$(error ${ERROR}There is no ${WEBSITE_DIR} directory!${_END})
+$(error ${ERROR} There is no ${WEBSITE_DIR} directory! ${_END})
 endif
 
 help:: help-custom-website
@@ -18,14 +18,14 @@ help-custom-website::
 	$(info ${help-custom-website-message})
 
 define help-custom-website-message
-${HIGHLIGHT}Quick help for this project's website-specific targets:${_END}
+${HIGHLIGHT} Quick help for this project's website-specific targets: ${_END}
 
 ${CODE}make help-website${_END}       # Help on the website targets.
 
 endef
 
 define help-website-message
-${HIGHLIGHT}Help for the GitHub Pages website targets:${_END}
+${HIGHLIGHT} Help for the GitHub Pages website targets: ${_END}
 
 ${CODE}make view-pages${_END}         # View the published GitHub pages in a browser.
 ${CODE}make view-local${_END}         # View the pages locally (requires Jekyll).
@@ -43,7 +43,7 @@ endef
 .PHONY: print-info-website
 print-info:: print-info-website
 print-info-website::
-	@echo "${HIGHLIGHT}For the GitHub Pages website:${_END}"
+	@echo "${HIGHLIGHT} For the GitHub Pages website: ${_END}"
 	@echo
 	@echo "  ${DARK_GREEN}GitHub Pages URL:${_END}   ${CODE}${PAGES_URL}${_END}"
 	@echo "  ${DARK_GREEN}Website files:${_END}      ${CODE}${WEBSITE_DIR}${_END}"
@@ -61,14 +61,14 @@ clean-website::
 
 view-pages::
 	@python -m webbrowser "${PAGES_URL}" || \
-		$(error "${ERROR}I could not open the GitHub Pages URL.${_END} Try ⌘-click or ^-click on this URL instead: ${CODE}${PAGES_URL}${_END}")
+		$(error "${ERROR} I could not open the GitHub Pages URL. ${_END} Try ⌘-click or ^-click on this URL instead: ${CODE}${PAGES_URL}${_END}")
 
 view-local:: setup-jekyll run-jekyll
 
 # Passing --baseurl '' allows us to use `localhost:4000` rather than require
 # `localhost:4000/The-AI-Alliance/${REPO_NAME}` when running locally.
 
-run-jekyll: clean
+run-jekyll: clean-website
 	@echo
 	@echo "Once you see the ${CODE}http://127.0.0.1:${JEKYLL_PORT}/${_END} URL printed, open it with command+click..."
 	@echo
@@ -82,8 +82,10 @@ setup-jekyll:: ruby-installed-check ruby-gem-installation bundle-command-check b
 .PHONY: jekyll-error ruby-missing-error gem-missing-error gem-error bundle-error bundle-missing-error
 
 ruby-gem-installation::
-	@echo "${NOTE}Updating Ruby gems required for local viewing of the website in the '${WEBSITE_DIR}' directory...${_END}"
-	gem install jekyll bundler jemoji || ${MAKE} gem-error
+	@command -v jekyll > /dev/null && \
+	  echo "${INFO_LABEL}jekyll already installed." || \
+	  { echo "${NOTE}Installing Ruby gems...${_END}"; \
+	    gem install jekyll bundler jemoji || ${MAKE} gem-error; }
 
 bundle-installation::
 	bundle install || ${MAKE} bundle-error
@@ -102,17 +104,17 @@ bundle-command-check:
 # invoked, independent of the shell script logic. Hence, the only way to make
 # this invocation conditional is to use a make target invocation, as shown above.
 jekyll-error:
-	$(error "${ERROR}Failed to run Jekyll.${_END} Try running 'make setup-jekyll'.")
+	$(error "${ERROR} Failed to run Jekyll. ${_END} Try running 'make setup-jekyll'.")
 ruby-missing-error:
-	$(error "${ERROR}'ruby' is required.${_END} ${ruby-installation-message}")
+	$(error "${ERROR} 'ruby' is required. ${_END} ${ruby-installation-message}")
 gem-missing-error:
-	$(error "${ERROR}Ruby's 'gem' is required.${_END} ${ruby-installation-message}")
+	$(error "${ERROR} Ruby's 'gem' is required. ${_END} ${ruby-installation-message}")
 gem-error:
 	$(error ${gem-error-message})
 bundle-error:
 	$(error ${bundle-error-message})
 bundle-missing-error:
-	$(error "${ERROR}Ruby gem command 'bundle' is required.${_END} I tried ${CODE}gem install bundle${_END}, but it apparently didn't work!")
+	$(error "${ERROR} Ruby gem command 'bundle' is required. ${_END} I tried ${CODE}gem install bundle${_END}, but it apparently didn't work!")
 
 define gem-error-message
 

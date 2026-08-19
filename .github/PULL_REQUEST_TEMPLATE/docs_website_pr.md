@@ -1,4 +1,4 @@
-# [PR Template] Documentation/Website Changes
+# [PR Template] Website or Other Documentation Changes
 
 > Replace the title with a more descriptive alternative. Delete
 > content below that doesn't apply to your PR. Also delete this paragraph!
@@ -36,6 +36,7 @@ Provide a link to a preview of the changes (if applicable) or just say that runn
 - [ ] I have updated any related documentation
 - [ ] I have added/updated tests if applicable
 - [ ] I have included necessary screenshots or examples
+- [ ] `make before-pr` passes (if there are also any `src` code changes.)
 
 ## Additional Context
 Add any other context or information that might be helpful for reviewers:

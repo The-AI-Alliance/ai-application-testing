@@ -9,9 +9,11 @@ import logging
 import os
 import sys
 from pathlib import Path
-from apps.chatbot import ChatBot, ChatBotSimple, ChatBotAgent, ChatBotResponseHandler
-from common.utils import setup
+
 from fastmcp import FastMCP
+
+from apps.chatbot import ChatBot, ChatBotAgent, ChatBotResponseHandler, ChatBotSimple
+from common.utils import tool_setup
 
 
 def create_mcp_server(
@@ -107,8 +109,8 @@ def create_mcp_server(
 
             return result
 
-        except Exception as e:
-            error_msg = f"Error processing chatbot query: {str(e)}"
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
+            error_msg = f"Error processing chatbot query: {e!s}"
             logger.error(error_msg)
             return error_msg
 
@@ -123,7 +125,7 @@ def create_mcp_server(
         Returns:
             A formatted list of all queries and responses in the current session
         """
-        # TODO: This needs rework, based on changes to query/response handling.
+        # This could be reworked, based on changes to query/response handling.
 
         logger.info("MCP tool get_chatbot_session_history called")
 
@@ -158,8 +160,8 @@ def create_mcp_server(
 
             return "\n".join(history_lines)
 
-        except Exception as e:
-            error_msg = f"Error retrieving session history: {str(e)}"
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
+            error_msg = f"Error retrieving session history: {e!s}"
             logger.error(error_msg)
             return error_msg
 
@@ -199,8 +201,8 @@ def create_mcp_server(
 
             return "\n".join(info_lines)
 
-        except Exception as e:
-            error_msg = f"Error retrieving chatbot info: {str(e)}"
+        except Exception as e:  # noqa pylint: disable=broad-exception-caught
+            error_msg = f"Error retrieving chatbot info: {e!s}"
             logger.error(error_msg)
             return error_msg
 
@@ -233,7 +235,7 @@ def main():
             help="Which ChatBot implementation to use: 'agent' for ChatBotAgent (LangChain Deep Agents) or 'simple' for ChatBotSimple (direct LiteLLM). Default: agent",
         )
 
-    args, logger = setup(
+    args, logger = tool_setup(
         tool,
         description,
         epilog="Run the chatbot as an MCP server for integration with MCP clients.",
@@ -262,7 +264,7 @@ def main():
         if result is None:
             sys.exit(1)
 
-        mcp, chatbot = result
+        mcp, _chatbot = result
 
         if logger:
             logger.info("Starting FastMCP server...")
@@ -274,7 +276,7 @@ def main():
         if logger:
             logger.info("MCP server stopped by user")
         print("\nMCP server stopped")
-    except Exception as e:
+    except Exception as e:  # noqa pylint: disable=broad-exception-caught
         error_msg = f"Error running MCP server: {e}"
         if logger:
             logger.error(error_msg)

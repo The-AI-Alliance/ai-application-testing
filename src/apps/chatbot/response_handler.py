@@ -1,3 +1,5 @@
+"""Handle processing of responses from LLMs."""
+
 import logging
 from typing import Any
 
@@ -56,7 +58,7 @@ class ResponseHandler:
         return f"{type(self).__name__}(confidence_level_threshold = {self.confidence_level_threshold}, #responses = {len(self.responses)})"
 
 
-class ChatBotResponseHandler(ResponseHandler):
+class ChatBotResponseHandler(ResponseHandler):  # pylint: disable=too-few-public-methods,unused-variable
     """
     Handle responses for the ChatBot, reflecting the details for the expected responses,
     as defined in the prompt file. We follow a policy of actually using the model's response text if the
@@ -64,12 +66,12 @@ class ChatBotResponseHandler(ResponseHandler):
     """
 
     team_member_reply = """
-I will ask a member of the healthcare team to get back to you as soon as possible. 
+I will ask a member of the healthcare team to get back to you as soon as possible.
 This could be the next business day. If you are having an emergency, please call 911 immediately!"""
 
     # If a value is a dictionary, it corresponds to the expected `actions` value, with `default` used if the actions
     # is empty or not found here.
-    fixed_replies = {
+    fixed_replies = {  # noqa: RUF012
         "prescription": {
             "refill": f"I have your request for a refill for {{prescriptions}}. {team_member_reply}",
             "inquiry": f"I have your request for information concerning {{prescriptions}}. {team_member_reply}",
@@ -119,5 +121,7 @@ This could be the next business day. If you are having an emergency, please call
         return processed_response
 
     class DictEmptyStrDefault(dict):
+        """A dictionary that simply returns an empty string "" for any missing keys."""
+
         def __missing__(self, key):
             return '""'

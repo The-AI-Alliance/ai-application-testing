@@ -1,7 +1,8 @@
 """Driver for data synthesis."""
 
 import os
-from common.utils import setup
+
+from common.utils import tool_setup
 from tools.unit_benchmark import UnitBenchmarkDataSynthesizer
 
 
@@ -9,7 +10,7 @@ def main():
 
     tool = os.path.basename(__file__)
     description = "Synthesize Q&A pairs for the healthcare ChatBot."
-    args, logger = setup(tool, description)
+    args, logger = tool_setup(tool, description)
 
     synthesizer = UnitBenchmarkDataSynthesizer(
         args.model,

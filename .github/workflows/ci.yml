@@ -8,9 +8,9 @@ on:
       - ".common.mk"
       - ".console-colors.mk"
       - ".website.mk"
-      - "pyproject.toml"
       - "Makefile"
       - "src/**"
+      - "pyproject.toml"
 
 jobs:
   quality:
@@ -36,7 +36,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Cache uv download cache
         uses: actions/cache@v6
@@ -50,18 +50,18 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .venv
-          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('pyproject.toml') }}
+          key: venv-${{ runner.os }}-py3.13-${{ hashFiles('pyproject.toml') }}
           restore-keys: |
-            venv-${{ runner.os }}-py3.12-
+            venv-${{ runner.os }}-py3.13-
 
       - name: Create virtual environment (if cache miss)
         run: |
           if [ ! -d .venv ]; then
-            uv venv
+            uv venv --no-managed-python
           fi
 
       - name: Install dependencies
         run: uv pip install -e ".[dev]"
 
       - name: Run before-pr checks
-        run: make before-pr
+        run: make GITHUB_CI='true' before-pr

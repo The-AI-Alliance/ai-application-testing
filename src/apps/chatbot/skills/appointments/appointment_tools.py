@@ -4,20 +4,27 @@ These tools are used by the Deep Agent's appointment skill.
 """
 
 import logging
+from collections.abc import MutableMapping, Sequence
 from datetime import datetime
 from pathlib import Path
-from typing import Any, MutableMapping, Optional, Sequence, Tuple
+from typing import Any
 
 from langchain_core.tools import tool
 
 from apps.chatbot.tools.appointment_manager import AppointmentManager
+from common.date_time_utils import now
 
-# Initialize the appointment tool with a default file location
-# This will be overridden when integrated with the ChatBot
-_def_appointments_file = Path("../output/appointments.jsonl")
-_def_appointment_manager_logger = logging.getLogger("AppointmentManager")
-_def_appointment_manager_logger.setLevel(logging.INFO)
-_appointment_manager: Optional[AppointmentManager] = None
+
+class AppointmentManagerTool:  # pylint: disable=too-few-public-methods
+    """Holds "global" objects for appointment management, but in a more OO way."""
+
+    # Initialize the appointment tool with a default file location
+    # This will be overridden when integrated with the ChatBot
+    def_appointments_file = Path("../output/appointments.jsonl")
+    def_appointment_manager_logger = logging.getLogger("AppointmentManager")
+    def_appointment_manager_logger.setLevel(logging.INFO)
+    appointment_manager: AppointmentManager
+    appointment_manager_initialized: bool = False
 
 
 def get_appointment_manager(
@@ -34,36 +41,42 @@ def get_appointment_manager(
 
     Args:
         - file_path (Path): Ignored unless a new manager is to be created.
-          The storage location. If empty, then `_def_appointments_file` is used.
+          The storage location. If empty, then `AppointmentManagerTool.def_appointments_file` is used.
         - logger (logging.Logger): Ignored unless a new manager is to be created.
-          The logger. If `None`, then `_def_appointment_manager_logger` is used.
-
+          The logger. If `None`, then `AppointmentManagerTool.def_appointment_manager_logger` is used.
+        - make_new (bool): Whether or not to make a new
     Returns:
         The appointment manager.
     """
-    global _appointment_manager
-
-    if _appointment_manager and not make_new:
-        return _appointment_manager
+    if AppointmentManagerTool.appointment_manager_initialized and not make_new:
+        return AppointmentManagerTool.appointment_manager
 
     # Determine the correct file path value:
     fp: Path | None = None
     if file_path:
         fp = Path(file_path)
     else:
-        fp = _def_appointments_file
+        fp = AppointmentManagerTool.def_appointments_file
 
     # Determine the logger value
     if not logger:
-        logger = _def_appointment_manager_logger  # assign the default logger
+        logger = AppointmentManagerTool.def_appointment_manager_logger  # assign the default logger
 
-    _appointment_manager = AppointmentManager(fp, logger=logger)
-    logger.info(f"Created a new AppointmentManager({fp}, logger) (id = {hex(id(_appointment_manager))}).")
-    return _appointment_manager
+    AppointmentManagerTool.appointment_manager = AppointmentManager(appointments_file=fp, logger=logger)
+    amt_id = hex(id(AppointmentManagerTool.appointment_manager))
+    logger.info(
+        "Created a new AppointmentManager(%s, logger) (id = %s, existing appointment count: %d), %s",
+        fp,
+        amt_id,
+        AppointmentManagerTool.appointment_manager.get_appointments_count(),
+        AppointmentManagerTool.appointment_manager,
+    )
+    AppointmentManagerTool.appointment_manager_initialized = True
+    return AppointmentManagerTool.appointment_manager
 
 
 @tool
-def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> Tuple[str, str]:
+def create_appointment(patient_name: str, appointment_date_time: str, reason: str) -> tuple[str, str]:
     """
     Create a new appointment for a patient.
 
@@ -85,14 +98,14 @@ def create_appointment(patient_name: str, appointment_date_time: str, reason: st
 
 
 @tool
-def cancel_appointment(id: str) -> Tuple[bool, str]:
+def cancel_appointment(appointment_id: str) -> tuple[bool, str]:
     """
     Cancel an existing appointment, specified by the appointment ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
 
     Args:
-        - id (str): ID of the appointment to cancel
+        - appointment_id (str): ID of the appointment to cancel
 
     Returns:
         True with success message or False with a failure message with reasons for the failure.
@@ -101,18 +114,18 @@ def cancel_appointment(id: str) -> Tuple[bool, str]:
         cancel_appointment("abc123-def456")
     """
     am = get_appointment_manager()
-    return am.cancel_appointment(id)
+    return am.cancel_appointment(appointment_id)
 
 
 @tool
-def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
+def change_appointment(appointment_id: str, new_date_time: str) -> tuple[bool, str]:
     """
     Change an appointment to a new time.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
 
     Args:
-        - id (str): ID of the appointment to change
+        - appointment_id (str): ID of the appointment to change
         - new_date_time (str): New ISO format datetime string
 
     Returns:
@@ -123,7 +136,7 @@ def change_appointment(id: str, new_date_time: str) -> Tuple[bool, str]:
     """
     new_dt = datetime.fromisoformat(new_date_time)
     am = get_appointment_manager()
-    return am.change_appointment(id, new_dt)
+    return am.change_appointment(appointment_id, new_dt)
 
 
 @tool
@@ -132,8 +145,8 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
     List all active appointments, with optional filtering.
 
     Args:
-        - patient_name (str): Only return appointments for this patient (default (str): all patients)
-        - after_date_time (str): Don't include appointments before this date time. I (str)f empty, the value `datetime.now().isoformat()` will be used to only return future appointments.
+        - patient_name (str): Only return appointments for this patient (default: all patients)
+        - after_date_time (str): Don't include appointments before this date time. If empty, the value `now().isoformat()` will be used to only return future appointments.
 
     Returns:
         List of dictionaries for the located appointments
@@ -144,7 +157,7 @@ def get_appointments(patient_name: str = "", after_date_time: str = "") -> Seque
         get_appointments(patient_name="John Doe")
     """
     am = get_appointment_manager()
-    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else datetime.now()
+    after_dt = datetime.fromisoformat(after_date_time) if after_date_time else now()
     return am.get_appointments(patient_name=patient_name, after_date_time=after_dt)
 
 
@@ -158,20 +171,20 @@ def get_appointments_count() -> int:
 
 
 @tool
-def get_appointment_by_id(id: str) -> MutableMapping[str, Any]:
+def get_appointment_by_id(appointment_id: str) -> MutableMapping[str, Any]:
     """
     Return a specific appointment for the specified ID.
     Use "get_appointment_id_for_name_and_date_time" to get the ID for a patient name
     and appointment date and time, if necessary.
 
     Args:
-        - id (str): ID of the appointment
+        - appointment_id (str): ID of the appointment
 
     Returns:
         Appointment dictionary for the input ID or {} if a matching appointment was not found
     """
     am = get_appointment_manager()
-    return am.get_appointment_by_id(id)
+    return am.get_appointment_by_id(appointment_id)
 
 
 @tool
@@ -194,7 +207,7 @@ def get_appointment_id_for_name_and_date_time(patient_name: str, appointment_dat
 # Export all tools as a list for easy registration
 # Note that get_appointment_manager is not a tool and so it is not in this list.
 # It is used internally.
-APPOINTMENT_TOOLS = [
+APPOINTMENT_TOOLS = [  # pylint: disable=unused-variable
     create_appointment,
     cancel_appointment,
     change_appointment,
