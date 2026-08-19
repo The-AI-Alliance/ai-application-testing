@@ -27,6 +27,11 @@ class ResourceManager:
     In memory, the resources are stored as a mapping of the resource id as the
     key and the resource as the value, for efficient lookup by id, but most
     methods just accept or return sequences of resource values.
+
+    NOTE: You will see a number of log messages with two versions, a "sanitized"
+    version that passes CodeQL checks for leaking sensitive information into logs,
+    and a commented-out version with more information that can be used temporarily
+    for debugging, but shouldn't be left "on".
     """
 
     def __init__(
@@ -188,7 +193,8 @@ class ResourceManager:
         the remaining collection of resources.
         """
         if resource_id not in self.resources:
-            raise ValueError(f"ID {resource_id} not in the resources.")
+            raise ValueError("An input ID is not in the resources.")
+            # raise ValueError(f"ID {resource_id} not in the resources.")
         del self.resources[resource_id]
         if write_to_storage:
             self.save_resources()
@@ -223,7 +229,8 @@ class ResourceManager:
         all_count = loaded_count + error_count
         if errors:
             self.logger.error(
-                f"{error_count}/{all_count} records from storage file {self.storage.storage_path} failed to parse: {errors}"
+                f"{error_count}/{all_count} records from storage file failed to parse: {errors}"
+                # f"{error_count}/{all_count} records from storage file {self.storage.storage_path} failed to parse: {errors}"
             )
 
         self.resources = {}
@@ -233,13 +240,15 @@ class ResourceManager:
                 resource_id = resource.get("id")
                 if resource_id:
                     if resource_id in self.resources:
-                        error_msg = f"self.resources already has an entry for {resource_id} ({self.resources[resource_id]}) (from storage file: {self.storage.storage_path}). SKIPPING new one!"
+                        error_msg = "self.resources already has an entry for an ID. SKIPPING new one!"
+                        # error_msg = f"self.resources already has an entry for {resource_id} ({self.resources[resource_id]}) (from storage file: {self.storage.storage_path}). SKIPPING new one!"
                         self.logger.error(error_msg)
                         errors.append(error_msg)
                     else:
                         self.resources[resource_id] = resource
                 else:
-                    error_msg = f"resource doesn't have an id! resource = {resource} (from storage file: {self.storage.storage_path})."
+                    error_msg = "A resource doesn't have an ID!"
+                    # error_msg = f"resource doesn't have an id! resource = {resource} (from storage file: {self.storage.storage_path})."
                     self.logger.error(error_msg)
                     errors.append(error_msg)
                     error_count += 1
@@ -262,7 +271,8 @@ class ResourceManager:
         error_msg = ""
         if count != lena:
             diff = lena - count
-            error_msg = f"Failed to save {diff} out of {lena} resources to the storage file {self.storage.storage_path}. resources = {resources}"
+            error_msg = f"Failed to save {diff} out of {lena} resources to the storage file."
+            # error_msg = f"Failed to save {diff} out of {lena} resources to the storage file {self.storage.storage_path}. resources = {resources}"
             self.logger.error(error_msg)
         return count, error_msg
 
@@ -308,8 +318,10 @@ class ResourceManager:
             for resource in self.resources.values():
                 dt = resource.get(unique_datetime_key)
                 if not dt:
-                    self.logger.error(
-                        f"""_is_valid_date_time(): Resource found without a datetime for key "{unique_datetime_key}"! {resource}"""
+                    return (
+                        False,
+                        f"""Resource found without a datetime for a key!"""
+                        # f"""Resource found without a datetime for key "{unique_datetime_key}"! {resource}"""
                     )
                 else:
                     dtm1 = dt - one_second
@@ -317,7 +329,8 @@ class ResourceManager:
                     if not self._ignore(resource) and dtm1 < a_date_time and dtp1 > a_date_time:
                         return (
                             False,
-                            f"""The time slot {a_date_time} for key "{unique_datetime_key}" is already reserved.""",
+                            f"""The time slot the input date-time for a key is already reserved.""",
+                            # f"""The time slot {a_date_time} for key "{unique_datetime_key}" is already reserved.""",
                         )
 
         return True, ""
@@ -366,7 +379,8 @@ class ResourceManager:
             self.logger.error(msg)
             return "", msg
 
-        success_msg = f"Resource created at {now()} with ID {resource_id}."
+        success_msg = f"Resource created at {now()} with a new ID."
+        # success_msg = f"Resource created at {now()} with ID {resource_id}."
         self.logger.info(success_msg)
         return resource_id, success_msg
 
@@ -416,7 +430,8 @@ class ResourceManager:
         if len(unique) != len(ids):
             return (
                 0,
-                f"{len(ids) - len(unique)} out of {len(ids)} ids are not unique! {ids}",
+                f"{len(ids) - len(unique)} out of {len(ids)} ids are not unique!",
+                # f"{len(ids) - len(unique)} out of {len(ids)} ids are not unique! {ids}",
             )
         len_resources = len(ids)
 
