@@ -71,6 +71,11 @@ class AppointmentManager(ResourceManager):
     Appointments are stored in a JSONL file where each line is a JSON object
     representing an appointment. The method return values are designed to work
     with LLMs in an agent context.
+
+    NOTE: You will see a number of log messages with two versions, a "sanitized"
+    version that passes CodeQL checks for leaking sensitive information into logs,
+    and a commented-out version with more information that can be used temporarily
+    for debugging, but shouldn't be left "on".
     """
 
     # Common USA holidays (simplified list)
@@ -209,7 +214,8 @@ class AppointmentManager(ResourceManager):
             pn_error_msg = "'patient_name' field can't be empty."
 
         if not is_valid_dt or not is_valid_pn:
-            return False, f"{dt_error_msg} {pn_error_msg} Input fields: {fields}."
+            return False, f"{dt_error_msg} {pn_error_msg}."
+            # return False, f"{dt_error_msg} {pn_error_msg} Input fields: {fields}."
         else:
             return True, ""
 
@@ -263,7 +269,8 @@ class AppointmentManager(ResourceManager):
         """
         appointment = self.get_resource_by_id(appointment_id)
         if not appointment or not len(appointment):
-            error_msg = f"There is no appointment with ID {appointment_id}."
+            error_msg = "There is no appointment with the input ID."
+            # error_msg = f"There is no appointment with ID {appointment_id}."
             self.logger.error(error_msg)
             return False, error_msg
 
@@ -272,7 +279,8 @@ class AppointmentManager(ResourceManager):
 
         # Persist the updated status.
         self._persist_resources([appointment])
-        success_msg = f"Appointment {appointment_id} is now cancelled."
+        success_msg = "Appointment with the input ID is now cancelled."
+        # success_msg = f"Appointment {appointment_id} is now cancelled."
         self.logger.info(success_msg)
         return True, success_msg
 
@@ -289,7 +297,8 @@ class AppointmentManager(ResourceManager):
         """
         appointment = self.get_resource_by_id(appointment_id)
         if not appointment or not len(appointment):
-            error_msg = f"No appointment with ID {appointment_id} was found."
+            error_msg = "No appointment with the input ID was found."
+            # error_msg = f"No appointment with ID {appointment_id} was found."
             self.logger.error(error_msg)
             return False, error_msg
 
@@ -300,7 +309,8 @@ class AppointmentManager(ResourceManager):
             unique_datetime_key="appointment_date_time",
         )
         if not is_valid:
-            error_msg = f"I could not change the appointment {appointment_id}. {error_msg}"
+            error_msg = f"I could not change an appointment with the input ID. {error_msg}"
+            # error_msg = f"I could not change the appointment {appointment_id}. {error_msg}"
             self.logger.error(error_msg)
             return False, error_msg
 
@@ -313,11 +323,13 @@ class AppointmentManager(ResourceManager):
         self._persist_resources([appointment])
 
         self.logger.info(
-            f"I changed appointment with id = {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
+            "I changed an appointment from the old date-time to the new one."
+            # f"I changed appointment with id = {appointment_id} from {old_time.isoformat()} to {new_date_time.isoformat()}."
         )
         return (
             True,
-            f"I changed appointment with id = {appointment_id} from {old_time} to {new_date_time}.",
+            "I changed an appointment from the old date-time to the new one.",
+            # f"I changed appointment with id = {appointment_id} from {old_time} to {new_date_time}.",
         )
 
     def get_appointments_by_criteria(
@@ -389,7 +401,8 @@ class AppointmentManager(ResourceManager):
         if not patient_name:
             errors.append("The patient_name argument can't be empty!")
         if not self._is_valid_date_time(appointment_date_time):
-            errors.append(f"The appointment_date_time argument '{appointment_date_time}' is invalid!")
+            errors.append("The input appointment_date_time argument is invalid!")
+            # errors.append(f"The appointment_date_time argument '{appointment_date_time}' is invalid!")
         if errors:
             raise ValueError(" ".join(errors))
 
@@ -411,7 +424,8 @@ class AppointmentManager(ResourceManager):
                 return found[0]
             case n:
                 raise ValueError(
-                    f"Logic error. {n} > 1 appointments found for {patient_name} at {appointment_date_time}. Should be 0 or 1. appointments = {self.get_resources()}"
+                    f"Logic error. {n} > 1 appointments found for the input patient_name at the same appointment date_time. Should be 0 or 1."
+                    # f"Logic error. {n} > 1 appointments found for {patient_name} at {appointment_date_time}. Should be 0 or 1. appointments = {self.get_resources()}"
                 )
 
     def __str__(self) -> str:
