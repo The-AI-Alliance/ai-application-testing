@@ -63,14 +63,19 @@ def get_appointment_manager(
         logger = AppointmentManagerTool.def_appointment_manager_logger  # assign the default logger
 
     AppointmentManagerTool.appointment_manager = AppointmentManager(appointments_file=fp, logger=logger)
-    amt_id = hex(id(AppointmentManagerTool.appointment_manager))
     logger.info(
-        "Created a new AppointmentManager(%s, logger) (id = %s, existing appointment count: %d), %s",
-        fp,
-        amt_id,
+        "Created a new AppointmentManager (existing appointment count: %d)",
         AppointmentManagerTool.appointment_manager.get_appointments_count(),
-        AppointmentManagerTool.appointment_manager,
     )
+    # This version of the previous statement fails the CodeQL check for potential
+    # clear text leaks of sensitive data. It is left here for temporary debugging use...
+    # logger.info(
+    #     "Created a new AppointmentManager(%s, logger) (id = %s, existing appointment count: %d), %s",
+    #     fp,
+    #     hex(id(AppointmentManagerTool.appointment_manager)),
+    #     AppointmentManagerTool.appointment_manager.get_appointments_count(),
+    #     AppointmentManagerTool.appointment_manager,
+    # )
     AppointmentManagerTool.appointment_manager_initialized = True
     return AppointmentManagerTool.appointment_manager
 

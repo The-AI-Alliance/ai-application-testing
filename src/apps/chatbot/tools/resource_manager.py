@@ -438,12 +438,13 @@ class ResourceManager:
         # Validate the resource records
         errors = []
         good_resources = []
-        for resource in resources:
+        for idx, resource in enumerate(resources):
             success, message = self._is_valid_resource(resource)
             if success:
                 good_resources.append(resource)
             else:
-                errors.append(f""" "{resource}" -> Error: {message}""")
+                errors.append(f"index={idx} -> Error: {message}")
+                # errors.append(f' index={idx}, "{resource}" -> Error: {message}')
         if errors:
             error_msg = f"{len(errors)} resources are invalid: [{", ".join(errors)}]. No resources changed!"
             self.logger.error(error_msg)
