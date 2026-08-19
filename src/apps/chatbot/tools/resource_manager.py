@@ -320,7 +320,7 @@ class ResourceManager:
                 if not dt:
                     return (
                         False,
-                        f"""Resource found without a datetime for a key!"""
+                        f"""Resource found without a datetime for a key!""",
                         # f"""Resource found without a datetime for key "{unique_datetime_key}"! {resource}"""
                     )
                 else:

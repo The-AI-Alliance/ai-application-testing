@@ -328,7 +328,7 @@ class AppointmentManager(ResourceManager):
         )
         return (
             True,
-            "I changed an appointment from the old date-time to the new one."
+            "I changed an appointment from the old date-time to the new one.",
             # f"I changed appointment with id = {appointment_id} from {old_time} to {new_date_time}.",
         )
 
