@@ -320,7 +320,7 @@ class ResourceManager:
                 if not dt:
                     return (
                         False,
-                        f"""Resource found without a datetime for a key!""",
+                        """Resource found without a datetime for a key!""",
                         # f"""Resource found without a datetime for key "{unique_datetime_key}"! {resource}"""
                     )
                 else:
@@ -329,7 +329,7 @@ class ResourceManager:
                     if not self._ignore(resource) and dtm1 < a_date_time and dtp1 > a_date_time:
                         return (
                             False,
-                            f"""The time slot the input date-time for a key is already reserved.""",
+                            """The time slot the input date-time for a key is already reserved.""",
                             # f"""The time slot {a_date_time} for key "{unique_datetime_key}" is already reserved.""",
                         )
 
