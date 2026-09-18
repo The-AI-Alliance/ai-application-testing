@@ -115,6 +115,8 @@ ${HIGHLIGHT} Quick help for this make process: General Targets ${_END}
 ${CODE}make all${_END}                # Makes the ${CODE}help${_END} and ${CODE}print-info${_END} targets.
 ${CODE}make help${_END}               # Prints this output.
 ${CODE}make print-info${_END}         # Print the current values of some make and environment variables.
+${CODE}make foo-watch${_END}          # Rerun ${CODE}make foo${_END} whenever any files are changed.
+${CODE}${_END}                        # See also the custom ${CODE}*-watch${_END} targets below.
 
 ${HIGHLIGHT} Working with the code: ${_END}
 
@@ -350,6 +352,27 @@ type-check-watch-command-default::
 	@echo "${INFO_LABEL}Target ${CODE}type-check-watch${_END}: Running ${CODE}ty${_END} to type check the code in ${CODE}${SRC_DIR}${_END} using 'watch' mode."
 	cd ${SRC_DIR} && ${UV_RUN} ty ${TY_ARGS} --watch ${TY_OPT_ARGS} .
 
+
+# Some explicit *-watch targets are defined above in this file for shell commands
+# with `--watch` flags, which continually rerun when files change. The following
+# %-watch target pattern provides similar behavior for arbitrary make targets. For
+# example, to keep running the unit tests as you edit the files, use:
+#   make unit-tests-watch
+
+%-watch:
+	@while true; do \
+        $(MAKE) ${@:%-watch=%}; \
+        echo "${HIGHLIGHT}Use CTRL-c TWICE to exit...${_END_BOLD}${_END}"; \
+        fswatch --one-event --recursive --extended \
+            --include '\.mk$$' \
+            --exclude '\.git' \
+            --exclude '\.coverage' \
+            --exclude '\.hypothesis' \
+            --exclude '__pycache__' \
+            --exclude '\..*_cache' \
+            . || exit 0; \
+    done
+
 .PHONY: one-time-setup clean-setup uninstall-uv 
 .PHONY: force-setup force-one-time-setup rm-venv
 .PHONY: command-check-uv install-uv uv-venv install-dev-dependencies 
@@ -414,3 +437,6 @@ ${INFO_LABEL}this project. See ${CODE}https://nodejs.org/en/download/${_END} for
 endef
 
 open-url-message = ${TIP_LABEL}Try ${CODE}⌘+click${_END} or ${CODE}^+click${_END} on the URL.
+
+# Definitions for the website:
+include .website.mk
