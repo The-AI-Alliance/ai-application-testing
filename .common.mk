@@ -371,23 +371,20 @@ type-check-watch-command-default::
             --exclude '__pycache__' \
             --exclude '\..*_cache' \
             . || exit 0; \
+        sleep 1; \
     done
 
-.PHONY: one-time-setup clean-setup uninstall-uv 
+.PHONY: one-time-setup clean-setup uninstall-uv install-dev-dependencies install-brew-commands
 .PHONY: force-setup force-one-time-setup rm-venv
-.PHONY: command-check-uv install-uv uv-venv install-dev-dependencies 
+.PHONY: command-check-uv uv-venv install-requirements-txt-dependencies
 
-setup one-time-setup:: install-uv uv-venv install-dev-dependencies
+setup one-time-setup:: install-brew-commands uv-venv install-dev-dependencies
 force-setup force-one-time-setup:: rm-venv setup
 rm-venv::
 	rm -rf .venv
 	rm -f uv.lock
 
 clean-setup:: uninstall-uv
-
-install-%::
-	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
-		echo "${INFO_LABEL}command ${CODE}$$cmd${_END} is already installed." || ${MAKE} CMD=$$cmd help-command-not-installed help-command-$$cmd
 
 uv-venv:: command-check-uv
 	@test -d .venv && echo "${INFO_LABEL}directory ${CODE}.venv${_END} already exists; not running ${CODE}uv venv${_END}." || uv venv
@@ -397,6 +394,24 @@ uv-venv:: command-check-uv
 
 install-dev-dependencies::
 	uv pip install -e ".[dev]"
+
+install-brew-commands:: install-uv install-fswatch # install-jq
+	@command -v jq > /dev/null || ( \
+	echo "${TIP_LABEL}The ${CODE}jq${_END} command is recommended for analyzing JSON files, but we don't install it automatically." && \
+	echo "${TIP_LABEL}If you want to install it, run the command ${CODE}make install-jq${_END}." )
+
+# Check if a command is installed. If not and brew is installed, try that. If brew isn't
+# installed or it fails to work, try to provide help on installing the command.
+install-%::
+	@cmd=${@:install-%=%} && command -v $$cmd > /dev/null && \
+		echo "${INFO_LABEL}Command ${CODE}$$cmd${_END} is already installed." || \
+		${MAKE} do-brew-install-$$cmd
+
+do-brew-install-%::
+	@cmd=${@:do-brew-install-%=%} && command -v brew > /dev/null && \
+		echo "Using HomeBrew to install $$cmd:" && brew install $$cmd || \
+		echo "${WARNING_LABEL}${CODE}HomeBrew${_END} is not installed, so we can't install ${CODE}$$cmd${_END}. Attempting to provide help..." && \
+		${MAKE} LABEL=WARNING help-command-$$cmd && exit 1
 
 uninstall-uv:: 
 	$(info ${help-command-${@}-message})
@@ -425,8 +440,14 @@ endef
 
 help-command-uvx-message = ${help-command-uv-message}
 
+define help-command-fswatch-message
+The command ${CODE}fswatch${_END} is required for most of the ${CODE}%-watch${_END} targets to work.
+See its website, ${CODE}https://emcrisostomo.github.io/fswatch/${_END} for details.
+For example, if you have HomeBrew installed, run ${CODE}brew install fswatch${_END}.
+endef
+
 define help-command-jq-message
-${INFO_LABEL}The CLI command ${CODE}jq${_END} is useful, but not required, for processing JSON file.
+${INFO_LABEL}The CLI command ${CODE}jq${_END} is recommended, but not required, for processing JSON file.
 ${INFO_LABEL}See ${CODE}https://jqlang.org/download/${_END} for installation instructions.
 endef
 
