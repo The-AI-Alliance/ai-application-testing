@@ -29,11 +29,17 @@ In production deployments, an LLM could also be used to judge model responses du
 {: .tip}
 > **Highlights:**
 >
+> 1. The recently announced [Jev](https://typesafe.ai){:target="typesafe"} from [TypeSafe.ai](https://typesafe.ai){:target="typesafe"} promises to be a much more compelling alternative to using LLMs as judges.
 > 1. Manual evaluation of synthetic data and model responses (during testing and inference) doesn't scale and is error prone. 
 > 1. Let one or more &ldquo;smart&rdquo; _teacher models_ do the judging.
 > 1. Small models don't make very good judges, but using a &ldquo;panel&rdquo; of judges with _majority wins_ or _average scoring_ provides more resiliency and can be used when a single large, expensive model isn't a viable choice.
 > 1. A more effective option is to use an agent framework that integrates reliable, expert data sources to formulate responses, rather than just relying on an LLM itself.
 > 1. Deciding on appropriate pass/fail thresholds will require studying actual content, continued experiments, and a growing intuition about what is required. Different values will emerge for use in data validation, test runs, and possibly production judging of generated responses.
+
+{: .note}
+> **News:**
+>
+> The recently announced [Jev](https://typesafe.ai){:target="typesafe"} from [TypeSafe.ai](https://typesafe.ai){:target="typesafe"} promises to be a much more compelling alternative _LLM as a Judge_, at least in many cases. It is both far cheaper and far faster for particular applications like this, but not a replacement for LLMs in other uses. This guide's content will be updated to discuss Jev (and expected competitors), although most of the content about using AI models for judging purposes will be unchanged.
 
 Normally, a judge model is chosen because it is considered very &ldquo;smart&rdquo; or capable for evaluating the content in question. It may also be large and expensive to use or otherwise considered not suitable for production use in the application. As for one-time data synthesis, one-time judging of the data can be a cost-effective way to maximize application quality while keeping production costs as low as possible.
 
