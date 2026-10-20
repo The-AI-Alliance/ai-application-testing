@@ -1,6 +1,6 @@
 # Guide for the `ai-application-testing` Repo
 
-This repository is the technical home for _Testing Generative AI Agent Applications_ project. Use this file as the fast path for orientation, navigation, and local conventions.
+This repository is the technical home for _Testing Generative AI Applications_ project. Use this file as the fast path for orientation, navigation, and local conventions.
 
 ## Repository Map
 

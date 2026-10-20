@@ -20,7 +20,7 @@ We welcome your contributions!
 	* [Issues]({{site.gh_edit_repository}}/issues){:target="issues"}
 	* [Discussion forum]({{site.gh_edit_repository}}/discussions){:target="discussions"}
 	* [Pull requests]({{site.gh_edit_repository}}/pulls){:target="prs"}
-* Or give us your feedback through [email](mailto:contact@thealliance.ai?subject=Feedback on Testing Generative AI Agent Applications)
+* Or give us your feedback through [email](mailto:contact@thealliance.ai?subject=Feedback on Testing Generative AI Applications)
 
 Here are some areas where help is most needed:
 

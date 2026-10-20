@@ -1,4 +1,4 @@
-# Contributing to Testing Generative AI Agent Applications
+# Contributing to Testing Generative AI Applications
 
 👍🎉 First off, thank you for your interest in this project! 🎉👍
 

@@ -742,7 +742,7 @@
       "zoom": 1.0718780799165848
     }
   },
-  "description": "Synthesizes data using the unit benchmarks tools published as part of the AI Alliance, Testing Generative AI Agent Applications (https://the-ai-alliance.github.io/ai-application-testing/)",
+  "description": "Synthesizes data using the unit benchmarks tools published as part of the AI Alliance, Testing Generative AI Applications (https://the-ai-alliance.github.io/ai-application-testing/)",
   "endpoint_name": null,
   "id": "13e81448-428c-4037-b50c-30875384e68b",
   "is_component": false,
