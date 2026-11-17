@@ -230,7 +230,7 @@ Here is an example from the _emergency_ file (nicely formatted):
 
 Note that the answer has the identified prescription (placeholder `_P_`) and the specific body part (heart) found in the question.
 
-Each of the Q&A data files is generated with a single inference invocation, using the prompt in the corresponding template file discussed above. In some cases, output Q&A pairs don't actually fit the use case. There are times when a _prescription refill_ Q&A pair is labeled as an emergency, times when an _emergency_ Q&A pair is labeled a _refill_, etc. This is more likely to happen with smaller models. Is this _okay_? We will return to this issue of _cross pollination_ in [LLM as a Judge]({{site.baseurl}}/llm-as-a-judge).
+Each of the Q&A data files is generated with a single inference invocation, using the prompt in the corresponding template file discussed above. In some cases, output Q&A pairs don't actually fit the use case. There are times when a _prescription refill_ Q&A pair is labeled as an emergency, times when an _emergency_ Q&A pair is labeled a _refill_, etc. This is more likely to happen with smaller models. Is this _okay_? We will return to this issue of _cross pollination_ in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/).
 
 Finally, even though the system prompt emphasizes that we want _at least_ 100 Q&A pairs, we rarely got that many in the actual results with `llama3.2:3B`, while using `gpt-oss:20b` over delivered. This is probably more of a quirk of using a small model than a reflection of any &ldquo;defects&rdquo; or advantages of one model architecture vs. the other.
 
@@ -253,61 +253,60 @@ While the best-known benchmarks tend to be too broad in scope and generic for ou
 
 Note that benchmarks fall into the broad category of [Evaluation]({{site.glossaryurl}}/#evaluation){:target="_glossary"}, including data sets and tools for safety purposes. Many of the data sets and tools discussed below use this term, so we call it out here for clarity.
 
-Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here.
+Here is a list of some domain-specific benchmarks that we know of. [Let us know]({{site.baseurl}}/) of any others you find useful, so we can add them here. The items in each section are listed alphabetically by name.
 
 ### General Collections of Domain-Specific Evaluations
 
-* [EvalEval](https://evalevalai.com/){:target="ee"} ([Blog post](https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/){:target="ee-blog"}, [GitHub organization](https://github.com/evaleval){:target="ee-gh"}) is a research coalition on _evaluating evaluations_. [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"}, is defining a shared schema for evaluations and a crowdsourced database of AI evaluations.
-* [Weval](https://weval.org/sandbox){:target="weval"} from the [Collective Intelligence Project](https://www.cip.org/){:target="cip"}, is a community-driven collection of domain-specific evaluations, designed to allow non-experts to contribute and use evaluation suites relevant to their needs. 
+These collections cover many domains or more general content. When looking for benchmarks for a specific domain, consult the sections below as well as the benchmarks listed here.
+
+* [AI Professions Prompt Benchmark](https://aiprofessions.ai/models/ai-model-test-results/){:target="aippb"} ([data set](https://github.com/aiprofessions/prompt-benchmark){:target="aippb"}), from [AI Professions](https://aiprofessions.ai/models/ai-model-test-results/){:target="aippb"}, contains 100 drafting tasks from 10 professions (lawyers, accountants, healthcare, engineers, real estate, sales, and others), plus Excel/Microsoft 365. It contains English, Spanish, French and Portuguese content. Each task has a fictional input and five pass/fail criteria, hash-locked before any model was run on them. The [results](https://aiprofessions.ai/models/ai-model-test-results/){:target="aippb"} are for five models, where each task was executed three times for a total of 1,500 runs and 7,500 verdicts. All the results are public under CC BY 4.0. LLM as a Judge was used as the grader, so the benchmark's limits are the same ones we discuss in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/). For example, swapping the judge moved pass rates as much as 17 points on the same outputs! For this reason, no pooled ranking results were published.
 * [ClairBot](https://clair.bot/){:target="clairbot"} from the Responsible AI Team at [Ekimetrics](https://ekimetrics.com/){:target="ekimetrics"} is a research project that compares several model responses for domain-specific questions, where each of the models has been tuned for a particular domain, in this case ad serving, laws and regulations, and social sciences and ethics.
-* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity. 
+* [EvalEval](https://evalevalai.com/){:target="ee"} ([Blog post](https://evalevalai.com/infrastructure/2026/02/17/everyevalever-launch/){:target="ee-blog"}, [GitHub organization](https://github.com/evaleval){:target="ee-gh"}) is a research coalition on _evaluating evaluations_. [Every Eval Ever](https://github.com/evaleval/every_eval_ever){:target="eee-gh"}, is defining a shared schema for evaluations and a crowdsourced database of AI evaluations.
+* [HELM Enterprise Benchmark](https://github.com/IBM/helm-enterprise-benchmark){:target="heb"} is an enterprise benchmark framework for LLM evaluation. It extends [HELM](https://crfm.stanford.edu/helm/lite/latest/){:target="helm"}, an open-source benchmark framework developed by [Stanford CRFM](https://crfm.stanford.edu/helm/lite/latest/){:target="crfm"}, to enable users evaluate LLMs with domain-specific data sets such as finance, legal, climate, and cybersecurity.
+* [Weval](https://weval.org/sandbox){:target="weval"} from the [Collective Intelligence Project](https://www.cip.org/){:target="cip"}, is a community-driven collection of domain-specific evaluations, designed to allow non-experts to contribute and use evaluation suites relevant to their needs. 
 
 ### Education
 
-* The [AI for Education](https://ai-for-education.org/){:target="ai4e"} organization provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
+* [AI for Education](https://ai-for-education.org/){:target="ai4e"} is an organization that provides lots of useful guidance on how to evaluate AI for different education use cases and select benchmarks for them. See also their [Hugging Face page](https://huggingface.co/AI-for-Education){:target="ai4e-hf"}.
 
 ### Finance
 
 Benchmarks for finance applications.
 
-* Patronus AI [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"}
-* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"}.
+* [FIBEN Benchmark](https://github.com/IBM/fiben-benchmark){:target="_blank"} from [IBM](https://ibm.com){:target="_blank"}.
+* [FinanceBench](https://github.com/patronus-ai/financebench){:target="finance-bench"} from [Patronus AI](https://www.patronus.ai/){:target="_blank"}.
 
 ### Healthcare 
 
 Benchmarks for testing health-related use cases.
 
-* OpenAI [Healthbench](https://openai.com/index/healthbench/){:target="oai-hb"}
-* Stanford HELM for healthcare, [MedHELM](https://crfm.stanford.edu/helm/medhelm/latest/){:target="medhelm"}
-* Stanford ML's [MedAgentBench](https://stanfordmlgroup.github.io/projects/medagentbench/){:target="mab"} an virtual environment and benchmark suite for assessing the performance of LLMs in the context of _electronic health records_ (EHR).
+* [Healthbench](https://openai.com/index/healthbench/){:target="oai-hb"} from [OpenAI](https://openai.com){:target="_blank"}.
+* [MedAgentBench](https://stanfordmlgroup.github.io/projects/medagentbench/){:target="mab"} from [Stanford ML Group](https://stanfordmlgroup.github.io/) is a virtual environment and benchmark suite for assessing the performance of LLMs in the context of _electronic health records_ (EHR).
+* [MedHELM](https://crfm.stanford.edu/helm/medhelm/latest/){:target="medhelm"}, HELM for healthcare, from [Stanford](https://stanford.edu){:target="_blank"}.
 
 ### Industrial Systems
 
 I.e., manufacturing, shipping, etc.
 
-* FailureSensorIQ
-  * [paper](https://arxiv.org/abs/2506.03278){:target="_blank"} &ldquo;... a novel Multi-Choice Question-Answering (MCQA) benchmarking system designed to assess the ability of Large Language Models (LLMs) to reason and understand complex, domain-specific scenarios in Industry 4.0. Unlike traditional QA benchmarks, our system focuses on multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets.&rdquo;
-  * [GitHub](https://github.com/IBM/FailureSensorIQ){:target="_blank"}
-  * [Data set](https://huggingface.co/datasets/ibm-research/AssetOpsBench){:target="_blank"}
+* `FailureSensorIQ` ([paper](https://arxiv.org/abs/2506.03278){:target="fsiq"}, [GitHub](https://github.com/IBM/FailureSensorIQ){:target="fsiq"}, [data set](https://huggingface.co/datasets/ibm-research/AssetOpsBench){:target="fsiq"}) &ldquo;... a novel Multi-Choice Question-Answering (MCQA) benchmarking system designed to assess the ability of Large Language Models (LLMs) to reason and understand complex, domain-specific scenarios in Industry 4.0. Unlike traditional QA benchmarks, our system focuses on multiple aspects of reasoning through failure modes, sensor data, and the relationships between them across various industrial assets.&rdquo;
 
 ### Legal
 
-* Stanford [LegalBench](https://hazyresearch.stanford.edu/legalbench/){:target="legalbench"} ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"})
+* [LegalBench](https://hazyresearch.stanford.edu/legalbench/){:target="legalbench"} ([paper](https://arxiv.org/abs/2308.11462){:target="arxiv"}) from [Stanford](https://stanford.edu){:target="_blank"}.
 
 ### Software Engineering
 
 Benchmarks for testing software engineering use cases.
 
-* Open AI [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"}
+* [SWE-bench Verified](https://openai.com/index/introducing-swe-bench-verified/){:target="oai-swe"} from [Open AI](https://openai.com){:target="_blank"}.
 
 Benchmarks for software systems performance and reliability include the following:
 
-* The [Llama Stack](https://github.com/llamastack/llama-stack/){:target="ls"} project's [Kubernetes Benchmark](https://github.com/llamastack/llama-stack/tree/main/benchmarking/k8s-benchmark){:target="ls-kb"} suite.
-
+* [Kubernetes Benchmark](https://github.com/llamastack/llama-stack/tree/main/benchmarking/k8s-benchmark){:target="ls-kb"} suite that is part of [Llama Stack](https://github.com/llamastack/llama-stack/){:target="ls"}.
 
 ### Other Domains?
 
-What other domains would you like to see here?
+What other domains would you like to see here? [Let us know]({{site.baseurl}}/contributing/#how-to-contribute-to-this-project). [Pull requests](https://github.com/The-AI-Alliance/ai-application-testing/pulls){:target="github"} are welcome!
 
 <a id="other-tools"/>
 
@@ -321,7 +320,7 @@ Some of the criteria pertain to documentation, ease of adoption, and feedback me
 
 We are using relatively-simple, custom tools for our examples, which work well so far, but may not be as flexible for real-world use in large development teams with diverse skill sets and large evaluation suites. Here are some additional tools to explore. 
 
-Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/#other-tools) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/#other-tools).
+Additional tools that have some data synthesis and evaluation capabilities are discussed in [LLM as a Judge]({{site.baseurl}}/testing-strategies/llm-as-a-judge/) and [From Testing to Tuning]({{site.baseurl}}/advanced-techniques/from-testing-to-tuning/#other-tools).
 
 See also [A Working Example]({{site.baseurl}}/working-example) for a discussion of integrating new tools into existing frameworks, like [PyTest](https://docs.pytest.org/en/stable/){:target="_blank"}.
 
